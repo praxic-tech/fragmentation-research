@@ -1,11 +1,11 @@
 import json
 from itertools import combinations
 from scipy.stats import kendalltau
-
-DATA_DIR      = r"C:\Users\Arafat\Desktop\SCRMBL"
-ANSWER_KEY    = DATA_DIR + r"\answer_key.jsonl"
-ORDER_GUESSES = DATA_DIR + r"\llm_ordering_guesses.jsonl"
-GROUP_GUESSES = DATA_DIR + r"\llm_grouping_guesses.jsonl"
+import os
+BASE          = os.path.dirname(os.path.abspath(__file__))
+ANSWER_KEY    = os.path.join(BASE, "answer_key.jsonl")
+ORDER_GUESSES = os.path.join(BASE, "llm_ordering_guesses.jsonl")
+GROUP_GUESSES = os.path.join(BASE, "llm_grouping_guesses.jsonl")
 
 
 def load_jsonl(path):
@@ -72,7 +72,7 @@ if __name__ == "__main__":
             k += 1
     p, r, f1 = eval_linkage(combined, true_groups)
 
-    print("=== LLM adversary (Groq llama-3.3-70b-versatile) ===")
+    print("=== LLM adversary (Claude claude-sonnet-5, 50-way linkage) ===")
     print(f"  Game O  avg tau  : {avg_tau:.4f}   ({len(taus)} records scored, {skipped} skipped)")
     print(f"  Game L  precision={p:.4f}  recall={r:.4f}  f1={f1:.4f}")
     print()
