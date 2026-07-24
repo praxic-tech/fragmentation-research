@@ -2,8 +2,9 @@ import os, json, time, random, re
 from dotenv import load_dotenv
 from openai import OpenAI
 
-BASE = os.path.dirname(os.path.abspath(__file__))     # relative: the folder this script sits in
-load_dotenv(os.path.join(BASE, "apikey.env"))
+BASE = os.path.dirname(os.path.abspath(__file__))     # this script's folder (adversaries/)
+ROOT = os.path.dirname(BASE)                           # repo root, one level up
+load_dotenv(os.path.join(ROOT, "apikey.env"))
 
 client = OpenAI(
     base_url="https://api.anthropic.com/v1/",         # Anthropic via OpenAI-compat layer
@@ -114,14 +115,14 @@ def guess_groups_global(fragments, n_records, model=MODEL):    # Game L — 50-w
 
 
 def main(model=MODEL):
-    fragments = load_jsonl(os.path.join(BASE, "fragments.jsonl"))
+    fragments = load_jsonl(os.path.join(ROOT, "data", "identifier", "fragments.jsonl"))
     by_record = {}
     for f in fragments:
         by_record.setdefault(f["record_id"], []).append(f)
     record_ids = sorted(by_record)
 
-    order_path = os.path.join(BASE, "llm_ordering_guesses.jsonl")
-    group_path = os.path.join(BASE, "llm_grouping_guesses.jsonl")
+    order_path = os.path.join(ROOT, "results", "llm_ordering_guesses.jsonl")
+    group_path = os.path.join(ROOT, "results", "llm_grouping_guesses.jsonl")
     done_orders = {r["record_id"] for r in load_jsonl(order_path)}
 
     # Game O — one ordering guess per record (resumes; skips finished ones)

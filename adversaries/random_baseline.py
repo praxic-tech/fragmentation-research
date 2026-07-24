@@ -1,3 +1,4 @@
+import os
 import json
 import random
 from itertools import combinations
@@ -8,8 +9,10 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from scipy.stats import kendalltau, norm
 
-FRAGMENTS_PATH = "fragments.jsonl"
-ANSWER_KEY_PATH = "answer_key.jsonl"
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))   # repo root
+FRAGMENTS_PATH  = os.path.join(ROOT, "data", "identifier", "fragments.jsonl")
+ANSWER_KEY_PATH = os.path.join(ROOT, "data", "identifier", "answer_key.jsonl")
+RESULTS_DIR     = os.path.join(ROOT, "results")
 
 N_RUNS = 23000
 
@@ -191,7 +194,7 @@ if __name__ == "__main__":
     fig1.suptitle("Random baseline: distribution of results with normal fit",
                   fontsize=14, fontweight="bold")
     fig1.tight_layout(rect=[0, 0, 1, 0.96])
-    fig1.savefig("baseline_normal_distribution.png", dpi=130)
+    fig1.savefig(os.path.join(RESULTS_DIR, "baseline_normal_distribution.png"), dpi=130)
     print("\nSaved: baseline_normal_distribution.png")
 
     # ---------- Chart 2: box plots comparing metric variation ----------
@@ -207,7 +210,7 @@ if __name__ == "__main__":
                   fontweight="bold")
     ax2.set_ylabel("score")
     fig2.tight_layout()
-    fig2.savefig("baseline_boxplot.png", dpi=130)
+    fig2.savefig(os.path.join(RESULTS_DIR, "baseline_boxplot.png"), dpi=130)
     print("Saved: baseline_boxplot.png")
 
     # ---------- Chart 3: per-run trace (variation over trials) ----------
@@ -222,5 +225,5 @@ if __name__ == "__main__":
     ax3.set_ylabel("score")
     ax3.legend()
     fig3.tight_layout()
-    fig3.savefig("baseline_per_run_trace.png", dpi=130)
+    fig3.savefig(os.path.join(RESULTS_DIR, "baseline_per_run_trace.png"), dpi=130)
     print("Saved: baseline_per_run_trace.png")

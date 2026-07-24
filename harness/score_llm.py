@@ -3,9 +3,10 @@ from itertools import combinations
 from scipy.stats import kendalltau
 import os
 BASE          = os.path.dirname(os.path.abspath(__file__))
-ANSWER_KEY    = os.path.join(BASE, "answer_key.jsonl")
-ORDER_GUESSES = os.path.join(BASE, "llm_ordering_guesses.jsonl")
-GROUP_GUESSES = os.path.join(BASE, "llm_grouping_guesses.jsonl")
+ROOT          = os.path.dirname(BASE)
+ANSWER_KEY    = os.path.join(ROOT, "data", "identifier", "answer_key.jsonl")
+ORDER_GUESSES = os.path.join(ROOT, "results", "llm_ordering_guesses.jsonl")
+GROUP_GUESSES = os.path.join(ROOT, "results", "llm_grouping_guesses.jsonl")
 
 
 def load_jsonl(path):

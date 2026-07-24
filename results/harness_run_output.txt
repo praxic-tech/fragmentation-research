@@ -1,0 +1,78 @@
+======================================================================
+ Evaluating: IDENTIFIER DATA (4 fragments per record)
+======================================================================
+  200 fragments across 50 records
+  n_groups = 50
+  Fragment counts per record: min=4, max=4, mean=4.0
+
+Random baseline (10,000 runs) ...
+  Game O tau : -0.0002 +- 0.0682   2sigma CI [-0.1365, +0.1361]
+  Game L F1: 0.0151 +- 0.0071
+
+Memon-Greedy ...
+  Game O tau : +0.4800
+  Game L   : F1=0.0298  P=0.0153  R=0.5767
+
+Memon-MST ...
+  Game O tau : +0.3600
+  Game L   : F1=0.0295  P=0.0151  R=0.5567
+
+LLM guesses ...
+  [warn] Error loading LLM grouping guesses: LLM grouping file must contain a 'groups' key
+  Game O tau : +0.2133
+
+======================================================================
+ Identifier Data Results
+======================================================================
+
++---------------+------------------------+------------------------+----------+----------+----------+
+| Method        | Game O tau (mean+/-std) | Game O tau +/-2sigma CI | L: F1    | L: P     | L: R     |
++===============+========================+========================+==========+==========+==========+
+| Random        | -0.0002 +- 0.0682      | [-0.1365, +0.1361]     | +0.0151  | +0.0151  | +0.0151  |
+| Memon-Greedy  | +0.4800                | -                      | +0.0298  | +0.0153  | +0.5767  |
+| Memon-MST     | +0.3600                | -                      | +0.0295  | +0.0151  | +0.5567  |
+| LLM           | +0.2133                | -                      | -        | -        | -        |
++---------------+------------------------+------------------------+----------+----------+----------+
+  seed=42  |  random_runs=10,000
+
+======================================================================
+ Evaluating: PROSE CORPUS (variable fragments per record)
+======================================================================
+  104 fragments across 25 records
+  n_groups = 25
+  Fragment counts per record: min=3, max=6, mean=4.2
+
+Random baseline (10,000 runs) ...
+  Game O tau : +0.0008 +- 0.0988   2sigma CI [-0.1967, +0.1984]
+  Game L F1: 0.0313 +- 0.0134
+
+Memon-Greedy ...
+  Game O tau : +0.7200
+  Game L   : F1=0.0459  P=0.0254  R=0.2412
+
+Memon-MST ...
+  Game O tau : +0.5467
+  Game L   : F1=0.0459  P=0.0254  R=0.2412
+
+LLM guesses ...
+  No LLM guesses found (files: prose_llm_ordering_guesses.jsonl, prose_llm_grouping_guesses.jsonl)
+  LLM results will show as '-' in the table
+
+======================================================================
+ Prose Corpus Results
+======================================================================
+
++---------------+------------------------+------------------------+----------+----------+----------+
+| Method        | Game O tau (mean+/-std) | Game O tau +/-2sigma CI | L: F1    | L: P     | L: R     |
++===============+========================+========================+==========+==========+==========+
+| Random        | +0.0008 +- 0.0988      | [-0.1967, +0.1984]     | +0.0313  | +0.0316  | +0.0309  |
+| Memon-Greedy  | +0.7200                | -                      | +0.0459  | +0.0254  | +0.2412  |
+| Memon-MST     | +0.5467                | -                      | +0.0459  | +0.0254  | +0.2412  |
+| LLM           | -                      | -                      | -        | -        | -        |
++---------------+------------------------+------------------------+----------+----------+----------+
+  seed=42  |  random_runs=10,000
+
+Saved: harness_results.json
+
+[Done] exited with code=0 in 101.522 seconds
+

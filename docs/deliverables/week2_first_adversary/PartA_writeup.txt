@@ -1,0 +1,67 @@
+PART A — LLM ADVERSARY 
+Status: done. Both games run end to end and feed the scorer.
+
+WHAT I BUILT
+I built the LLM attacker for the reassembly games. It reads fragments.jsonl,
+sends each record's shuffled fragments to an LLM, and produces two guesses that
+plug straight into Person B's scorer:
+  - Game O (ordering): the fragments in their best-guess original order
+  - Game L (linkage): across small pools of records, which fragments belong together
+
+Setup: Groq, llama-3.3-70b-versatile, temperature 0. The model name is a
+parameter (one-line change), so we can swap in weak/mid/frontier models for the
+sweep later. I started on NVIDIA's free Kimi as the brief suggested, but it was
+retired, so I moved to Groq — everything is OpenAI-compatible, so it was a
+base-URL + model-string change.
+
+RESULTS (identifier records)
+  Game O (ordering):  tau = 0.34
+      vs statistical 0.06, NCD 0.14, random ~0.00
+      -> LLM clearly beats the baselines. It reliably puts the name first,
+         i.e. it helps where there is real linguistic structure.
+
+  Game L (linkage):   F1 = 0.22
+      -> looks high, but it is sitting on the random floor FOR MY SETUP (~0.20),
+         so the model is NOT actually linking anything. It is at chance.
+
+THE KEY FINDING (worth reading)
+At first the model looked like it was solving linkage — but it was cheating off
+the fragment ID numbers, grouping f_00000-f_00003 together just because the
+numbers were consecutive. The fragments were already shuffled; the leak was that
+the model could still read the ID *labels*. Once I masked the IDs (relabel to
+item_0, item_1, ... before the model sees them, then translate back afterward),
+the grouping collapsed to random. That is the real result: given only the field
+text, with no ID and no order, the LLM cannot re-link a name to its SSN. This
+confirms the thesis from the LLM side.
+
+PROTOCOL MISMATCH — needs a team decision before the shared table
+My Game L used small pools of 5 records (as the brief said, "a small pool").
+Person B clustered all 50 records at once. Those are different-difficulty tasks
+with different random floors (mine ~0.20, the global one ~0.02), so our two
+linkage numbers CANNOT go in the same table row until we agree on one shared
+protocol. Two ways to fix it:
+  (a) the LLM also does the global 50-way grouping Person B did, or
+  (b) Person B + a random baseline also run on pools of 5.
+Game O is unaffected — same protocol for everyone, directly comparable.
+So the linkage row is blocked on this decision, not on my code.
+
+FILES
+Code:
+  Record_Generator.py    - synthetic record generator (Faker, fixed fields)
+  cutter.py              - field cutter -> fragments + answer key, shuffled
+  run_llm_adversary.py   - the LLM adversary, both games, IDs masked from model
+  score_llm.py           - scorer, reuses Person B's exact formulas
+Data / outputs:
+  records.jsonl
+  fragments.jsonl
+  answer_key.jsonl
+  llm_ordering_guesses.jsonl
+  llm_grouping_guesses.jsonl
+
+
+BOTTOM LINE
+Part A meets the definition of done: real numbers out of both games, feeding the
+scorer, model as a parameter, temperature 0. Game O is a clean, comparable win
+for the LLM. Game L shows the LLM at chance once it can't read the IDs, which is
+the result we wanted — but the linkage protocol needs to be aligned with Person B
+before we build the combined table.

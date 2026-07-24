@@ -29,6 +29,7 @@ from pathlib import Path
 import numpy as np
 
 BASE = Path(__file__).parent
+ROOT = BASE.parent
 sys.path.insert(0, str(BASE))
 
 from loader  import (load_fragments, load_answer_key,
@@ -43,20 +44,21 @@ from scoring  import score_ordering, score_linkage
 # ── Constants ────────────────────────────────────────────────────────────────────
 _NAN = "-"
 
-# ── Paths (all relative to this file) ─────────────────────────────────────────
-DATA          = BASE / "data"
+# ── Paths (relative to the repo root, one level up from this file) ────────────
+DATA          = ROOT / "data"
+RESULTS       = ROOT / "results"
 
 # Identifier data
-ID_FRAGMENTS  = DATA / "fragments.jsonl"
-ID_ANSWER_KEY = DATA / "answer_key.jsonl"
-ID_LLM_ORDER  = DATA / "llm_ordering_guesses.jsonl"
-ID_LLM_GROUP  = DATA / "llm_grouping_guesses.jsonl"
+ID_FRAGMENTS  = DATA / "identifier" / "fragments.jsonl"
+ID_ANSWER_KEY = DATA / "identifier" / "answer_key.jsonl"
+ID_LLM_ORDER  = RESULTS / "llm_ordering_guesses.jsonl"
+ID_LLM_GROUP  = RESULTS / "llm_grouping_guesses.jsonl"
 
 # Prose data
-PROSE_FRAGMENTS  = DATA / "prose_fragments.jsonl"
-PROSE_ANSWER_KEY = DATA / "prose_answer_key.jsonl"
-PROSE_LLM_ORDER  = DATA / "prose_llm_ordering_guesses.jsonl"
-PROSE_LLM_GROUP  = DATA / "prose_llm_grouping_guesses.jsonl"
+PROSE_FRAGMENTS  = DATA / "prose" / "prose_fragments.jsonl"
+PROSE_ANSWER_KEY = DATA / "prose" / "prose_answer_key.jsonl"
+PROSE_LLM_ORDER  = RESULTS / "prose_llm_ordering_guesses.jsonl"
+PROSE_LLM_GROUP  = RESULTS / "prose_llm_grouping_guesses.jsonl"
 
 DEFAULT_SEED  = 42
 DEFAULT_RUNS  = 10_000
@@ -453,7 +455,7 @@ def main() -> None:
                                seed=args.seed, n_runs=args.runs)
 
     # ── Persist ───────────────────────────────────────────────────────────────
-    out = BASE / "harness_results.json"
+    out = RESULTS / "harness_results.json"
     with open(out, "w") as fh:
         json.dump(
             {

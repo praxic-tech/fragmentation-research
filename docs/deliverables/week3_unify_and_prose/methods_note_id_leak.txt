@@ -1,0 +1,54 @@
+METHODS NOTE — Fragment-identifier leakage in the LLM adversary
+(For the paper's methods / threat-validity section. Author: Mohammed, Part A.)
+
+SUMMARY
+While validating the LLM adversary on the association-recovery game (Game L), we
+found that apparent linkage success was an artifact of the fragment identifiers,
+not of any reasoning over field content. Masking the identifiers removed the
+effect and returned the adversary to chance. We document the before/after because
+it is a methodological pitfall for any fragment-reassembly evaluation that carries
+per-fragment IDs into the adversary's input.
+
+THE LEAK
+Each fragment in our pipeline is tagged with a unique identifier assigned in
+generation order (f_00000, f_00001, ...). Because a record's fields are emitted
+consecutively, a record's four fragments receive consecutive IDs. When these IDs
+were passed to the model alongside the field text, the LLM's grouping guesses
+recovered records by chaining consecutive identifiers (e.g. {f_00000, f_00001,
+f_00002, f_00003}) rather than by reasoning about the field values. The identifier
+ordering — an incidental property of the harness, not information available in a
+real attack — leaked the ground-truth grouping directly into the adversary's input.
+
+DIAGNOSIS
+The signature was grouping output that reproduced tidy consecutive ID runs far
+more often than chance, despite the field values (name, SSN, account, address)
+containing no cross-field linkage signal. This mirrors an earlier record_id leak
+we had already removed: in both cases a label attached for bookkeeping, not a
+property of the content, was doing the adversary's work.
+
+FIX (MASKING)
+Before any fragment reaches the model, we relabel the (already shuffled) fragments
+with content-free placeholders (item_0, item_1, ...) assigned in shuffled order,
+and maintain a private map back to the true fragment IDs. The model sees only the
+field text and meaningless labels; its answer is translated back to real IDs only
+after it is returned, for scoring. The model therefore has access to exactly the
+information a real adversary would: the field values and nothing else.
+
+BEFORE / AFTER
+  Before masking: grouping tracked consecutive IDs; linkage appeared well above
+                  chance and was not attributable to field content.
+  After masking:  grouping collapsed to the random floor. At the aligned 50-way
+                  ("stolen database") protocol, the LLM adversary (Claude Sonnet)
+                  scored Game L F1 = 0.017 — at chance, alongside the random
+                  (~0.02) and Memon (0.027) baselines. With only field text
+                  available, the adversary cannot re-associate a name with its
+                  SSN, because that association was never present in the
+                  fragments; it existed solely in the original adjacency, which
+                  fragmentation removes.
+
+TAKEAWAY
+Any identifier or metadata carried alongside fragments (sequential IDs, source
+tags, positional hints) must be withheld from the adversary or masked, or it will
+inflate measured reconstruction and mis-attribute leakage to model capability.
+The corrected result — a frontier LLM at chance on identifier linkage — is the
+intended measurement and supports the content-dependence thesis from the LLM side.

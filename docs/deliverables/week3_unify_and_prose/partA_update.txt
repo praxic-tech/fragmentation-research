@@ -1,0 +1,33 @@
+Part A update — LLM adversary (aligned + done)
+
+Reran Game L at the global 50-way level (whole 200-fragment pile -> 50 records),
+same protocol as Michael's clustering, so our linkage numbers are comparable now.
+Also switched the adversary to Claude Sonnet since I had a key, and moved
+everything to relative paths.
+
+Table (identifier records, both games):
+
+  Game            Random   Memon    NCD     LLM (Claude Sonnet)
+  O (ordering, t)  ~0.00    0.06    0.14     0.21
+  L (linkage, F1)  ~0.02   0.0267  0.0223    0.017
+
+Findings:
+- Linkage: at the 50-way setting the LLM is at the random floor (F1 0.017),
+  right next to Memon and random. A frontier model, given all 200 fragments at
+  once, still can't re-link a name to its SSN. Identifiers resist - thesis holds.
+- Ordering: LLM stays on top of both baselines (0.21 vs Memon 0.06, NCD 0.14).
+  It reliably puts the name first, which is the bit of linguistic structure we
+  expected it to catch. (Lower than the earlier 0.34 because that was Llama, not
+  Claude - different model, same story.)
+
+Note on the earlier 0.22 linkage number: that was pools of 5, not 50-way. The
+random floor for pools of 5 is ~0.20, so 0.22 was already at chance for that
+setup - it just couldn't share a row with the 50-way numbers. Fixed now.
+
+Also wrote up the fragment-ID leak as a short methods note (before/after: looked
+like it was linking, collapsed to chance once IDs were masked). Attaching it.
+
+Files are on relative paths now. Not touching apikey.env - keeping that out of
+the repo.
+
+Blockers on my side: none. Ready for the unified harness whenever.

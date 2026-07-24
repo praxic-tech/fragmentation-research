@@ -22,6 +22,7 @@ Data-type note:
 Parameters: n=2, d=2 (strict paper recommendation d <= n)
 """
 
+import os
 import json
 import math
 import numpy as np
@@ -31,8 +32,9 @@ from scipy.cluster.hierarchy import linkage as hier_linkage, fcluster
 from scipy.spatial.distance import squareform
 from scipy.stats import kendalltau
 
-FRAGMENTS_PATH = r"C:\Users\Micha\OneDrive\Desktop\part2\fragments.jsonl"
-ANSWER_KEY_PATH = r"C:\Users\Micha\OneDrive\Desktop\part2\answer_key.jsonl"
+_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))   # repo root
+FRAGMENTS_PATH  = os.path.join(_ROOT, "data", "identifier", "fragments.jsonl")
+ANSWER_KEY_PATH = os.path.join(_ROOT, "data", "identifier", "answer_key.jsonl")
 N = 2   # n-gram order
 D = N   # boundary depth (d <= n as the paper specifies)
 
