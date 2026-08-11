@@ -38,6 +38,41 @@ No system build required. Fragments are fabricated directly: synthetic documents
 8. **Limitations** — empirical, not a proof; LLM capability shifts over time; closed-world scope — a web-enabled agentic adversary (InferLink-style) is strictly stronger, and our resistance result holds specifically for the no-auxiliary-context setting.
 9. **Conclusion**
 
+## Repo layout
+
+Organised by function, not by deliverable.
+
+| directory | what lives there |
+|---|---|
+| `data/prose/` | 500 real post-cutoff case reports. `prose_raw.jsonl` is the source of truth every cutter reads. |
+| `data/identifier/` | 500 synthetic identifier records, 4 fields each. |
+| `datagen/` | Corpus builders and cutters — `pull_prose*.py`, `verify_postcutoff.py`, `prose_cutter.py`, `coherence_sever.py`, `record_generator.py`, `cutter.py` (identifier). |
+| `adversaries/` | `llm_adversary.py`, `memon_linkage.py` (the fixed `B_stat`), `memon.py`, `random_baseline.py`. |
+| `harness/` | Scoring and evaluation. `harness.py` for the standard corpora, `run_baselines.py` to point the same evaluators at any corpus or grid cell. |
+| `analysis/` | Cost model, grid cost projection, length analysis, linkage benchmarks, timing. No API calls. |
+| `docs/` | `RUN_PLAN.md` (the experiment plan), `RESEARCH_BRIEF.md`, `corpus_build.md`, `identifier_corpus.md`, `paper_section3.md`, and per-week deliverable notes. |
+| `results/` | Adversary output and harness tables. |
+| `archive/` | Superseded corpora, results, and scripts. Kept for the paper trail; nothing here is on a live path. |
+
+### Setup
+
+```bash
+pip install -r requirements.txt && python -m spacy download en_core_web_sm
+```
+
+The LLM adversary reads `apikey.env` from the repo root. Env files are
+gitignored — never commit one.
+
+### The two commands you'll actually run
+
+```bash
+python harness/harness.py --runs 2000
+```
+
+```bash
+python datagen/prose_cutter.py --out-dir results/grid/semantic_clause --strategy semantic --granularity clause
+```
+
 ## Ownership
 
 - **Threat model / reassembly game (§3)** — lead, with advisor (cryptographer) review before anything goes public.

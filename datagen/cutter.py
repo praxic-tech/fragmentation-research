@@ -1,3 +1,16 @@
+"""Cut identifier records into one fragment per field.
+
+Fragment IDs are assigned in (record index, field index) order, so the IDs for
+the first N records are stable no matter how large the corpus is — a 500-record
+cut contains f_00000..f_00199 with exactly the same record, text and position
+they had in the 50-record cut.
+
+Usage:
+    python datagen/cutter.py                              # data/identifier
+    python datagen/cutter.py --data-dir corpus_expansion/data/identifier_v2
+"""
+
+import argparse
 import json
 import os
 import random
@@ -42,15 +55,25 @@ def save_jsonl(rows: list[dict], path: str) -> None:
             f.write(json.dumps(row) + "\n")
 
 
+def parse_args():
+    p = argparse.ArgumentParser(description="Cut identifier records into per-field fragments.")
+    p.add_argument("--data-dir", default=OUT_DIR,
+                   help="folder holding records.jsonl; fragments + answer key are written here")
+    p.add_argument("--seed", type=int, default=123,
+                   help="shuffle seed (kept distinct from the generator seed)")
+    return p.parse_args()
+
+
 if __name__ == "__main__":
-    records = load_records(os.path.join(OUT_DIR, "records.jsonl"))
+    args = parse_args()
+    records = load_records(os.path.join(args.data_dir, "records.jsonl"))
     fragments, answer_key = cut_records(records)
 
-    random.seed(123)              # reproducible shuffle (different seed than the generator)
+    random.seed(args.seed)        # reproducible shuffle (different seed than the generator)
     random.shuffle(fragments)     # strip the original order
 
-    save_jsonl(fragments,  os.path.join(OUT_DIR, "fragments.jsonl"))
-    save_jsonl(answer_key, os.path.join(OUT_DIR, "answer_key.jsonl"))
+    save_jsonl(fragments,  os.path.join(args.data_dir, "fragments.jsonl"))
+    save_jsonl(answer_key, os.path.join(args.data_dir, "answer_key.jsonl"))
 
-    print(f"read {len(records)} records → {len(fragments)} fragments")
-    print(f"wrote fragments.jsonl and answer_key.jsonl to {OUT_DIR}")
+    print(f"read {len(records)} records -> {len(fragments)} fragments")
+    print(f"wrote fragments.jsonl and answer_key.jsonl to {args.data_dir}")

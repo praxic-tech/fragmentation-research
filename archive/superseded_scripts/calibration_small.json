@@ -1,0 +1,69 @@
+{
+  "model": "claude-sonnet-5",
+  "doc": "prose_0015",
+  "doc_frags": 28,
+  "doc_chars": 3845,
+  "pool_docs": 10,
+  "pool_frags": 280,
+  "pool_chars": 37407,
+  "est": {
+    "o_in": 1111.25,
+    "o_out": 420,
+    "l_in": 9551.75,
+    "l_out": 840
+  },
+  "actual": {
+    "o_in": 1674,
+    "o_out": 830,
+    "l_in": 15054,
+    "l_out": 25923
+  },
+  "factors": {
+    "o_in": 1.5064116985376828,
+    "o_out": 1.9761904761904763,
+    "l_in": 1.5760462742429397,
+    "l_out": 30.860714285714284
+  },
+  "cost_usd": 0.30098600000000003,
+  "ordering": {
+    "valid_permutation": false,
+    "returned": 1,
+    "expected": 28
+  },
+  "linkage": {
+    "groups_returned": 11,
+    "groups_expected": 10,
+    "labels_emitted": 280,
+    "labels_expected": 280,
+    "invalid": 0,
+    "duplicates": 0,
+    "missing": 0,
+    "largest_group": 34,
+    "precision": 0.7302,
+    "recall": 0.7024,
+    "f1": 0.716
+  },
+  "diagnostics": {
+    "call1": {
+      "stop_reason": "cached-from-previous-run",
+      "blocks": [],
+      "n_blocks": 0,
+      "text_chars": 0
+    },
+    "call2": {
+      "stop_reason": "end_turn",
+      "blocks": [
+        [
+          "thinking",
+          0
+        ],
+        [
+          "text",
+          3158
+        ]
+      ],
+      "n_blocks": 2,
+      "text_chars": 3158
+    }
+  }
+}

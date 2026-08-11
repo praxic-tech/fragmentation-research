@@ -1,0 +1,101 @@
+{
+  "baseline": {
+    "name": "baseline (adaptive, default effort)",
+    "in": 15054,
+    "out": 25923,
+    "f1": 0.716,
+    "p": 0.7302,
+    "r": 0.7024,
+    "text_chars": 3158,
+    "wall": 251.3
+  },
+  "random_floor": 0.0967,
+  "trivial": 0.1765,
+  "runs": [
+    {
+      "setting": "off",
+      "config": {
+        "thinking": {
+          "type": "disabled"
+        }
+      },
+      "stop_reason": "end_turn",
+      "blocks": [
+        [
+          "text",
+          4029
+        ]
+      ],
+      "in": 15054,
+      "out": 1749,
+      "answer_tokens": 1151,
+      "thinking_tokens": 598,
+      "cost_usd": 0.0476,
+      "wall_seconds": 16.4,
+      "groups": 10,
+      "labels": 279,
+      "expected_labels": 280,
+      "invalid": 0,
+      "duplicates": 1,
+      "missing": 2,
+      "precision": 0.2894,
+      "recall": 0.4336,
+      "f1": 0.3471
+    },
+    {
+      "setting": "low",
+      "config": {
+        "thinking": {
+          "type": "adaptive"
+        },
+        "output_config": {
+          "effort": "low"
+        }
+      },
+      "stop_reason": "end_turn",
+      "blocks": [
+        [
+          "thinking",
+          0
+        ],
+        [
+          "text",
+          3299
+        ]
+      ],
+      "in": 15054,
+      "out": 26153,
+      "answer_tokens": 943,
+      "thinking_tokens": 25210,
+      "cost_usd": 0.2916,
+      "wall_seconds": 242.6,
+      "parse_error": "Extra data: line 14 column 1 (char 1606)"
+    },
+    {
+      "setting": "medium",
+      "config": {
+        "thinking": {
+          "type": "adaptive"
+        },
+        "output_config": {
+          "effort": "medium"
+        }
+      },
+      "stop_reason": "max_tokens",
+      "blocks": [
+        [
+          "thinking",
+          0
+        ]
+      ],
+      "in": 15054,
+      "out": 32000,
+      "answer_tokens": 0,
+      "thinking_tokens": 32000,
+      "cost_usd": 0.3501,
+      "wall_seconds": 338.1,
+      "parse_error": "Expecting value: line 1 column 1 (char 0)"
+    }
+  ],
+  "total_cost_usd": 0.6893
+}

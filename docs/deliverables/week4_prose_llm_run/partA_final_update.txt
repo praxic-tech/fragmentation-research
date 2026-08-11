@@ -1,0 +1,47 @@
+Part A update — prose run done, both tables complete
+
+Ran the LLM adversary on Michael's prose corpus. Results are in, both content
+types scored. Here's the full picture:
+
+IDENTIFIER DATA (50 records, 4 fields each)
+
+  Game O tau   : 0.2133   vs  Memon-Greedy 0.48 | Memon-MST 0.36 | random ~0.00
+  Game L F1    : 0.0133   vs  Memon-Greedy 0.030 | Memon-MST 0.030 | random ~0.02
+
+  LLM is above random on ordering but below Memon. Linkage sits right on the
+  random floor — a frontier model, IDs masked, given all 200 fragments at once,
+  cannot re-link a name to its SSN. Nothing in the content connects them.
+
+PROSE CORPUS (25 records, 3-6 sentences each)
+
+  Game O tau   : 0.9733   vs  Memon-Greedy 0.72 | Memon-MST 0.55 | random ~0.00
+  Game L F1    : 0.8921   vs  Memon-Greedy 0.046 | Memon-MST 0.046 | random ~0.03
+
+  LLM dominates both games on prose. Ordering near-perfect (0.97), linkage at
+  0.89. Clinical notes have real narrative structure — patient history into
+  symptoms into diagnosis into treatment — and the model follows it cleanly.
+  Memon barely moves on linkage (0.046) while the LLM hits 0.89. That gap is
+  the finding.
+
+THE CONTRAST IS THE THESIS
+
+  Identifiers: fragmentation holds. LLM at chance on both games.
+  Prose: fragmentation fails. LLM recovers ordering and linkage near-perfectly.
+
+  The difference is not model capability — it's whether the content carries
+  recoverable structure. Identifiers do not. Clinical prose does. This is
+  exactly the content-dependence hypothesis, confirmed from the LLM side on
+  both content types.
+
+FILES (ready for Michael's harness)
+  llm_ordering_guesses.jsonl           <- identifier ordering
+  llm_grouping_guesses.jsonl           <- identifier grouping
+  prose_llm_ordering_guesses.jsonl     <- prose ordering
+  prose_llm_grouping_guesses.jsonl     <- prose grouping
+
+All in the {"groups": {...}} schema, relative paths, repo-ready.
+
+Methods note on the ID leak is attached separately (going in the paper as-is
+per Aiden's note).
+
+No blockers on my side.

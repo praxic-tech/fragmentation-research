@@ -31,15 +31,18 @@ import numpy as np
 BASE = Path(__file__).parent
 ROOT = BASE.parent
 sys.path.insert(0, str(BASE))
+sys.path.insert(0, str(ROOT / "adversaries"))
 
 from loader  import (load_fragments, load_answer_key,
                      group_fragments_by_record,
                      load_llm_ordering_guesses,
                      load_llm_grouping_guesses)
 from orderers import (random_order,    random_grouping,
-                      greedy_nn_order, greedy_grouping,
-                      mst_order,       mst_grouping)
+                      greedy_nn_order, mst_order)
+# greedy_grouping / mst_grouping are deliberately NOT imported here: they are
+# degenerate and reachable only through memon_linkage's legacy variants.
 from scoring  import score_ordering, score_linkage
+from memon_linkage import memon_grouping
 
 # ── Constants ────────────────────────────────────────────────────────────────────
 _NAN = "-"
@@ -72,21 +75,36 @@ def mask_fragment_ids(fragments: list) -> tuple:
     """
     Replace fragment IDs with random labels to prevent ID-based leakage.
     Preserves the text content for similarity computation.
-    
+
+    Labels are drawn from a shuffled permutation of exactly len(fragments)
+    distinct labels, so masking is COLLISION-FREE by construction. Shuffling is
+    what hides the original order — the label index carries no positional
+    information about the fragment it names.
+
+    The previous implementation drew `random.randint(100000, 999999)` per
+    fragment. With only 900,000 possible labels that is a birthday problem: at
+    16,524 fragments ~128 labels collided, each collision overwrote an id_map
+    entry, and `unmask_groups` then silently dropped those fragments from every
+    Game L score. Invisible at 200 fragments (expected collisions ~0.02), which
+    is why it survived until the corpus scaled.
+
     Returns:
         masked_fragments: list of fragments with masked IDs
         id_map: dict mapping masked_id -> original_id
     """
+    labels = [f"m_{i:07d}" for i in range(len(fragments))]
+    random.shuffle(labels)
+
     masked_fragments = []
     id_map = {}
-    for f in fragments:
-        # Generate a random ID
-        masked_id = f"m_{random.randint(100000, 999999)}"
-        id_map[masked_id] = f["fragment_id"]
+    for label, f in zip(labels, fragments):
+        id_map[label] = f["fragment_id"]
         masked_fragments.append({
-            "fragment_id": masked_id,
+            "fragment_id": label,
             "text": f["text"]
         })
+
+    assert len(id_map) == len(fragments), "mask collision — labels must be unique"
     return masked_fragments, id_map
 
 
@@ -167,10 +185,22 @@ def eval_random(fragments, true_order, true_groups, n_runs):
 
 # ── Memon (greedy / MST) ──────────────────────────────────────────────────────
 
-def eval_memon(fragments, true_order, true_groups, method: str) -> dict:
+def eval_memon(fragments, true_order, true_groups, method: str,
+               grouping_variant: str = "fixed") -> dict:
     """
-    Evaluate one Memon strategy ('greedy' or 'mst') on both games.
-    Returns a result dict ready for the comparison table.
+    Evaluate one Memon strategy on both games.
+
+    method selects the Game O ORDERING heuristic only:
+        'greedy' — greedy nearest-neighbour ordering
+        'mst'    — maximum spanning tree path ordering
+
+    Game L GROUPING is the same for both, because there is only one correct
+    grouping: TF-IDF cosine + average linkage (`memon_linkage`, variant
+    "fixed"). The published single-linkage / MST-cut groupings are degenerate —
+    they collapse ~90% of a corpus into one cluster and score at or below the
+    trivial "everything in one bucket" strategy — so they are NOT on the live
+    path. They remain reachable via grouping_variant="legacy-greedy" /
+    "legacy-mst" purely to reproduce tables the team saw before the fix.
     """
     text_by_id = {f["fragment_id"]: f["text"] for f in fragments}
     n_groups   = len(true_groups)
@@ -180,17 +210,15 @@ def eval_memon(fragments, true_order, true_groups, method: str) -> dict:
 
     # Game O - uses original fragments and text_by_id
     if method == "greedy":
-        o_tau = _avg_ordering_tau(
-            fragments, true_order,
-            order_fn=lambda ids: greedy_nn_order(ids, text_by_id)
-        )
-        masked_groups = greedy_grouping(masked_fragments, n_groups)
+        order_fn = lambda ids: greedy_nn_order(ids, text_by_id)
+    elif method == "mst":
+        order_fn = lambda ids: mst_order(ids, text_by_id)
     else:
-        o_tau = _avg_ordering_tau(
-            fragments, true_order,
-            order_fn=lambda ids: mst_order(ids, text_by_id)
-        )
-        masked_groups = mst_grouping(masked_fragments, n_groups)
+        raise ValueError(f"unknown Memon ordering method {method!r}")
+
+    o_tau = _avg_ordering_tau(fragments, true_order, order_fn=order_fn)
+    masked_groups = memon_grouping(masked_fragments, n_groups,
+                                   variant=grouping_variant)
 
     # Convert masked IDs back to original IDs for scoring
     unmasked_groups = unmask_groups(masked_groups, id_map)
@@ -381,16 +409,23 @@ def evaluate_dataset(fragments_path, answer_key_path, llm_order_path, llm_group_
         for method, label in [("greedy", "Memon-Greedy"), ("mst", "Memon-MST")]:
             print(f"\n{label} ...")
             results[label] = eval_memon(
-                fragments, true_order, true_groups, method
+                fragments, true_order, true_groups, method,
+                grouping_variant=args.grouping
             )
             r = results[label]
             print(f"  Game O tau : {r['o_tau']:+.4f}")
             print(f"  Game L   : F1={r['l_f1']:.4f}  P={r['l_precision']:.4f}"
                   f"  R={r['l_recall']:.4f}")
+        print(f"\n  [Game L grouping = '{args.grouping}' for both rows — one "
+              f"grouping algorithm; greedy/MST differ in ordering only]")
     else:
         print("\n[Memon methods skipped - use without --skip-memon to enable]")
 
     # ── LLM ───────────────────────────────────────────────────────────────────
+    if args.skip_llm:
+        print("\n[LLM adversary skipped]")
+        return results
+
     print("\nLLM guesses ...")
     results["LLM"] = eval_llm(true_order, true_groups, llm_order_path, llm_group_path)
     r = results["LLM"]
@@ -422,6 +457,13 @@ def main() -> None:
                         help="Random baseline repetitions (default: 10 000)")
     parser.add_argument("--skip-memon", action="store_true",
                         help="Skip Memon methods (fast mode: random + LLM only)")
+    parser.add_argument("--skip-llm",   action="store_true",
+                        help="Skip the LLM adversary (baselines only)")
+    parser.add_argument("--grouping",   default="fixed",
+                        choices=["fixed", "legacy-greedy", "legacy-mst"],
+                        help="Game L grouping algorithm. Default 'fixed' is the "
+                             "validated B_stat; the legacy options are degenerate "
+                             "and exist only to reproduce pre-fix tables.")
     parser.add_argument("--skip-prose", action="store_true",
                         help="Skip prose corpus evaluation (identifier data only)")
     parser.add_argument("--skip-ids",   action="store_true",
@@ -466,7 +508,7 @@ def main() -> None:
             },
             fh, indent=2
         )
-    print(f"\nSaved: {out.relative_to(BASE)}")
+    print(f"\nSaved: {out.relative_to(ROOT)}")
 
 
 if __name__ == "__main__":
