@@ -119,31 +119,86 @@ def unmask_groups(groups: dict, id_map: dict) -> dict:
 
 
 # ════════════════════════════════════════════════════════════════════════════════
+# Coverage reporting helper
+# ════════════════════════════════════════════════════════════════════════════════
+
+def _print_coverage(game: str, scored: int, supplied: int,
+                    expected: int, malformed: int) -> None:
+    """
+    Print a coverage line for one game in one cell.
+
+    Item (a): every score must show scored / supplied / expected so that
+    bugs 1, 8, and 10 (fragments missing, records dropped, errors swallowed)
+    are immediately visible.  Any cell where scored < expected is quarantined
+    with a clear marker so it does not silently pollute the grid results.
+
+    Format:
+        Game O coverage: scored=50/50/50  malformed=0          <- healthy
+        [QUARANTINE] Game O: scored=48/50/50  malformed=2      <- needs review
+    """
+    tag    = f"  {game} coverage:"
+    detail = f"scored={scored}/{supplied}/{expected}  malformed={malformed}"
+    if scored < expected or malformed > 0:
+        print(f"  [QUARANTINE] {game}: {detail}")
+    else:
+        print(f"{tag} {detail}")
+
+
+# ════════════════════════════════════════════════════════════════════════════════
 # Per-method evaluators
 # ════════════════════════════════════════════════════════════════════════════════
 
-def _avg_ordering_tau(fragments, true_order, order_fn) -> float:
+def _avg_ordering_tau(fragments, true_order, order_fn) -> dict:
     """
     Run order_fn on each record, compute per-record Kendall's tau,
-    return the mean (NaN records skipped).
+    return a coverage dict.
+
+    Bug 10 fix: the old version had a bare `except: continue` that silently
+    swallowed errors and id-set mismatches, so "mean tau 0.70" could be the
+    mean over 500 records or over 12, with no way to tell.  This version
+    tracks every skip and error and returns them alongside the mean so the
+    caller can print the coverage line and quarantine cells where
+    scored < expected.
+
+    Returns:
+        {
+            "tau":      float,   # mean tau, or nan if nothing was scored
+            "scored":   int,     # records that produced a valid tau
+            "supplied": int,     # records handed to this function
+            "expected": int,     # records in true_order
+            "skipped":  int,     # id-set mismatches or nan tau
+            "errors":   int,     # exceptions raised by order_fn or score_ordering
+        }
     """
-    grouped = group_fragments_by_record(fragments)
-    taus    = []
+    grouped  = group_fragments_by_record(fragments)
+    taus     = []
+    skipped  = 0
+    errors   = 0
+    supplied = len(grouped)
+    expected = len(true_order)
+
     for rec_id, frag_ids in grouped.items():
         try:
             guess = order_fn(frag_ids)
-            # Check if lengths match
-            if len(guess) != len(frag_ids):
-                continue
-            # Check if all fragment IDs are present
-            if set(guess) != set(frag_ids):
+            if len(guess) != len(frag_ids) or set(guess) != set(frag_ids):
+                skipped += 1
                 continue
             result = score_ordering(guess, true_order[rec_id])
             if not np.isnan(result["tau"]):
                 taus.append(result["tau"])
+            else:
+                skipped += 1
         except Exception:
-            continue
-    return float(np.mean(taus)) if taus else float("nan")
+            errors += 1
+
+    return {
+        "tau":      float(np.mean(taus)) if taus else float("nan"),
+        "scored":   len(taus),
+        "supplied": supplied,
+        "expected": expected,
+        "skipped":  skipped,
+        "errors":   errors,
+    }
 
 
 # ── Random ────────────────────────────────────────────────────────────────────
@@ -216,13 +271,34 @@ def eval_memon(fragments, true_order, true_groups, method: str,
     else:
         raise ValueError(f"unknown Memon ordering method {method!r}")
 
-    o_tau = _avg_ordering_tau(fragments, true_order, order_fn=order_fn)
+    o_cov = _avg_ordering_tau(fragments, true_order, order_fn=order_fn)
+    o_tau = o_cov["tau"]
+
+    # Item (a): coverage line for Game O
+    _print_coverage("Game O", o_cov["scored"], o_cov["supplied"],
+                    o_cov["expected"], o_cov["errors"])
+
     masked_groups = memon_grouping(masked_fragments, n_groups,
                                    variant=grouping_variant)
 
+    # Bug 11 fix: grouping must return exactly n_groups clusters.
+    # If it returns a different number, flag it rather than silently
+    # scoring an incompatible partition.
+    if len(masked_groups) != n_groups:
+        print(f"  [QUARANTINE] Game L: grouping returned {len(masked_groups)} groups, "
+              f"expected {n_groups} — cell is quarantined")
+
     # Convert masked IDs back to original IDs for scoring
     unmasked_groups = unmask_groups(masked_groups, id_map)
-    l_scores = score_linkage(unmasked_groups, true_groups)
+    all_ids = {f["fragment_id"] for f in fragments}
+    l_scores = score_linkage(unmasked_groups, true_groups,
+                             all_fragment_ids=all_ids)
+
+    # Item (a): coverage line for Game L
+    if l_scores["coverage"]:
+        cov = l_scores["coverage"]
+        _print_coverage("Game L", cov["unique"], cov["supplied"],
+                        cov["expected"], 0)
 
     return {
         "o_tau":       o_tau,
@@ -230,6 +306,10 @@ def eval_memon(fragments, true_order, true_groups, method: str,
         "l_precision": l_scores["precision"],
         "l_recall":    l_scores["recall"],
         "l_f1":        l_scores["f1"],
+        "l_floor":     l_scores["floor"]["f1"],
+        "o_scored":    o_cov["scored"],
+        "o_supplied":  o_cov["supplied"],
+        "o_expected":  o_cov["expected"],
     }
 
 
@@ -239,34 +319,72 @@ def eval_llm(true_order, true_groups, llm_order_path, llm_group_path) -> dict:
     """
     Load and score pre-computed LLM guesses.
     Gracefully handles missing files without crashing.
+
+    Bug 7 fix: the old version wrapped the entire Game O loop in one try block.
+    One malformed record raised an exception that aborted the loop, leaving
+    o_tau as NaN — indistinguishable from "no file found".  This version wraps
+    each record individually so good records are still scored.
+
+    Item (a): coverage line printed for both games.
+    Item (d): malformed / zero-answer counts appear in the coverage line,
+              not as a buried [warn] message.
     """
-    # Game O
-    o_tau = float("nan")
+    # ── Game O ────────────────────────────────────────────────────────────────
+    o_tau      = float("nan")
+    o_scored   = 0
+    o_supplied = 0
+    o_expected = len(true_order)
+    o_malformed = 0
+
     if llm_order_path.exists():
         try:
-            guesses = load_llm_ordering_guesses(llm_order_path)
-            taus    = []
+            guesses    = load_llm_ordering_guesses(llm_order_path)
+            o_supplied = len(guesses)
+            taus       = []
             for rec_id, guessed_order in guesses.items():
                 if rec_id not in true_order:
+                    o_malformed += 1
                     continue
-                r = score_ordering(guessed_order, true_order[rec_id])
-                if not np.isnan(r["tau"]):
-                    taus.append(r["tau"])
+                try:                                    # Bug 7 fix: per-record try
+                    r = score_ordering(guessed_order, true_order[rec_id])
+                    if not np.isnan(r["tau"]):
+                        taus.append(r["tau"])
+                    else:
+                        o_malformed += 1
+                except Exception as rec_err:
+                    o_malformed += 1                    # Item (d): count, not warn
+            o_scored = len(taus)
             if taus:
                 o_tau = float(np.mean(taus))
         except Exception as e:
-            print(f"  [warn] Error loading LLM ordering guesses: {e}")
-    # If file doesn't exist, silently skip (o_tau stays NaN)
+            print(f"  [warn] Error loading LLM ordering file: {e}")
 
-    # Game L
-    l_scores = {"precision": float("nan"), "recall": float("nan"), "f1": float("nan")}
+    # Item (a): coverage line — quarantine if scored < expected
+    _print_coverage("Game O", o_scored, o_supplied, o_expected, o_malformed)
+
+    # ── Game L ────────────────────────────────────────────────────────────────
+    l_scores = {
+        "precision": float("nan"), "recall": float("nan"),
+        "f1": float("nan"), "empty": True,
+        "coverage": None, "floor": {"f1": float("nan")},
+    }
+
     if llm_group_path.exists():
         try:
             llm_groups = load_llm_grouping_guesses(llm_group_path)
-            l_scores   = score_linkage(llm_groups, true_groups)
+            all_ids    = {fid for ids in true_groups.values() for fid in ids}
+            l_scores   = score_linkage(llm_groups, true_groups,
+                                       all_fragment_ids=all_ids)
         except Exception as e:
             print(f"  [warn] Error loading LLM grouping guesses: {e}")
-    # If file doesn't exist, silently skip (l_scores stay NaN)
+
+    # Item (a): coverage line for Game L
+    if l_scores["coverage"]:
+        cov = l_scores["coverage"]
+        _print_coverage("Game L", cov["unique"], cov["supplied"],
+                        cov["expected"], 0)
+    elif l_scores["empty"]:
+        print(f"  Game L coverage: no groups submitted")
 
     return {
         "o_tau":       o_tau,
@@ -274,6 +392,10 @@ def eval_llm(true_order, true_groups, llm_order_path, llm_group_path) -> dict:
         "l_precision": l_scores["precision"],
         "l_recall":    l_scores["recall"],
         "l_f1":        l_scores["f1"],
+        "l_floor":     l_scores["floor"]["f1"],
+        "o_scored":    o_scored,
+        "o_supplied":  o_supplied,
+        "o_expected":  o_expected,
     }
 
 
@@ -311,12 +433,13 @@ def print_comparison_table(results: dict, title: str, seed: int, n_runs: int) ->
     print('='*70)
     
     # Column widths
-    cw = [15, 24, 24, 10, 10, 10]
+    cw = [15, 24, 24, 10, 10, 10, 10]
     headers = [
         "Method",
         "Game O tau (mean+/-std)",
         "Game O tau +/-2sigma CI",
         "L: F1",
+        "L: floor",   # Item (c): trivial single-bucket floor alongside F1
         "L: P",
         "L: R",
     ]
@@ -349,9 +472,10 @@ def print_comparison_table(results: dict, title: str, seed: int, n_runs: int) ->
             name,
             tau_cell,
             ci_cell,
-            _f(r["l_f1"],        9).strip(),
-            _f(r["l_precision"], 9).strip(),
-            _f(r["l_recall"],    9).strip(),
+            _f(r["l_f1"],          9).strip(),
+            _f(r.get("l_floor", float("nan")), 9).strip(),
+            _f(r["l_precision"],   9).strip(),
+            _f(r["l_recall"],      9).strip(),
         ))
 
     print(hline())

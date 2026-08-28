@@ -18,3 +18,6 @@ results/grid/
 
 # Local drafts — meeting prep and outgoing comms, not project record
 docs/deliverables/week6_full_grid/
+
+# Local key backups — .env.bak is NOT matched by the .env rules above
+*.bak
