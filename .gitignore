@@ -21,3 +21,6 @@ docs/deliverables/week6_full_grid/
 
 # Local key backups — .env.bak is NOT matched by the .env rules above
 *.bak
+
+# Batch state and results — regenerate, do not version
+results/batches/

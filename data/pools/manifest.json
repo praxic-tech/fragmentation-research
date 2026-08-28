@@ -1,0 +1,25 @@
+{
+  "built_at": "2026-08-28T14:53:16.277237+00:00",
+  "seed": 42,
+  "source_answer_key": "data/prose/prose_answer_key.jsonl",
+  "source_sha256": "1a05fef47218e73b99d74c00ea76ba509d4d7760f76e74000d7f3b163811785c",
+  "n_documents": 500,
+  "n_fragments": 16524,
+  "pool_size": 7,
+  "n_pools": 71,
+  "documents_pooled": 497,
+  "documents_held_out": [
+    "prose_0012",
+    "prose_0057",
+    "prose_0327"
+  ],
+  "n_linkage_pools": 25,
+  "n_ordering_documents": 180,
+  "ordering_fragment_cap": 30,
+  "pool_floor_f1": {
+    "min": 0.25102697901632065,
+    "max": 0.5028789588935644,
+    "mean": 0.29627320413022695,
+    "worst_pool": "pool_037"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "n_pools": 25,
+  "seed": 42,
+  "pool_ids": [
+    "pool_000",
+    "pool_002",
+    "pool_004",
+    "pool_012",
+    "pool_013",
+    "pool_014",
+    "pool_016",
+    "pool_027",
+    "pool_033",
+    "pool_034",
+    "pool_036",
+    "pool_040",
+    "pool_042",
+    "pool_043",
+    "pool_044",
+    "pool_045",
+    "pool_046",
+    "pool_047",
+    "pool_049",
+    "pool_051",
+    "pool_055",
+    "pool_057",
+    "pool_060",
+    "pool_063",
+    "pool_068"
+  ]
+}

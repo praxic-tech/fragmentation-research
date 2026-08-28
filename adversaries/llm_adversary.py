@@ -54,8 +54,19 @@ DEFAULT_GROUP_OUT = os.path.join(ROOT, "results", "llm_grouping_guesses.jsonl")
 
 
 def make_client():
-    load_dotenv(os.path.join(ROOT, "apikey.env"))
-    return OpenAI(base_url=BASE_URL, api_key=os.environ["LLM_API_KEY"])
+    # .env is the file that actually exists at the repo root; apikey.env never
+    # did, so load_dotenv was a silent no-op and the bare subscript below raised
+    # KeyError before a single request went out. Same fallback as llm_cutter.py.
+    load_dotenv(os.path.join(ROOT, ".env"))
+    key = (os.environ.get("LLM_API_KEY")
+           or os.environ.get("ANTHROPIC_API_KEY")
+           or os.environ.get("API_KEY"))
+    if not key:
+        raise RuntimeError(
+            "No API key found. Set LLM_API_KEY, ANTHROPIC_API_KEY or API_KEY "
+            "in .env at the repo root."
+        )
+    return OpenAI(base_url=BASE_URL, api_key=key)
 
 
 # ── file helpers ────────────────────────────────────────────────────────────────
@@ -129,9 +140,27 @@ def call_model(client, prompt, model, temperature=DEFAULT_TEMPERATURE,
 
 # ── Game O: ordering ─────────────────────────────────────────────────────────────
 
-def guess_order(client, fragments, model, temperature=DEFAULT_TEMPERATURE):
-    alias = {f"item_{i}": frag["fragment_id"] for i, frag in enumerate(fragments)}
-    lines = "\n".join(f'item_{i}: {frag["text"]}' for i, frag in enumerate(fragments))
+def guess_order(client, fragments, model, temperature=DEFAULT_TEMPERATURE, seed=None):
+    """Ask the model to reconstruct the order of one record's fragments.
+
+    BUG 12. The fragments are SHUFFLED before they are aliased. They were not,
+    and prose_fragments.jsonl is written in true document order, so item_0 was
+    fragment 0 and item_1 was fragment 1 -- while the prompt told the model they
+    were shuffled. A model that echoed item_0, item_1, item_2... straight back
+    scored tau = 1.0 without reading a word. 23 of the 25 week-4 prose ordering
+    guesses are exactly sequential, so that tau was never a measurement of
+    reconstruction. guess_groups_global below had shuffled all along, with the
+    comment "no positional leak"; it was simply never applied here.
+
+    The shuffle uses an explicit random.Random(seed) instance rather than the
+    global module, so a caller seeding the global RNG for its own purposes
+    cannot perturb the presentation order, or be perturbed by it.
+    """
+    shuffled = list(fragments)
+    random.Random(seed).shuffle(shuffled)
+
+    alias = {f"item_{i}": frag["fragment_id"] for i, frag in enumerate(shuffled)}
+    lines = "\n".join(f'item_{i}: {frag["text"]}' for i, frag in enumerate(shuffled))
     prompt = (
         "These fragments are pieces of ONE record, shuffled. "
         "Put them back in their most likely original order.\n\n"
