@@ -119,29 +119,44 @@ def unmask_groups(groups: dict, id_map: dict) -> dict:
 
 
 # ════════════════════════════════════════════════════════════════════════════════
-# Coverage reporting helper
+# Cell status constants and coverage reporting
 # ════════════════════════════════════════════════════════════════════════════════
 
-def _print_coverage(game: str, scored: int, supplied: int,
-                    expected: int, malformed: int) -> None:
-    """
-    Print a coverage line for one game in one cell.
+# Three distinct LLM cell states carried in every return dict so run_grid.py
+# can branch on them without parsing stdout.
+STATUS_NOT_SUBMITTED = "not_submitted"   # file never existed
+STATUS_LOAD_FAILED   = "load_failed"     # file exists but threw on load
+STATUS_SCORED        = "scored"          # loaded and scored (may be quarantined)
 
-    Item (a): every score must show scored / supplied / expected so that
-    bugs 1, 8, and 10 (fragments missing, records dropped, errors swallowed)
-    are immediately visible.  Any cell where scored < expected is quarantined
-    with a clear marker so it does not silently pollute the grid results.
 
-    Format:
-        Game O coverage: scored=50/50/50  malformed=0          <- healthy
-        [QUARANTINE] Game O: scored=48/50/50  malformed=2      <- needs review
+def _coverage_line(game: str, scored: int, supplied: int,
+                   expected: int, malformed: int,
+                   partition_valid: bool = True,
+                   status: str = STATUS_SCORED) -> tuple:
     """
-    tag    = f"  {game} coverage:"
-    detail = f"scored={scored}/{supplied}/{expected}  malformed={malformed}"
-    if scored < expected or malformed > 0:
-        print(f"  [QUARANTINE] {game}: {detail}")
-    else:
-        print(f"{tag} {detail}")
+    Build the coverage line string and a quarantine bool for one game.
+
+    Returns (line: str, quarantined: bool).
+
+    Issue 2 fix: three distinct states produce three distinct messages.
+      not_submitted -> informational only, never quarantined by itself.
+      load_failed   -> always quarantined.
+      scored        -> quarantined only when coverage is actually bad.
+
+    Issue 3 fix: partition_valid=False triggers quarantine even when
+      unique == expected (duplicates that cancel with extras).
+    """
+    if status == STATUS_NOT_SUBMITTED:
+        return f"  {game}: not submitted", False
+    if status == STATUS_LOAD_FAILED:
+        return f"  [QUARANTINE] {game}: file load failed", True
+    # status == STATUS_SCORED
+    detail   = f"scored={scored}/{supplied}/{expected}  malformed={malformed}"
+    bad      = scored < expected or malformed > 0 or not partition_valid
+    dup_note = "" if partition_valid else "  partition_valid=False"
+    if bad:
+        return f"  [QUARANTINE] {game}: {detail}{dup_note}", True
+    return f"  {game} coverage: {detail}", False
 
 
 # ════════════════════════════════════════════════════════════════════════════════
@@ -150,33 +165,21 @@ def _print_coverage(game: str, scored: int, supplied: int,
 
 def _avg_ordering_tau(fragments, true_order, order_fn) -> dict:
     """
-    Run order_fn on each record, compute per-record Kendall's tau,
-    return a coverage dict.
+    Run order_fn on each record, compute per-record Kendall's tau.
 
-    Bug 10 fix: the old version had a bare `except: continue` that silently
-    swallowed errors and id-set mismatches, so "mean tau 0.70" could be the
-    mean over 500 records or over 12, with no way to tell.  This version
-    tracks every skip and error and returns them alongside the mean so the
-    caller can print the coverage line and quarantine cells where
-    scored < expected.
+    Bug 10 fix: old version had a bare except that silently swallowed errors
+    and id-set mismatches, so "mean tau 0.70" could be the mean over 500
+    records or over 12 with no way to tell. This version tracks every skip
+    and error and returns them alongside the mean so the caller can print
+    the coverage line and quarantine cells where scored < expected.
 
     Returns:
-        {
-            "tau":      float,   # mean tau, or nan if nothing was scored
-            "scored":   int,     # records that produced a valid tau
-            "supplied": int,     # records handed to this function
-            "expected": int,     # records in true_order
-            "skipped":  int,     # id-set mismatches or nan tau
-            "errors":   int,     # exceptions raised by order_fn or score_ordering
-        }
+        {"tau", "scored", "supplied", "expected", "skipped", "errors"}
     """
     grouped  = group_fragments_by_record(fragments)
     taus     = []
     skipped  = 0
     errors   = 0
-    supplied = len(grouped)
-    expected = len(true_order)
-
     for rec_id, frag_ids in grouped.items():
         try:
             guess = order_fn(frag_ids)
@@ -190,12 +193,11 @@ def _avg_ordering_tau(fragments, true_order, order_fn) -> dict:
                 skipped += 1
         except Exception:
             errors += 1
-
     return {
         "tau":      float(np.mean(taus)) if taus else float("nan"),
         "scored":   len(taus),
-        "supplied": supplied,
-        "expected": expected,
+        "supplied": len(grouped),
+        "expected": len(true_order),
         "skipped":  skipped,
         "errors":   errors,
     }
@@ -273,43 +275,62 @@ def eval_memon(fragments, true_order, true_groups, method: str,
 
     o_cov = _avg_ordering_tau(fragments, true_order, order_fn=order_fn)
     o_tau = o_cov["tau"]
-
-    # Item (a): coverage line for Game O
-    _print_coverage("Game O", o_cov["scored"], o_cov["supplied"],
-                    o_cov["expected"], o_cov["errors"])
+    o_line, o_q = _coverage_line(
+        "Game O", o_cov["scored"], o_cov["supplied"],
+        o_cov["expected"], o_cov["errors"], status=STATUS_SCORED)
+    print(o_line)
 
     masked_groups = memon_grouping(masked_fragments, n_groups,
                                    variant=grouping_variant)
+    # Bug 11 fix: validate grouping returned exactly the requested count
+    count_ok = len(masked_groups) == n_groups
+    if not count_ok:
+        print(f"  [QUARANTINE] Game L: grouping returned {len(masked_groups)} "
+              f"groups, expected {n_groups}")
 
-    # Bug 11 fix: grouping must return exactly n_groups clusters.
-    # If it returns a different number, flag it rather than silently
-    # scoring an incompatible partition.
-    if len(masked_groups) != n_groups:
-        print(f"  [QUARANTINE] Game L: grouping returned {len(masked_groups)} groups, "
-              f"expected {n_groups} — cell is quarantined")
-
-    # Convert masked IDs back to original IDs for scoring
     unmasked_groups = unmask_groups(masked_groups, id_map)
-    all_ids = {f["fragment_id"] for f in fragments}
+    all_ids  = {f["fragment_id"] for f in fragments}
     l_scores = score_linkage(unmasked_groups, true_groups,
                              all_fragment_ids=all_ids)
 
-    # Item (a): coverage line for Game L
-    if l_scores["coverage"]:
-        cov = l_scores["coverage"]
-        _print_coverage("Game L", cov["unique"], cov["supplied"],
-                        cov["expected"], 0)
+    # Issue 1 fix: extract l_coverage fields into return dict
+    l_cov        = l_scores.get("coverage") or {}
+    l_scored     = l_cov.get("unique", 0)
+    l_supplied   = l_cov.get("supplied", 0)
+    l_expected   = len(all_ids)
+    l_valid      = l_cov.get("valid", True)
+    l_duplicates = l_cov.get("duplicates", 0)
+    l_missing    = l_cov.get("missing", 0)
+
+    l_line, l_q = _coverage_line(
+        "Game L", l_scored, l_supplied, l_expected, 0,
+        partition_valid=l_valid,   # Issue 3 fix
+        status=STATUS_SCORED)
+    print(l_line)
+    if not count_ok:
+        l_q = True
+
+    quarantine_reasons = (
+        (["game_o_coverage"] if o_q else []) +
+        (["game_l_coverage"] if l_q else []) +
+        (["game_l_count_mismatch"] if not count_ok else [])
+    )
 
     return {
-        "o_tau":       o_tau,
-        "o_tau_std":   float("nan"),
+        "o_tau":       o_tau,  "o_tau_std":   float("nan"),
+        "o_status":    STATUS_SCORED,
+        "o_scored":    o_cov["scored"],   "o_supplied": o_cov["supplied"],
+        "o_expected":  o_cov["expected"],
         "l_precision": l_scores["precision"],
         "l_recall":    l_scores["recall"],
         "l_f1":        l_scores["f1"],
         "l_floor":     l_scores["floor"]["f1"],
-        "o_scored":    o_cov["scored"],
-        "o_supplied":  o_cov["supplied"],
-        "o_expected":  o_cov["expected"],
+        "l_status":    STATUS_SCORED,
+        "l_scored":    l_scored,   "l_supplied":  l_supplied,
+        "l_expected":  l_expected, "l_valid":     l_valid,
+        "l_duplicates": l_duplicates, "l_missing": l_missing,
+        "quarantined":       len(quarantine_reasons) > 0,
+        "quarantine_reasons": quarantine_reasons,
     }
 
 
@@ -318,84 +339,101 @@ def eval_memon(fragments, true_order, true_groups, method: str,
 def eval_llm(true_order, true_groups, llm_order_path, llm_group_path) -> dict:
     """
     Load and score pre-computed LLM guesses.
-    Gracefully handles missing files without crashing.
 
-    Bug 7 fix: the old version wrapped the entire Game O loop in one try block.
-    One malformed record raised an exception that aborted the loop, leaving
-    o_tau as NaN — indistinguishable from "no file found".  This version wraps
-    each record individually so good records are still scored.
-
-    Item (a): coverage line printed for both games.
-    Item (d): malformed / zero-answer counts appear in the coverage line,
-              not as a buried [warn] message.
+    Bug 7 fix:    per-record try for Game O so one bad record cannot abort
+                  the whole scoring loop.
+    Issue 2 fix:  three distinct cell states (not_submitted / load_failed /
+                  scored) carried in the return dict so run_grid.py can
+                  distinguish "batch hasn't landed yet" from "landed broken".
+    Issue 1 fix:  l_coverage fields (l_scored, l_supplied, l_expected,
+                  l_valid, l_duplicates, l_missing) included in return dict.
+    Issue 3 fix:  partition_valid=False gates quarantine, not just counts.
     """
+    quarantine_reasons = []
+
     # ── Game O ────────────────────────────────────────────────────────────────
+    o_status   = STATUS_NOT_SUBMITTED
     o_tau      = float("nan")
-    o_scored   = 0
-    o_supplied = 0
+    o_scored   = 0; o_supplied = 0; o_malformed = 0
     o_expected = len(true_order)
-    o_malformed = 0
 
     if llm_order_path.exists():
+        o_status = STATUS_LOAD_FAILED          # pessimistic until success
         try:
             guesses    = load_llm_ordering_guesses(llm_order_path)
+            o_status   = STATUS_SCORED
             o_supplied = len(guesses)
             taus       = []
             for rec_id, guessed_order in guesses.items():
                 if rec_id not in true_order:
-                    o_malformed += 1
-                    continue
-                try:                                    # Bug 7 fix: per-record try
+                    o_malformed += 1; continue
+                try:                            # Bug 7 fix: per-record try
                     r = score_ordering(guessed_order, true_order[rec_id])
-                    if not np.isnan(r["tau"]):
-                        taus.append(r["tau"])
-                    else:
-                        o_malformed += 1
-                except Exception as rec_err:
-                    o_malformed += 1                    # Item (d): count, not warn
+                    if not np.isnan(r["tau"]): taus.append(r["tau"])
+                    else: o_malformed += 1
+                except Exception:
+                    o_malformed += 1
             o_scored = len(taus)
-            if taus:
-                o_tau = float(np.mean(taus))
+            if taus: o_tau = float(np.mean(taus))
         except Exception as e:
-            print(f"  [warn] Error loading LLM ordering file: {e}")
+            print(f"  [warn] Game O file load failed: {e}")
+            # o_status stays STATUS_LOAD_FAILED
 
-    # Item (a): coverage line — quarantine if scored < expected
-    _print_coverage("Game O", o_scored, o_supplied, o_expected, o_malformed)
+    o_line, o_q = _coverage_line("Game O", o_scored, o_supplied, o_expected,
+                                  o_malformed, status=o_status)
+    print(o_line)
+    if o_q: quarantine_reasons.append("game_o_coverage")
 
     # ── Game L ────────────────────────────────────────────────────────────────
+    l_status = STATUS_NOT_SUBMITTED
     l_scores = {
         "precision": float("nan"), "recall": float("nan"),
-        "f1": float("nan"), "empty": True,
-        "coverage": None, "floor": {"f1": float("nan")},
+        "f1":        float("nan"), "empty": True,
+        "coverage":  None,         "floor": {"f1": float("nan")},
     }
 
     if llm_group_path.exists():
+        l_status = STATUS_LOAD_FAILED          # pessimistic until success
         try:
             llm_groups = load_llm_grouping_guesses(llm_group_path)
+            l_status   = STATUS_SCORED
             all_ids    = {fid for ids in true_groups.values() for fid in ids}
             l_scores   = score_linkage(llm_groups, true_groups,
                                        all_fragment_ids=all_ids)
         except Exception as e:
-            print(f"  [warn] Error loading LLM grouping guesses: {e}")
+            print(f"  [warn] Game L file load failed: {e}")
 
-    # Item (a): coverage line for Game L
-    if l_scores["coverage"]:
-        cov = l_scores["coverage"]
-        _print_coverage("Game L", cov["unique"], cov["supplied"],
-                        cov["expected"], 0)
-    elif l_scores["empty"]:
-        print(f"  Game L coverage: no groups submitted")
+    # Issue 1 fix: extract l_coverage into return dict
+    l_cov      = l_scores.get("coverage") or {}
+    l_scored   = l_cov.get("unique", 0)
+    l_supplied = l_cov.get("supplied", 0)
+    l_expected = sum(len(ids) for ids in true_groups.values())
+    l_valid    = l_cov.get("valid", True)
+    l_dup      = l_cov.get("duplicates", 0)
+    l_missing  = l_cov.get("missing", 0)
+
+    l_line, l_q = _coverage_line(
+        "Game L", l_scored, l_supplied, l_expected, 0,
+        partition_valid=l_valid,   # Issue 3 fix
+        status=l_status)
+    print(l_line)
+    if l_q: quarantine_reasons.append("game_l_coverage")
 
     return {
-        "o_tau":       o_tau,
-        "o_tau_std":   float("nan"),
+        "o_tau":      o_tau,  "o_tau_std":  float("nan"),
+        "o_status":   o_status,
+        "o_scored":   o_scored,   "o_supplied": o_supplied,
+        "o_expected": o_expected,
         "l_precision": l_scores["precision"],
         "l_recall":    l_scores["recall"],
         "l_f1":        l_scores["f1"],
         "l_floor":     l_scores["floor"]["f1"],
-        "o_scored":    o_scored,
-        "o_supplied":  o_supplied,
-        "o_expected":  o_expected,
+        "l_status":    l_status,
+        "l_scored":    l_scored,   "l_supplied": l_supplied,
+        "l_expected":  l_expected, "l_valid":    l_valid,
+        "l_duplicates": l_dup,     "l_missing":  l_missing,
+        "quarantined":       len(quarantine_reasons) > 0,
+        "quarantine_reasons": quarantine_reasons,
     }
 
 
@@ -439,7 +477,7 @@ def print_comparison_table(results: dict, title: str, seed: int, n_runs: int) ->
         "Game O tau (mean+/-std)",
         "Game O tau +/-2sigma CI",
         "L: F1",
-        "L: floor",   # Item (c): trivial single-bucket floor alongside F1
+        "L: floor",
         "L: P",
         "L: R",
     ]
@@ -472,10 +510,10 @@ def print_comparison_table(results: dict, title: str, seed: int, n_runs: int) ->
             name,
             tau_cell,
             ci_cell,
-            _f(r["l_f1"],          9).strip(),
-            _f(r.get("l_floor", float("nan")), 9).strip(),
-            _f(r["l_precision"],   9).strip(),
-            _f(r["l_recall"],      9).strip(),
+            _f(r["l_f1"],                        9).strip(),
+            _f(r.get("l_floor", float("nan")),   9).strip(),
+            _f(r["l_precision"],                 9).strip(),
+            _f(r["l_recall"],                    9).strip(),
         ))
 
     print(hline())
@@ -516,12 +554,16 @@ def evaluate_dataset(fragments_path, answer_key_path, llm_order_path, llm_group_
     o_taus, l_ps, l_rs, l_fs = eval_random(
         fragments, true_order, true_groups, args.runs
     )
+    from scoring import trivial_floor as _trivial_floor
     results["Random"] = {
         "o_tau":       float(o_taus.mean()),
         "o_tau_std":   float(o_taus.std(ddof=1)),
         "l_precision": float(l_ps.mean()),
         "l_recall":    float(l_rs.mean()),
         "l_f1":        float(l_fs.mean()),
+        "l_floor":     _trivial_floor(true_groups)["f1"],  # Item (c)
+        "quarantined": False,
+        "quarantine_reasons": [],
     }
     print(f"  Game O tau : {o_taus.mean():+.4f} +- {o_taus.std(ddof=1):.4f}"
           f"   2sigma CI [{o_taus.mean()-2*o_taus.std(ddof=1):+.4f},"

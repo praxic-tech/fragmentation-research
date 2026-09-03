@@ -27,12 +27,17 @@ Usage (from the repo root):
 import argparse
 import json
 import os
+import sys
 import random
 import re
 import time
 
 from dotenv import load_dotenv
 from openai import OpenAI
+
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(
+    os.path.abspath(__file__))), "harness"))
+from masking import preflight, preflight_summary   # noqa: E402
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))   # adversaries/
 ROOT     = os.path.dirname(BASE_DIR)                    # repo root
@@ -42,6 +47,10 @@ ROOT     = os.path.dirname(BASE_DIR)                    # repo root
 # To switch to Groq: BASE_URL = "https://api.groq.com/openai/v1"
 #                    DEFAULT_MODEL = "llama-3.3-70b-versatile"
 #                    DEFAULT_TEMPERATURE = 0.0
+PROVIDERS = {
+    "anthropic": ("https://api.anthropic.com/v1/", "claude-sonnet-5"),
+    "groq":      ("https://api.groq.com/openai/v1", "openai/gpt-oss-120b"),
+}
 BASE_URL            = "https://api.anthropic.com/v1/"
 DEFAULT_MODEL       = "claude-sonnet-5"
 DEFAULT_TEMPERATURE = None   # claude-sonnet-5 rejects the temperature parameter
@@ -53,7 +62,7 @@ DEFAULT_ORDER_OUT = os.path.join(ROOT, "results", "llm_ordering_guesses.jsonl")
 DEFAULT_GROUP_OUT = os.path.join(ROOT, "results", "llm_grouping_guesses.jsonl")
 
 
-def make_client():
+def make_client(provider="anthropic"):
     # .env is the file that actually exists at the repo root; apikey.env never
     # did, so load_dotenv was a silent no-op and the bare subscript below raised
     # KeyError before a single request went out. Same fallback as llm_cutter.py.
@@ -66,7 +75,10 @@ def make_client():
             "No API key found. Set LLM_API_KEY, ANTHROPIC_API_KEY or API_KEY "
             "in .env at the repo root."
         )
-    return OpenAI(base_url=BASE_URL, api_key=key)
+    base = PROVIDERS.get(provider, (BASE_URL, DEFAULT_MODEL))[0]
+    if provider == "groq":
+        key = os.environ.get("GROQ_API_KEY") or key
+    return OpenAI(base_url=base, api_key=key)
 
 
 # ── file helpers ────────────────────────────────────────────────────────────────
@@ -167,6 +179,7 @@ def guess_order(client, fragments, model, temperature=DEFAULT_TEMPERATURE, seed=
         "Fragments:\n" + lines +
         "\n\nReturn ONLY a JSON array of the item labels in your best order."
     )
+    preflight(prompt, where="guess_order prompt")
     guessed = call_model(client, prompt, model, temperature=temperature)
     return [alias.get(label, label) for label in guessed]
 
@@ -180,8 +193,18 @@ def repair_partition(groups, all_ids):
     seen    = set()
     cleaned = []
     for group in groups:
-        deduped = [x for x in group if x in valid and x not in seen]
-        seen.update(deduped)
+        # `seen` must be updated INSIDE the loop. Building the list first and
+        # calling seen.update() afterwards let a fragment repeated within a
+        # SINGLE group pass the `not in seen` test twice, so both copies
+        # survived and the returned partition was invalid despite this
+        # function existing to guarantee it. Cross-group duplicates were caught;
+        # same-group ones were not. Found by scoring.check_partition on 3 of 9
+        # pools.
+        deduped = []
+        for x in group:
+            if x in valid and x not in seen:
+                deduped.append(x)
+                seen.add(x)
         if deduped:
             cleaned.append(deduped)
     for fragment_id in all_ids:
@@ -192,9 +215,9 @@ def repair_partition(groups, all_ids):
 
 
 def guess_groups_global(client, fragments, n_records, model,
-                        temperature=DEFAULT_TEMPERATURE):
+                        temperature=DEFAULT_TEMPERATURE, seed=None):
     pool = fragments[:]
-    random.shuffle(pool)
+    random.Random(seed).shuffle(pool)   # explicit instance, not the global RNG
     alias = {f"item_{i}": frag["fragment_id"] for i, frag in enumerate(pool)}
     lines = "\n".join(f'item_{i}: {frag["text"]}' for i, frag in enumerate(pool))
     prompt = (
@@ -205,8 +228,14 @@ def guess_groups_global(client, fragments, n_records, model,
         f"\n\nReturn ONLY a JSON array of {n_records} arrays, each an array of the "
         "item labels that belong to one record. No explanation, no markdown."
     )
+    preflight(prompt, where="guess_groups_global prompt")
+    # Size the output cap to the answer, do not reserve a flat 16k. Providers
+    # count the RESERVATION against tokens-per-minute, so a fixed cap made a
+    # pool of three documents fail a rate limit it was nowhere near using: the
+    # answer is a few hundred tokens of labels, the reservation was 16,000.
+    max_tokens = max(1024, min(16000, len(pool) * 40 + 256))
     guessed    = call_model(client, prompt, model, temperature=temperature,
-                            max_tokens=16000)
+                            max_tokens=max_tokens)
     translated = [[alias.get(label, label) for label in group] for group in guessed]
     all_ids    = [frag["fragment_id"] for frag in fragments]
     return repair_partition(translated, all_ids)
@@ -221,29 +250,114 @@ def group_by_record(fragments):
     return by_record
 
 
-def run_ordering(client, by_record, record_ids, model, temperature, order_path):
-    already_done = {row["record_id"] for row in load_jsonl(order_path)}
+def run_ordering(client, by_record, record_ids, model, temperature, order_path,
+                 seed=None):
+    # Count, do not just set-ify: two runs appending to the same file (a resume
+    # started while the first process is still alive) produce byte-identical
+    # duplicate lines that no value check can detect. Only the count shows it,
+    # and a duplicate silently doubles that document's weight in the mean.
+    existing = load_jsonl(order_path)
+    already_done = {row["record_id"] for row in existing}
+    if len(existing) != len(already_done):
+        import collections
+        dups = {k: v for k, v in
+                collections.Counter(r["record_id"] for r in existing).items() if v > 1}
+        raise SystemExit(
+            f"{order_path} has {len(existing)} lines for {len(already_done)} "
+            f"records — duplicates: {dups}\n"
+            "  Two runs wrote to this file. Deduplicate it before scoring; the "
+            "mean over it is wrong until you do."
+        )
+    failed = []
     for record_id in record_ids:
         if record_id in already_done:
             continue
         fragments = by_record[record_id]
-        order     = guess_order(client, fragments, model, temperature=temperature)
+        try:
+            order = guess_order(client, fragments, model, temperature=temperature,
+                                seed=seed)
+        except Exception as err:
+            # One document over the rate-limit ceiling must not take the other
+            # ten down with it. Skipped records stay absent from the output file,
+            # so a later pass retries them and the coverage line counts them.
+            failed.append(record_id)
+            print(f"  [skip] {record_id} ({len(fragments)} frags): "
+                  f"{str(err)[:110]}")
+            continue
         append_jsonl({"record_id": record_id, "guessed_order": order}, order_path)
-        print(f"order {record_id} ({len(fragments)} frags): {order}")
+        print(f"  order {record_id}: {len(fragments)} frags -> guessed")
+    _ordering_done(failed, record_ids, already_done)
 
 
-def run_grouping(client, fragments, n_records, model, temperature, group_path):
-    if os.path.exists(group_path):
-        print(f"grouping already exists ({os.path.basename(group_path)}) — skipping.")
-        return
-    print("running global grouping (one large call, give it a moment)...")
-    groups = guess_groups_global(client, fragments, n_records, model,
-                                 temperature=temperature)
-    # harness schema: {"groups": {"0": [...], "1": [...], ...}}
-    row = {"groups": {str(i): group for i, group in enumerate(groups)}}
-    append_jsonl(row, group_path)
-    print(f"grouping: {len(groups)} groups over {len(fragments)} fragments "
-          f"-> {os.path.basename(group_path)}")
+def _ordering_done(failed, record_ids, already_done):
+    n_new = len(record_ids) - len(already_done) - len(failed)
+    print(f"  ordering: {n_new} new, {len(already_done)} cached, "
+          f"{len(failed)} skipped of {len(record_ids)} documents")
+    if failed:
+        print(f"  skipped: {', '.join(failed)} — re-run to retry")
+    print(preflight_summary())
+
+
+def run_grouping(client, fragments, n_records, model, temperature, group_path,
+                 seed=None, pool_size=None):
+    """Game L, either globally or one pool at a time.
+
+    pool_size exists because a whole cell in a single prompt is not answerable:
+    calibration showed 10 full-length documents already blowing past 48,000
+    output tokens, and a free tier caps a single request far below that. It is
+    also what the real run does everywhere — pools of 7, fixed, because pool size
+    sets the random floor and a floor that moves between cells makes the cells
+    incomparable.
+
+    Each pool is scored as its own observation, so the output is one row per
+    pool rather than one row for the cell.
+    """
+    # Resume per POOL, not per file. Skipping the whole file when it exists was
+    # correct while Game L was one global call; with pools it silently freezes a
+    # partial run, so a cell that lost three pools to a rate limit could never
+    # recover them and would be scored on whatever happened to land.
+    existing = load_jsonl(group_path)
+    done_pools = {row.get("pool_id") for row in existing}
+    if len(existing) != len(done_pools):
+        raise SystemExit(
+            f"{group_path} has {len(existing)} rows for {len(done_pools)} pools — "
+            "duplicates. Deduplicate before scoring."
+        )
+
+    by_record = group_by_record(fragments)
+    record_ids = sorted(by_record)
+
+    if not pool_size:
+        pools = [record_ids]
+    else:
+        pools = [record_ids[i:i + pool_size]
+                 for i in range(0, len(record_ids), pool_size)]
+
+    print(f"running grouping: {len(pools)} pool(s) of up to "
+          f"{pool_size or len(record_ids)} documents")
+    failed = []
+    for pi, members in enumerate(pools):
+        if f"pool_{pi:02d}" in done_pools:
+            continue
+        pool_frags = [f for rid in members for f in by_record[rid]]
+        try:
+            groups = guess_groups_global(client, pool_frags, len(members), model,
+                                         temperature=temperature, seed=seed)
+        except Exception as err:
+            failed.append(f"pool_{pi:02d}")
+            print(f"  [skip] pool_{pi:02d} ({len(pool_frags)} frags): "
+                  f"{str(err)[:110]}")
+            continue
+        append_jsonl({
+            "pool_id": f"pool_{pi:02d}",
+            "members": members,
+            "n_fragments": len(pool_frags),
+            "groups": {str(i): g for i, g in enumerate(groups)},
+        }, group_path)
+        print(f"  pool_{pi:02d}: {len(members)} docs, {len(pool_frags)} frags "
+              f"-> {len(groups)} groups")
+    print(f"  grouping: {len(pools) - len(failed) - len(done_pools) if False else len(load_jsonl(group_path))}/{len(pools)} pools scored"
+          + (f", skipped {', '.join(failed)}" if failed else ""))
 
 
 def parse_args():
@@ -256,14 +370,25 @@ def parse_args():
                         help="output file for ordering guesses (.jsonl)")
     parser.add_argument("--group-out",  default=DEFAULT_GROUP_OUT,
                         help="output file for the grouping guess (.jsonl)")
-    parser.add_argument("--model",      default=DEFAULT_MODEL,
-                        help="model name (change for the model sweep)")
+    parser.add_argument("--model",      default=None,
+                        help="model name; defaults to the provider's model")
+    parser.add_argument("--provider",   default="anthropic", choices=list(PROVIDERS),
+                        help="groq is the free-tier option")
+    parser.add_argument("--seed",       type=int, default=None,
+                        help="seed for the presentation shuffle (bug 12)")
+    parser.add_argument("--pool-size", type=int, default=None,
+                        help="run Game L per pool of N documents instead of "
+                             "one global call; required on a rate-limited tier")
+    parser.add_argument("--skip-grouping", action="store_true",
+                        help="Game O only — Game L over a whole cell can exceed "
+                             "a free tier's tokens-per-minute ceiling")
     return parser.parse_args()
 
 
 def main():
     args   = parse_args()
-    client = make_client()
+    client = make_client(args.provider)
+    model  = args.model or PROVIDERS[args.provider][1]
 
     # CLI paths are taken as given (relative to the current working directory);
     # only the defaults are anchored to the repo root.
@@ -278,10 +403,15 @@ def main():
     by_record  = group_by_record(fragments)
     record_ids = sorted(by_record)
 
-    run_ordering(client, by_record, record_ids, args.model, DEFAULT_TEMPERATURE,
-                 order_path)
-    run_grouping(client, fragments, len(record_ids), args.model, DEFAULT_TEMPERATURE,
-                 group_path)
+    print(f"[adversary] provider={args.provider} model={model} "
+          f"records={len(record_ids)}")
+    run_ordering(client, by_record, record_ids, model, DEFAULT_TEMPERATURE,
+                 order_path, seed=args.seed)
+    if args.skip_grouping:
+        print("\n[Game L skipped]")
+    else:
+        run_grouping(client, fragments, len(record_ids), model, DEFAULT_TEMPERATURE,
+                     group_path, seed=args.seed, pool_size=args.pool_size)
 
     print("\ndone.")
 

@@ -1,13 +1,12 @@
 """
 scoring.py — Game O and Game L scoring functions.
 
-Fixed in week 6:
-  Bug 8:  score_linkage now takes all_fragment_ids and returns a coverage report.
-          Missing/extra/duplicate fragments are caught before scoring, not after.
-  Bug 9:  empty guess (no groups at all) returns nan, not 0.0, so it is
-          distinguishable from a guess that was present but wrong.
-  (b):    check_partition validates guessed groups are an exact partition.
-  (c):    trivial_floor computes the F1 a single-bucket strategy would achieve,
+Changes from original (week 6):
+  Bug 8:  score_linkage now accepts all_fragment_ids and returns a coverage
+          report. Missing/extra/duplicate fragments are caught before scoring.
+  Bug 9:  empty guess returns NaN, not 0.0 — distinguishable from a wrong answer.
+  (b):    check_partition validates guessed_groups is an exact partition.
+  (c):    trivial_floor computes the F1 a single-bucket strategy achieves,
           so every linkage score has its floor printed alongside it.
 """
 
@@ -28,9 +27,16 @@ def score_ordering(guessed_order: list, true_order: list) -> dict:
     For single-element sequences scipy returns nan; callers should skip those.
     Raises ValueError if the fragment ID sets do not match.
     """
-    if set(guessed_order) != set(true_order):
+    # Length as well as set. A guess that repeats one label and omits none has
+    # the same SET as the truth but a different LENGTH, so a set-only check
+    # passes it through and scipy then dies on "Array shapes are incompatible
+    # for broadcasting" — a crash, not a scored result. Observed on real LLM
+    # ordering output, where repeated labels are a normal failure mode.
+    if len(guessed_order) != len(true_order) or set(guessed_order) != set(true_order):
         raise ValueError(
-            "guessed_order and true_order must contain the same fragment IDs"
+            f"guessed_order and true_order must contain the same fragment IDs "
+            f"exactly once each (got {len(guessed_order)} ids, "
+            f"{len(set(guessed_order))} distinct; expected {len(true_order)})"
         )
 
     true_rank     = {fid: i for i, fid in enumerate(true_order)}
@@ -57,15 +63,14 @@ def _pairs_from_groups(groups: dict) -> set:
 
 def trivial_floor(true_groups: dict) -> dict:
     """
-    F1 / precision / recall you would get by putting ALL fragments into one
-    single cluster — the dumbest possible strategy.
+    F1 / precision / recall of putting ALL fragments into one single cluster.
 
     This is the minimum bar any grouping method must clear to be doing
-    something useful.  An f1 without this floor is uninterpretable: 0.05 is
+    something useful. An F1 without this floor is uninterpretable: 0.05 is
     excellent at 500-way grouping and worthless at 7-way.
 
-    Recall is always 1.0 for a single-bucket (every true pair is inside it).
-    Precision is true_pairs / all_pairs.
+    Recall is always 1.0 for a single bucket (every true pair is inside it).
+    Precision equals true_pairs / all_pairs.
     """
     group_sizes      = [len(ids) for ids in true_groups.values()]
     N                = sum(group_sizes)
@@ -77,7 +82,7 @@ def trivial_floor(true_groups: dict) -> dict:
         return {"precision": 0.0, "recall": 1.0, "f1": 0.0}
     prec = true_pairs_count / all_pairs_count
     rec  = 1.0
-    f1   = 2 * prec / (prec + 1.0)   # = 2*p*1 / (p+1)
+    f1   = 2 * prec / (prec + 1.0)
     return {"precision": prec, "recall": rec, "f1": f1}
 
 
@@ -86,23 +91,21 @@ def check_partition(guessed_groups: dict, all_fragment_ids: set) -> dict:
     Verify that guessed_groups is an exact partition of all_fragment_ids.
 
     Returns a coverage report:
-        supplied   — total fragment slots in guessed_groups (counting duplicates)
+        supplied   — total fragment slots (counting duplicates)
         expected   — len(all_fragment_ids)
-        unique     — distinct fragment IDs seen in guessed_groups
-        duplicates — fragment IDs appearing more than once
+        unique     — distinct fragment IDs in guessed_groups
+        duplicates — IDs appearing more than once
         missing    — IDs in all_fragment_ids but absent from guessed_groups
         extra      — IDs in guessed_groups but not in all_fragment_ids
-        valid      — True only if partition is exact (no duplicates, missing, extra)
+        valid      — True only when partition is exact
     """
     guessed_ids = []
     for ids in guessed_groups.values():
         guessed_ids.extend(ids)
-
     guessed_set = set(guessed_ids)
     duplicates  = len(guessed_ids) - len(guessed_set)
     missing     = all_fragment_ids - guessed_set
     extra       = guessed_set - all_fragment_ids
-
     return {
         "supplied":   len(guessed_ids),
         "expected":   len(all_fragment_ids),
@@ -123,11 +126,11 @@ def score_linkage(
     Pair-based precision / recall / F1 for a grouping guess.
 
     Both arguments: {any_key: [fragment_ids]}.
-    The keys don't need to match; only co-membership matters.
+    Keys don't need to match; only co-membership matters.
 
-    all_fragment_ids (optional): the complete set of fragment IDs that should
-        appear in guessed_groups.  When supplied, a coverage check is run and
-        its report is included in the return value under "coverage".
+    all_fragment_ids (optional): complete set of fragment IDs that should appear
+        in guessed_groups. When supplied, a coverage check is run and its report
+        is included in the return value under "coverage".
 
     Returns:
         {
@@ -137,28 +140,21 @@ def score_linkage(
             "floor":     dict,          # trivial single-bucket floor
         }
 
-    Bug 9 fix: an empty guess returns NaN for all three metrics, not 0.0.
-        0.0 is a valid score (guessed everything wrong); NaN means "no answer
-        was submitted", which must be represented differently.
-
-    Bug 8 fix: when all_fragment_ids is provided, the coverage check catches
-        missing / duplicated / extra fragments before scoring so they cannot
-        silently degrade recall while precision looks fine.
+    Bug 9 fix: empty guess returns NaN for all three metrics, not 0.0.
+    Bug 8 fix: when all_fragment_ids is provided, coverage catches missing /
+        duplicated / extra fragments before scoring.
     """
     floor = trivial_floor(true_groups)
 
-    # Bug 9 fix — empty guess -> NaN, not 0.0
+    # Bug 9 fix: empty guess -> NaN, not 0.0
     if not guessed_groups:
         return {
-            "precision": float("nan"),
-            "recall":    float("nan"),
-            "f1":        float("nan"),
-            "empty":     True,
-            "coverage":  None,
-            "floor":     floor,
+            "precision": float("nan"), "recall": float("nan"),
+            "f1":        float("nan"), "empty":  True,
+            "coverage":  None,         "floor":  floor,
         }
 
-    # Bug 8 fix — coverage check before scoring
+    # Bug 8 fix: coverage check before scoring
     coverage = None
     if all_fragment_ids is not None:
         coverage = check_partition(guessed_groups, all_fragment_ids)
@@ -173,12 +169,7 @@ def score_linkage(
         2 * precision * recall / (precision + recall)
         if (precision + recall) > 0 else 0.0
     )
-
     return {
-        "precision": precision,
-        "recall":    recall,
-        "f1":        f1,
-        "empty":     False,
-        "coverage":  coverage,
-        "floor":     floor,
+        "precision": precision, "recall": recall, "f1": f1,
+        "empty":    False,      "coverage": coverage, "floor": floor,
     }

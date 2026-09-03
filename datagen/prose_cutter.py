@@ -180,6 +180,17 @@ def _split_token_window(text, window_size=DEFAULT_WINDOW):
 
 # ── public interface ─────────────────────────────────────────────────────────────
 
+# ── public names for the shared splitters ─────────────────────────────────────
+# Every cutter in the grid imports its sentence and clause splitting from here
+# rather than reimplementing it (bug 2). The underscore names are historical;
+# these aliases are the supported interface so a cutter does not have to reach
+# for a private name to obey the one-tokenizer rule.
+split_sentences   = _split_sentences
+split_clauses     = _split_clauses
+split_token_window = _split_token_window
+nlp               = _nlp
+
+
 def cut(text, strategy="semantic", granularity="sentence",
         window_size=DEFAULT_WINDOW):
     """Cut a raw document body into a list of fragment strings.

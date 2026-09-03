@@ -14,6 +14,7 @@ Usage:
 """
 
 import argparse
+import json
 import sys
 from pathlib import Path
 
@@ -21,10 +22,15 @@ import numpy as np
 
 ROOT = Path(__file__).resolve().parent.parent      # repo root
 DEFAULT_DATA = ROOT / "data" / "prose"
+
+# Delimiters for the machine-readable block; run_grid.py reads between them.
+JSON_BEGIN = "===RUN_BASELINES_JSON_BEGIN==="
+JSON_END   = "===RUN_BASELINES_JSON_END==="
 sys.path.insert(0, str(ROOT / "harness"))
 
 from loader import load_fragments, load_answer_key, group_fragments_by_record   # noqa: E402
 import harness as H                                                             # noqa: E402
+from scoring import trivial_floor                                               # noqa: E402
 
 
 def main():
@@ -77,6 +83,7 @@ def main():
         "l_precision": float(l_ps.mean()),
         "l_recall":    float(l_rs.mean()),
         "l_f1":        float(l_fs.mean()),
+        "l_floor":     trivial_floor(true_groups)["f1"],
     }
     print(f"  Game O tau : {o_taus.mean():+.4f} +- {sd:.4f}"
           f"   2sigma CI [{o_taus.mean()-2*sd:+.4f}, {o_taus.mean()+2*sd:+.4f}]")
@@ -94,6 +101,28 @@ def main():
 
     print()
     H.print_comparison_table(results, f"{label} Results", args.seed, args.runs)
+
+    # Machine-readable block for run_grid.py. Delimited rather than "find the
+    # last {...}": the payload is nested, so a bare rfind("{") lands on an inner
+    # object and parses a fragment of the answer as if it were the whole thing.
+    payload = {
+        "cell": label,
+        "data": str(data),
+        "seed": args.seed,
+        "runs": args.runs,
+        "grouping": args.grouping,
+        "n_fragments": len(fragments),
+        "n_records": len(true_groups),
+        "results": results,
+        "quarantined": any(r.get("quarantined") for r in results.values()),
+        "quarantine_reasons": {
+            name: r.get("quarantine_reasons", [])
+            for name, r in results.items() if r.get("quarantined")
+        },
+    }
+    print(JSON_BEGIN)
+    print(json.dumps(payload, indent=2, default=float))
+    print(JSON_END)
 
 
 if __name__ == "__main__":

@@ -152,6 +152,30 @@ How the adversary wins: they look for fragments that obviously follow one anothe
 So do NOT cut only at tidy sentence starts. Fragments do not need to be grammatical, readable, or self-contained — a fragment that ends mid-thought and resumes mid-thought is harder to place, not easier. Prefer boundaries that split a continuing idea over boundaries that close one cleanly.
 
 Make the fragments small and uniform enough that no single one stands out as an obvious opening or ending.""" + _TAIL,
+
+    # v1 and v2 both address ORDERING only. Neither says anything about linkage,
+    # so the defence against "which fragments came from the same document" has
+    # never been prompted for at all. v3 states the role and both objectives.
+    # It deliberately does NOT name our metrics or the scoring functions: a role
+    # is a stance and is fair to give, but handing over the measurement turns a
+    # good score into evidence the model can optimise against a stated target
+    # rather than evidence it defends well.
+    "v3-strategist": """You are a fragmentation cut strategist. A document is going to be split into fragments, mixed in with fragments from many other documents, and released. Your job is to choose the split points so that an analyst holding the released pile can do neither of these things:
+
+  ORDERING  - take the fragments of one document and put them back into their
+              original sequence.
+  LINKAGE   - look at two fragments and tell whether they came from the same
+              document at all.
+
+These two goals pull in different directions and you have to serve both.
+
+Ordering is defeated by removing the joins. An analyst restores sequence using fragments that visibly continue one another: a fragment that opens a new sentence, or begins with a connective ("however", "therefore", "subsequently") or with a pronoun whose referent sits in a different fragment, announces where it belongs. Cut so that fragments begin and end mid-thought. They do not need to be grammatical, readable, or self-contained.
+
+Linkage is defeated by spreading out what makes a document identifiable. An analyst attributes fragments to a common source using distinctive shared vocabulary: a rare condition, a specific drug or device, an unusual measurement, a recurring descriptor of the same person. Where such terms cluster, cut through the cluster rather than around it, so that no single fragment carries a concentrated signature of the document and no two fragments share an obvious rare term.
+
+Where the two goals conflict, prefer the cut that leaves the analyst less certain overall. Avoid a uniform rhythm; a predictable cut interval is itself a cue.
+
+The document is split into {n} numbered units below. Choose which unit indices to cut BEFORE. Index 0 is the start of the document and is always a cut; do not include it.""" + _TAIL,
 }
 
 
