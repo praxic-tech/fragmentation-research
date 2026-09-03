@@ -227,9 +227,22 @@ def cut(text, strategy="coherence-sever", granularity="sentence",
 # ── corpus-level runner (mirrors prose_cutter.cut_corpus exactly) ──────────
 
 def cut_corpus(raw_path, out_dir, granularity="sentence",
-               window_size=DEFAULT_WINDOW, report_boundaries=False):
+               window_size=DEFAULT_WINDOW, report_boundaries=False, docs=None):
+    """docs: optional record_id filter. The grid runs every cell on the SAME
+    180 documents, so each cutter needs the same filter -- matching by document
+    is what makes a cross-cell difference the strategy rather than the sample."""
     os.makedirs(out_dir, exist_ok=True)
     records = load_jsonl(raw_path)
+    if docs:
+        wanted = set(docs)
+        records = [r for r in records if r["record_id"] in wanted]
+        missing = wanted - {r["record_id"] for r in records}
+        if missing:
+            raise ValueError(
+                f"{len(missing)} requested record_ids are not in {raw_path}, "
+                f"e.g. {sorted(missing)[:3]}. A cell silently cut on fewer "
+                "documents than the others is not comparable to them."
+            )
 
     frag_path = os.path.join(out_dir, "prose_fragments.jsonl")
     key_path  = os.path.join(out_dir, "prose_answer_key.jsonl")
@@ -269,6 +282,9 @@ def cut_corpus(raw_path, out_dir, granularity="sentence",
           f"mean={sum(frag_counts)/len(frag_counts):.1f})")
     print(f"  wrote: {frag_path}")
     print(f"  wrote: {key_path}")
+
+    return {"n_docs": len(records), "n_fragments": total_frags,
+            "fragment_counts": frag_counts}
 
     if report_boundaries and sum(tally.values()):
         total = sum(tally.values())

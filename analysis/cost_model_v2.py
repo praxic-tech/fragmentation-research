@@ -32,7 +32,11 @@ from collections import defaultdict
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-IN_PER_M, OUT_PER_M = 1.0, 5.0          # sonnet-5 introductory + batch 50%
+IN_PER_M, OUT_PER_M = 1.0, 5.0
+
+# Delimiters for the machine-readable block; run_grid.py reads between them.
+JSON_BEGIN = "===COST_MODEL_JSON_BEGIN==="
+JSON_END   = "===COST_MODEL_JSON_END==="          # sonnet-5 introductory + batch 50%
 CAL_IN = 1.541 * 0.913                   # estimator factor, corrected by measurement
 LABEL_CHARS = 11
 
@@ -129,6 +133,30 @@ def main():
     print(f"\n  headroom under $200: {200 - total * 1.40:.2f}")
     print(f"  ordering grid per cell: sentence {o_sent:.2f}  "
           f"clause {o_clause:.2f}  token-window {o_tw:.2f}")
+
+    # Machine-readable block for harness/run_grid.py --dry-run. Priced PER
+    # GRANULARITY, not as a flat per-cell average: clause costs ~4x sentence
+    # here, so a count of pending cells cannot project a spend. Delimited
+    # rather than "last {...}" because the payload is nested.
+    payload = {
+        "ordering_per_cell": {
+            "sentence": round(o_sent, 4),
+            "clause": round(o_clause, 4),
+            "token-window": round(o_tw, 4),
+        },
+        "linkage_per_cell": {
+            "sentence": round(POOLS_GRID * l_grid, 4),
+            "clause": round(POOLS_GRID * lnk_cost(round(132 * 1.81),
+                                                  14144 * 1.5, CHF), 4),
+            "token-window": round(POOLS_GRID * lnk_cost(round(132 * 1.617),
+                                                        14144 * 1.35, CHF), 4),
+        },
+        "totals": {"base_usd": round(total, 2),
+                   "total_usd": round(total * 1.40, 2)},
+    }
+    print(JSON_BEGIN)
+    print(json.dumps(payload, indent=2))
+    print(JSON_END)
 
 
 if __name__ == "__main__":

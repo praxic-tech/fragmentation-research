@@ -228,7 +228,7 @@ def load_jsonl(path):
 
 
 def cut_corpus(raw_path, out_dir, strategy="semantic",
-               granularity="sentence", window_size=DEFAULT_WINDOW):
+               granularity="sentence", window_size=DEFAULT_WINDOW, docs=None):
     """Cut every record in prose_raw.jsonl and emit standard JSONL.
 
     Outputs to out_dir:
@@ -237,9 +237,24 @@ def cut_corpus(raw_path, out_dir, strategy="semantic",
 
     Names and schema match data/prose/, so any runner that reads the corpus
     reads a grid cell without translation.
+    docs: optional list of record_ids. The grid runs every cell on the SAME
+        180 documents, so each cutter needs the same filter -- matching by
+        document is what makes a cross-cell difference the strategy rather
+        than the sample. None means the whole corpus.
+
     """
     os.makedirs(out_dir, exist_ok=True)
     records = load_jsonl(raw_path)
+    if docs:
+        wanted = set(docs)
+        records = [r for r in records if r["record_id"] in wanted]
+        missing = wanted - {r["record_id"] for r in records}
+        if missing:
+            raise ValueError(
+                f"{len(missing)} requested record_ids are not in {raw_path}, "
+                f"e.g. {sorted(missing)[:3]}. A cell silently cut on fewer "
+                "documents than the others is not comparable to them."
+            )
 
     frag_path = os.path.join(out_dir, "prose_fragments.jsonl")
     key_path  = os.path.join(out_dir, "prose_answer_key.jsonl")
@@ -271,6 +286,8 @@ def cut_corpus(raw_path, out_dir, strategy="semantic",
           f"mean={sum(frag_counts)/len(frag_counts):.1f})")
     print(f"  wrote: {frag_path}")
     print(f"  wrote: {key_path}")
+    return {"n_docs": len(records), "n_fragments": total_frags,
+            "fragment_counts": frag_counts}
 
 
 # ── CLI ──────────────────────────────────────────────────────────────────────────
