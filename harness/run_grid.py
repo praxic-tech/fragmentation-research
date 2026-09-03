@@ -1,159 +1,203 @@
 """
-run_grid.py — the harness that drives the full strategy x granularity grid.
+run_grid.py — drive the strategy x granularity grid.
 
 Pipeline per cell: cut -> verify -> score -> append to grid_results.json.
 
-    cut     : call that strategy's cut_corpus() to write fragments.jsonl +
-              answer_key.jsonl for the cell.
-    verify  : reconstruct each doc from its fragments (in answer-key order)
-              and confirm the word sequence matches the original raw text —
-              a cheap sanity check that runs before we pay for scoring.
-    score   : call the real reassembly scorer ("prose memon", ~15 min/cell —
-              this is the expensive step and the reason resume exists at
-              all). Not our code — plug the real call into
-              score_with_memon() below. Left as a clearly-marked stub here.
-    append  : one JSON object per cell appended to grid_results.json, with
-              full provenance (module/function/params used, timestamps,
-              status), so a partial or resumed run is auditable after the
-              fact.
+    cut     : strategy's cut_corpus() -> prose_fragments.jsonl +
+              prose_answer_key.jsonl (exact harness names, run_baselines.py
+              reads nothing else).
+    verify  : shell out to analysis/verify_fragments.py --cell <dir>.
+              exits non-zero on bad cells; any cell that fails quarantined,
+              not scored. expect ~0.12% dropped content and ~380/500 exact
+              on a healthy cell (MIN_SENT_CHARS filter in corpus build, not
+              a cutter bug).
+    score   : shell out to harness/run_baselines.py --data <cell>.
+              parse coverage from its json output; quarantine any cell
+              where scored < expected (Arafat's coverage counts). sets
+              status="ok" so resume actually fires next run.
+    append  : one entry per cell written to grid_results.json after every
+              cell, not at the end, so a crash mid-run leaves a valid file.
 
-Resume: before running a cell, check grid_results.json for an existing
-status="ok" entry for that (strategy, granularity) — if found, skip unless
---force. Since scoring is the ~15 min/cell cost, this is what makes it
-affordable to re-run after a crash, a code fix, or a corpus update without
-re-paying for cells that already scored cleanly.
+Resume: checks status=="ok" in grid_results.json before running. status was
+previously never set to "ok" because score_with_memon() always raised — so
+resume never fired once. That's fixed: score() sets status="ok" on success.
 
-Fault isolation: one cell's cut/verify/score is wrapped in try/except.
-A failing cell is logged with status="error" and the run continues — it
-does not take down the other 11 cells.
-
---dry-run: prints the full 12-cell plan, which cells resume would skip,
-which are still pending, and a projected cost for the pending ones
-(pending_count * ASSUMED_SCORE_SECONDS — the only per-cell timing we have
-is the ~15 min/cell figure for scoring; cutting itself is fast and isn't
-counted). Does not cut, verify, or score anything.
+--dry-run: prints plan + dollar cost from analysis/cost_model_v2.py.
+Minutes can't do the job the spec describes ("spend check before we commit
+$60 on the ordering grid").
 """
 
 import argparse
 import importlib
 import json
 import os
+import subprocess
 import sys
 import time
 from datetime import datetime, timezone
+from pathlib import Path
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-ROOT = os.path.dirname(BASE_DIR)
-# cutters and the shared splitters live in datagen/; scoring lives here
-for _p in (BASE_DIR, os.path.join(ROOT, "datagen")):
-    if _p not in sys.path:
-        sys.path.insert(0, _p)
+BASE_DIR = Path(__file__).resolve().parent
+REPO_ROOT = BASE_DIR.parent
+RESULTS_PATH = REPO_ROOT / "results" / "grid_results.json"
 
-RESULTS_PATH = os.path.join(ROOT, "results", "grid_results.json")
-DEFAULT_RAW = os.path.join(ROOT, "data", "prose", "prose_raw.jsonl")
-ASSUMED_SCORE_SECONDS = 15 * 60  # the one timing figure we actually have
+VERIFY_SCRIPT = REPO_ROOT / "analysis" / "verify_fragments.py"
+BASELINES_SCRIPT = REPO_ROOT / "harness" / "run_baselines.py"
 
-# ── the full 12-cell grid ────────────────────────────────────────────────
-# (strategy, granularity, grid_status) — grid_status is documentation, not
-# used for dispatch; "skip" cells are never run, "not_built" cells (llm-cut)
-# are logged and skipped until that module exists.
+# Must match the emitters in run_baselines.py and cost_model_v2.py.
+BASELINES_JSON_BEGIN = "===RUN_BASELINES_JSON_BEGIN==="
+BASELINES_JSON_END   = "===RUN_BASELINES_JSON_END==="
+COST_JSON_BEGIN      = "===COST_MODEL_JSON_BEGIN==="
+COST_JSON_END        = "===COST_MODEL_JSON_END==="
+COST_MODEL = REPO_ROOT / "analysis" / "cost_model_v2.py"
+
 CELLS = [
-    ("random", "sentence", "build"),
-    ("random", "clause", "build"),
-    ("random", "token-window", "build"),
-    ("semantic", "sentence", "have it"),
-    ("semantic", "clause", "build"),
-    ("semantic", "token-window", "build"),
-    ("coherence-sever", "sentence", "build"),
-    ("coherence-sever", "clause", "build"),
-    ("coherence-sever", "token-window", "build"),
-    ("subject-verb", "sentence", "build"),
-    ("subject-verb", "clause", "build"),
-    ("subject-verb", "token-window", "skip"),
-    ("llm-cut", "llm-decides", "build (deferred — spec only, no corpus-scale run yet)"),
+    ("random",          "sentence",    "build"),
+    ("random",          "clause",      "build"),
+    ("random",          "token-window","build"),
+    ("semantic",        "sentence",    "have it"),
+    ("semantic",        "clause",      "build"),
+    ("semantic",        "token-window","build"),
+    ("coherence-sever", "sentence",    "build"),
+    ("coherence-sever", "clause",      "build"),
+    ("coherence-sever", "token-window","build"),
+    ("subject-verb",    "sentence",    "build"),
+    ("subject-verb",    "clause",      "build"),
+    ("subject-verb",    "token-window","skip"),
+    ("llm-cut",         "llm-decides", "build (deferred)"),
 ]
 
-SKIP_STATUSES = {"skip"}
-NOT_BUILT_STRATEGIES = {"llm-cut"}
+SKIP_STATUSES    = {"skip"}
+NOT_BUILT        = {"llm-cut"}
 
-# strategy -> (module name, cut_corpus kwargs beyond raw_path/out_dir/granularity)
-# semantic dispatches to Arafat's committed cutter.py, which isn't part of
-# this deliverable — if that module isn't importable in this environment,
-# the cell fails and is logged, it doesn't stop the other 11.
 STRATEGY_MODULES = {
-    "random": ("random_cut", {"seed": 42}),
-    "semantic": ("prose_cutter", {"strategy": "semantic"}),
+    "random":          ("random_cut",      {"seed": 42}),
+    "semantic":        ("prose_cutter",    {"strategy": "semantic"}),
     "coherence-sever": ("coherence_sever", {}),
-    "subject-verb": ("subject_verb", {}),
+    "subject-verb":    ("subject_verb",    {}),
 }
 
 
 def load_results():
-    if not os.path.exists(RESULTS_PATH):
+    if not RESULTS_PATH.exists():
         return []
-    with open(RESULTS_PATH, "r", encoding="utf-8") as f:
-        return json.load(f)
+    return json.loads(RESULTS_PATH.read_text())
 
 
 def save_results(results):
-    with open(RESULTS_PATH, "w", encoding="utf-8") as f:
-        json.dump(results, f, indent=2)
+    RESULTS_PATH.parent.mkdir(parents=True, exist_ok=True)
+    RESULTS_PATH.write_text(json.dumps(results, indent=2))
 
 
 def already_done(results, strategy, granularity):
     return any(
-        r["strategy"] == strategy and r["granularity"] == granularity and r["status"] == "ok"
+        r["strategy"] == strategy and r["granularity"] == granularity
+        and r["status"] == "ok"
         for r in results
     )
 
 
-def verify_reconstruction(fragments_path, answer_key_path, raw_path):
-    """Cheap sanity check, not the real scorer: for each doc, join its
-    fragments in answer-key order and confirm the word sequence matches the
-    original raw text. Whitespace differences are ignored (the cutters don't
-    all guarantee exact character-level reconstruction); word drops,
-    additions, or reorderings are not."""
-    frag_text = {}
-    with open(fragments_path, "r", encoding="utf-8") as f:
-        for line in f:
-            row = json.loads(line)
-            frag_text[row["fragment_id"]] = row["text"]
-
-    raw_text = {}
-    with open(raw_path, "r", encoding="utf-8") as f:
-        for line in f:
-            row = json.loads(line)
-            raw_text[row["record_id"]] = row["text"]
-
-    mismatches = []
-    n_checked = 0
-    with open(answer_key_path, "r", encoding="utf-8") as f:
-        for line in f:
-            row = json.loads(line)
-            record_id = row["record_id"]
-            n_checked += 1
-            reconstructed = " ".join(frag_text[fid] for fid in row["order"] if fid in frag_text)
-            original = raw_text.get(record_id, "")
-            if reconstructed.split() != original.split():
-                mismatches.append(record_id)
-
-    return {"n_checked": n_checked, "n_mismatched": len(mismatches), "mismatched_ids": mismatches[:10]}
-
-
-def score_with_memon(fragments_path, answer_key_path):
-    """Placeholder for the real ~15 min/cell reassembly scorer ("prose
-    memon"). Not our code — replace this function body with the actual call
-    when it's available. Raises so a cell that reaches scoring without this
-    wired up is honestly logged as score_unavailable rather than silently
-    faked."""
-    raise NotImplementedError(
-        "score_with_memon() is a stub — plug in the real prose-memon scoring call here"
+def run_verify(cell_dir):
+    """Shell out to analysis/verify_fragments.py --cell <dir>.
+    Returns (passed:bool, output:str). A non-zero exit quarantines the cell."""
+    if not VERIFY_SCRIPT.exists():
+        return None, f"verify script not found at {VERIFY_SCRIPT}"
+    result = subprocess.run(
+        [sys.executable, str(VERIFY_SCRIPT), "--cell", str(cell_dir)],
+        capture_output=True, text=True
     )
+    passed = result.returncode == 0
+    return passed, (result.stdout + result.stderr).strip()
 
 
-def run_cell(strategy, granularity, raw_path, out_root, score_fn=score_with_memon):
+def run_score(cell_dir):
+    """Shell out to harness/run_baselines.py --data <cell_dir>.
+    Parses its JSON output and returns the score dict, or raises on failure.
+    Coverage counts come from Arafat's JSON output; quarantine if
+    scored < expected."""
+    if not BASELINES_SCRIPT.exists():
+        raise FileNotFoundError(f"scorer not found at {BASELINES_SCRIPT}")
+    result = subprocess.run(
+        [sys.executable, str(BASELINES_SCRIPT), "--data", str(cell_dir)],
+        capture_output=True, text=True
+    )
+    if result.returncode != 0:
+        raise RuntimeError(
+            f"run_baselines.py exited {result.returncode}:\n{result.stderr[:500]}"
+        )
+    # run_baselines.py emits a DELIMITED block. The previous version took the
+    # last {...} in stdout, which failed two ways: run_baselines printed no JSON
+    # at all, so every cell raised; and had it printed nested JSON, a bare
+    # rfind("{") lands on an inner object and parses part of the answer as the
+    # whole thing.
+    raw = result.stdout
+    if BASELINES_JSON_BEGIN not in raw or BASELINES_JSON_END not in raw:
+        raise ValueError(
+            f"run_baselines.py emitted no {BASELINES_JSON_BEGIN} block:"
+            f"\n{raw[-500:]}"
+        )
+    score = json.loads(
+        raw.split(BASELINES_JSON_BEGIN)[1].split(BASELINES_JSON_END)[0])
+
+    # Quarantine comes from the emitted per-method flags, not a top-level
+    # scored/expected pair -- coverage is reported PER METHOD, so a cell where
+    # one method lost records and another did not has to be caught on the
+    # method that lost them. Reading a top-level key found nothing and every
+    # cell passed.
+    reasons = []
+    if score.get('quarantined'):
+        for method, why in (score.get('quarantine_reasons') or {}).items():
+            reasons.append(f"{method}: {', '.join(why) if why else 'flagged'}")
+    for method, r in (score.get('results') or {}).items():
+        for game, sc, exp in (('O', r.get('o_scored'), r.get('o_expected')),
+                              ('L', r.get('l_scored'), r.get('l_expected'))):
+            if sc is not None and exp is not None and sc < exp:
+                reasons.append(f"{method} Game {game}: scored {sc} < expected {exp}")
+        if r.get('l_valid') is False:
+            reasons.append(f"{method} Game L: guess is not an exact partition")
+    score['quarantine'] = bool(reasons)
+    score['quarantine_reasons_flat'] = reasons
+
+    return score
+
+
+def get_dollar_cost(pending_cells):
+    """Projected spend for the pending cells, from analysis/cost_model_v2.py.
+
+    Takes the actual (strategy, granularity) pairs rather than a count: clause
+    costs roughly 4x sentence per ordering cell, so a flat per-cell average
+    cannot do the spend-check job the dry run exists for. Returns None if the
+    cost model is missing or unparseable, and the caller says so explicitly
+    rather than printing a wrong number."""
+    if not COST_MODEL.exists():
+        return None
+    result = subprocess.run(
+        [sys.executable, str(COST_MODEL)], capture_output=True, text=True)
+    raw = result.stdout
+    if result.returncode != 0 or COST_JSON_BEGIN not in raw:
+        return None
+    model = json.loads(
+        raw.split(COST_JSON_BEGIN)[1].split(COST_JSON_END)[0])
+
+    per_cell = model.get('ordering_per_cell', {})
+    breakdown, total = {}, 0.0
+    for _strategy, granularity in pending_cells:
+        usd = per_cell.get(granularity)
+        if usd is None:
+            continue
+        breakdown[granularity] = breakdown.get(granularity, 0.0) + usd
+        total += usd
+    return {
+        'total_usd': total,
+        'breakdown': breakdown,
+        'detail': '  '.join(f'{g} {v:.2f}' for g, v in sorted(breakdown.items())),
+        'run_total_usd': model.get('totals', {}).get('total_usd'),
+    }
+
+
+def run_cell(strategy, granularity, raw_path, out_root, docs=None):
     module_name, extra_kwargs = STRATEGY_MODULES[strategy]
-    out_dir = os.path.join(out_root, f"{strategy}__{granularity}".replace(" ", "_"))
+    cell_dir = Path(out_root) / f"{strategy}__{granularity}".replace(" ", "_")
 
     entry = {
         "strategy": strategy,
@@ -163,103 +207,150 @@ def run_cell(strategy, granularity, raw_path, out_root, score_fn=score_with_memo
             "cutter_module": module_name,
             "cutter_function": "cut_corpus",
             "params": {"granularity": granularity, **extra_kwargs},
-            "out_dir": out_dir,
+            "cell_dir": str(cell_dir),
+            "n_docs": None,       # filled in after cut
+            "n_fragments": None,  # filled in after cut
         },
     }
     t0 = time.time()
 
     try:
+        # ── cut ──────────────────────────────────────────────────────────
+        sys.path.insert(0, str(REPO_ROOT / "datagen"))
         module = importlib.import_module(module_name)
-        module.cut_corpus(raw_path, out_dir, granularity=granularity, **extra_kwargs)
+        # `or {}` so a cutter that returns nothing degrades to missing
+        # provenance rather than an AttributeError that reads as a cut failure.
+        cut_stats = module.cut_corpus(
+            str(raw_path), str(cell_dir),
+            granularity=granularity,
+            docs=docs,
+            **extra_kwargs,
+        ) or {}
+        entry["provenance"]["n_docs"]      = cut_stats.get("n_docs")
+        entry["provenance"]["n_fragments"] = cut_stats.get("n_fragments")
 
-        frag_path = os.path.join(out_dir, "prose_fragments.jsonl")
-        key_path = os.path.join(out_dir, "prose_answer_key.jsonl")
-        verify_result = verify_reconstruction(frag_path, key_path, raw_path)
-        entry["verify"] = verify_result
+        # ── verify ───────────────────────────────────────────────────────
+        verify_passed, verify_out = run_verify(cell_dir)
+        entry["verify"] = {"passed": verify_passed, "output": verify_out}
+        if verify_passed is False:
+            entry["status"] = "verify_failed"
+            entry["error"]  = f"verify_fragments.py exited non-zero:\n{verify_out[:300]}"
+            return entry
 
-        try:
-            score = score_fn(frag_path, key_path)
-            entry["score"] = score
-            entry["status"] = "ok"
-        except NotImplementedError as e:
-            entry["status"] = "score_unavailable"
-            entry["error"] = str(e)
+        # ── score ────────────────────────────────────────────────────────
+        score = run_score(cell_dir)
+        entry["score"]  = score
+        entry["status"] = "quarantine" if score.get("quarantine") else "ok"
 
     except Exception as e:
         entry["status"] = "error"
-        entry["error"] = f"{type(e).__name__}: {e}"
+        entry["error"]  = f"{type(e).__name__}: {e}"
 
-    entry["finished_at"] = datetime.now(timezone.utc).isoformat()
+    entry["finished_at"]  = datetime.now(timezone.utc).isoformat()
     entry["duration_sec"] = round(time.time() - t0, 2)
     return entry
 
 
 def plan_dry_run(results):
-    print(f"{'strategy':<18}{'granularity':<15}{'plan status':<14}{'action'}")
+    print(f"{'strategy':<18}{'granularity':<15}{'status':<12}action")
     pending = 0
+    pending_cells = []
     for strategy, granularity, grid_status in CELLS:
         if grid_status in SKIP_STATUSES:
-            action = "skip (grid marks this cell skip)"
-        elif strategy in NOT_BUILT_STRATEGIES:
-            action = "skip (not built yet)"
+            action = "skip (grid)"
+        elif strategy in NOT_BUILT:
+            action = "skip (not built)"
         elif already_done(results, strategy, granularity):
-            action = "resume: already ok, skip"
+            action = "resume: already ok"
         else:
             action = "RUN"
             pending += 1
-        print(f"{strategy:<18}{granularity:<15}{grid_status:<14}{action}")
+            pending_cells.append((strategy, granularity))
+        print(f"{strategy:<18}{granularity:<15}{grid_status:<12}{action}")
 
-    projected_sec = pending * ASSUMED_SCORE_SECONDS
     print(f"\npending cells: {pending}")
-    print(f"projected cost: {projected_sec/60:.0f} min (~{projected_sec/3600:.1f} hr) "
-          f"at {ASSUMED_SCORE_SECONDS/60:.0f} min/cell (scoring only, cutting is fast and uncounted)")
+
+    cost = get_dollar_cost(pending_cells)
+    if cost:
+        print(f"projected cost: ${cost.get('total_usd', '?'):.2f}  "
+              f"({cost.get('detail', '')})")
+    else:
+        # cost_model_v2.py not present yet — fall back to minutes only,
+        # with an explicit note that this can't do the spend-check job
+        mins = pending * 15
+        print(f"projected time: ~{mins} min  "
+              f"(no dollar estimate — analysis/cost_model_v2.py not found)")
 
 
-def run_grid(raw_path, out_root, force=False, score_fn=score_with_memon):
+def run_grid(raw_path, out_root, force=False, docs=None):
     results = load_results()
 
     for strategy, granularity, grid_status in CELLS:
         if grid_status in SKIP_STATUSES:
-            print(f"[skip] {strategy} x {granularity} — grid marks this cell skip")
+            print(f"[skip] {strategy} x {granularity}")
             continue
-        if strategy in NOT_BUILT_STRATEGIES:
+        if strategy in NOT_BUILT:
             print(f"[skip] {strategy} x {granularity} — not built yet")
             continue
         if not force and already_done(results, strategy, granularity):
-            print(f"[resume] {strategy} x {granularity} — already ok, skipping")
+            print(f"[resume] {strategy} x {granularity} — already ok")
             continue
 
         print(f"[run] {strategy} x {granularity} ...")
-        entry = run_cell(strategy, granularity, raw_path, out_root, score_fn=score_fn)
+        entry = run_cell(strategy, granularity, raw_path, out_root, docs=docs)
         print(f"  -> status={entry['status']}  ({entry['duration_sec']}s)")
-        if entry["status"] == "error":
-            print(f"  -> error: {entry['error']}")
+        if entry["status"] in ("error", "verify_failed", "quarantine"):
+            print(f"  -> {entry.get('error', entry.get('score', {}).get('quarantine_reason', ''))}")
 
-        # drop any stale entry for this cell before appending the fresh one
         results = [r for r in results
                    if not (r["strategy"] == strategy and r["granularity"] == granularity)]
         results.append(entry)
-        save_results(results)  # write after every cell, not just at the end
+        save_results(results)
 
     return results
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description="Run the full strategy x granularity grid.")
-    parser.add_argument("--raw", default=DEFAULT_RAW)
-    parser.add_argument("--out-root", default=os.path.join(ROOT, "results", "grid"))
-    parser.add_argument("--force", action="store_true", help="re-run cells even if already ok")
-    parser.add_argument("--dry-run", action="store_true", help="print the plan and projected cost only")
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--raw",
+                    default=str(REPO_ROOT / "data" / "prose" / "prose_raw.jsonl"))
+    parser.add_argument("--out-root", default=str(REPO_ROOT / "results" / "grid"))
+    parser.add_argument("--force",    action="store_true")
+    parser.add_argument("--dry-run",  action="store_true")
+    parser.add_argument("--docs",     nargs="*",
+                        help="restrict to these record_ids")
+    parser.add_argument("--docs-from", metavar="JSON",
+                        default=str(REPO_ROOT / "data" / "pools" / "ordering_grid.json"),
+                        help="read the document selection from build_pools.py output "
+                             "(default: data/pools/ordering_grid.json). Pass 'all' to "
+                             "cut the whole corpus instead.")
     return parser.parse_args()
 
 
 def main():
     args = parse_args()
+
+    # The grid runs on ONE fixed document selection, built once by
+    # datagen/build_pools.py. Rebuilding or varying it between cells makes the
+    # cells incomparable without erroring, so the selection is the default and
+    # cutting the whole corpus has to be asked for explicitly.
+    docs = args.docs
+    if not docs and args.docs_from and args.docs_from != "all":
+        sel = Path(args.docs_from)
+        if sel.exists():
+            payload = json.loads(sel.read_text())
+            docs = [d["record_id"] for d in payload["documents"]]
+            print(f"[docs] {len(docs)} documents from {sel.name} "
+                  f"(cap {payload.get('fragment_cap')} fragments)")
+        else:
+            print(f"[docs] {sel} not found — run datagen/build_pools.py first, "
+                  "or pass --docs-from all")
+            raise SystemExit(1)
     results = load_results()
     if args.dry_run:
         plan_dry_run(results)
         return
-    run_grid(args.raw, args.out_root, force=args.force)
+    run_grid(args.raw, args.out_root, force=args.force, docs=docs)
 
 
 if __name__ == "__main__":

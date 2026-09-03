@@ -24,3 +24,6 @@ docs/deliverables/week6_full_grid/
 
 # Batch state and results — regenerate, do not version
 results/batches/
+
+# Grid run record — regenerate with harness/run_grid.py
+results/grid_results.json
