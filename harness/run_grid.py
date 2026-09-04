@@ -97,13 +97,23 @@ def already_done(results, strategy, granularity):
     )
 
 
-def run_verify(cell_dir):
-    """Shell out to analysis/verify_fragments.py --cell <dir>.
+def run_verify(cell_dir, raw_path):
+    """Shell out to analysis/verify_fragments.py --cell <dir> --raw <raw_path>.
+
+    raw_path MUST be the file the cell was actually cut from. The grid runs on
+    the length-capped corpus (data/grid_corpus/), and verify_fragments defaults
+    to the FULL data/prose/prose_raw.jsonl -- checking a truncated cell against
+    the untruncated document reports the truncation as dropped content. Measured
+    on the reference cell: 27.20% dropped and 79/180 reconstructing against the
+    full corpus, versus 0.00% and 179/180 against the corpus it was cut from.
+    Every grid cell would have looked catastrophically broken.
+
     Returns (passed:bool, output:str). A non-zero exit quarantines the cell."""
     if not VERIFY_SCRIPT.exists():
         return None, f"verify script not found at {VERIFY_SCRIPT}"
     result = subprocess.run(
-        [sys.executable, str(VERIFY_SCRIPT), "--cell", str(cell_dir)],
+        [sys.executable, str(VERIFY_SCRIPT),
+         "--cell", str(cell_dir), "--raw", str(raw_path)],
         capture_output=True, text=True
     )
     passed = result.returncode == 0
@@ -230,7 +240,7 @@ def run_cell(strategy, granularity, raw_path, out_root, docs=None):
         entry["provenance"]["n_fragments"] = cut_stats.get("n_fragments")
 
         # ── verify ───────────────────────────────────────────────────────
-        verify_passed, verify_out = run_verify(cell_dir)
+        verify_passed, verify_out = run_verify(cell_dir, raw_path)
         entry["verify"] = {"passed": verify_passed, "output": verify_out}
         if verify_passed is False:
             entry["status"] = "verify_failed"
@@ -313,7 +323,9 @@ def run_grid(raw_path, out_root, force=False, docs=None):
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--raw",
-                    default=str(REPO_ROOT / "data" / "prose" / "prose_raw.jsonl"))
+                    default=str(REPO_ROOT / "data" / "grid_corpus" / "prose_raw.jsonl"),
+                    help="the grid runs on the length-capped corpus from "
+                         "datagen/build_grid_corpus.py, not the full one")
     parser.add_argument("--out-root", default=str(REPO_ROOT / "results" / "grid"))
     parser.add_argument("--force",    action="store_true")
     parser.add_argument("--dry-run",  action="store_true")

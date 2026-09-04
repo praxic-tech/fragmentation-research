@@ -1,0 +1,15 @@
+{
+  "source_raw": "data/prose/prose_raw.jsonl",
+  "source_sha256": "3234627b0361458f312597a80bb9e891aefd1feb78d94f366000cb99c9c1c055",
+  "selection": "data/pools/ordering_grid.json",
+  "selection_seed": 42,
+  "fragment_cap": 30,
+  "cap_applied_to": "source_text",
+  "n_documents": 180,
+  "documents_truncated": 75,
+  "sentences_kept": 4470,
+  "sentences_in_full_documents": 6145,
+  "reference_fragments": 4459,
+  "reference_max_per_doc": 30,
+  "grid_corpus_sha256": "c10c71b081c2f9b0b88eeac9bae8e207320ffaefcc97ae614a05c592cd2850c8"
+}
