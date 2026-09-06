@@ -30,3 +30,6 @@ results/grid_results.json
 
 # Length-capped grid corpus — rebuild with datagen/build_grid_corpus.py
 # (tracked deliberately: every cell must cut the SAME bytes)
+
+# Pilot response data — regenerate with adversaries/joint_game.py
+results/joint_pilot*/
