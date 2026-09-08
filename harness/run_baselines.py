@@ -30,7 +30,7 @@ sys.path.insert(0, str(ROOT / "harness"))
 
 from loader import load_fragments, load_answer_key, group_fragments_by_record   # noqa: E402
 import harness as H                                                             # noqa: E402
-from scoring import trivial_floor                                               # noqa: E402
+from scoring import trivial_baseline                                               # noqa: E402
 
 
 def main():
@@ -83,7 +83,7 @@ def main():
         "l_precision": float(l_ps.mean()),
         "l_recall":    float(l_rs.mean()),
         "l_f1":        float(l_fs.mean()),
-        "l_floor":     trivial_floor(true_groups)["f1"],
+        "l_baseline":  trivial_baseline(true_groups)["f1"],
     }
     print(f"  Game O tau : {o_taus.mean():+.4f} +- {sd:.4f}"
           f"   2sigma CI [{o_taus.mean()-2*sd:+.4f}, {o_taus.mean()+2*sd:+.4f}]")

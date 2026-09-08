@@ -23,25 +23,25 @@ The partition ships with the paper.
 WHY POOLS OF 7
 --------------
 Game L cannot be asked in one shot: 10 documents in a single pool already failed
-at >48,000 output tokens. Pool size also sets the random floor, which is why it
-never varies across the grid — Arafat's pools-of-5 run reported F1 0.22, which
-looked like signal until you notice the floor at pools of 5 is ~0.20. Fixing the
+at >48,000 output tokens. Pool size also sets the chance baseline, which is why
+it never varies across the grid — Arafat's pools-of-5 run reported F1 0.22,
+which looked like signal until you notice the baseline at pools of 5 is ~0.20. Fixing the
 pool size everywhere is what stops that recurring.
 
 WHY 71 POOLS AND NOT 10
 -----------------------
 Each pool is one independent observation. Measured on this corpus, per-pool F1
-ranges 0.229 to 0.703 and each pool's own trivial floor ranges 0.251 to 0.503 —
-pools are not interchangeable and the floor is not a constant. SEM over 71 pools
+ranges 0.229 to 0.703 and each pool's own trivial baseline ranges 0.251 to 0.503 —
+pools are not interchangeable and the baseline is not a constant. SEM over 71 pools
 is 0.0096; over 10 it would be 0.0256, 2.7x wider, and any grid difference under
 ~0.05 becomes undetectable. The pools are the sample size.
 
-THE FLOOR IS WRITTEN PER POOL, NOT ASSUMED
-------------------------------------------
+THE BASELINE IS WRITTEN PER POOL, NOT ASSUMED
+---------------------------------------------
 Each pool carries the F1 that "put all 7 documents in one bucket" achieves on
-that pool, computed from that pool's actual fragment counts. An F1 with no floor
+that pool, computed from that pool's actual fragment counts. An F1 with no reference
 beside it is uninterpretable: 0.05 is excellent at 500-way and worthless at
-7-way. harness/scoring.py has trivial_floor() for the live path; this writes the
+7-way. harness/scoring.py has trivial_baseline() for the live path; this writes the
 same quantity to disk so the grid can report a margin without recomputing it.
 
 Usage:
@@ -102,8 +102,10 @@ def fingerprint(path):
     return h.hexdigest()
 
 
-def trivial_floor(sizes):
+def trivial_baseline(sizes):
     """F1 of putting every fragment in the pool into ONE bucket.
+
+    A trivial BASELINE, not a floor -- an all-singleton guess scores lower.
 
     Recall is 1.0 by construction (every true pair is inside the single bucket),
     so precision is true_pairs / all_pairs and F1 collapses to 2p / (p + 1).
@@ -121,7 +123,7 @@ def build_pools(counts, rng):
     """Shuffle all documents, then deal them into consecutive pools of 7.
 
     Random assignment, not stratified: pools are meant to be exchangeable draws
-    from the corpus, and the per-pool floor spread that makes 71 pools necessary
+    from the corpus, and the per-pool baseline spread that makes 71 pools necessary
     is a property we want to MEASURE, not one to engineer away by balancing.
     500 is not divisible by 7, so 71 pools use 497 documents and 3 are held out.
     Held-out ids are written to the manifest rather than dropped silently.
@@ -139,7 +141,7 @@ def build_pools(counts, rng):
             "members": members,
             "fragment_counts": sizes,
             "n_fragments": sum(sizes),
-            "trivial_floor": trivial_floor(sizes),
+            "trivial_baseline": trivial_baseline(sizes),
         })
     return pools, sorted(ids[n_pools * POOL_SIZE:])
 
@@ -211,8 +213,8 @@ def build(key_path, out_dir, seed, force):
     linkage = sorted(rng.sample([p["pool_id"] for p in pools], N_LINKAGE_POOLS))
     ordering, quota = select_ordering_docs(counts, rng)
 
-    floors = [p["trivial_floor"]["f1"] for p in pools]
-    worst = max(pools, key=lambda p: p["trivial_floor"]["f1"])
+    baselines = [p["trivial_baseline"]["f1"] for p in pools]
+    worst = max(pools, key=lambda p: p["trivial_baseline"]["f1"])
 
     write_json(os.path.join(out_dir, "pools.json"), {
         "pool_size": POOL_SIZE, "n_pools": len(pools), "seed": seed, "pools": pools,
@@ -238,17 +240,17 @@ def build(key_path, out_dir, seed, force):
         "n_linkage_pools": N_LINKAGE_POOLS,
         "n_ordering_documents": N_ORDERING_DOCS,
         "ordering_fragment_cap": ORDERING_FRAGMENT_CAP,
-        "pool_floor_f1": {
-            "min": min(floors), "max": max(floors),
-            "mean": sum(floors) / len(floors), "worst_pool": worst["pool_id"],
+        "pool_baseline_f1": {
+            "min": min(baselines), "max": max(baselines),
+            "mean": sum(baselines) / len(baselines), "worst_pool": worst["pool_id"],
         },
     })
 
     print(f"corpus      : {len(counts)} documents, {sum(counts.values())} fragments")
     print(f"pools       : {len(pools)} x {POOL_SIZE} = {len(pools) * POOL_SIZE} documents"
           f"  ({len(leftover)} held out: {', '.join(leftover) or 'none'})")
-    print(f"pool floor  : f1 min {min(floors):.4f}  mean {sum(floors)/len(floors):.4f}"
-          f"  max {max(floors):.4f}  (worst: {worst['pool_id']})")
+    print(f"pool base   : f1 min {min(baselines):.4f}  mean {sum(baselines)/len(baselines):.4f}"
+          f"  max {max(baselines):.4f}  (worst: {worst['pool_id']})")
     print(f"linkage grid: {len(linkage)} pools")
     print(f"ordering grid: {len(ordering)} documents, capped at {ORDERING_FRAGMENT_CAP} fragments")
     for name, _, _ in BANDS:

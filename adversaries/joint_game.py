@@ -1,10 +1,11 @@
 """
 joint_game.py — the three attack conditions on one corpus, scored comparably.
 
-    game O (oracle)  one document's fragments, shuffled -> recover the ORDER.
-                     Membership is given for free. An upper bound on the
-                     adversary, not a threat model: it assumes linkage already
-                     solved.
+    game O           one document's fragments, shuffled -> recover the ORDER.
+                     Membership is given for free. A MEMBERSHIP-ORACLE
+                     REFERENCE, not a ceiling: for a prompted model, changing
+                     the task can hurt as easily as help, so J is not bounded
+                     by it.
     game L           one pool's fragments from N documents, mixed -> recover
                      which fragments share a document. No ordering asked.
     game J (joint)   the same pool -> recover membership AND order together.
@@ -14,9 +15,11 @@ joint_game.py — the three attack conditions on one corpus, scored comparably.
 
 WHY RUN ALL THREE
 -----------------
-J is the realistic number. O is the ceiling. The GAP between them is the result
-worth reporting: it says how much of the defence is linkage and how much is
-ordering. L falls out of J for free (drop the ordering) and is kept as a
+J is the realistic number. O is a membership-oracle reference. The GAP between
+them is NOT a clean measure of "how much of the defence is linkage" -- the two
+are differently prompted and on different scales, so the gap carries task
+coupling as well. The F1_J = F1_L * q decomposition is the clean evidence for
+where J fails. L falls out of J for free (drop the ordering) and is kept as a
 separate arm here only to check that asking for order does not degrade the
 grouping — if J's linkage is materially worse than L's, the joint task is
 costing the model something and that has to be disclosed.
@@ -56,7 +59,9 @@ for _p in (os.path.join(ROOT, "harness"), os.path.join(ROOT, "datagen"), BASE_DI
         sys.path.insert(0, _p)
 
 from masking import mask_fragment_ids, preflight, preflight_summary   # noqa: E402
-from scoring import score_ordering, score_linkage, trivial_floor, check_partition  # noqa: E402
+from scoring import score_ordering, score_linkage, trivial_baseline, check_partition  # noqa: E402
+from joint_metrics import (analytic_baseline, advantage, decompose,      # noqa: E402
+                          micro_q, ordered_pairs, score_joint)
 from llm_adversary import PROVIDERS, call_model, make_client, load_jsonl  # noqa: E402
 
 import numpy as np                                                    # noqa: E402
@@ -293,12 +298,13 @@ def score_row(row, true_order, true_groups_by_unit):
     gdict = {str(i): g for i, g in enumerate(groups)}
     cov = check_partition(gdict, all_ids)
     lk = score_linkage(gdict, tg, all_fragment_ids=all_ids)
-    fl = trivial_floor(tg)
+    bl = trivial_baseline(tg)
     out = {"game": game, "unit": row["unit"], "malformed": False,
            "n_dropped": len(dropped),
            "coverage_frac": len(placed & all_ids) / len(all_ids) if all_ids else 0.0,
            "n_groups_guessed": len(groups) - len(dropped), "n_groups_true": len(tg),
-           "f1": lk["f1"], "floor": fl["f1"], "margin": lk["f1"] - fl["f1"],
+           "f1": lk["f1"], "baseline": bl["f1"],
+           "advantage": advantage(lk["f1"], bl["f1"]),
            "partition_valid": cov["valid"], "coverage": cov}
 
     if game == "J":
@@ -316,16 +322,21 @@ def score_row(row, true_order, true_groups_by_unit):
             if set(groups[gi]) == set(truth) and groups[gi] == truth:
                 exact += 1
         jp = score_joint(groups, true_order, list(tg))
-        jf = joint_floor(true_order, list(tg))
+        dec = decompose(groups, true_order, list(tg))
         out.update({"tau_in_matched": float(np.mean(taus)) if taus else float("nan"),
                     "n_matched_groups": matched,
                     "exact_records": exact,
                     "exact_rate": exact / len(tg) if tg else 0.0,
-                    # headline joint metric: ordered-pair F1 against the
-                    # one-bucket-arbitrary-order floor
+                    # headline: ordered-pair F1 against the ANALYTIC
+                    # one-bucket-arbitrary-order baseline, plus the
+                    # F1_J = F1_L * q decomposition. q is None when K == 0.
                     "joint_f1": jp["f1"], "joint_p": jp["precision"],
-                    "joint_r": jp["recall"], "joint_floor": jf["f1"],
-                    "joint_margin": jp["f1"] - jf["f1"]})
+                    "joint_r": jp["recall"],
+                    "joint_baseline": dec["baseline_joint"],
+                    "joint_advantage": dec["a_joint"],
+                    "j_linkage_f1": dec["f1_linkage"],
+                    "C": dec["C"], "K": dec["K"], "q": dec["q"],
+                    "a_order": dec["a_order"]})
     return out
 
 
@@ -384,8 +395,8 @@ def report(out_dir, key, pool_truth):
         print(f"\n{name}")
         print(f"  pools scored {len(S)}")
         print(f"  linkage F1   mean {np.mean([r['f1'] for r in S]):.4f}   "
-              f"floor {np.mean([r['floor'] for r in S]):.4f}   "
-              f"margin {np.mean([r['margin'] for r in S]):+.4f}")
+              f"baseline {np.mean([r['baseline'] for r in S]):.4f}   "
+              f"advantage {np.mean([r['advantage'] for r in S]):+.4f}")
         print(f"  groups       guessed {np.mean([r['n_groups_guessed'] for r in S]):.1f} "
               f"vs {np.mean([r['n_groups_true'] for r in S]):.1f} asked   "
               f"exact count {sum(1 for r in S if r['n_groups_guessed']==r['n_groups_true'])}/{len(S)}")
@@ -396,8 +407,12 @@ def report(out_dir, key, pool_truth):
               f"worst pool {max(r['n_dropped'] for r in S)}")
         if name.startswith("GAME J"):
             print(f"  JOINT ordered-pair F1   mean {np.mean([r['joint_f1'] for r in S]):.4f}"
-                  f"   floor {np.mean([r['joint_floor'] for r in S]):.4f}"
-                  f"   margin {np.mean([r['joint_margin'] for r in S]):+.4f}")
+                  f"   baseline {np.mean([r['joint_baseline'] for r in S]):.4f}"
+                  f"   advantage {np.mean([r['joint_advantage'] for r in S]):+.4f}")
+            q, n_undef = micro_q(S)
+            print(f"  direction accuracy      q_micro "
+                  f"{('%.4f' % q) if q is not None else 'undefined'}"
+                  f"   (K=0 in {n_undef}/{len(S)} pools)")
             tj = [r["tau_in_matched"] for r in S if not np.isnan(r["tau_in_matched"])]
             print(f"  tau in matched groups   mean {np.mean(tj):+.4f}  (n={len(tj)} pools)")
             print(f"  records recovered EXACTLY (membership and order): "
@@ -407,13 +422,20 @@ def report(out_dir, key, pool_truth):
     if O and J:
         tj = [r["tau_in_matched"] for r in J if not np.isnan(r["tau_in_matched"])]
         if tj:
-            print(f"\nTHE GAP  oracle tau {np.mean([r['tau'] for r in O]):+.4f}  ->  "
-                  f"joint tau {np.mean(tj):+.4f}   "
-                  f"({np.mean([r['tau'] for r in O]) - np.mean(tj):+.4f})")
+            # Reported, NOT interpreted as 'how much of the defence is
+            # linkage'. O and J are differently prompted and on different
+            # scales, so the difference carries task coupling too. O is put
+            # on the joint scale as (1+tau)/2 for a like-for-like read;
+            # q_micro above is the actual linkage-vs-ordering split.
+            o_tau = np.mean([r['tau'] for r in O])
+            print(f"\nREFERENCE  membership-oracle tau {o_tau:+.4f} "
+                  f"= {(1 + o_tau) / 2:.4f} on the joint scale;  "
+                  f"joint tau-in-matched {np.mean(tj):+.4f}")
+            print("  Not a ceiling, not a decomposition -- see q_micro.")
     if L and J:
-        print(f"COST OF ASKING FOR ORDER  linkage margin "
-              f"{np.mean([r['margin'] for r in L]):+.4f} (L) -> "
-              f"{np.mean([r['margin'] for r in J]):+.4f} (J)")
+        print(f"COST OF ASKING FOR ORDER  linkage advantage "
+              f"{np.mean([r['advantage'] for r in L]):+.4f} (L) -> "
+              f"{np.mean([r['advantage'] for r in J]):+.4f} (J)")
     return rows
 
 
@@ -453,72 +475,6 @@ def main():
         print("\n" + preflight_summary())
 
     report(a.out_dir, key, pool_truth)
-
-
-
-
-# ── the joint metric ─────────────────────────────────────────────────────────
-
-def _ordered_pairs(groups):
-    """Every (earlier, later) pair implied by a list of ORDERED groups."""
-    out = set()
-    for g in groups:
-        for i, a in enumerate(g):
-            for b in g[i + 1:]:
-                out.add((a, b))
-    return out
-
-
-def score_joint(guessed_groups, true_order, members):
-    """Ordered-pair precision / recall / F1 for a joint answer.
-
-    Generalises the two metrics already in use rather than inventing a third
-    scale. An unordered co-membership pair is what score_linkage counts; this
-    counts the same pair WITH its direction, so:
-
-        ignore direction              -> exactly score_linkage's F1
-        fix membership to perfect     -> concordant-pair counting, i.e. tau
-
-    A pair split across groups is a miss. A pair grouped together but ordered
-    backwards is both a false positive (asserted something untrue) and a false
-    negative (failed to assert the truth), which is the right charge for it.
-
-    Edge case worth disclosing: a perfectly grouped but fully REVERSED document
-    scores 0 here, because every pair points the wrong way. That agrees with
-    tau = -1 on the same output, but "reversed" is arguably a full
-    reconstruction in information terms, so it belongs in methods.
-    """
-    guessed = _ordered_pairs(guessed_groups)
-    truth = _ordered_pairs([true_order[r] for r in members])
-    tp = len(guessed & truth)
-    p = tp / len(guessed) if guessed else 0.0
-    r = tp / len(truth) if truth else 0.0
-    return {"precision": p, "recall": r,
-            "f1": 2 * p * r / (p + r) if (p + r) else 0.0,
-            "tp": tp, "n_guessed": len(guessed), "n_true": len(truth)}
-
-
-def joint_floor(true_order, members, seed=0, trials=200):
-    """Floor: every fragment in ONE bucket, in an arbitrary order.
-
-    The joint counterpart of scoring.trivial_floor. Recall is ~0.5 rather than
-    1.0 because a single arbitrary sequence gets about half its directions right
-    by chance -- which is exactly why a joint F1 must be read against this and
-    not against the linkage floor.
-    """
-    ids = [f for r in members for f in true_order[r]]
-    rng = random.Random(seed)
-    acc = {"precision": 0.0, "recall": 0.0, "f1": 0.0}
-    for _ in range(trials):
-        shuffled = list(ids)
-        rng.shuffle(shuffled)
-        s = score_joint([shuffled], true_order, members)
-        for k in acc:
-            acc[k] += s[k]
-    # An EXPECTATION over shuffles, not one draw. A single shuffle is a sample
-    # with real variance -- on a small pool it can land on 0 by luck, and a
-    # floor that moves between calls is worse than no floor.
-    return {k: v / trials for k, v in acc.items()}
 
 
 if __name__ == "__main__":

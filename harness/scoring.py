@@ -6,8 +6,9 @@ Changes from original (week 6):
           report. Missing/extra/duplicate fragments are caught before scoring.
   Bug 9:  empty guess returns NaN, not 0.0 — distinguishable from a wrong answer.
   (b):    check_partition validates guessed_groups is an exact partition.
-  (c):    trivial_floor computes the F1 a single-bucket strategy achieves,
-          so every linkage score has its floor printed alongside it.
+  (c):    trivial_baseline computes the F1 a single-bucket strategy achieves,
+          so every linkage score has its reference printed alongside it.
+          NOT a "floor": an all-singleton guess scores 0, which is lower.
 """
 
 import math
@@ -61,12 +62,12 @@ def _pairs_from_groups(groups: dict) -> set:
     return pairs
 
 
-def trivial_floor(true_groups: dict) -> dict:
+def trivial_baseline(true_groups: dict) -> dict:
     """
     F1 / precision / recall of putting ALL fragments into one single cluster.
 
     This is the minimum bar any grouping method must clear to be doing
-    something useful. An F1 without this floor is uninterpretable: 0.05 is
+    something useful. An F1 without this reference is uninterpretable: 0.05 is
     excellent at 500-way grouping and worthless at 7-way.
 
     Recall is always 1.0 for a single bucket (every true pair is inside it).
@@ -137,21 +138,21 @@ def score_linkage(
             "precision": float, "recall": float, "f1": float,
             "empty":     bool,          # True when guessed_groups is empty
             "coverage":  dict | None,   # partition validity report (if checked)
-            "floor":     dict,          # trivial single-bucket floor
+            "baseline":  dict,          # trivial single-bucket reference
         }
 
     Bug 9 fix: empty guess returns NaN for all three metrics, not 0.0.
     Bug 8 fix: when all_fragment_ids is provided, coverage catches missing /
         duplicated / extra fragments before scoring.
     """
-    floor = trivial_floor(true_groups)
+    baseline = trivial_baseline(true_groups)
 
     # Bug 9 fix: empty guess -> NaN, not 0.0
     if not guessed_groups:
         return {
             "precision": float("nan"), "recall": float("nan"),
             "f1":        float("nan"), "empty":  True,
-            "coverage":  None,         "floor":  floor,
+            "coverage":  None,         "baseline":  baseline,
         }
 
     # Bug 8 fix: coverage check before scoring
@@ -171,5 +172,5 @@ def score_linkage(
     )
     return {
         "precision": precision, "recall": recall, "f1": f1,
-        "empty":    False,      "coverage": coverage, "floor": floor,
+        "empty":    False,      "coverage": coverage, "baseline": baseline,
     }

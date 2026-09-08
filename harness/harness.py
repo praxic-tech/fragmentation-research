@@ -324,7 +324,7 @@ def eval_memon(fragments, true_order, true_groups, method: str,
         "l_precision": l_scores["precision"],
         "l_recall":    l_scores["recall"],
         "l_f1":        l_scores["f1"],
-        "l_floor":     l_scores["floor"]["f1"],
+        "l_baseline":  l_scores["baseline"]["f1"],
         "l_status":    STATUS_SCORED,
         "l_scored":    l_scored,   "l_supplied":  l_supplied,
         "l_expected":  l_expected, "l_valid":     l_valid,
@@ -389,7 +389,7 @@ def eval_llm(true_order, true_groups, llm_order_path, llm_group_path) -> dict:
     l_scores = {
         "precision": float("nan"), "recall": float("nan"),
         "f1":        float("nan"), "empty": True,
-        "coverage":  None,         "floor": {"f1": float("nan")},
+        "coverage":  None,         "baseline": {"f1": float("nan")},
     }
 
     if llm_group_path.exists():
@@ -427,7 +427,7 @@ def eval_llm(true_order, true_groups, llm_order_path, llm_group_path) -> dict:
         "l_precision": l_scores["precision"],
         "l_recall":    l_scores["recall"],
         "l_f1":        l_scores["f1"],
-        "l_floor":     l_scores["floor"]["f1"],
+        "l_baseline":  l_scores["baseline"]["f1"],
         "l_status":    l_status,
         "l_scored":    l_scored,   "l_supplied": l_supplied,
         "l_expected":  l_expected, "l_valid":    l_valid,
@@ -477,7 +477,7 @@ def print_comparison_table(results: dict, title: str, seed: int, n_runs: int) ->
         "Game O tau (mean+/-std)",
         "Game O tau +/-2sigma CI",
         "L: F1",
-        "L: floor",
+        "L: base",
         "L: P",
         "L: R",
     ]
@@ -511,7 +511,7 @@ def print_comparison_table(results: dict, title: str, seed: int, n_runs: int) ->
             tau_cell,
             ci_cell,
             _f(r["l_f1"],                        9).strip(),
-            _f(r.get("l_floor", float("nan")),   9).strip(),
+            _f(r.get("l_baseline", float("nan")),   9).strip(),
             _f(r["l_precision"],                 9).strip(),
             _f(r["l_recall"],                    9).strip(),
         ))
@@ -554,14 +554,14 @@ def evaluate_dataset(fragments_path, answer_key_path, llm_order_path, llm_group_
     o_taus, l_ps, l_rs, l_fs = eval_random(
         fragments, true_order, true_groups, args.runs
     )
-    from scoring import trivial_floor as _trivial_floor
+    from scoring import trivial_baseline as _trivial_baseline
     results["Random"] = {
         "o_tau":       float(o_taus.mean()),
         "o_tau_std":   float(o_taus.std(ddof=1)),
         "l_precision": float(l_ps.mean()),
         "l_recall":    float(l_rs.mean()),
         "l_f1":        float(l_fs.mean()),
-        "l_floor":     _trivial_floor(true_groups)["f1"],  # Item (c)
+        "l_baseline":  _trivial_baseline(true_groups)["f1"],  # Item (c)
         "quarantined": False,
         "quarantine_reasons": [],
     }
