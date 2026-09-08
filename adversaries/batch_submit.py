@@ -44,6 +44,7 @@ sys.path.insert(0, os.path.join(ROOT, "harness"))
 
 from masking import (IdLeakError, preflight, preflight_stats,
                      preflight_summary, reset_preflight_stats)
+from run_ledger import DEFAULT_MAX_SPEND, Ledger
 
 DEFAULT_MODEL = "claude-sonnet-5"
 DEFAULT_MAX_TOKENS = 4096
@@ -262,7 +263,8 @@ def make_client():
 
 # ── submit ───────────────────────────────────────────────────────────────────
 
-def submit(spec, state_dir=DEFAULT_STATE_DIR, client=None):
+def submit(spec, state_dir=DEFAULT_STATE_DIR, client=None,
+           max_spend=DEFAULT_MAX_SPEND, ledger=None):
     tag = spec["tag"]
     requests = build_requests(spec)
     sp = state_path(state_dir, tag)
@@ -280,7 +282,21 @@ def submit(spec, state_dir=DEFAULT_STATE_DIR, client=None):
     print(f"  worst case ${est['est_cost_worst_case']:.2f}, "
           f"input alone ${est['est_cost_input_only']:.2f}")
 
+    # THE SPEND CAP IS CONSULTED HERE, BEFORE create(). With auto-reload on the
+    # account balance is no longer a backstop -- a loop that resubmits just buys
+    # more credit -- so this is the only real limit. Projected, not observed,
+    # because after create() the money is already committed.
+    led = ledger if ledger is not None else Ledger(max_spend=max_spend)
+    allowed, message = led.check_spend(est["est_cost_worst_case"])
+    print(f"  {message}" if allowed else "")
+    if not allowed:
+        raise SystemExit(message)
+
     batch = client.messages.batches.create(requests=requests)
+    # Reserve immediately: the batch is billable from this moment.
+    led.commit(est["est_cost_worst_case"])
+    led.record_submission(tag, batch.id, est["est_cost_worst_case"],
+                          len(requests))
 
     # Written FIRST. If the process dies now the batch is still recoverable.
     state = {
@@ -463,6 +479,9 @@ def parse_args():
     ap.add_argument("--wait", action="store_true", help="block until the batch ends")
     ap.add_argument("--poll-seconds", type=int, default=60)
     ap.add_argument("--budget", type=float, default=None)
+    ap.add_argument("--max-spend", type=float, default=DEFAULT_MAX_SPEND,
+                    help="hard cap on cumulative run spend, checked "
+                         "BEFORE each submission against the ledger")
     ap.add_argument("--self-test", action="store_true")
     return ap.parse_args()
 
@@ -503,7 +522,7 @@ def main():
             print("\n  dry run — nothing submitted. Add --submit to spend.")
         return
 
-    submit(spec, state_dir=args.state_dir)
+    submit(spec, state_dir=args.state_dir, max_spend=args.max_spend)
 
 
 if __name__ == "__main__":

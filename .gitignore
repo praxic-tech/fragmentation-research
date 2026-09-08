@@ -33,3 +33,6 @@ results/grid_results.json
 
 # Pilot response data — regenerate with adversaries/joint_game.py
 results/joint_pilot*/
+
+# Run ledger — live run state, regenerate by running
+results/run_ledger.json
