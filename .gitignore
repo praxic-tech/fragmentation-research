@@ -36,3 +36,6 @@ results/joint_pilot*/
 
 # Run ledger — live run state, regenerate by running
 results/run_ledger.json
+
+# Smoke-test output - regenerate with adversaries/hierarchical.py
+results/hierarchical_smoke/

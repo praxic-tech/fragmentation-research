@@ -47,6 +47,7 @@ it does not. Cluster on M, order on W.
 """
 
 import argparse
+import io
 import hashlib
 import json
 import os
@@ -195,9 +196,35 @@ def score_pairs_offline(pairs, oracle, seed=0):
     return m_edges, w_edges, rows
 
 
+def pair_reservation(n_pairs, prompt, tpm_limit=None):
+    """Output budget for one pair batch, sized from MEASUREMENT.
+
+    A reasoning model spends most of its output thinking, not answering. On
+    gpt-oss-120b, measured:
+
+        3 pairs  -> 489 completion tokens   (163/pair)
+        8 pairs  -> 894                     (112/pair)
+       15 pairs  -> 1258                    ( 84/pair)
+
+    which is roughly 250 tokens of fixed overhead plus ~70 per pair -- so per
+    pair, BIGGER BATCHES ARE CHEAPER. An earlier version reserved 40/pair with
+    no fixed term and every single batch came back empty: the model burned the
+    whole budget reasoning and emitted nothing, which surfaced as "Model did not
+    return valid JSON" and looked like a parser bug.
+
+    400 + 100/pair is that fit with margin. Shrunk to fit tpm_limit when given,
+    since providers count the reservation against tokens-per-minute.
+    """
+    want = 400 + 100 * n_pairs
+    if not tpm_limit:
+        return want
+    room = tpm_limit - (len(prompt) // 4) - 200
+    return max(256, min(want, room))
+
+
 def score_pairs_llm(client, pairs, text_by_id, model, seed=0,
                     pairs_per_call=DEFAULT_PAIRS_PER_CALL, temperature=None,
-                    pause=0.0, on_call=None):
+                    pause=0.0, on_call=None, tpm_limit=None):
     """Score pairs with a model, batched, every prompt through preflight.
 
     Returns (m_edges, w_edges, rows, telemetry). A batch that fails is recorded
@@ -208,7 +235,7 @@ def score_pairs_llm(client, pairs, text_by_id, model, seed=0,
 
     oriented = orient(pairs, seed)
     m_edges, w_edges, rows = {}, {}, []
-    calls = failed = malformed = unanswered = 0
+    calls = failed = malformed = unanswered = truncated = 0
 
     for start in range(0, len(oriented), pairs_per_call):
         chunk = oriented[start:start + pairs_per_call]
@@ -220,12 +247,30 @@ def score_pairs_llm(client, pairs, text_by_id, model, seed=0,
         prompt = pair_prompt(shown)
         preflight(prompt, where=f"hierarchical pair batch {start}")
         calls += 1
-        try:
-            answer = call_model(client, prompt, model, temperature=temperature,
-                                max_tokens=max(256, len(chunk) * 40 + 200))
-        except Exception as err:                                # noqa: BLE001
-            failed += 1
-            print(f"  [skip] pair batch {start}: {str(err)[:90]}")
+        # Reasoning length is VARIABLE, so a fixed margin is not enough: at
+        # 15 pairs the measured need was 1258 tokens, the reservation 1900, and
+        # one batch in fourteen still truncated mid-JSON. A truncation is not a
+        # model failure, it is a budget failure, so retry once with double the
+        # room before giving the batch up.
+        answer = None
+        for attempt in (1, 2):
+            budget = pair_reservation(len(chunk), prompt, tpm_limit) * attempt
+            if tpm_limit:
+                budget = min(budget, max(256, tpm_limit - len(prompt) // 4 - 200))
+            try:
+                answer = call_model(client, prompt, model,
+                                    temperature=temperature, max_tokens=budget)
+                break
+            except Exception as err:                            # noqa: BLE001
+                last = str(err)
+                if attempt == 1:
+                    truncated += 1
+                    if pause:
+                        time.sleep(pause)
+                    continue
+                failed += 1
+                print(f"  [skip] pair batch {start} after retry: {last[:80]}")
+        if answer is None:
             if pause:
                 time.sleep(pause)
             continue
@@ -266,6 +311,7 @@ def score_pairs_llm(client, pairs, text_by_id, model, seed=0,
     return m_edges, w_edges, rows, {
         "pair_calls": calls, "failed_batches": failed,
         "malformed_pairs": malformed, "unanswered_pairs": unanswered,
+        "retried_batches": truncated,
         "scored_pairs": len(rows), "requested_pairs": len(oriented),
     }
 
@@ -345,7 +391,8 @@ def sha(text):
 
 
 def attack_pool_llm(client, fragments, n_records, model, k=DEFAULT_K, seed=42,
-                    pairs_per_call=DEFAULT_PAIRS_PER_CALL, pause=0.0):
+                    pairs_per_call=DEFAULT_PAIRS_PER_CALL, pause=0.0,
+                    tpm_limit=None):
     """attack() wired to a model, keeping every raw response re-scorable."""
     text_by_id = {f["fragment_id"]: f["text"] for f in fragments}
     captured = {"rows": [], "telemetry": []}
@@ -353,7 +400,7 @@ def attack_pool_llm(client, fragments, n_records, model, k=DEFAULT_K, seed=42,
     def score_fn(pairs):
         m, w, rows, tel = score_pairs_llm(
             client, pairs, text_by_id, model, seed=seed,
-            pairs_per_call=pairs_per_call, pause=pause)
+            pairs_per_call=pairs_per_call, pause=pause, tpm_limit=tpm_limit)
         captured["rows"].extend(rows)
         captured["telemetry"].append(tel)
         return m, w, rows
@@ -363,6 +410,113 @@ def attack_pool_llm(client, fragments, n_records, model, k=DEFAULT_K, seed=42,
         "pair_calls": sum(t["pair_calls"] for t in captured["telemetry"]),
         "failed_batches": sum(t["failed_batches"] for t in captured["telemetry"]),
         "malformed_pairs": sum(t["malformed_pairs"] for t in captured["telemetry"]),
+        "retried_batches": sum(t["retried_batches"] for t in captured["telemetry"]),
+        "unanswered_pairs": sum(t["unanswered_pairs"] for t in captured["telemetry"]),
         "model": model,
     }
     return groups, telemetry, captured["rows"]
+
+
+# ── CLI: real-model smoke test ───────────────────────────────────────────────
+
+def _load_pool(cell_dir, n_docs):
+    frags = [json.loads(l) for l in
+             io.open(os.path.join(cell_dir, "prose_fragments.jsonl"),
+                     encoding="utf-8") if l.strip()]
+    key = {json.loads(l)["record_id"]: json.loads(l)["order"] for l in
+           io.open(os.path.join(cell_dir, "prose_answer_key.jsonl"),
+                   encoding="utf-8") if l.strip()}
+    by_rec = defaultdict(list)
+    for f in frags:
+        by_rec[f["record_id"]].append(f)
+    rids = sorted(by_rec)[:n_docs]
+    return [f for r in rids for f in by_rec[r]], {r: key[r] for r in rids}
+
+
+def parse_args():
+    ap = argparse.ArgumentParser(
+        description="Smoke-test the hierarchical attacker against a real model.")
+    ap.add_argument("--cell", default=os.path.join(ROOT, "results", "grid",
+                                                   "pilot_reference"))
+    ap.add_argument("--docs", type=int, default=3)
+    ap.add_argument("--k", type=int, default=5)
+    ap.add_argument("--provider", default="groq")
+    ap.add_argument("--model", default=None)
+    ap.add_argument("--pairs-per-call", type=int, default=15)
+    ap.add_argument("--pause", type=float, default=3.0)
+    ap.add_argument("--tpm-limit", type=int, default=8000,
+                    help="provider tokens-per-minute ceiling; the output "
+                         "reservation is shrunk to fit under it")
+    ap.add_argument("--seed", type=int, default=42)
+    ap.add_argument("--out", default=os.path.join(ROOT, "results",
+                                                  "hierarchical_smoke"))
+    return ap.parse_args()
+
+
+def main():
+    a = parse_args()
+    sys.path.insert(0, os.path.join(ROOT, "harness"))
+    from joint_metrics import analytic_baseline, decompose, score_joint
+    from llm_adversary import PROVIDERS, make_client
+
+    model = a.model or PROVIDERS[a.provider][1]
+    fragments, truth = _load_pool(a.cell, a.docs)
+    members = list(truth)
+
+    # MASK before anything reaches a prompt. preflight refuses raw ids, but the
+    # masking has to happen here or every pair prompt would be blocked.
+    masked, id_map = mask_fragment_ids(fragments, seed=a.seed)
+    back = {m: o for m, o in id_map.items()}
+
+    print(f"pool   : {len(members)} documents, {len(masked)} fragments")
+    print(f"model  : {model} via {a.provider}   k={a.k}  "
+          f"pairs/call={a.pairs_per_call}")
+
+    client = make_client(a.provider)
+    groups, tel, rows = attack_pool_llm(
+        client, masked, len(members), model, k=a.k, seed=a.seed,
+        pairs_per_call=a.pairs_per_call, pause=a.pause,
+        tpm_limit=a.tpm_limit)
+
+    unmasked = [[back[m] for m in g if m in back] for g in groups]
+
+    os.makedirs(a.out, exist_ok=True)
+    with io.open(os.path.join(a.out, "rows.jsonl"), "w", encoding="utf-8") as fh:
+        for r in rows:
+            fh.write(json.dumps(r) + "\n")
+    with io.open(os.path.join(a.out, "result.json"), "w", encoding="utf-8") as fh:
+        json.dump({"groups": unmasked, "telemetry": tel,
+                   "alias_map": id_map, "model": model,
+                   "at": datetime.now(timezone.utc).isoformat()}, fh, indent=2)
+
+    c = tel["candidates"]
+    llm = tel["llm"]
+    print(f"\ncandidates : {c['candidate_pairs']} pairs from "
+          f"{c['possible_pairs']} possible ({c['reduction_ratio']:.1%} skipped), "
+          f"{c['fragments_tied_at_k']} fragments tied at k")
+    print(f"scoring    : {llm['pair_calls']} calls, "
+          f"{llm['retried_batches']} retried, "
+          f"{llm['failed_batches']} failed, "
+          f"{llm['malformed_pairs']} malformed, "
+          f"{llm['unanswered_pairs']} unanswered")
+    print(f"             {len(rows)} of {c['candidate_pairs']} candidate pairs "
+          f"scored ({len(rows) / max(1, c['candidate_pairs']):.1%})")
+    print(f"clustering : {tel['n_clusters']} clusters "
+          f"(exactly N: {tel['exact_n']}), "
+          f"{tel['clustering']['evidence_free_merges']} evidence-free merges, "
+          f"{tel['bridge_rounds']} bridge rounds")
+    print(f"ordering   : {tel['clusters_disconnected']} disconnected clusters, "
+          f"{tel['arbitrary_pairs_total']} arbitrary pairs")
+
+    res = score_joint(unmasked, truth, members)
+    dec = decompose(unmasked, truth, members)
+    base = analytic_baseline({r: truth[r] for r in members})
+    q = dec["q"]
+    print(f"\nF1_J       : {res['f1']:.4f}   baseline {base['joint']:.4f}")
+    print(f"J-linkage  : {dec['f1_linkage']:.4f}")
+    print(f"q (C/K)    : {('%.4f' % q) if q is not None else 'undefined (K=0)'}")
+    print(f"\nwrote {a.out}")
+
+
+if __name__ == "__main__":
+    main()
