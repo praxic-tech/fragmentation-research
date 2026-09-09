@@ -263,13 +263,24 @@ def score_pairs_llm(client, pairs, text_by_id, model, seed=0,
                 break
             except Exception as err:                            # noqa: BLE001
                 last = str(err)
-                if attempt == 1:
+                # ONLY a truncation is worth retrying. call_model already
+                # handles transient/429 conditions internally with backoff, so
+                # if it raises one of those the quota is genuinely gone --
+                # retrying at DOUBLE the budget then spends more of the quota
+                # that just ran out and provokes further limiting. Measured:
+                # a run that retried indiscriminately turned 1 failed batch in
+                # 14 into 10 failed in 17, and F1_J fell 0.4214 -> 0.2738 for
+                # reasons that had nothing to do with the defence.
+                retryable = "did not return valid JSON" in last
+                if attempt == 1 and retryable:
                     truncated += 1
                     if pause:
                         time.sleep(pause)
                     continue
                 failed += 1
-                print(f"  [skip] pair batch {start} after retry: {last[:80]}")
+                reason = "after retry" if attempt > 1 else "not retryable"
+                print(f"  [skip] pair batch {start} ({reason}): {last[:70]}")
+                break
         if answer is None:
             if pause:
                 time.sleep(pause)
