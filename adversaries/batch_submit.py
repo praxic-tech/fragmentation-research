@@ -292,11 +292,15 @@ def submit(spec, state_dir=DEFAULT_STATE_DIR, client=None,
     if not allowed:
         raise SystemExit(message)
 
-    batch = client.messages.batches.create(requests=requests)
-    # Reserve immediately: the batch is billable from this moment.
-    led.commit(est["est_cost_worst_case"])
-    led.record_submission(tag, batch.id, est["est_cost_worst_case"],
-                          len(requests))
+    # RESERVE FIRST. If create() succeeds and this process dies before the id
+    # is recorded, the ledger must already know money was committed.
+    led.reserve(tag, est["est_cost_worst_case"], len(requests))
+    try:
+        batch = client.messages.batches.create(requests=requests)
+    except Exception:
+        led.release(tag, est["est_cost_worst_case"], reason="create() failed")
+        raise
+    led.attach_batch(tag, batch.id)
 
     # Written FIRST. If the process dies now the batch is still recoverable.
     state = {

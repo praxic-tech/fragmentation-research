@@ -75,7 +75,7 @@ MAX_BRIDGE_ROUNDS = 3
 
 # ── 1. candidate generation ──────────────────────────────────────────────────
 
-def top_k_candidates(frag_ids, text_by_id, k=DEFAULT_K):
+def top_k_candidates(frag_ids, text_by_id, k=DEFAULT_K, tie_seed=42):
     """Each fragment's k most similar neighbours, as UNDIRECTED pairs.
 
     Union-kNN: an edge exists when EITHER endpoint selects the other. Reciprocal
@@ -92,7 +92,16 @@ def top_k_candidates(frag_ids, text_by_id, k=DEFAULT_K):
     sim = build_tfidf(frag_ids, text_by_id)
     n = len(frag_ids)
     comparisons = 0
+    ties_at_k = 0
     pairs = set()
+
+    # Ties broken by a SEEDED HASH, not by fragment id. Clinical prose produces
+    # many equal (often zero) similarities, and breaking those lexicographically
+    # would make candidate membership partly an artifact of alias assignment
+    # order rather than of the text.
+    def tiebreak(fid):
+        return int(hashlib.sha256(f"{tie_seed}:{fid}".encode()).hexdigest()[:8], 16)
+
     for i, a in enumerate(frag_ids):
         scored = []
         for j, b in enumerate(frag_ids):
@@ -100,7 +109,9 @@ def top_k_candidates(frag_ids, text_by_id, k=DEFAULT_K):
                 continue
             scored.append((sim(a, b), b))
             comparisons += 1
-        scored.sort(key=lambda t: (-t[0], t[1]))
+        scored.sort(key=lambda t: (-t[0], tiebreak(t[1])))
+        if len(scored) > k and abs(scored[k - 1][0] - scored[k][0]) < 1e-12:
+            ties_at_k += 1
         for _s, b in scored[:k]:
             pairs.add((a, b) if a <= b else (b, a))
     return sorted(pairs), {
@@ -110,6 +121,8 @@ def top_k_candidates(frag_ids, text_by_id, k=DEFAULT_K):
         "possible_pairs": n * (n - 1) // 2,
         "candidate_pairs": len(pairs),
         "reduction_ratio": (1 - len(pairs) / (n * (n - 1) / 2)) if n > 1 else 0.0,
+        "fragments_tied_at_k": ties_at_k,
+        "tied_at_k_fraction": ties_at_k / n if n else 0.0,
     }
 
 
@@ -118,26 +131,29 @@ def top_k_candidates(frag_ids, text_by_id, k=DEFAULT_K):
 def pair_prompt(shown):
     """One prompt covering many pairs. `shown` is [(idx, a_text, b_text), ...].
 
-    Deliberately asks for ONE precedence number, not two. The reverse is
-    derived.
+    Deliberately asks for ONE precedence number, not two -- the reverse is
+    derived. And it requires pair_id on every returned object: mapping answers
+    back by ARRAY POSITION would silently attach valid-looking probabilities to
+    the wrong fragments if the model reordered two objects while returning the
+    right array length. Nothing downstream could detect that.
     """
     blocks = []
     for idx, a_text, b_text in shown:
-        blocks.append(f"{idx}.\n  A: {a_text}\n  B: {b_text}")
+        blocks.append(f"pair_id {idx}\n  A: {a_text}\n  B: {b_text}")
     return (
-        "Each numbered item below is a PAIR of text fragments taken from a "
-        "collection of documents that were split up and mixed together.\n\n"
-        "For each pair, judge two things independently:\n"
-        "  same   — the probability the two fragments came from the SAME "
-        "document, from 0.0 to 1.0\n"
-        "  before — ASSUMING they are from the same document, the probability "
-        "that A appeared BEFORE B in it, from 0.0 to 1.0\n\n"
+        "Each item below is a PAIR of text fragments taken from a collection "
+        "of documents that were split up and mixed together." "\n\n"
+        "For each pair, judge two things independently:" "\n"
+        "  same   - the probability the two fragments came from the SAME "
+        "document, from 0.0 to 1.0" "\n"
+        "  before - ASSUMING they are from the same document, the probability "
+        "that A appeared BEFORE B in it, from 0.0 to 1.0" "\n\n"
         + "\n\n".join(blocks) +
-        f"\n\nReturn ONLY a JSON array of {len(shown)} objects in the same "
-        'order, each {"same": <number>, "before": <number>}. '
-        "No explanation, no markdown."
+        f"\n\nReturn ONLY a JSON array of {len(shown)} objects, each "
+        '{"pair_id": <the number shown above>, "same": <number>, '
+        '"before": <number>}. Include pair_id on every object so the answers '
+        'can be matched up. No explanation, no markdown.'
     )
-
 
 def orient(pairs, seed):
     """Decide, per pair, which fragment is shown as A. Deterministic from seed.
@@ -192,10 +208,11 @@ def score_pairs_llm(client, pairs, text_by_id, model, seed=0,
 
     oriented = orient(pairs, seed)
     m_edges, w_edges, rows = {}, {}, []
-    calls = failed = malformed = 0
+    calls = failed = malformed = unanswered = 0
 
     for start in range(0, len(oriented), pairs_per_call):
         chunk = oriented[start:start + pairs_per_call]
+        by_pair_id = {n + 1: (i, j, flip) for n, (i, j, flip) in enumerate(chunk)}
         shown = [(n + 1,
                   text_by_id[j if flip else i],
                   text_by_id[i if flip else j])
@@ -213,19 +230,34 @@ def score_pairs_llm(client, pairs, text_by_id, model, seed=0,
                 time.sleep(pause)
             continue
 
-        for n, (i, j, flip) in enumerate(chunk):
+        # MAP BY pair_id, NEVER BY POSITION. A model that reorders two objects
+        # while returning the right array length would otherwise attach
+        # valid-looking probabilities to the wrong fragments -- silent, and
+        # expensive because nothing downstream can detect it.
+        seen_ids = set()
+        for item in (answer if isinstance(answer, list) else []):
             try:
-                item = answer[n]
+                pid = int(item["pair_id"])
                 same = float(item["same"])
                 before = float(item["before"])
-            except (IndexError, KeyError, TypeError, ValueError):
+            except (KeyError, TypeError, ValueError):
                 malformed += 1
                 continue
+            if pid not in by_pair_id or pid in seen_ids:
+                malformed += 1          # unknown or duplicated pair_id
+                continue
+            if not (0.0 <= same <= 1.0 and 0.0 <= before <= 1.0):
+                malformed += 1          # out of range
+                continue
+            seen_ids.add(pid)
+            i, j, flip = by_pair_id[pid]
             d = derive(i, j, flip, same, before)
             m_edges[(i, j)] = d["M"]
             w_edges[(i, j)] = d["W"]
-            rows.append({"pair": [i, j], "flipped": flip,
+            rows.append({"pair": [i, j], "pair_id": pid, "flipped": flip,
                          "same": same, "before": before, **d})
+
+        unanswered += len(by_pair_id) - len(seen_ids)
         if on_call:
             on_call(calls)
         if pause:
@@ -233,7 +265,8 @@ def score_pairs_llm(client, pairs, text_by_id, model, seed=0,
 
     return m_edges, w_edges, rows, {
         "pair_calls": calls, "failed_batches": failed,
-        "malformed_pairs": malformed, "scored_pairs": len(rows),
+        "malformed_pairs": malformed, "unanswered_pairs": unanswered,
+        "scored_pairs": len(rows), "requested_pairs": len(oriented),
     }
 
 
@@ -265,7 +298,10 @@ def attack(fragments, n_records, score_fn, k=DEFAULT_K, seed=42,
     clusters, cinfo = cluster_known_n(frag_ids, m_edges, n_records)
     while cinfo["needs_bridges"] and bridge_rounds < max_bridge_rounds:
         comps = connected_components(frag_ids, m_edges)
-        new_pairs = [p for p in bridge_candidates(comps) if p not in m_edges]
+        sim = build_tfidf(frag_ids, text_by_id)
+        new_pairs = [p for p in bridge_candidates(comps, sim=sim,
+                                                  n_target=n_records)
+                     if p not in m_edges]
         if not new_pairs:
             break
         bm, bw, brows = score_fn(new_pairs)

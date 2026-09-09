@@ -50,14 +50,20 @@ __all__ = ["validate", "finalise", "repair_report_text", "run_with_repair",
 
 # ── validation ───────────────────────────────────────────────────────────────
 
-def validate(groups, all_ids):
+def validate(groups, all_ids, expected_n=None):
     """Deterministic report on one answer. Uses only the attacker's own view.
 
-    groups  : list of lists of labels, as returned (may be malformed)
-    all_ids : the set of labels the attacker was given
+    groups     : list of lists of labels, as returned (may be malformed)
+    all_ids    : the set of labels the attacker was given
+    expected_n : the document count, when the attacker was told it
 
-    Returns counts plus the actual id lists, so a caller can build a repair
-    message without recomputing anything.
+    expected_n matters more than it looks. Under the primary condition the
+    attacker is HANDED N, so "you returned 11 groups, the task specified 7" is
+    bookkeeping it could check itself -- not ground truth. Without it an
+    all-singleton partition validates as correct, which is wrong twice over: it
+    is not a known-N answer, and two all-singleton outputs have empty
+    directed-pair sets and therefore agree perfectly with each other, so medoid
+    selection would happily pick one.
     """
     flat = [x for g in groups for x in g]
     counts = Counter(flat)
@@ -67,6 +73,9 @@ def validate(groups, all_ids):
     duplicated = sorted(x for x, n in counts.items() if n > 1 and x in all_ids)
     missing = sorted(all_ids - seen)
 
+    n_groups = len(groups)
+    group_count_error = (expected_n is not None and n_groups != expected_n)
+
     return {
         "n_returned": len(flat),
         "n_distinct": len(seen),
@@ -74,7 +83,11 @@ def validate(groups, all_ids):
         "invalid": invalid,
         "duplicated": duplicated,
         "missing": missing,
-        "valid": not invalid and not duplicated and not missing,
+        "n_groups": n_groups,
+        "expected_n": expected_n,
+        "group_count_error": group_count_error,
+        "valid": (not invalid and not duplicated and not missing
+                  and not group_count_error),
     }
 
 
@@ -93,6 +106,9 @@ def repair_report_text(report, max_list=40):
     if report["invalid"]:
         ids = report["invalid"][:max_list]
         parts.append(f"These labels were not in the input: {', '.join(ids)}.")
+    if report.get("group_count_error"):
+        parts.append(f"You returned {report['n_groups']} groups; the task "
+                     f"specifies {report['expected_n']}.")
     if not parts:
         return ""
     return (" ".join(parts) +
@@ -137,13 +153,13 @@ def finalise(groups, all_ids):
         "discarded_invalid": discarded_invalid,
         "dropped_duplicates": dropped_duplicates,
         "singletons_added": len(singletons),
-        "coverage_before_repair": len(seen) / len(all_ids) if all_ids else 0.0,
+        "final_attempt_coverage": len(seen) / len(all_ids) if all_ids else 0.0,
     }
 
 
 # ── the loop ─────────────────────────────────────────────────────────────────
 
-def run_with_repair(ask, all_ids, max_retries=2):
+def run_with_repair(ask, all_ids, max_retries=2, expected_n=None):
     """Query, validate, request a correction, up to max_retries. Then finalise.
 
     ask(feedback) -> groups
@@ -164,13 +180,15 @@ def run_with_repair(ask, all_ids, max_retries=2):
         except Exception as exc:                      # noqa: BLE001
             groups, error = [], f"{type(exc).__name__}: {exc}"
 
-        report = validate(groups, all_ids)
+        report = validate(groups, all_ids, expected_n=expected_n)
         attempts.append({"attempt": attempt, "error": error, **{
             k: report[k] for k in
             ("n_returned", "n_distinct", "n_expected", "valid")},
             "n_invalid": len(report["invalid"]),
             "n_duplicated": len(report["duplicated"]),
-            "n_missing": len(report["missing"])})
+            "n_missing": len(report["missing"]),
+            "n_groups": report["n_groups"],
+            "group_count_error": report["group_count_error"]})
 
         if error is None and report["valid"]:
             break
@@ -179,10 +197,17 @@ def run_with_repair(ask, all_ids, max_retries=2):
             break                                     # nothing actionable
 
     final, actions = finalise(groups, all_ids)
+    # Three distinct facts, not one overloaded flag. The old "repaired" was
+    # `not attempts[-1]["valid"]`, which reported an answer that FAILED then
+    # succeeded on retry as never repaired -- corrupting exactly the compliance
+    # statistics used for sizing and reporting, without touching F1.
     return final, {
         "calls": len(attempts),
         "attempts": attempts,
-        "repaired": not attempts[-1]["valid"],
+        "repair_attempted": len(attempts) > 1,
+        "final_attempt_valid": attempts[-1]["valid"],
+        "forced_finalise": not attempts[-1]["valid"],
+        "group_count_error": attempts[-1]["group_count_error"],
         **actions,
     }
 

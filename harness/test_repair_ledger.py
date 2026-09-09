@@ -14,8 +14,8 @@ import tempfile
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from joint_metrics import ordered_pairs, score_joint
-from repair import (finalise, pair_agreement, repair_report_text,
-                    run_with_repair, select_medoid, validate)
+from repair import (finalise, pair_agreement, repair_report_text, validate,
+                    run_with_repair, select_medoid)
 from run_ledger import Ledger
 
 _failures = []
@@ -60,9 +60,9 @@ def test_finalise():
     check("duplicate dropped, first occurrence kept",
           act["dropped_duplicates"] == 1 and ["a", "b"] in groups)
     check("unplaced ids became singletons", act["singletons_added"] == 2)
-    check("coverage before repair reported",
-          abs(act["coverage_before_repair"] - 3 / 5) < 1e-9,
-          f"{act['coverage_before_repair']:.2f}")
+    check("final-attempt coverage reported under an honest name",
+          abs(act["final_attempt_coverage"] - 3 / 5) < 1e-9,
+          f"{act['final_attempt_coverage']:.2f}")
 
     # a dropped fragment must cost recall, not be invisible
     true_order = {"d1": ["a", "b", "c"], "d2": ["d", "e"]}
@@ -85,7 +85,11 @@ def test_repair_loop():
         return [["a", "b", "c"], ["d", "e"]]         # corrected
 
     groups, rec = run_with_repair(flaky, ALL, max_retries=2)
-    check("second attempt accepted", rec["calls"] == 2 and not rec["repaired"])
+    check("second attempt accepted", rec["calls"] == 2)
+    check("a first-try failure that succeeds on retry is recorded as REPAIRED",
+          rec["repair_attempted"] and rec["final_attempt_valid"]
+          and not rec["forced_finalise"],
+          "the old single `repaired` flag called this not-repaired")
     check("corrected answer is a valid partition",
           sorted(x for g in groups for x in g) == sorted(ALL))
 
@@ -96,7 +100,22 @@ def test_repair_loop():
     check("budget is bounded", rec["calls"] == 3, f"calls={rec['calls']}")
     check("exhaustion still yields a full partition",
           sorted(x for g in groups for x in g) == sorted(ALL))
-    check("repair recorded, not silent", rec["repaired"] and rec["singletons_added"] == 4)
+    check("exhaustion recorded, not silent",
+          rec["forced_finalise"] and not rec["final_attempt_valid"]
+          and rec["singletons_added"] == 4)
+
+    singles = [[x] for x in sorted(ALL)]
+    r_no_n = validate(singles, ALL)
+    r_with_n = validate(singles, ALL, expected_n=2)
+    check("without expected_n an all-singleton partition validates",
+          r_no_n["valid"])
+    check("WITH expected_n it does not -- the known-N attacker must use N",
+          not r_with_n["valid"] and r_with_n["group_count_error"],
+          f"returned {r_with_n['n_groups']} groups, expected 2")
+    msg = repair_report_text(r_with_n)
+    check("group-count feedback is bookkeeping, not truth",
+          "5 groups" in msg and "specifies 2" in msg
+          and "belongs" not in msg.lower(), msg[:70] + "...")
 
     def explodes(feedback):
         raise ValueError("malformed JSON")
@@ -148,8 +167,8 @@ def test_ledger():
         led = Ledger(path, max_spend=100.0)
 
         check("unknown step is pending", led.state("step2") == "pending")
-        led.record_submission("step2", "batch_abc", projected_usd=20.0,
-                              n_requests=571)
+        led.reserve("step2", projected_usd=20.0, n_requests=571)
+        led.attach_batch("step2", "batch_abc")
         check("batch id persisted immediately",
               led.step("step2")["batch_id"] == "batch_abc")
 
@@ -162,7 +181,6 @@ def test_ledger():
         check("completed steps are skippable", reopened.is_done("step2"))
 
         led2 = Ledger(path, max_spend=100.0)
-        led2.commit(20.0)
         ok, msg = led2.check_spend(30.0)
         check("a submission under the cap is allowed", ok, msg.split("(")[0].strip())
 
@@ -170,6 +188,24 @@ def test_ledger():
         check("a submission over the cap is refused", not ok)
         check("refusal prints the documented cut order",
               "cut order" in msg and "repeats" in msg and "clause row" in msg)
+
+        led3 = Ledger(os.path.join(td, "l3.json"), max_spend=100.0)
+        led3.reserve("step4", 30.0, 100)
+        check("reservation commits spend BEFORE the provider call",
+              abs(led3.committed - 30.0) < 1e-9
+              and led3.state("step4") == "submitted")
+        check("a dangling reservation is detectable after a crash",
+              led3.dangling_reservations() == ["step4"])
+        led3.attach_batch("step4", "batch_xyz")
+        check("attaching the id clears the dangling state",
+              led3.dangling_reservations() == []
+              and led3.step("step4")["batch_id"] == "batch_xyz")
+
+        led4 = Ledger(os.path.join(td, "l4.json"), max_spend=100.0)
+        led4.reserve("step5", 25.0, 10)
+        led4.release("step5", 25.0, reason="create() failed")
+        check("a failed create() releases the reservation",
+              abs(led4.committed) < 1e-9 and led4.state("step5") == "failed")
 
         led2.observe(45.0)
         check("projection uses max(committed, observed), not just one",

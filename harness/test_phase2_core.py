@@ -152,7 +152,7 @@ def test_cluster_exact_n():
           sorted(map(sorted, clusters)) ==
           [["f0", "f1", "f2"], ["f3", "f4", "f5"], ["f6", "f7", "f8"]],
           str(sorted(map(sorted, clusters))))
-    check("no merge was forced without an edge", info["forced_merges"] == 0)
+    check("no evidence-free merge was needed", info["evidence_free_merges"] == 0)
 
     for n in (1, 2, 4, 5):
         cl, _ = cluster_known_n(ids, edges, n)
@@ -164,31 +164,99 @@ def test_cluster_exact_n():
 
 
 def test_cluster_never_invents():
-    print("\nclustering: absence is absence, never a confident negative")
+    print("\nclustering: known-N completion is labelled, and bridges are sized")
     ids = [f"f{i}" for i in range(6)]
     edges = {("f0", "f1"): 0.9, ("f2", "f3"): 0.9, ("f4", "f5"): 0.9}
     clusters, info = cluster_known_n(ids, edges, 2)     # 3 islands, asked for 2
-    check("refuses to invent a link, reports needs_bridges",
-          info["needs_bridges"] and not info["reached_n"],
-          f"components={info['components_before']} asked=2")
-    check("returns the honest components rather than a fabricated N",
-          len(clusters) == 3, str(len(clusters)))
-    check("nothing lost while refusing",
+
+    # Under known-N the attacker was HANDED the document count, so completing to
+    # N from disconnected components is an evidence-free decision using side
+    # information -- not fabricated evidence. It happens, and it is counted.
+    check("known-N still yields exactly N", len(clusters) == 2,
+          str(len(clusters)))
+    check("the evidence-free part is COUNTED, not hidden",
+          info["evidence_free_merges"] == 1, str(info["evidence_free_merges"]))
+    check("needs_bridges still flags that evidence was too sparse",
+          info["needs_bridges"])
+    check("nothing lost",
           sorted(x for c in clusters for x in c) == sorted(ids))
 
-    bridges = bridge_candidates(connected_components(ids, edges))
-    check("bridge pairs proposed across components", len(bridges) == 3,
-          str(bridges))
-    check("bridge pairs are cross-component, never within",
-          all(not (a[1] == b[1]) or True for a, b in bridges)
-          and all({a, b} not in [{"f0", "f1"}, {"f2", "f3"}, {"f4", "f5"}]
-                  for a, b in bridges))
+    bridges = bridge_candidates(connected_components(ids, edges), n_target=2)
+    check("bridges are sized to c - N, not C(c,2)", len(bridges) == 1,
+          f"{len(bridges)} proposed to take 3 components to 2")
+    check("bridge pairs are cross-component",
+          all({a, b} not in [{"f0", "f1"}, {"f2", "f3"}, {"f4", "f5"}]
+              for a, b in bridges), str(bridges))
 
-    edges2 = dict(edges); edges2[bridges[0]] = 0.5
+    many = [[f"c{i}_{j}" for j in range(3)] for i in range(50)]
+    check("50 components propose 49 bridges, not 1225",
+          len(bridge_candidates(many)) == 49,
+          str(len(bridge_candidates(many))))
+
+    edges2 = dict(edges)
+    edges2[bridges[0]] = 0.9
     clusters2, info2 = cluster_known_n(ids, edges2, 2)
-    check("after one bridge, N becomes reachable",
-          info2["reached_n"] and len(clusters2) == 2,
-          f"components_before={info2['components_before']}")
+    check("after the bridge, N is reached on evidence alone",
+          len(clusters2) == 2 and info2["evidence_free_merges"] == 0)
+
+
+def test_signed_vs_single():
+    """What signed aggregation actually buys -- and what it does not.
+
+    The reviewer's argument is that aggregating signed evidence lets several
+    negative observed edges outvote one erroneous positive, where single-linkage
+    merges on the single best edge and is therefore welded by it. That is true,
+    but only once clusters HAVE members. Measured below, both cases matter.
+    """
+    print("\nclustering: signed aggregation vs single-linkage")
+
+    # CASE 1: the poisoned edge is the GLOBAL MAXIMUM, both endpoints singletons.
+    ids = [f"f{i}" for i in range(6)]
+    edges = {}
+    for a, b in (("f0", "f1"), ("f1", "f2"), ("f0", "f2")):
+        edges[(a, b)] = 0.95
+    for a, b in (("f3", "f4"), ("f4", "f5"), ("f3", "f5")):
+        edges[(a, b)] = 0.95
+    edges[("f2", "f3")] = 0.99                       # wrong, and the maximum
+    for a, b in (("f0", "f4"), ("f1", "f5"), ("f0", "f3"), ("f1", "f4")):
+        edges[(a, b)] = 0.02                         # correct negatives
+
+    truth = [["f0", "f1", "f2"], ["f3", "f4", "f5"]]
+    single, _ = cluster_known_n(ids, edges, 2, linkage="single")
+    signed, _ = cluster_known_n(ids, edges, 2, linkage="signed")
+    s_sizes = sorted(len(c) for c in single)
+    z_sizes = sorted(len(c) for c in signed)
+
+    check("neither recovers truth when the poison is the global maximum",
+          sorted(map(sorted, single)) != truth
+          and sorted(map(sorted, signed)) != truth,
+          "greedy commits on merge 1; a SUM cannot help when both sides are "
+          "singletons with one edge each")
+    check("but signed degrades far less catastrophically",
+          z_sizes == [2, 4] and s_sizes == [1, 5],
+          f"single {s_sizes} vs signed {z_sizes}")
+
+    # CASE 2: clusters already have members, so the poison competes with a sum.
+    ids2 = [f"g{i}" for i in range(6)]
+    e2 = {("g0", "g1"): 0.99, ("g2", "g3"): 0.99, ("g4", "g5"): 0.99}
+    e2[("g1", "g2")] = 0.97                          # one strong wrong link
+    for a, b in (("g0", "g2"), ("g0", "g3"), ("g1", "g3")):
+        e2[(a, b)] = 0.02                            # A-B negatives
+    e2[("g3", "g4")] = 0.60
+    e2[("g2", "g5")] = 0.60                          # B-C mild positives
+
+    single2, _ = cluster_known_n(ids2, e2, 2, linkage="single")
+    signed2, _ = cluster_known_n(ids2, e2, 2, linkage="signed")
+    check("single-linkage follows the one strong wrong link",
+          ["g0", "g1", "g2", "g3"] in sorted(map(sorted, single2)),
+          str(sorted(map(sorted, single2))))
+    check("signed REJECTS it -- three negatives outvote one positive",
+          ["g0", "g1"] in sorted(map(sorted, signed2)),
+          str(sorted(map(sorted, signed2))))
+
+    check("both backends always return exactly N",
+          len(single) == 2 and len(signed) == 2
+          and len(single2) == 2 and len(signed2) == 2)
 
 
 def test_cluster_determinism():
@@ -219,6 +287,7 @@ def main():
     test_inconsistent_evidence_rejected()
     test_cluster_exact_n()
     test_cluster_never_invents()
+    test_signed_vs_single()
     test_cluster_determinism()
     print("\n" + "=" * 70)
     if _failures:

@@ -118,7 +118,12 @@ def score_joint(guessed_groups, true_order, members):
 
 
 def analytic_baseline(true_groups):
-    """Expected score of one bucket in arbitrary order. Closed form, no sampling.
+    """EXPECTED score of one bucket under a RANDOM order. Closed form.
+
+    Not the score of one particular arbitrary ordering -- a fixed ordering has
+    a definite score that can sit well above or below this. This is the
+    expectation over orderings, which is exactly why the joint value is half
+    the linkage value: a random direction is right half the time.
 
     true_groups : {record_id: [fragment ids]} — only the SIZES are used.
     Returns {"joint": ..., "linkage": ...} with joint == linkage / 2 exactly.

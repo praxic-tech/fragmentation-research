@@ -209,8 +209,11 @@ def test_bridges():
           sorted(x for g in groups for x in g) == sorted(ids))
     check("bridge rounds recorded", "bridge_rounds" in tel,
           f"rounds={tel['bridge_rounds']} extra pairs={tel['bridge_pairs_scored']}")
-    check("no cluster was merged without an observed edge",
-          tel["clustering"]["forced_merges"] == 0)
+    check("evidence-free completion is counted when it happens",
+          "evidence_free_merges" in tel["clustering"],
+          f"evidence_free={tel['clustering']['evidence_free_merges']}")
+    check("exactly N even under starved evidence", tel["exact_n"],
+          f"{tel['n_clusters']} clusters")
 
 
 def main():

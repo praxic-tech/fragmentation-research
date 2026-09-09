@@ -109,10 +109,40 @@ class Ledger:
         self.save()
         return entry
 
-    def record_submission(self, name, batch_id, projected_usd, n_requests):
-        """Write the batch id BEFORE anything else. It is already billable."""
-        return self.mark(name, "submitted", batch_id=batch_id,
+    def reserve(self, name, projected_usd, n_requests):
+        """Commit spend and mark the step BEFORE the provider call.
+
+        check -> create -> commit has a crash window: if the provider accepts
+        the request and this process dies before commit(), real money exists
+        that the durable ledger has no record of, and crash recovery is exactly
+        what G1 tests. So the reservation is persisted first and the batch id is
+        attached afterwards. A reservation left dangling by a crash is
+        conservatively counted as spent -- over-counting is recoverable, a lost
+        submission is not.
+        """
+        self.data["spend"]["committed_usd"] += float(projected_usd)
+        return self.mark(name, "submitted", batch_id=None, reserved=True,
                          n_requests=n_requests, projected_usd=projected_usd)
+
+    def attach_batch(self, name, batch_id):
+        """Record the provider id against an existing reservation."""
+        return self.mark(name, "submitted", batch_id=batch_id, reserved=False)
+
+    def release(self, name, projected_usd, reason=""):
+        """The provider call failed, so give the reservation back."""
+        self.data["spend"]["committed_usd"] -= float(projected_usd)
+        return self.mark(name, "failed", reserved=False, error=reason)
+
+    def dangling_reservations(self):
+        """Steps holding a reservation with no batch id -- a crash left these.
+
+        Each one is either a submission whose id was lost (money spent, results
+        retrievable only by hand) or a create() that never landed. Both need a
+        human, so they are surfaced rather than cleaned up automatically.
+        """
+        return [n for n, st in self.data["steps"].items()
+                if st.get("state") == "submitted" and st.get("reserved")
+                and not st.get("batch_id")]
 
     # ── spend ────────────────────────────────────────────────────────────────
 

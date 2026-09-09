@@ -51,6 +51,7 @@ optimises the real objective either way. Adding an estimator with its own
 failure mode to the highest-risk component is a bad trade.
 """
 
+import random
 from collections import defaultdict
 
 __all__ = ["net_win_scores", "objective", "components", "order_cluster"]
@@ -157,8 +158,10 @@ def _local_search(order, canon, max_passes=64):
 
     Deterministic: candidate moves are scanned in index order and only a strict
     improvement is taken, so equal-scoring alternatives never flip the result.
-    Still a local optimum, not a global one. Exact optimisation here is Kemeny
-    and NP-hard; we do not need exact, we need honest.
+
+    Returns (order, swaps, converged). `converged` is True only when a complete
+    pass produced no improving move -- terminating because max_passes ran out is
+    a different condition and must not be reported as a local optimum.
     """
     order = list(order)
     n = len(order)
@@ -198,8 +201,8 @@ def _local_search(order, canon, max_passes=64):
             break
 
         if not moved:
-            break
-    return order, swaps
+            return order, swaps, True      # full pass, no move
+    return order, swaps, False                                    # hit max_passes
 
 
 def order_cluster(ids, edges, max_passes=64):
@@ -243,12 +246,27 @@ def order_cluster(ids, edges, max_passes=64):
 
     order = []
     swaps = 0
+    converged_all = True
+    starts_used = 0
+
     for comp in comps:
-        # descending net-win: earlier fragments should win more comparisons
-        seeded = sorted(comp, key=lambda f: (-scores[f], f))
-        improved, n = _local_search(seeded, canon, max_passes)
-        order.extend(improved)
-        swaps += n
+        # MULTI-START. One seed is not enough: net-win is flat on a chain, so a
+        # single start can sit in a poor local optimum. Three deterministic
+        # starts, keeping whichever scores best on the OBSERVED-EDGE objective --
+        # entirely attacker-computable, no ground truth, no model calls.
+        by_score = sorted(comp, key=lambda f: (-scores[f], f))
+        shuffled = list(comp)
+        random.Random(hash(tuple(sorted(comp))) & 0xFFFFFFFF).shuffle(shuffled)
+        best_order, best_val, best_conv, best_swaps = None, None, True, 0
+        for seed_order in (by_score, list(reversed(by_score)), shuffled):
+            cand, n, conv = _local_search(seed_order, canon, max_passes)
+            val = _objective_of(cand, canon)
+            starts_used += 1
+            if best_val is None or val > best_val:
+                best_order, best_val, best_conv, best_swaps = cand, val, conv, n
+        order.extend(best_order)
+        swaps += best_swaps
+        converged_all = converged_all and best_conv
 
     # pairs whose relative order no evidence path could have determined
     sizes = [len(c) for c in comps]
@@ -257,6 +275,8 @@ def order_cluster(ids, edges, max_passes=64):
     return order, {
         "n_components": len(comps),
         "component_sizes": sizes,
+        "converged": converged_all,
+        "starts": starts_used,
         "arbitrary_pairs": arbitrary,
         "observed_pairs": len(canon),
         "possible_pairs": m * (m - 1) // 2,
