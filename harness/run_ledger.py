@@ -41,8 +41,20 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(BASE_DIR)
 DEFAULT_PATH = os.path.join(ROOT, "results", "run_ledger.json")
 
-# RUN_PLAN's tripwire. Above the $149.82 modelled ceiling, below runaway.
-DEFAULT_MAX_SPEND = 170.00
+# RUN_PLAN's tripwire, set deliberately rather than derived.
+#
+# The previous value was $170, justified as "above the $149.82 modelled
+# ceiling". That justification is void: $149.82 predates medoid-of-k, repair
+# retries and hierarchical pair scoring, so it is not a ceiling, it is an
+# out-of-date estimate wearing a ceiling's clothes. A cap chosen as
+# "the stale forecast plus headroom" is not a cap at all.
+#
+# $120 is a hard budget decision. It is deliberately allowed to sit BELOW
+# whatever the regenerated cost model returns: if the forecast comes back
+# higher, the correct outcome is a refusal and a cut from CUT_ORDER, not a
+# larger number here. Raising it is a decision to spend more, made once,
+# on purpose -- never a fix for a refused submission.
+DEFAULT_MAX_SPEND = 120.00
 
 # Documented, in the order it should be applied. Not invented at the moment of
 # refusal, when the temptation is to cut whatever is nearest.
