@@ -39,3 +39,6 @@ results/run_ledger.json
 
 # Smoke-test output - regenerate with adversaries/hierarchical.py
 results/hierarchical_smoke/
+
+# Blocker measurement output - regenerate with analysis/blocker.py
+results/blocker/
