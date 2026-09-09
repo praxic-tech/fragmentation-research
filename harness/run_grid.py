@@ -189,7 +189,10 @@ def get_dollar_cost(pending_cells):
     model = json.loads(
         raw.split(COST_JSON_BEGIN)[1].split(COST_JSON_END)[0])
 
-    per_cell = model.get('ordering_per_cell', {})
+    # The joint model emits one cost per cell. 'ordering_per_cell' is the
+    # superseded O+L shape, kept as a fallback so an old model file still
+    # produces a number rather than a silent None.
+    per_cell = model.get('joint_per_cell') or model.get('ordering_per_cell', {})
     breakdown, total = {}, 0.0
     for _strategy, granularity in pending_cells:
         usd = per_cell.get(granularity)
