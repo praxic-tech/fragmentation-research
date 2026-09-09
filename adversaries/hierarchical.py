@@ -63,7 +63,8 @@ for _p in (os.path.join(ROOT, "harness"), os.path.join(ROOT, "datagen"), BASE_DI
     if _p not in sys.path:
         sys.path.insert(0, _p)
 
-from masking import mask_fragment_ids, preflight                    # noqa: E402
+from masking import (assert_ids_masked, mask_fragment_ids,          # noqa: E402
+                     preflight)
 from memon_linkage import build_tfidf                               # noqa: E402
 from order_from_sim import order_cluster                            # noqa: E402
 from sparse_cluster import (bridge_candidates, cluster_known_n,     # noqa: E402
@@ -343,6 +344,10 @@ def attack(fragments, n_records, score_fn, k=DEFAULT_K, seed=42,
     every fragment exactly once — the same shape one-shot J emits.
     """
     frag_ids = [f["fragment_id"] for f in fragments]
+    # "ALREADY MASKED" was a docstring promise; now it is checked. preflight
+    # guards prompts, and every id here reaches a sort, a seeded hash and a
+    # tie-break before any prompt is built.
+    assert_ids_masked(frag_ids, where="hierarchical.attack")
     text_by_id = {f["fragment_id"]: f["text"] for f in fragments}
 
     pairs, cand_info = top_k_candidates(frag_ids, text_by_id, k=k)

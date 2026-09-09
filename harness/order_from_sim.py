@@ -186,13 +186,43 @@ def _local_search(order, canon, max_passes=64):
         for src in range(n):
             frag = order[src]
             rest = order[:src] + order[src + 1:]
+
+            # Insertion deltas in O(n) instead of O(n * |E|).
+            #
+            # Moving `frag` changes the objective only through pairs that
+            # involve `frag`; every other pair keeps its relative order. Let
+            # w_t be the evidence that frag precedes rest[t]. Inserting at dst
+            # puts frag after rest[:dst] and before rest[dst:], so its whole
+            # contribution is
+            #
+            #     sum_{t >= dst} w_t  -  sum_{t < dst} w_t  =  total - 2*P(dst)
+            #
+            # with P the prefix sum of w. The objective at dst therefore
+            # differs from the current one by 2*(P(src) - P(dst)), because
+            # dst == src reproduces the current order exactly.
+            #
+            # This is the same search in the same order taking the same first
+            # strict improvement -- only the arithmetic is cheaper. The naive
+            # form is O(n^2 * |E|) per pass, which is fine on the hierarchical
+            # attacker's sparse top-k graphs and unusable on the dense
+            # within-cluster graphs the free n-gram attacker produces.
+            prefix = [0.0] * (n + 1)
+            for t, other in enumerate(rest):
+                key = (frag, other) if frag <= other else (other, frag)
+                w = canon.get(key)
+                if w is None:
+                    w_ft = 0.0
+                else:
+                    w_ft = w if frag <= other else -w
+                prefix[t + 1] = prefix[t] + w_ft
+
+            p_src = prefix[src]
             for dst in range(n):
                 if dst == src:
                     continue
-                cand = rest[:dst] + [frag] + rest[dst:]
-                val = _objective_of(cand, canon)
-                if val > best + 1e-12:          # strict, so ties never move
-                    order, best = cand, val
+                if 2.0 * (p_src - prefix[dst]) > 1e-12:
+                    order = rest[:dst] + [frag] + rest[dst:]
+                    best = best + 2.0 * (p_src - prefix[dst])
                     moved = True
                     swaps += 1
                     break

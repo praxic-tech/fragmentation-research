@@ -1,0 +1,35 @@
+{
+  "cell": "results/grid/pilot_reference",
+  "docs": 7,
+  "f1_joint": 0.1670585600716605,
+  "baseline_joint": 0.12421972534332085,
+  "advantage": 0.048915048634925254,
+  "f1_linkage": 0.2973911096181839,
+  "q": 0.5617469879518072,
+  "K": 1328,
+  "C": 746,
+  "telemetry": {
+    "attacker": "memon-joint",
+    "n": 6,
+    "d": 6,
+    "seed": 42,
+    "mask_seed": 42,
+    "n_fragments": 184,
+    "n_docs_given": 7,
+    "grouping": {
+      "n_groups": 7,
+      "exact_n": true,
+      "maxclust_n_groups": 7,
+      "cut_tree_disagreed": false,
+      "largest": 106,
+      "singletons": 1
+    },
+    "score_pair_calls": 13086,
+    "context_coverage": 0.0009424830607774211,
+    "zero_weight_pairs": 6470,
+    "clusters_ordered": 6,
+    "all_orderings_connected": true,
+    "arbitrary_pairs": 0,
+    "mean_objective_frac": 0.16666666666666666
+  }
+}

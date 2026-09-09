@@ -142,6 +142,35 @@ def assert_clean(text, where="prompt"):
     return text
 
 
+def assert_ids_masked(ids, where="attacker input"):
+    """Raise IdLeakError if any fragment ID still names its document/position.
+
+    preflight() guards PROMPTS, which protects attackers that talk to a model
+    and nothing else. An OFFLINE attacker never builds a prompt, so it can read
+    `prose_0002_frag_000` straight off the input and never trip a single check.
+
+    That is not hypothetical. The n-gram joint attacker scored q = 1.0000 --
+    perfect ordering -- at n = 8 on a cell where the statistic produced ZERO
+    usable evidence: 6,543 of 6,543 pairs at weight 0, context coverage 0.0%.
+    Every ordering was decided by order_cluster's deterministic tie rule, which
+    concatenates by smallest member, and sorting `prose_0002_frag_000 <
+    ..._frag_001 < ...` IS the answer key. The tie rule is honest -- it is
+    documented as evidence-free -- but "evidence-free" only means "arbitrary"
+    when the identifiers are arbitrary, and raw fragment IDs are not.
+
+    So every attacker asserts its inputs are masked, model-driven or not.
+    """
+    bad = [i for i in ids if find_leaks(str(i))]
+    if bad:
+        raise IdLeakError(
+            f"{where} received {len(bad)} raw fragment/record IDs, e.g. "
+            f"{bad[0]!r}. Fragment IDs name the document and the position, so "
+            "any tie-break, sort, or hash over them leaks the answer key. Call "
+            "mask_fragment_ids() before the attacker sees the fragments."
+        )
+    return ids
+
+
 def preflight(prompt, where="prompt"):
     """assert_clean, with counters so a run can prove the check executed.
 
