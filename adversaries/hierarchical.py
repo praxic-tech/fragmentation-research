@@ -65,6 +65,7 @@ for _p in (os.path.join(ROOT, "harness"), os.path.join(ROOT, "datagen"), BASE_DI
 
 from masking import (assert_ids_masked, mask_fragment_ids,          # noqa: E402
                      preflight)
+from repair import NoModelAnswer                                       # noqa: E402
 from memon_linkage import build_tfidf                               # noqa: E402
 from order_from_sim import order_cluster                            # noqa: E402
 from sparse_cluster import (bridge_candidates, cluster_known_n,     # noqa: E402
@@ -197,6 +198,12 @@ def score_pairs_offline(pairs, oracle, seed=0):
     return m_edges, w_edges, rows
 
 
+# Mirrors joint_game.POLICY_CAP. Past this share of the REQUESTED pair evidence
+# having no model answer, the partition rests too heavily on the clusterer's
+# evidence-free completion to be scored as the attacker's work.
+HOLE_CAP = 0.25
+
+
 def pair_reservation(n_pairs, prompt, tpm_limit=None):
     """Output budget for one pair batch, sized from MEASUREMENT.
 
@@ -278,6 +285,14 @@ def score_pairs_llm(client, pairs, text_by_id, model, seed=0,
                     if pause:
                         time.sleep(pause)
                     continue
+                if "Too many transient failures" in last:
+                    # The provider quota is gone. Every remaining batch would
+                    # fail the same way, leaving the clusterer to fill the
+                    # holes with evidence-free merges and the pool to be scored
+                    # as if the attacker had tried. Stop instead of carrying on.
+                    raise NoModelAnswer(
+                        f"pair batch {start}: provider limit reached -- "
+                        f"{last[:80]}")
                 failed += 1
                 reason = "after retry" if attempt > 1 else "not retryable"
                 print(f"  [skip] pair batch {start} ({reason}): {last[:70]}")
@@ -428,6 +443,8 @@ def attack_pool_llm(client, fragments, n_records, model, k=DEFAULT_K, seed=42,
         "malformed_pairs": sum(t["malformed_pairs"] for t in captured["telemetry"]),
         "retried_batches": sum(t["retried_batches"] for t in captured["telemetry"]),
         "unanswered_pairs": sum(t["unanswered_pairs"] for t in captured["telemetry"]),
+        "requested_pairs": sum(t["requested_pairs"] for t in captured["telemetry"]),
+        "scored_pairs": sum(t["scored_pairs"] for t in captured["telemetry"]),
         "model": model,
     }
     return groups, telemetry, captured["rows"]
@@ -489,10 +506,16 @@ def main():
           f"pairs/call={a.pairs_per_call}")
 
     client = make_client(a.provider)
-    groups, tel, rows = attack_pool_llm(
-        client, masked, len(members), model, k=a.k, seed=a.seed,
-        pairs_per_call=a.pairs_per_call, pause=a.pause,
-        tpm_limit=a.tpm_limit)
+    try:
+        groups, tel, rows = attack_pool_llm(
+            client, masked, len(members), model, k=a.k, seed=a.seed,
+            pairs_per_call=a.pairs_per_call, pause=a.pause,
+            tpm_limit=a.tpm_limit)
+    except NoModelAnswer as err:
+        print(f"REFUSED: {err}")
+        print("The pool's pair evidence is incomplete for a transport reason, "
+              "so it is not scored. Re-run when the provider quota recovers.")
+        sys.exit(1)
 
     unmasked = [[back[m] for m in g if m in back] for g in groups]
 
@@ -523,6 +546,18 @@ def main():
           f"{tel['bridge_rounds']} bridge rounds")
     print(f"ordering   : {tel['clusters_disconnected']} disconnected clusters, "
           f"{tel['arbitrary_pairs_total']} arbitrary pairs")
+
+    # INTEGRITY. A pair batch with no model answer leaves its pairs unobserved
+    # and the clusterer completes to N with evidence-free merges -- a partition
+    # that is partly ours, scored as the attacker's. The smoke run that lost 10
+    # of 17 batches to rate limiting and "scored" F1_J 0.2738 would stop here.
+    hole = 1.0 - llm["scored_pairs"] / max(1, llm["requested_pairs"])
+    print(f"integrity  : {llm['scored_pairs']} of {llm['requested_pairs']} "
+          f"requested pairs answered ({hole:.1%} without a model answer)")
+    if hole > HOLE_CAP:
+        print(f"REFUSED: {hole:.0%} of the requested pair evidence has no model "
+              f"answer (cap {HOLE_CAP:.0%}). F1 withheld.")
+        sys.exit(1)
 
     res = score_joint(unmasked, truth, members)
     dec = decompose(unmasked, truth, members)
