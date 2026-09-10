@@ -16,7 +16,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from joint_metrics import ordered_pairs, score_joint
 from repair import (finalise, pair_agreement, repair_report_text, validate,
                     run_with_repair, select_medoid)
-from run_ledger import Ledger
+from run_ledger import CUT_ORDER, HARD_LIMIT, Ledger
 
 _failures = []
 
@@ -186,8 +186,23 @@ def test_ledger():
 
         ok, msg = led2.check_spend(95.0)
         check("a submission over the cap is refused", not ok)
-        check("refusal prints the documented cut order",
-              "cut order" in msg and "repeats" in msg and "clause row" in msg)
+        # Asserts the SHAPE of the refusal, not which cells are in the list.
+        # The old version named "clause row", which was in CUT_ORDER only
+        # because the superseded model priced clause at a 1.81x fragment
+        # multiplier that RUN_PLAN had already measured at 1.31x. A test that
+        # pins the contents forces the list to stay wrong.
+        check("refusal names the documented cut order and its first cut",
+              "cut order" in msg and CUT_ORDER[0][0] in msg,
+              f"first cut: {CUT_ORDER[0][0]}")
+        cuts = [ln for ln in msg.splitlines() if ln.strip().startswith("drop ")]
+        check("cuts are listed in the declared order",
+              [c[0] for c in CUT_ORDER][:len(cuts)]
+              == [ln.split("drop ")[1].split("  ")[0].strip() for ln in cuts],
+              f"{len(cuts)} listed")
+        running = [float(ln.split("-> $")[1].split()[0]) for ln in cuts]
+        check("each cut lowers the running total",
+              all(b < a for a, b in zip(running, running[1:])) or len(running) < 2,
+              " -> ".join(f"{r:.2f}" for r in running))
 
         led3 = Ledger(os.path.join(td, "l3.json"), max_spend=100.0)
         led3.reserve("step4", 30.0, 100)
@@ -213,6 +228,25 @@ def test_ledger():
               f"committed 20, observed 45 -> {led2.projected_total(0.0):.2f}")
 
 
+def test_hard_limit():
+    print("\nhard limit: the wallet, distinct from the tripwire")
+    with tempfile.TemporaryDirectory() as td:
+        path = os.path.join(td, "hl.json")
+        try:
+            Ledger(path, max_spend=HARD_LIMIT + 1.0)
+            check("a cap above the hard limit is refused at construction", False)
+        except ValueError as e:
+            check("a cap above the hard limit is refused at construction",
+                  "hard limit" in str(e), str(e)[:60] + "...")
+        led = Ledger(path, max_spend=HARD_LIMIT)
+        check("a cap AT the hard limit is allowed",
+              abs(led.data["max_spend_usd"] - HARD_LIMIT) < 1e-9,
+              f"${HARD_LIMIT:.2f}")
+        check("the tripwire sits below the wall, so it bites first",
+              Ledger(os.path.join(td, "d.json")).data["max_spend_usd"]
+              < HARD_LIMIT)
+
+
 def main():
     print("=" * 70)
     print(" G1a — repair protocol, medoid selection, spend ledger")
@@ -222,6 +256,7 @@ def main():
     test_repair_loop()
     test_medoid()
     test_ledger()
+    test_hard_limit()
     print("\n" + "=" * 70)
     if _failures:
         print(f" FAILED — {len(_failures)}: {', '.join(_failures)}")

@@ -56,13 +56,34 @@ DEFAULT_PATH = os.path.join(ROOT, "results", "run_ledger.json")
 # on purpose -- never a fix for a refused submission.
 DEFAULT_MAX_SPEND = 120.00
 
+# The wallet's actual floor. The tripwire above is a REFUSAL that forces a
+# decision and can be raised deliberately with --max-spend; this cannot. A run
+# configured above it is a configuration error, not a judgement call, so the
+# Ledger refuses to construct itself rather than waiting to refuse a submission.
+HARD_LIMIT = 150.00
+
 # Documented, in the order it should be applied. Not invented at the moment of
 # refusal, when the temptation is to cut whatever is nearest.
+#
+# REBUILT for the joint run. The previous list priced cuts that no longer exist
+# ("two granularity linkage cells" is an O+L concept) at figures from the
+# superseded model, and offered "drop the clause row, -$31" computed at a 1.81x
+# clause multiplier that RUN_PLAN had already measured at 1.31x. Under J the
+# clause row is 4 x $3.63 and is a poor thing to cut.
+#
+# Ordered least-damaging first. Dollar figures track analysis/cost_model_v2.py
+# at its selected settings; re-run the model rather than trusting these if the
+# configuration changes.
 CUT_ORDER = [
-    ("repeats", 7.60, "reference cell x2, the variance bound"),
-    ("clause row", 31.00, "4 clause cells; clause is also mispriced at 1.81x "
-                          "when measured is ~1.31x"),
-    ("granularity linkage cells", 5.62, "the two non-sentence linkage cells"),
+    ("repeats", 5.06, "reference cell x2; the variance bound is a "
+                      "nice-to-have, not a claim"),
+    ("J-vs-N curve", 1.67, "N = 1/3/5 on the reference cell; a secondary "
+                           "figure, the grid still stands at N=7"),
+    ("token-window row", 14.16, "3 cells; its 1.617 fragment multiplier is "
+                                "the one granularity figure never independently "
+                                "measured"),
+    ("hierarchical arm, 46 of 71 pools", 17.94,
+     "keeps the second attacker on 25 pools rather than losing it entirely"),
 ]
 
 STATES = ("pending", "submitted", "fetched", "scored", "failed")
@@ -76,6 +97,14 @@ class Ledger:
     """One JSON file, written atomically, describing the whole run."""
 
     def __init__(self, path=DEFAULT_PATH, max_spend=DEFAULT_MAX_SPEND):
+        if max_spend > HARD_LIMIT:
+            raise ValueError(
+                f"max_spend ${max_spend:.2f} is above the ${HARD_LIMIT:.2f} "
+                "hard limit. The tripwire is a refusal you can raise on "
+                "purpose; the hard limit is the wallet. Raising it is a "
+                "decision to change the budget, made by editing HARD_LIMIT, "
+                "never by passing a bigger --max-spend."
+            )
         self.path = path
         self.data = {
             "created_at": _now(),

@@ -111,8 +111,23 @@ GRID_CELLS = [("sentence", 4), ("clause", 4),
               ("token-window", 3), ("llm-decides", 1)]
 
 # ── assumptions ──────────────────────────────────────────────────────────────
-DEFAULTS = dict(j_over_l=1.15, medoid_k=3, retry_rate=0.15,
-                pair_model_tax=1.0, k=5, hier_pools=25)
+# medoid_k = 1 is FORCED, not preferred. At k=3 the run is $238 against a $150
+# hard limit: it does not fit at any other setting, so there was no trade to
+# make. What k=1 gives up is variance reduction WITHIN a pool; the estimates
+# rest on 71 pools (headline) and 25 per grid cell, and averaging across pools
+# is what the error bars actually use. Line item 6 (repeats, reference cell x2)
+# measures the run-to-run variance directly, so the thing medoid-of-k was
+# insuring against gets reported rather than assumed away.
+#
+# repair.select_medoid stays in the tree and is a passthrough at k=1. This is a
+# budget setting, not a deletion.
+#
+# The freed room goes to hier_pools=71: the hierarchical attacker across the
+# WHOLE headline instead of a 25-pool subset. That buys a second attacker on
+# every headline pool for $22, where medoid-3 would have bought tighter
+# per-pool numbers for $166.
+DEFAULTS = dict(j_over_l=1.15, medoid_k=1, retry_rate=0.15,
+                pair_model_tax=1.0, k=5, hier_pools=71)
 
 
 def oneshot_out_tokens(n_frags, n_groups=7):
@@ -181,7 +196,7 @@ def line_items(a):
     return [
         ("G3  positive control, unmasked + masked", ctrl),
         ("G4  nuisance sizing (development, excluded)", g4),
-        ("1   Headline J, 71 pools, one-shot x medoid-3", head_one),
+        (f"1   Headline J, 71 pools, one-shot x medoid-{a[chr(39)+chr(39)] if False else a['medoid_k']}", head_one),
         (f"2   Headline J, hierarchical, {a['hier_pools']} pools", head_hier),
         ("3   Grid, 12 cells x 25 pools, capped", grid),
         ("4   J-vs-N curve, N = 1/3/5, reference cell", curve),
@@ -223,28 +238,29 @@ def main():
     grand = total * (1 + args.buffer)
     print(f"{'    TOTAL':48s} {grand:8.2f}")
 
-    cap = 120.00
+    cap, wall = 120.00, 150.00
     verdict = "UNDER" if grand <= cap else "OVER"
     print(f"\n  tripwire ${cap:.2f}: {verdict} by ${abs(cap - grand):.2f}")
+    print(f"  hard limit ${wall:.2f}: {'UNDER' if grand <= wall else 'OVER'} by ${abs(wall - grand):.2f}")
     print("  grid per cell: " +
           "  ".join(f"{g} ${per_cell[g]:.2f}" for g, _ in GRID_CELLS))
 
     print("\nSCENARIOS — the shape of the decision, not a recommendation")
-    print(f"  {'configuration':<46}{'TOTAL':>9}{'cap':>8}")
+    print(f"  {'configuration':<46}{'TOTAL':>9}{'vs $120/$150':>10}")
     for label, over in (
-            ("as planned: medoid-3 everywhere", {}),
-            ("medoid-1 everywhere, repeats keep the variance bound",
-             {"medoid_k": 1}),
-            ("medoid-1, hierarchical on all 71 pools",
-             {"medoid_k": 1, "hier_pools": 71}),
-            ("medoid-1, no hierarchical arm",
-             {"medoid_k": 1, "hier_pools": 0}),
-            ("medoid-1, and J costs 1.8x L",
-             {"medoid_k": 1, "j_over_l": 1.8}),
+            ("SELECTED: medoid-1, hierarchical on all 71 pools", {}),
+            ("...if J turns out to cost 1.4x L", {"j_over_l": 1.4}),
+            ("...if J turns out to cost 1.8x L", {"j_over_l": 1.8}),
+            ("...if repairs run hot (35% retry)", {"retry_rate": 0.35}),
+            ("...and sonnet reasons 2x harder on pairs",
+             {"pair_model_tax": 2.0}),
+            ("fallback: drop the hierarchical arm", {"hier_pools": 0}),
+            ("the old plan: medoid-3 everywhere", {"medoid_k": 3}),
     ):
         b = dict(a); b.update(over)
         t = sum(x for _l, x in line_items(b)[0]) * (1 + args.buffer)
-        print(f"  {label:<46}{t:>9.2f}{'ok' if t <= cap else 'OVER':>8}")
+        flag = "ok" if t <= cap else ("tripwire" if t <= wall else "OVER")
+        print(f"  {label:<46}{t:>9.2f}{flag:>10}")
 
     if args.sensitivity:
         print("\nSENSITIVITY — the assumptions that can move the total")
