@@ -25,6 +25,7 @@ leak between calls.
 import argparse
 import json
 import os
+import hashlib
 import random
 import sys
 from pathlib import Path
@@ -45,6 +46,12 @@ def _reference_count(text, granularity):
         words = text.split()
         return max(1, -(-len(words) // DEFAULT_WINDOW))  # ceiling div
     raise ValueError(f"unknown granularity: {granularity!r}")
+
+
+def _doc_seed(seed, record_id):
+    """Per-document seed, stable across processes -- never Python's hash()."""
+    return seed + int(hashlib.sha256(str(record_id).encode("utf-8"))
+                      .hexdigest()[:8], 16)
 
 
 def cut(text, granularity="sentence", seed=None, target_fragments=None):
@@ -89,7 +96,13 @@ def cut_corpus(raw_path, out_dir, granularity="sentence", seed=None,
          open(key_path,  "w", encoding="utf-8") as kf:
         for idx, rec in enumerate(records):
             record_id = rec["record_id"]
-            doc_seed = None if seed is None else seed + idx
+            # Seed from the document's IDENTITY, not its position in the file.
+            # seed + idx gave a document a different random cut depending on
+            # which other documents happened to be in the file being cut, so
+            # an 8-document test and the full run cut the same document
+            # differently: every prompt differed and no test answer could carry
+            # over. A cut is a property of the document, not of its neighbours.
+            doc_seed = None if seed is None else _doc_seed(seed, rec["record_id"])
             fragments = cut(rec["text"], granularity=granularity, seed=doc_seed)
             frag_counts.append(len(fragments))
             ref_counts.append(_reference_count(rec["text"], granularity))
