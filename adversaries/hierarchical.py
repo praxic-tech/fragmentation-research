@@ -230,9 +230,87 @@ def pair_reservation(n_pairs, prompt, tpm_limit=None):
     return max(256, min(want, room))
 
 
+QUOTA_MARKER = "Too many transient failures"
+
+
+def _call_with_cooldown(call, client, prompt, model, temperature, max_tokens,
+                        cooldown, retries, where):
+    """call_model, riding out provider rate limits instead of dying on them.
+
+    call_model already backs off inside one call; when it gives up it raises
+    QUOTA_MARKER. That is usually a per-minute burst, not an exhausted daily
+    budget, so the batch waits and is asked again. Only after `retries`
+    cool-downs does the error propagate -- and by then every earlier answer is
+    already on disk, so the stop is resumable rather than a loss.
+    """
+    for k in range(retries + 1):
+        try:
+            return call(client, prompt, model, temperature=temperature,
+                        max_tokens=max_tokens)
+        except Exception as err:                            # noqa: BLE001
+            if QUOTA_MARKER not in str(err) or k == retries:
+                raise
+            print(f"  [QUOTA] {where}: provider limit -- cooling down "
+                  f"{cooldown:.0f}s ({k + 1}/{retries})")
+            time.sleep(cooldown)
+
+
+class PairCache:
+    """Every answered pair, appended and flushed the moment it is derived.
+
+    The free-tier rehearsal lost ~570 answered pairs -- 38 of 41 batches -- to
+    a quota stop near the end, because answers were only written after the
+    whole pool finished. On the paid run this attacker calls the model directly
+    at full price, so that would have been real money thrown away.
+    """
+
+    def __init__(self, path=None):
+        self.path = path
+        self.rows = {}
+        if path and os.path.exists(path):
+            with io.open(path, encoding="utf-8") as fh:
+                for line in fh:
+                    if line.strip():
+                        r = json.loads(line)
+                        self.rows[tuple(r["pair"])] = r
+
+    def get(self, i, j):
+        return self.rows.get((i, j))
+
+    def add(self, row):
+        self.rows[tuple(row["pair"])] = row
+        if self.path:
+            with io.open(self.path, "a", encoding="utf-8") as fh:
+                fh.write(json.dumps(row) + "\n")
+                fh.flush()
+
+
+def check_run_meta(out_dir, meta):
+    """Refuse to resume into a folder holding a DIFFERENT run's answers.
+
+    Returns True for a fresh folder (meta written), False for a genuine resume.
+    """
+    path = os.path.join(out_dir, "run_meta.json")
+    if os.path.exists(path):
+        with io.open(path, encoding="utf-8") as fh:
+            old = json.load(fh)
+        diff = sorted(k for k in meta if old.get(k) != meta[k])
+        if diff:
+            raise ValueError(
+                f"{out_dir} holds answers from a different run (differs in "
+                f"{', '.join(diff)}). Use a fresh --out: mixing runs would "
+                "score one pool with another pool's evidence.")
+        return False
+    os.makedirs(out_dir, exist_ok=True)
+    with io.open(path, "w", encoding="utf-8") as fh:
+        json.dump(meta, fh, indent=2)
+    return True
+
+
 def score_pairs_llm(client, pairs, text_by_id, model, seed=0,
                     pairs_per_call=DEFAULT_PAIRS_PER_CALL, temperature=None,
-                    pause=0.0, on_call=None, tpm_limit=None):
+                    pause=0.0, on_call=None, tpm_limit=None, cache=None,
+                    call=None, quota_cooldown=90.0, quota_retries=6):
     """Score pairs with a model, batched, every prompt through preflight.
 
     Returns (m_edges, w_edges, rows, telemetry). A batch that fails is recorded
@@ -244,6 +322,23 @@ def score_pairs_llm(client, pairs, text_by_id, model, seed=0,
     oriented = orient(pairs, seed)
     m_edges, w_edges, rows = {}, {}, []
     calls = failed = malformed = unanswered = truncated = 0
+
+    # RESUME. A pair answered in an earlier run of this pool is taken from the
+    # cache, not asked again. Its stored M and W already carry the orientation
+    # it was asked under, so nothing is re-derived.
+    resumed = 0
+    if cache is not None:
+        todo = []
+        for (i, j, flip) in oriented:
+            hit = cache.get(i, j)
+            if hit is None:
+                todo.append((i, j, flip))
+                continue
+            m_edges[(i, j)] = hit["M"]
+            w_edges[(i, j)] = hit["W"]
+            rows.append(hit)
+            resumed += 1
+        oriented = todo
 
     for start in range(0, len(oriented), pairs_per_call):
         chunk = oriented[start:start + pairs_per_call]
@@ -266,8 +361,10 @@ def score_pairs_llm(client, pairs, text_by_id, model, seed=0,
             if tpm_limit:
                 budget = min(budget, max(256, tpm_limit - len(prompt) // 4 - 200))
             try:
-                answer = call_model(client, prompt, model,
-                                    temperature=temperature, max_tokens=budget)
+                answer = _call_with_cooldown(
+                    call or call_model, client, prompt, model, temperature,
+                    budget, quota_cooldown, quota_retries,
+                    f"pair batch {start}")
                 break
             except Exception as err:                            # noqa: BLE001
                 last = str(err)
@@ -291,8 +388,8 @@ def score_pairs_llm(client, pairs, text_by_id, model, seed=0,
                     # holes with evidence-free merges and the pool to be scored
                     # as if the attacker had tried. Stop instead of carrying on.
                     raise NoModelAnswer(
-                        f"pair batch {start}: provider limit reached -- "
-                        f"{last[:80]}")
+                        f"pair batch {start}: provider limit persisted through "
+                        f"{quota_retries} cool-downs -- {last[:80]}")
                 failed += 1
                 reason = "after retry" if attempt > 1 else "not retryable"
                 print(f"  [skip] pair batch {start} ({reason}): {last[:70]}")
@@ -326,8 +423,11 @@ def score_pairs_llm(client, pairs, text_by_id, model, seed=0,
             d = derive(i, j, flip, same, before)
             m_edges[(i, j)] = d["M"]
             w_edges[(i, j)] = d["W"]
-            rows.append({"pair": [i, j], "pair_id": pid, "flipped": flip,
-                         "same": same, "before": before, **d})
+            row = {"pair": [i, j], "pair_id": pid, "flipped": flip,
+                   "same": same, "before": before, **d}
+            rows.append(row)
+            if cache is not None:
+                cache.add(row)          # durable before the next batch is asked
 
         unanswered += len(by_pair_id) - len(seen_ids)
         if on_call:
@@ -339,7 +439,8 @@ def score_pairs_llm(client, pairs, text_by_id, model, seed=0,
         "pair_calls": calls, "failed_batches": failed,
         "malformed_pairs": malformed, "unanswered_pairs": unanswered,
         "retried_batches": truncated,
-        "scored_pairs": len(rows), "requested_pairs": len(oriented),
+        "scored_pairs": len(rows), "requested_pairs": len(oriented) + resumed,
+        "resumed_pairs": resumed,
     }
 
 
@@ -423,7 +524,8 @@ def sha(text):
 
 def attack_pool_llm(client, fragments, n_records, model, k=DEFAULT_K, seed=42,
                     pairs_per_call=DEFAULT_PAIRS_PER_CALL, pause=0.0,
-                    tpm_limit=None):
+                    tpm_limit=None, cache=None, quota_cooldown=90.0,
+                    quota_retries=6):
     """attack() wired to a model, keeping every raw response re-scorable."""
     text_by_id = {f["fragment_id"]: f["text"] for f in fragments}
     captured = {"rows": [], "telemetry": []}
@@ -431,7 +533,9 @@ def attack_pool_llm(client, fragments, n_records, model, k=DEFAULT_K, seed=42,
     def score_fn(pairs):
         m, w, rows, tel = score_pairs_llm(
             client, pairs, text_by_id, model, seed=seed,
-            pairs_per_call=pairs_per_call, pause=pause, tpm_limit=tpm_limit)
+            pairs_per_call=pairs_per_call, pause=pause, tpm_limit=tpm_limit,
+            cache=cache, quota_cooldown=quota_cooldown,
+            quota_retries=quota_retries)
         captured["rows"].extend(rows)
         captured["telemetry"].append(tel)
         return m, w, rows
@@ -445,6 +549,8 @@ def attack_pool_llm(client, fragments, n_records, model, k=DEFAULT_K, seed=42,
         "unanswered_pairs": sum(t["unanswered_pairs"] for t in captured["telemetry"]),
         "requested_pairs": sum(t["requested_pairs"] for t in captured["telemetry"]),
         "scored_pairs": sum(t["scored_pairs"] for t in captured["telemetry"]),
+        "resumed_pairs": sum(t.get("resumed_pairs", 0)
+                             for t in captured["telemetry"]),
         "model": model,
     }
     return groups, telemetry, captured["rows"]
@@ -481,6 +587,10 @@ def parse_args():
                     help="provider tokens-per-minute ceiling; the output "
                          "reservation is shrunk to fit under it")
     ap.add_argument("--seed", type=int, default=42)
+    ap.add_argument("--quota-cooldown", type=float, default=90.0,
+                    help="seconds to wait when the provider rate-limits")
+    ap.add_argument("--quota-retries", type=int, default=6,
+                    help="cool-downs per batch before stopping (resumable)")
     ap.add_argument("--out", default=os.path.join(ROOT, "results",
                                                   "hierarchical_smoke"))
     return ap.parse_args()
@@ -505,16 +615,29 @@ def main():
     print(f"model  : {model} via {a.provider}   k={a.k}  "
           f"pairs/call={a.pairs_per_call}")
 
+    # Every answered pair lands in <out>/pairs.jsonl as it arrives; run_meta
+    # stops a resume from mixing two different runs' evidence.
+    meta = {"cell": os.path.normpath(a.cell), "docs": a.docs, "seed": a.seed,
+            "k": a.k, "model": model,
+            "alias_sha": hashlib.sha256(json.dumps(id_map, sort_keys=True)
+                                        .encode("utf-8")).hexdigest()[:16]}
+    fresh = check_run_meta(a.out, meta)
+    cache = PairCache(os.path.join(a.out, "pairs.jsonl"))
+    if not fresh:
+        print(f"resume : {len(cache.rows)} pairs already answered in {a.out}")
+
     client = make_client(a.provider)
     try:
         groups, tel, rows = attack_pool_llm(
             client, masked, len(members), model, k=a.k, seed=a.seed,
             pairs_per_call=a.pairs_per_call, pause=a.pause,
-            tpm_limit=a.tpm_limit)
+            tpm_limit=a.tpm_limit, cache=cache,
+            quota_cooldown=a.quota_cooldown, quota_retries=a.quota_retries)
     except NoModelAnswer as err:
         print(f"REFUSED: {err}")
-        print("The pool's pair evidence is incomplete for a transport reason, "
-              "so it is not scored. Re-run when the provider quota recovers.")
+        print(f"{len(cache.rows)} answered pairs are saved in {a.out}. The pool "
+              "is not scored with its evidence incomplete; re-run the same "
+              "command to resume from where it stopped.")
         sys.exit(1)
 
     unmasked = [[back[m] for m in g if m in back] for g in groups]
