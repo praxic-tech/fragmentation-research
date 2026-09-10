@@ -264,8 +264,8 @@ def run_game(client, game, units, model, out_path, seed, pause=2.0,
                 # wall -- on the free-tier grid that ended in a wall-clock
                 # timeout killing the process mid-cell. Stop; resume later.
                 quota_hit = True
-                print("  [QUOTA] provider limit reached -- stopping. Re-run "
-                      "the same command later; finished units are kept.")
+                print("  [QUOTA] provider limit reached -- ending this pass; "
+                      "the run cools down and retries what is unanswered.")
                 break
             time.sleep(pause)
             continue
@@ -672,12 +672,17 @@ def main():
                     client, g, units, model, out_g, a.seed,
                     pause=a.pause, tpm_limit=a.tpm_limit,
                     max_retries=a.repair)
-                if quota_hit:
-                    stop = True
-                    break
                 if not failed:
                     break
-                wait = 60 * p
+                if p == a.passes:
+                    stop = quota_hit
+                    break
+                # A quota stop is usually a per-MINUTE burst, not the daily
+                # cap: on the free tier a document-sized request fit again
+                # minutes after the refusal. Cool down and retry rather than
+                # abandoning the run. A genuine daily cap fails every pass and
+                # still ends REFUSED -- correct, just a few minutes slower.
+                wait = 90 if quota_hit else 60 * p
                 print(f"  {len(failed)} unit(s) without a model answer -- "
                       f"retrying them in {wait}s")
                 time.sleep(wait)
