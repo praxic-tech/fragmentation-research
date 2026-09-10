@@ -59,6 +59,7 @@ for _p in (os.path.join(ROOT, "harness"), os.path.join(ROOT, "datagen"), BASE_DI
         sys.path.insert(0, _p)
 
 from masking import mask_fragment_ids, preflight, preflight_summary   # noqa: E402
+from joint_metrics import reconstruction_detail                       # noqa: E402
 from repair import run_with_repair                                    # noqa: E402
 from scoring import score_ordering, score_linkage, trivial_baseline, check_partition  # noqa: E402
 from joint_metrics import (analytic_baseline, advantage, decompose,      # noqa: E402
@@ -319,8 +320,16 @@ def score_row(row, true_order, true_groups_by_unit):
         truth = true_order[rid]
         if len(guess) != len(truth) or set(guess) != set(truth):
             return {"game": "O", "unit": rid, "malformed": True}
+        # tau alone is generous: it scores broad direction over every pair and
+        # can look healthy while nothing sits in the right place. Report what an
+        # attacker actually gets back -- exact positions, displacement, and the
+        # longest intact stretch -- beside it. All free from the answer key.
+        detail = reconstruction_detail(guess, truth) or {}
         return {"game": "O", "unit": rid, "malformed": False,
-                "tau": score_ordering(guess, truth)["tau"], "n": len(truth)}
+                "tau": score_ordering(guess, truth)["tau"], "n": len(truth),
+                **{k: detail[k] for k in
+                   ("exact_positions", "exact_fraction", "mean_shift",
+                    "longest_run", "run_fraction") if k in detail}}
 
     tg = true_groups_by_unit[row["unit"]]
     all_ids = {i for v in tg.values() for i in v}
@@ -426,6 +435,14 @@ def report(out_dir, key, pool_truth):
         t = [r["tau"] for r in O]
         print(f"\nGAME O  (oracle linkage: membership given, order only)")
         print(f"  scored {len(O)}/{len(O)+len(Om)} documents   malformed {len(Om)}")
+        if O and "longest_run" in O[0]:
+            n = len(O)
+            print(f"  recovered: {sum(r['exact_positions'] for r in O)}"
+                  f"/{sum(r['n'] for r in O)} fragments exactly placed   "
+                  f"mean shift {sum(r['mean_shift'] for r in O)/n:.1f}   "
+                  f"longest intact run {sum(r['longest_run'] for r in O)/n:.1f}"
+                  f" of {sum(r['n'] for r in O)/n:.1f} "
+                  f"({sum(r['run_fraction'] for r in O)/n:.0%})")
         print(f"  tau  mean {np.mean(t):+.4f}   median {np.median(t):+.4f}   "
               f"min {min(t):+.3f}  max {max(t):+.3f}")
 

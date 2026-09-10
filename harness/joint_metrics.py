@@ -69,6 +69,7 @@ __all__ = [
     "ordered_pairs", "unordered_pairs",
     "score_joint", "analytic_baseline", "decompose",
     "advantage", "paired_bootstrap_indices", "micro_q",
+    "reconstruction_detail",
 ]
 
 
@@ -232,3 +233,66 @@ def paired_bootstrap_indices(n_pools, n_replicates, rng):
     """
     for _ in range(n_replicates):
         yield [int(i) for i in rng.integers(0, n_pools, size=n_pools)]
+
+
+# ── how much CONTIGUOUS TEXT an attacker actually recovers ───────────────────
+
+def reconstruction_detail(guess, truth):
+    """What tau does not tell you: whether the document is readable.
+
+    Kendall's tau is generous from the attacker's side. It scores "did A come
+    before B" over every pair, so an answer can get the broad front-to-back
+    direction right while placing almost nothing correctly. Measured on this
+    corpus, a document at tau +0.430 had ZERO of its 27 fragments in the correct
+    position, an average displacement of 5 places, and a longest intact stretch
+    of 5 fragments. Another at tau +0.886 had 13 of 21 exactly placed. Both would
+    be reported as "partially reconstructed" by tau alone.
+
+    For a privacy claim the quantity that matters is contiguous readable text,
+    because that is what an attacker can act on. So:
+
+        pairs_ok        (1 + tau)/2, the fraction of pairs correctly ordered
+        exact_positions fragments sitting in their true index
+        mean_shift      average |predicted index - true index|
+        longest_run     longest stretch that is consecutive AND in order
+        run_fraction    longest_run / n, comparable across document lengths
+
+    longest_run is the headline of these: it answers "what is the biggest piece
+    of this document the attacker got back intact", which is the question a
+    reader of the paper actually has.
+
+    All of it is free -- it needs only the answer key and the response, no extra
+    model calls.
+    """
+    n = len(truth)
+    if n == 0 or sorted(guess) != sorted(truth):
+        return None
+    pos = {f: i for i, f in enumerate(truth)}
+    idx = [pos[f] for f in guess]
+
+    exact = sum(1 for i, p in enumerate(idx) if p == i)
+    shift = sum(abs(p - i) for i, p in enumerate(idx)) / n
+
+    best = cur = 1 if n else 0
+    for a, b in zip(idx, idx[1:]):
+        cur = cur + 1 if b == a + 1 else 1
+        best = max(best, cur)
+
+    conc = disc = 0
+    for i in range(n):
+        for j in range(i + 1, n):
+            if idx[i] < idx[j]:
+                conc += 1
+            else:
+                disc += 1
+    total = conc + disc
+    tau = (conc - disc) / total if total else 0.0
+
+    return {"tau": tau,
+            "pairs_ok": (1.0 + tau) / 2.0,
+            "exact_positions": exact,
+            "exact_fraction": exact / n,
+            "mean_shift": shift,
+            "longest_run": best,
+            "run_fraction": best / n,
+            "n": n}
