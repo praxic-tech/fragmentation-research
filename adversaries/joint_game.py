@@ -59,6 +59,7 @@ for _p in (os.path.join(ROOT, "harness"), os.path.join(ROOT, "datagen"), BASE_DI
         sys.path.insert(0, _p)
 
 from masking import mask_fragment_ids, preflight, preflight_summary   # noqa: E402
+from repair import run_with_repair                                    # noqa: E402
 from scoring import score_ordering, score_linkage, trivial_baseline, check_partition  # noqa: E402
 from joint_metrics import (analytic_baseline, advantage, decompose,      # noqa: E402
                           micro_q, ordered_pairs, score_joint)
@@ -176,7 +177,7 @@ def append(path, row):
 
 
 def run_game(client, game, units, model, out_path, seed, pause=2.0,
-             tpm_limit=None):
+             tpm_limit=None, max_retries=1):
     """units: list of (unit_id, fragments, n_records). Appends one row each."""
     already = done_units(out_path)
     ok, failed = 0, []
@@ -202,14 +203,49 @@ def run_game(client, game, units, model, out_path, seed, pause=2.0,
         # the call is nowhere near using. Reserving 45/fragment is what made
         # pools of 7 look impossible on an 8k TPM tier when they fit easily.
         max_tok = size_reservation(prompt, len(items), tpm_limit)
+
+        # REPAIR. harness/repair.py was built in Phase 1 for exactly this and
+        # was never wired in here, which cost more than it looks:
+        #
+        #   game O   a malformed answer is DROPPED from the sample, so tau is
+        #            computed on survivors. On the free-tier probe 12 of 32
+        #            units dropped, and the drop rate tracked fragment count
+        #            (6/8 at 44.5 frags/doc vs 1/8 at 26.4) -- so the bias was
+        #            largest exactly where the task was hardest.
+        #   game J   an incomplete answer is still scored and omission costs
+        #            recall, so the number is DEPRESSED rather than inflated.
+        #            Across the whole J pilot, 0 of 14 units ever returned a
+        #            complete valid partition.
+        #
+        # The feedback is bookkeeping only -- which labels are missing,
+        # duplicated or invented -- never a hint about grouping or order.
+        expected = set(id_map)
+        state = {"raw": None, "err": None}
+
+        def attempt(feedback, _p=prompt, _mt=max_tok, _u=unit_id, _g=game):
+            text = _p if not feedback else f"{_p}\n\n{feedback}"
+            preflight(text, where=f"{_g}/{_u} repair" if feedback
+                      else f"{_g}/{_u}")
+            raw = call_model(client, text, model, temperature=None,
+                             max_tokens=_mt)
+            state["raw"] = raw
+            return _as_groups(raw)
+
         try:
-            raw = call_model(client, prompt, model, temperature=None,
-                             max_tokens=max_tok)
+            groups, rec = run_with_repair(attempt, expected,
+                                          max_retries=max_retries)
         except Exception as err:
             failed.append(unit_id)
             print(f"  [skip] {game}/{unit_id} ({len(items)} frags): {str(err)[:100]}")
             time.sleep(pause)
             continue
+
+        # Game O wants ONE order over every fragment, not a partition. Flatten
+        # in order of appearance: what the model said first, then whatever it
+        # forgot, appended deterministically. That is the exhaustion policy for
+        # an ordering task -- arbitrary for the forgotten tail, and recorded as
+        # such in `repair` rather than hidden behind a dropped unit.
+        raw = [x for g in groups for x in g] if game == "O" else groups
 
         append(out_path, {
             "game": game, "unit": unit_id, "model": model, "seed": seed,
@@ -219,10 +255,15 @@ def run_game(client, game, units, model, out_path, seed, pause=2.0,
             "prompt_sha": sha(prompt),
             "prompt": prompt,
             "raw_response": raw,               # parsed structure, pre-scoring
+            "repair": rec,                     # calls, retries, forced completion
             "fetched_at": datetime.now(timezone.utc).isoformat(),
         })
         ok += 1
-        print(f"  {game}/{unit_id}: {len(items)} frags -> answered")
+        tag = "answered"
+        if rec["repair_attempted"]:
+            tag = ("answered after repair" if rec["final_attempt_valid"]
+                   else f"completed by policy (+{rec['singletons_added']})")
+        print(f"  {game}/{unit_id}: {len(items)} frags -> {tag}")
         time.sleep(pause)
     print(f"  game {game}: {ok} new, {len(already)} cached, {len(failed)} failed"
           + (f" ({', '.join(failed)})" if failed else ""))
@@ -453,6 +494,11 @@ def parse_args():
     ap.add_argument("--tpm-limit", type=int, default=8000,
                     help="provider tokens-per-minute ceiling; the output "
                          "reservation is shrunk to fit under it")
+    ap.add_argument("--repair", type=int, default=1,
+                    help="repair rounds for an incomplete or malformed answer. "
+                         "0 reproduces the old no-repair behaviour, which "
+                         "dropped 12 of 32 game-O units on the free-tier probe "
+                         "and never once produced a complete J partition.")
     ap.add_argument("--score-only", action="store_true")
     return ap.parse_args()
 
@@ -471,7 +517,8 @@ def main():
             print(f"\n[game {g}] {len(units)} units")
             run_game(client, g, units, model,
                      os.path.join(a.out_dir, f"{g}.jsonl"), a.seed,
-                     pause=a.pause, tpm_limit=a.tpm_limit)
+                     pause=a.pause, tpm_limit=a.tpm_limit,
+                     max_retries=a.repair)
         print("\n" + preflight_summary())
 
     report(a.out_dir, key, pool_truth)
