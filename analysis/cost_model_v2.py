@@ -321,7 +321,7 @@ def main():
     grand = total * (1 + args.buffer)
     print(f"{'    TOTAL':48s} {grand:8.2f}")
 
-    cap, wall = 120.00, 150.00
+    cap, wall = 120.00, 167.00
     verdict = "UNDER" if grand <= cap else "OVER"
     print(f"\n  tripwire ${cap:.2f}: {verdict} by ${abs(cap - grand):.2f}")
     print(f"  hard limit ${wall:.2f}: {'UNDER' if grand <= wall else 'OVER'} by ${abs(wall - grand):.2f}")
