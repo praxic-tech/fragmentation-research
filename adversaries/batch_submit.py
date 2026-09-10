@@ -388,14 +388,24 @@ def fetch(state, state_dir=DEFAULT_STATE_DIR, client=None, wait=False,
             written += 1
 
     missing = set(state["custom_ids"]) - already_fetched(out)
+    unanswered = sorted(set(failed_ids(out)) & set(state["custom_ids"]))
+    complete = not missing and not unanswered
     print(f"  wrote {written} results to {out}")
     print(f"  {counts}")
     print(meter.summary())
-    if missing:
-        print(f"  [WARNING] {len(missing)} requested ids never came back, "
-              f"e.g. {sorted(missing)[:3]}")
+    if not complete:
+        # Was a [WARNING] and a return value nobody checked. An errored,
+        # expired or empty result is not an attack outcome, and a result set
+        # with holes in it scores clean-looking wrong numbers -- the free-tier
+        # grid did exactly that. require_complete() is the gate scoring calls.
+        print(f"  [INCOMPLETE] {len(missing)} never came back, "
+              f"{len(unanswered)} came back without an answer "
+              f"(errored / expired / canceled / empty), "
+              f"e.g. {(sorted(missing) + unanswered)[:3]}. "
+              "Scoring will refuse this set: resubmit these ids.")
     return {"status": "ended", "written": written, "counts": counts,
-            "missing": sorted(missing), "cost": meter.cost}
+            "missing": sorted(missing), "unanswered": unanswered,
+            "complete": complete, "cost": meter.cost}
 
 
 # ── self test ────────────────────────────────────────────────────────────────
@@ -527,6 +537,52 @@ def main():
         return
 
     submit(spec, state_dir=args.state_dir, max_spend=args.max_spend)
+
+
+class IncompleteBatchError(RuntimeError):
+    """A batch result set with any request missing or unanswered."""
+
+
+def _latest_rows(out_path):
+    latest = {}
+    if os.path.exists(out_path):
+        with open(out_path, encoding="utf-8") as fh:
+            for line in fh:
+                if line.strip():
+                    row = json.loads(line)
+                    latest[row["custom_id"]] = row
+    return latest
+
+
+def failed_ids(out_path):
+    """custom_ids whose LATEST stored row is not a succeeded, non-empty answer.
+
+    Rows append, so an id that is resubmitted and then succeeds is superseded by
+    its newer row and drops out of this list.
+    """
+    return sorted(cid for cid, row in _latest_rows(out_path).items()
+                  if row.get("result_type") != "succeeded" or row.get("error")
+                  or not str(row.get("text", "")).strip())
+
+
+def require_complete(out_path, custom_ids):
+    """The gate between a batch and the scorer. Returns {custom_id: row}.
+
+    Raises unless EVERY requested id has a succeeded, non-empty answer. There is
+    deliberately no partial mode. An errored or expired request is a hole in the
+    sample, the holes are not random -- large prompts fail more -- and a mean over
+    the survivors is a different experiment from the one designed.
+    """
+    latest = _latest_rows(out_path)
+    wanted = list(custom_ids)
+    missing = [c for c in wanted if c not in latest]
+    bad = sorted(set(failed_ids(out_path)) & set(wanted))
+    if missing or bad:
+        raise IncompleteBatchError(
+            f"{len(missing)} of {len(wanted)} requests never came back and "
+            f"{len(bad)} came back without an answer, e.g. "
+            f"{(missing + bad)[:3]}. Resubmit them; do not score around them.")
+    return {c: latest[c] for c in wanted}
 
 
 if __name__ == "__main__":

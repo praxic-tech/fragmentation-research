@@ -44,7 +44,8 @@ invisible in the results.
 
 from collections import Counter
 
-__all__ = ["validate", "finalise", "repair_report_text", "run_with_repair",
+__all__ = ["NoModelAnswer", "validate", "finalise", "repair_report_text",
+           "run_with_repair",
            "select_medoid", "pair_agreement"]
 
 
@@ -159,24 +160,42 @@ def finalise(groups, all_ids):
 
 # ── the loop ─────────────────────────────────────────────────────────────────
 
+class NoModelAnswer(RuntimeError):
+    """Every attempt failed before the model produced an answer.
+
+    Quota, rate limit, timeout, transport. None of those is an attack outcome,
+    so there is nothing to score. The previous behaviour treated a raise as "the
+    model answered with nothing" and let finalise() build the WHOLE answer from
+    the completion policy -- an arbitrary order that scores near tau = 0 and
+    reads as a near-perfect defence. On the free-tier grid that supplied 74-85%
+    of the fragments in four of twelve cells, and those four topped the ranking.
+    Callers must leave such a unit unwritten so a re-run asks again.
+    """
+
+
 def run_with_repair(ask, all_ids, max_retries=2, expected_n=None):
     """Query, validate, request a correction, up to max_retries. Then finalise.
 
     ask(feedback) -> groups
         feedback is None on the first attempt and a repair message afterwards.
-        Raising is treated as a failed attempt and consumes budget.
+        Raising is a TRANSPORT failure, not an answer: it consumes an attempt,
+        the next attempt resends the same prompt (there is no answer to
+        correct), and if no attempt ever returns an answer this raises
+        NoModelAnswer instead of fabricating one.
 
     Returns (groups, record) where record carries every attempt's validation
     report and the calls spent, because retries are part of the attack cost.
     """
     attempts = []
     groups = []
+    last_answer = None          # the most recent groups the MODEL itself produced
     feedback = None
 
     for attempt in range(max_retries + 1):
         try:
             groups = ask(feedback) or []
             error = None
+            last_answer = groups
         except Exception as exc:                      # noqa: BLE001
             groups, error = [], f"{type(exc).__name__}: {exc}"
 
@@ -192,9 +211,22 @@ def run_with_repair(ask, all_ids, max_retries=2, expected_n=None):
 
         if error is None and report["valid"]:
             break
-        feedback = repair_report_text(report)
-        if not feedback and error is None:
-            break                                     # nothing actionable
+        if error is None:
+            feedback = repair_report_text(report)
+            if not feedback:
+                break                                 # nothing actionable
+        # On a transport error feedback is left as it was: the model gave no
+        # answer, so a correction listing every id as "missing" would be a
+        # message about an answer that does not exist.
+
+    if last_answer is None:
+        raise NoModelAnswer(
+            f"no attempt returned a model answer ({len(attempts)} tried); "
+            f"last error: {attempts[-1]['error']}")
+    if attempts[-1]["error"] is not None:
+        # The repair call died after the model had answered. Keep the model's
+        # own last answer rather than discarding it for an empty one.
+        groups = last_answer
 
     final, actions = finalise(groups, all_ids)
     # Three distinct facts, not one overloaded flag. The old "repaired" was
@@ -208,6 +240,11 @@ def run_with_repair(ask, all_ids, max_retries=2, expected_n=None):
         "final_attempt_valid": attempts[-1]["valid"],
         "forced_finalise": not attempts[-1]["valid"],
         "group_count_error": attempts[-1]["group_count_error"],
+        "model_answers": sum(1 for a in attempts if a["error"] is None),
+        # How much of the final answer is OURS. Reported per unit and gated per
+        # cell: past a point the score measures the completion policy.
+        "policy_share": (actions["singletons_added"] / len(all_ids)
+                         if all_ids else 0.0),
         **actions,
     }
 

@@ -15,7 +15,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from joint_metrics import ordered_pairs, score_joint
 from repair import (finalise, pair_agreement, repair_report_text, validate,
-                    run_with_repair, select_medoid)
+                    run_with_repair, select_medoid, NoModelAnswer)
 from run_ledger import CUT_ORDER, HARD_LIMIT, Ledger
 
 _failures = []
@@ -103,6 +103,9 @@ def test_repair_loop():
     check("exhaustion recorded, not silent",
           rec["forced_finalise"] and not rec["final_attempt_valid"]
           and rec["singletons_added"] == 4)
+    check("the share placed by policy rather than the model is recorded",
+          abs(rec["policy_share"] - 0.8) < 1e-9,
+          f"policy_share {rec['policy_share']:.2f} -- model placed 1 of 5")
 
     singles = [[x] for x in sorted(ALL)]
     r_no_n = validate(singles, ALL)
@@ -117,13 +120,55 @@ def test_repair_loop():
           "5 groups" in msg and "specifies 2" in msg
           and "belongs" not in msg.lower(), msg[:70] + "...")
 
+    # The assertion that used to sit here was "a raising attacker consumes
+    # budget and still returns a partition" -- which IS the bug. A raise means
+    # the model never answered; the partition was built 100% by the completion
+    # policy, scored near tau = 0, and read as a near-perfect defence. On the
+    # free-tier grid that was 74-85% of the fragments in four cells. The gate
+    # was guarding the failure it should have caught.
     def explodes(feedback):
-        raise ValueError("malformed JSON")
+        raise RuntimeError("Too many transient failures - try again later.")
 
-    groups, rec = run_with_repair(explodes, ALL, max_retries=1)
-    check("a raising attacker consumes budget and still returns a partition",
-          rec["calls"] == 2 and sorted(x for g in groups for x in g) == sorted(ALL))
-    check("the error is recorded", rec["attempts"][0]["error"] is not None)
+    try:
+        run_with_repair(explodes, ALL, max_retries=1)
+        check("an attacker that never answers is refused, not scored", False,
+              "returned a partition built entirely by the completion policy")
+    except NoModelAnswer as e:
+        check("an attacker that never answers raises NoModelAnswer",
+              "no attempt returned a model answer" in str(e),
+              str(e)[:60] + "...")
+
+    n = {"calls": 0}
+
+    def api_then_answer(feedback):
+        n["calls"] += 1
+        if n["calls"] == 1:
+            raise RuntimeError("429 rate limited")
+        # after a TRANSPORT error the retry must resend the original prompt,
+        # not a correction for an answer the model never gave
+        assert feedback is None, "repair feedback sent after a non-answer"
+        return [["a", "b", "c"], ["d", "e"]]
+
+    groups, rec = run_with_repair(api_then_answer, ALL, max_retries=1)
+    check("a transport error then a real answer keeps the real answer",
+          sorted(x for g in groups for x in g) == sorted(ALL)
+          and rec["policy_share"] == 0.0 and rec["final_attempt_valid"],
+          f"policy_share {rec['policy_share']:.2f}")
+    check("the retry after a non-answer resent the ORIGINAL prompt",
+          rec["attempts"][0]["error"] is not None and rec["calls"] == 2)
+
+    m = {"calls": 0}
+
+    def partial_then_dies(feedback):
+        m["calls"] += 1
+        if m["calls"] == 1:
+            return [["a", "b", "c"]]          # a REAL answer, incomplete
+        raise RuntimeError("Too many transient failures")
+
+    groups, rec = run_with_repair(partial_then_dies, ALL, max_retries=1)
+    check("if the repair call dies, the model's own last answer is kept",
+          ["a", "b", "c"] in groups and abs(rec["policy_share"] - 0.4) < 1e-9,
+          f"policy_share {rec['policy_share']:.2f} -- 2 of 5 filled by policy")
 
 
 # ── medoid selection ─────────────────────────────────────────────────────────

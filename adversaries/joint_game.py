@@ -60,7 +60,7 @@ for _p in (os.path.join(ROOT, "harness"), os.path.join(ROOT, "datagen"), BASE_DI
 
 from masking import mask_fragment_ids, preflight, preflight_summary   # noqa: E402
 from joint_metrics import reconstruction_detail                       # noqa: E402
-from repair import run_with_repair                                    # noqa: E402
+from repair import NoModelAnswer, run_with_repair                     # noqa: E402
 from scoring import score_ordering, score_linkage, trivial_baseline, check_partition  # noqa: E402
 from joint_metrics import (analytic_baseline, advantage, decompose,      # noqa: E402
                           micro_q, ordered_pairs, score_joint)
@@ -177,11 +177,27 @@ def append(path, row):
         fh.flush()
 
 
+# A unit whose answer is mostly OUR completion policy measures the policy, not
+# the attacker. Past this share the cell is refused as a defence result; see
+# cell_integrity(). A judgement call, stated here so it can be argued with.
+POLICY_CAP = 0.25
+# llm_adversary.call_model's message once its own 429 backoff gives up.
+QUOTA_MARKER = "Too many transient failures"
+
+
+def log_failure(out_path, game, unit_id, n_items, reason):
+    """Every unit the model never answered, durably, for the audit trail."""
+    append(out_path.replace(".jsonl", ".failures.jsonl"), {
+        "game": game, "unit": unit_id, "n_fragments": n_items,
+        "reason": reason, "at": datetime.now(timezone.utc).isoformat()})
+
+
 def run_game(client, game, units, model, out_path, seed, pause=2.0,
              tpm_limit=None, max_retries=1):
     """units: list of (unit_id, fragments, n_records). Appends one row each."""
     already = done_units(out_path)
     ok, failed = 0, []
+    quota_hit = False
     for unit_id, frags, n_records in units:
         if unit_id in already:
             continue
@@ -235,9 +251,22 @@ def run_game(client, game, units, model, out_path, seed, pause=2.0,
         try:
             groups, rec = run_with_repair(attempt, expected,
                                           max_retries=max_retries)
-        except Exception as err:
+        except NoModelAnswer as err:
+            # The model never answered: quota, rate limit, transport. That is
+            # not an attack outcome and is never scored. Not written, so a
+            # re-run of the same command asks exactly this unit again.
             failed.append(unit_id)
-            print(f"  [skip] {game}/{unit_id} ({len(items)} frags): {str(err)[:100]}")
+            log_failure(out_path, game, unit_id, len(items), str(err))
+            print(f"  [NO ANSWER] {game}/{unit_id} ({len(items)} frags): "
+                  f"not written, will be retried -- {str(err)[:90]}")
+            if QUOTA_MARKER in str(err):
+                # Grinding on only walks every remaining unit into the same
+                # wall -- on the free-tier grid that ended in a wall-clock
+                # timeout killing the process mid-cell. Stop; resume later.
+                quota_hit = True
+                print("  [QUOTA] provider limit reached -- stopping. Re-run "
+                      "the same command later; finished units are kept.")
+                break
             time.sleep(pause)
             continue
 
@@ -264,11 +293,14 @@ def run_game(client, game, units, model, out_path, seed, pause=2.0,
         if rec["repair_attempted"]:
             tag = ("answered after repair" if rec["final_attempt_valid"]
                    else f"completed by policy (+{rec['singletons_added']})")
+        if rec.get("policy_share", 0.0) > POLICY_CAP:
+            tag += (f"   [WARN model placed only "
+                    f"{1 - rec['policy_share']:.0%} of fragments]")
         print(f"  {game}/{unit_id}: {len(items)} frags -> {tag}")
         time.sleep(pause)
     print(f"  game {game}: {ok} new, {len(already)} cached, {len(failed)} failed"
           + (f" ({', '.join(failed)})" if failed else ""))
-    return failed
+    return failed, quota_hit
 
 
 # ── scoring ──────────────────────────────────────────────────────────────────
@@ -306,6 +338,26 @@ def _align(guessed, true_groups):
     return pairs
 
 
+def _policy_share(row):
+    """Fraction of this unit's fragments placed by OUR completion policy."""
+    rec = row.get("repair") or {}
+    if "policy_share" in rec:
+        return rec["policy_share"]
+    n = row.get("n_fragments") or 0
+    return (rec.get("singletons_added", 0) / n) if n else 0.0
+
+
+def _no_model_answer(row):
+    """True for rows the pre-fix code wrote after EVERY attempt errored.
+
+    Those orders are 100% completion policy. They exist in older result files,
+    so this reads the stored attempt log rather than trusting that no such row
+    can exist any more.
+    """
+    att = (row.get("repair") or {}).get("attempts") or []
+    return bool(att) and all(a.get("error") for a in att)
+
+
 def score_row(row, true_order, true_groups_by_unit):
     game = row["game"]
     id_map = row["alias_map"]
@@ -327,6 +379,7 @@ def score_row(row, true_order, true_groups_by_unit):
         detail = reconstruction_detail(guess, truth) or {}
         return {"game": "O", "unit": rid, "malformed": False,
                 "tau": score_ordering(guess, truth)["tau"], "n": len(truth),
+                "policy_share": _policy_share(row),
                 **{k: detail[k] for k in
                    ("exact_positions", "exact_fraction", "mean_shift",
                     "longest_run", "run_fraction") if k in detail}}
@@ -416,17 +469,87 @@ def build_units(cell_dir, n_docs, pool_size, seed):
     return o_units, pools, key, pool_truth
 
 
-def report(out_dir, key, pool_truth):
+def cell_integrity(scored, expected_units, cap=POLICY_CAP):
+    """May this set of scored units be reported as a defence result at all?
+
+    Two failures, both of which printed clean-looking, wrong means on the
+    free-tier grid before this existed:
+
+      incomplete     an expected unit has no model answer -- never written, or
+                     written by the old code with every attempt errored and
+                     the whole order supplied by the completion policy
+      policy-heavy   the model answered but placed under (1 - cap) of the
+                     fragments; the rest of the order is ours, so the score
+                     measures model capacity plus our policy, not the cut
+    """
+    by_unit = {r["unit"]: r for r in scored}
+    missing = sorted(u for u in expected_units
+                     if u not in by_unit or by_unit[u].get("no_model_answer"))
+    heavy = sorted(u for u, r in by_unit.items()
+                   if not r.get("no_model_answer")
+                   and r.get("policy_share", 0.0) > cap)
+    shares = [r.get("policy_share", 0.0) for r in scored
+              if not r.get("no_model_answer")]
+    return {"ok": not missing and not heavy,
+            "expected": len(expected_units),
+            "answered": len(expected_units) - len(missing),
+            "missing": missing, "policy_heavy": heavy,
+            "policy_share": (sum(shares) / len(shares)) if shares else 0.0}
+
+
+def integrity_gate(out_dir, key, pool_truth, expected):
+    """Per game: may a mean be printed? Returns the set of refused games."""
+    refused = set()
+    print()
+    print("INTEGRITY")
+    for gname, exp in expected.items():
+        p = os.path.join(out_dir, f"{gname}.jsonl")
+        scored = []
+        if os.path.exists(p):
+            for raw_row in load_jsonl(p):
+                s_row = score_row(raw_row, key, pool_truth)
+                s_row["no_model_answer"] = _no_model_answer(raw_row)
+                if "policy_share" not in s_row:
+                    s_row["policy_share"] = (1.0 - s_row["coverage_frac"]
+                                             if "coverage_frac" in s_row
+                                             else _policy_share(raw_row))
+                scored.append(s_row)
+        v = cell_integrity(scored, exp)
+        print(f"  game {gname}: {'ok' if v['ok'] else 'REFUSED'}   model "
+              f"answered {v['answered']}/{v['expected']}   fragments placed by "
+              f"policy {v['policy_share']:.1%}")
+        if v["missing"]:
+            more = " ..." if len(v["missing"]) > 8 else ""
+            print(f"    no model answer: {', '.join(v['missing'][:8])}{more}")
+        if v["policy_heavy"]:
+            more = " ..." if len(v["policy_heavy"]) > 8 else ""
+            print(f"    model placed under {1 - POLICY_CAP:.0%} of fragments: "
+                  f"{', '.join(v['policy_heavy'][:8])}{more}")
+        if not v["ok"]:
+            refused.add(gname)
+    return refused
+
+
+def report(out_dir, key, pool_truth, withhold=frozenset()):
     rows = []
     for g in ("O", "L", "J"):
         p = os.path.join(out_dir, f"{g}.jsonl")
         if os.path.exists(p):
-            rows += [score_row(r, key, pool_truth) for r in load_jsonl(p)]
+            rows += [score_row(r, key, pool_truth) for r in load_jsonl(p)
+                     if not _no_model_answer(r)]
 
     O = [r for r in rows if r["game"] == "O" and not r.get("malformed")]
     Om = [r for r in rows if r["game"] == "O" and r.get("malformed")]
     L = [r for r in rows if r["game"] == "L"]
     J = [r for r in rows if r["game"] == "J"]
+    # A refused game prints no mean at all. integrity_gate has said why, and a
+    # number printed underneath a warning still gets copied into a table.
+    if "O" in withhold:
+        O, Om = [], []
+    if "L" in withhold:
+        L = []
+    if "J" in withhold:
+        J = []
 
     print("\n" + "=" * 74)
     print(" THREE ATTACK CONDITIONS, SAME CORPUS, SAME MODEL")
@@ -516,6 +639,13 @@ def parse_args():
                          "0 reproduces the old no-repair behaviour, which "
                          "dropped 12 of 32 game-O units on the free-tier probe "
                          "and never once produced a complete J partition.")
+    ap.add_argument("--passes", type=int, default=3,
+                    help="re-attempt units the model never answered, with "
+                         "backoff. A quota stop ends the run early; re-running "
+                         "the same command resumes it.")
+    ap.add_argument("--allow-partial", action="store_true",
+                    help="print means for a game that failed the integrity "
+                         "gate, as DIAGNOSTICS. Never for a reported result.")
     ap.add_argument("--score-only", action="store_true")
     return ap.parse_args()
 
@@ -529,16 +659,44 @@ def main():
 
     if not a.score_only:
         client = make_client(a.provider)
+        stop = False
         for g in a.games:
+            if stop:
+                break
             units = o_units if g == "O" else pools
-            print(f"\n[game {g}] {len(units)} units")
-            run_game(client, g, units, model,
-                     os.path.join(a.out_dir, f"{g}.jsonl"), a.seed,
-                     pause=a.pause, tpm_limit=a.tpm_limit,
-                     max_retries=a.repair)
+            out_g = os.path.join(a.out_dir, f"{g}.jsonl")
+            for p in range(1, a.passes + 1):
+                print()
+                print(f"[game {g}] {len(units)} units   pass {p}/{a.passes}")
+                failed, quota_hit = run_game(
+                    client, g, units, model, out_g, a.seed,
+                    pause=a.pause, tpm_limit=a.tpm_limit,
+                    max_retries=a.repair)
+                if quota_hit:
+                    stop = True
+                    break
+                if not failed:
+                    break
+                wait = 60 * p
+                print(f"  {len(failed)} unit(s) without a model answer -- "
+                      f"retrying them in {wait}s")
+                time.sleep(wait)
         print("\n" + preflight_summary())
 
-    report(a.out_dir, key, pool_truth)
+    games_checked = (list(a.games) if not a.score_only else
+                     [g for g in ("O", "L", "J")
+                      if os.path.exists(os.path.join(a.out_dir, f"{g}.jsonl"))])
+    expected = {g: [u[0] for u in (o_units if g == "O" else pools)]
+                for g in games_checked}
+    refused = integrity_gate(a.out_dir, key, pool_truth, expected)
+    report(a.out_dir, key, pool_truth,
+           withhold=frozenset() if a.allow_partial else refused)
+    if refused and not a.allow_partial:
+        print()
+        print(f"REFUSED: game(s) {', '.join(sorted(refused))} -- means withheld. "
+              "Re-run the same command to complete the missing units, or pass "
+              "--allow-partial to see the numbers as diagnostics only.")
+        sys.exit(1)
 
 
 if __name__ == "__main__":
