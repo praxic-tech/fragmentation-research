@@ -1,0 +1,356 @@
+{"fragment_id": "prose_0002__sv_sentence_000", "record_id": "prose_0002", "text": "Castleman disease"}
+{"fragment_id": "prose_0002__sv_sentence_001", "record_id": "prose_0002", "text": "exists on a spectrum of lymph node involvement and severity."}
+{"fragment_id": "prose_0002__sv_sentence_002", "record_id": "prose_0002", "text": "UCD typically"}
+{"fragment_id": "prose_0002__sv_sentence_003", "record_id": "prose_0002", "text": "presents as an enlarged mass in the mediastinum, which may be visually apparent or detected incidentally."}
+{"fragment_id": "prose_0002__sv_sentence_004", "record_id": "prose_0002", "text": "Most patients"}
+{"fragment_id": "prose_0002__sv_sentence_005", "record_id": "prose_0002", "text": "are asymptomatic, but some may present with symptoms related to compression of nearby anatomical structures."}
+{"fragment_id": "prose_0002__sv_sentence_006", "record_id": "prose_0002", "text": "Laboratory abnormalities can"}
+{"fragment_id": "prose_0002__sv_sentence_007", "record_id": "prose_0002", "text": "include hypergammaglobulinemia, elevated erythrocyte sedimentation rate (ESR), and anemia."}
+{"fragment_id": "prose_0002__sv_sentence_008", "record_id": "prose_0002", "text": "Up to 90% of UCD cases present with hyaline vascular (HV) histopathology, which is characterized by atrophic germinal centers circumscribed with concentric rings of lymphocytes in an \u2018onion-ring\u2019 pattern and containing dysplastic follicular dendritic cells"}
+{"fragment_id": "prose_0002__sv_sentence_009", "record_id": "prose_0002", "text": "; the germinal centers are penetrated by hyalinized vessels giving a \u2018lollipop\u2019 appearance."}
+{"fragment_id": "prose_0002__sv_sentence_010", "record_id": "prose_0002", "text": "Unlike UCD, MCD"}
+{"fragment_id": "prose_0002__sv_sentence_011", "record_id": "prose_0002", "text": "is almost always symptomatic."}
+{"fragment_id": "prose_0002__sv_sentence_012", "record_id": "prose_0002", "text": "Patients present with multifocal lymphadenopathy and signs of systemic inflammation, most commonly fever, night sweats, fluid retention, and renal dysfunction."}
+{"fragment_id": "prose_0002__sv_sentence_013", "record_id": "prose_0002", "text": "These symptoms can"}
+{"fragment_id": "prose_0002__sv_sentence_014", "record_id": "prose_0002", "text": "be episodic, progressive, or chronic, and in severe cases can be fatal if left untreated."}
+{"fragment_id": "prose_0002__sv_sentence_015", "record_id": "prose_0002", "text": "Laboratory tests often"}
+{"fragment_id": "prose_0002__sv_sentence_016", "record_id": "prose_0002", "text": "reveal cytopenias, abnormal liver function tests, markedly elevated C-reactive protein (CRP) and ESR, and proteinuria."}
+{"fragment_id": "prose_0002__sv_sentence_017", "record_id": "prose_0002", "text": "The histopathology of MCD"}
+{"fragment_id": "prose_0002__sv_sentence_018", "record_id": "prose_0002", "text": "is more varied than UCD; it may present with a hypervascular type (hyperV), the plasmacytic (PC) type, or a mixed type."}
+{"fragment_id": "prose_0002__sv_sentence_019", "record_id": "prose_0002", "text": "The hyperV nomenclature is used to differentiate vascular MCD from HV UCD, though HV MCD and HyperV MCD are often used interchangeably by many authors."}
+{"fragment_id": "prose_0002__sv_sentence_020", "record_id": "prose_0002", "text": "The lymph nodes in the PC type are characterized by hypertrophic germinal centers, with intrafollicular spaces populated by sheets of plasma cells and vascular proliferations; as its name"}
+{"fragment_id": "prose_0002__sv_sentence_021", "record_id": "prose_0002", "text": "suggests, the mixed type exhibit features of both the HyperV and PC types."}
+{"fragment_id": "prose_0002__sv_sentence_022", "record_id": "prose_0002", "text": "The etiologic agent"}
+{"fragment_id": "prose_0002__sv_sentence_023", "record_id": "prose_0002", "text": "varies for the different subtypes of MCD."}
+{"fragment_id": "prose_0002__sv_sentence_024", "record_id": "prose_0002", "text": "Uncontrolled infection with HHV-8"}
+{"fragment_id": "prose_0002__sv_sentence_025", "record_id": "prose_0002", "text": "is often the pathogenic driver of MCD, especially in patients who are immunocompromised due to infection with human immunodeficiency virus (HIV)."}
+{"fragment_id": "prose_0002__sv_sentence_026", "record_id": "prose_0002", "text": "In these HHV-8-associated MCD cases, CD20+ B cells"}
+{"fragment_id": "prose_0002__sv_sentence_027", "record_id": "prose_0002", "text": "act as reservoirs for HHV-8 infection and replication, with symptomology stemming from production of a viral homolog of IL-6 and subsequent downstream upregulation of proinflammatory human cytokines."}
+{"fragment_id": "prose_0002__sv_sentence_028", "record_id": "prose_0002", "text": "For POEMS-associated MCD, up to 60% of cases are caused by malignant monoclonal plasma cells, which"}
+{"fragment_id": "prose_0002__sv_sentence_029", "record_id": "prose_0002", "text": "drive reactive lymph node changes with CD features."}
+{"fragment_id": "prose_0002__sv_sentence_030", "record_id": "prose_0002", "text": "Cases of MCD which are not concurrent with HHV-8 infection or POEMS syndrome do not"}
+{"fragment_id": "prose_0002__sv_sentence_031", "record_id": "prose_0002", "text": "have a clear etiology and are considered idiopathic (iMCD)."}
+{"fragment_id": "prose_0002__sv_sentence_032", "record_id": "prose_0002", "text": "While the exact etiology"}
+{"fragment_id": "prose_0002__sv_sentence_033", "record_id": "prose_0002", "text": "remains unknown, IL-6 has been identified as a key pathological driver of iMCD."}
+{"fragment_id": "prose_0002__sv_sentence_034", "record_id": "prose_0002", "text": "Episodes of disease flare may be marked by mild lymphadenopathy and B-symptoms, or in severe cases present acutely with extensive inflammation, organomegaly and organ dysfunction, pleural effusion, anasarca, and ascites."}
+{"fragment_id": "prose_0002__sv_sentence_035", "record_id": "prose_0002", "text": "Cases of iMCD in which thrombocytopenia, anasarca, renal dysfunction or reticulin fibrosis, fever, and organomegaly"}
+{"fragment_id": "prose_0002__sv_sentence_036", "record_id": "prose_0002", "text": "are present are classified as iMCD-TAFRO."}
+{"fragment_id": "prose_0002__sv_sentence_037", "record_id": "prose_0002", "text": "Ferritin and sCD25 are only modestly elevated in iMCD-TAFRO, whereas CRP"}
+{"fragment_id": "prose_0002__sv_sentence_038", "record_id": "prose_0002", "text": "is very high (often >100 mg/L)."}
+{"fragment_id": "prose_0002__sv_sentence_039", "record_id": "prose_0002", "text": "The gamma globulins"}
+{"fragment_id": "prose_0002__sv_sentence_040", "record_id": "prose_0002", "text": "are usually low, normal or modestly elevated in iMCD-TAFRO (5\u201315 g/L), in contrast to iMCD-IPL (usually >35 g/L)."}
+{"fragment_id": "prose_0002__sv_sentence_041", "record_id": "prose_0002", "text": "The cytokine profile, histopathology and clinical course of iMCD-TAFRO"}
+{"fragment_id": "prose_0002__sv_sentence_042", "record_id": "prose_0002", "text": "are different from iMCD-NOS; patients often have less markedly elevated serum IL-6 and increased serum vascular endothelial growth factor (VEGF), the lymph nodes are often highly vascularized and demonstrate the HyperV histopathology type, and the patients typically present with acute and severe disease."}
+{"fragment_id": "prose_0002__sv_sentence_043", "record_id": "prose_0002", "text": "Additional differences"}
+{"fragment_id": "prose_0002__sv_sentence_044", "record_id": "prose_0002", "text": "include frequently elevated alkaline phosphatase (ALP) without hyperbilirubinemia or transaminase elevation, and normal to mildly elevated gammaglobulin."}
+{"fragment_id": "prose_0002__sv_sentence_045", "record_id": "prose_0002", "text": "Differentiating iMCD-TAFRO and TAFRO syndrome is"}
+{"fragment_id": "prose_0002__sv_sentence_046", "record_id": "prose_0002", "text": "challenging due to substantial overlap of signs and symptoms and lack of specific biomarkers."}
+{"fragment_id": "prose_0002__sv_sentence_047", "record_id": "prose_0002", "text": "While the first descriptions of TAFRO syndrome by Takai and colleagues in 2010"}
+{"fragment_id": "prose_0002__sv_sentence_048", "record_id": "prose_0002", "text": "focused on its hyperinflammation symptoms, acute onset, and rapid progression, current perspectives now acknowledge how TAFRO presents as a constellation of nonspecific symptoms that can occur concurrently with other conditions, including malignancies, rheumatologic disorders, infections, and POEMS syndrome."}
+{"fragment_id": "prose_0002__sv_sentence_049", "record_id": "prose_0002", "text": "Due to the heterogeneity in disease presentation, Nishimura et al."}
+{"fragment_id": "prose_0002__sv_sentence_050", "record_id": "prose_0002", "text": "introduced the categories of probable iMCD-TAFRO and TAFRO syndrome without iMCD; these designations are based on the number of diagnostic criteria met (see below)."}
+{"fragment_id": "prose_0002__sv_sentence_051", "record_id": "prose_0002", "text": "There was an open debate as to whether TAFRO"}
+{"fragment_id": "prose_0002__sv_sentence_052", "record_id": "prose_0002", "text": "was exclusively a subtype of iMCD, a distinct clinical entity, or both."}
+{"fragment_id": "prose_0002__sv_sentence_053", "record_id": "prose_0002", "text": "A recent retrospective analysis of data collected from 11 rheumatology and hematology centers in Japan"}
+{"fragment_id": "prose_0002__sv_sentence_054", "record_id": "prose_0002", "text": "identified 104 patients with TAFRO, of which 26 (25%) did not have lymphadenopathy, confirming that TAFRO can in fact exist without CD."}
+{"fragment_id": "prose_0003__sv_sentence_000", "record_id": "prose_0003", "text": "The proband, a 60-year-old male, presented to our department on January 17, 2024, with a 5-year history of elevated serum creatinine (110\u2013160 \u03bcmol/L) and persistent proteinuria (1\u20132+)."}
+{"fragment_id": "prose_0003__sv_sentence_001", "record_id": "prose_0003", "text": "His medical history"}
+{"fragment_id": "prose_0003__sv_sentence_002", "record_id": "prose_0003", "text": "included long-standing hypertension and gout (duration >10 years)."}
+{"fragment_id": "prose_0003__sv_sentence_003", "record_id": "prose_0003", "text": "Notably, his family history"}
+{"fragment_id": "prose_0003__sv_sentence_004", "record_id": "prose_0003", "text": "was significant, with both his father and maternal aunt succumbing to uremia (Figure 1)."}
+{"fragment_id": "prose_0003__sv_sentence_005", "record_id": "prose_0003", "text": "Physical examination"}
+{"fragment_id": "prose_0003__sv_sentence_006", "record_id": "prose_0003", "text": "was unremarkable."}
+{"fragment_id": "prose_0003__sv_sentence_007", "record_id": "prose_0003", "text": "The laboratory workup"}
+{"fragment_id": "prose_0003__sv_sentence_008", "record_id": "prose_0003", "text": "revealed 2+ proteinuria without hematuria, with elevated 24-h urine protein excretion of 1.1 g/24h (normal range: 0\u20130.15 g/24h)."}
+{"fragment_id": "prose_0003__sv_sentence_009", "record_id": "prose_0003", "text": "Serum biochemistry"}
+{"fragment_id": "prose_0003__sv_sentence_010", "record_id": "prose_0003", "text": "demonstrated normal albumin (40.5 g/L; reference 40\u201355 g/L), elevated creatinine (153.4 \u03bcmol/L; reference 57\u2013111 \u03bcmol/L), and normal uric acid levels (221 \u03bcmol/L; reference 208\u2013428 \u03bcmol/L1)."}
+{"fragment_id": "prose_0003__sv_sentence_011", "record_id": "prose_0003", "text": "Immunological profiles"}
+{"fragment_id": "prose_0003__sv_sentence_012", "record_id": "prose_0003", "text": "showed normal IgG/IgA/IgM, C3/C4 complement levels, and negative autoantibodies (ANA, dsDNA, anti-PLA2R, ANCA)."}
+{"fragment_id": "prose_0003__sv_sentence_013", "record_id": "prose_0003", "text": "Infectious disease screening"}
+{"fragment_id": "prose_0003__sv_sentence_014", "record_id": "prose_0003", "text": "was negative for HBV, HCV, HIV, syphilis, HSV, and CMV, with normal hematologic, coagulation, and thyroid function parameters."}
+{"fragment_id": "prose_0003__sv_sentence_015", "record_id": "prose_0003", "text": "Ophthalmologic examination"}
+{"fragment_id": "prose_0003__sv_sentence_016", "record_id": "prose_0003", "text": "demonstrated no anterior lenticonus or perimacular dot/fleck retinopathy, while audiometry showed no bilateral high-frequency sensorineural hearing loss."}
+{"fragment_id": "prose_0003__sv_sentence_017", "record_id": "prose_0003", "text": "Renal ultrasound"}
+{"fragment_id": "prose_0003__sv_sentence_018", "record_id": "prose_0003", "text": "revealed normal-sized kidneys with altered parenchymal echogenicity and a 2.0 \u00d7 1.6 cm right renal cyst."}
+{"fragment_id": "prose_0003__sv_sentence_019", "record_id": "prose_0003", "text": "On light microscopy, histopathological examination"}
+{"fragment_id": "prose_0003__sv_sentence_020", "record_id": "prose_0003", "text": "showed tubulointerstitial fibrosis, tubular atrophy with cystic dilatation, and global glomerulosclerosis (53%)."}
+{"fragment_id": "prose_0003__sv_sentence_021", "record_id": "prose_0003", "text": "Immunofluorescence"}
+{"fragment_id": "prose_0003__sv_sentence_022", "record_id": "prose_0003", "text": "was negative for immunoglobulins and complement."}
+{"fragment_id": "prose_0003__sv_sentence_023", "record_id": "prose_0003", "text": "Immunohistochemistry using anti-UMOD antibody (EPR20071; Abcam)"}
+{"fragment_id": "prose_0003__sv_sentence_024", "record_id": "prose_0003", "text": "revealed abnormal intracellular accumulation of mutant uromodulin in distal tubule epithelial cells (Figure 2a and b)."}
+{"fragment_id": "prose_0003__sv_sentence_025", "record_id": "prose_0003", "text": "Electron microscopy"}
+{"fragment_id": "prose_0003__sv_sentence_026", "record_id": "prose_0003", "text": "revealed one obsolescent glomerulus with characteristic alterations: capillary endothelial vacuolization, segmental GBM thickening (250\u2013750 nm), and diffuse podocyte foot process effacement (>80%)."}
+{"fragment_id": "prose_0003__sv_sentence_027", "record_id": "prose_0003", "text": "The mesangium"}
+{"fragment_id": "prose_0003__sv_sentence_028", "record_id": "prose_0003", "text": "showed mild hypercellularity with rare electron-dense deposits."}
+{"fragment_id": "prose_0003__sv_sentence_029", "record_id": "prose_0003", "text": "Tubulointerstitial findings"}
+{"fragment_id": "prose_0003__sv_sentence_030", "record_id": "prose_0003", "text": "included tubular epithelial vacuolization, focal basement membrane thickening, and mild inflammatory infiltrates."}
+{"fragment_id": "prose_0003__sv_sentence_031", "record_id": "prose_0003", "text": "Vascular changes were limited to occasional capillary erythrocyte aggregates."}
+{"fragment_id": "prose_0003__sv_sentence_032", "record_id": "prose_0003", "text": "NGS"}
+{"fragment_id": "prose_0003__sv_sentence_033", "record_id": "prose_0003", "text": "revealed a novel heterozygous missense mutation in UMOD (NM_003361.4: c.1676A > G, p. Tyr559Cys), located within exon 8."}
+{"fragment_id": "prose_0003__sv_sentence_034", "record_id": "prose_0003", "text": "This variant"}
+{"fragment_id": "prose_0003__sv_sentence_035", "record_id": "prose_0003", "text": "was absent from all major genomic databases (e.g. gnomAD, NCBI\u3001OMIM, and others) and had been submitted to ClinVar with accession number RCV006253441.1."}
+{"fragment_id": "prose_0003__sv_sentence_036", "record_id": "prose_0003", "text": "Bioinformatics analysis"}
+{"fragment_id": "prose_0003__sv_sentence_037", "record_id": "prose_0003", "text": "demonstrated that the affected tyrosine residue at position 559 was evolutionarily conserved across species (Figure 3, Ugene analysis)."}
+{"fragment_id": "prose_0003__sv_sentence_038", "record_id": "prose_0003", "text": "The patient was diagnosed with chronic kidney disease (CKD) stage 3."}
+{"fragment_id": "prose_0003__sv_sentence_039", "record_id": "prose_0003", "text": "The patient was managed with a comprehensive therapeutic regimen including valsartan (for proteinuria control), empagliflozin (for kidney protection), febuxostat (for hyperuricemia management), and sodium bicarbonate (for urine alkalization) (Table 1)."}
+{"fragment_id": "prose_0003__sv_sentence_040", "record_id": "prose_0003", "text": "At the 1-year follow-up (January 22, 2025), laboratory evaluation"}
+{"fragment_id": "prose_0003__sv_sentence_041", "record_id": "prose_0003", "text": "demonstrated stable renal function (serum creatinine 155.8 \u03bcmol/L) with significantly improved proteinuria (trace"}
+{"fragment_id": "prose_0003__sv_sentence_042", "record_id": "prose_0003", "text": "[1+] (near-normal) on urinalysis; urine protein-to-creatinine ratio 0.29)."}
+{"fragment_id": "prose_0003__sv_sentence_043", "record_id": "prose_0003", "text": "A 36-year-old male proband presented to our department on April 7, 2024, with a 3-year history of persistently elevated serum creatinine and abnormal urinalysis."}
+{"fragment_id": "prose_0003__sv_sentence_044", "record_id": "prose_0003", "text": "Serum creatinine"}
+{"fragment_id": "prose_0003__sv_sentence_045", "record_id": "prose_0003", "text": "fluctuated between 119 and 129 \u03bcmol/L over the past 3 years."}
+{"fragment_id": "prose_0003__sv_sentence_046", "record_id": "prose_0003", "text": "Urinalysis"}
+{"fragment_id": "prose_0003__sv_sentence_047", "record_id": "prose_0003", "text": "demonstrated microscopic hematuria (occult blood 2+) without proteinuria."}
+{"fragment_id": "prose_0003__sv_sentence_048", "record_id": "prose_0003", "text": "The patient"}
+{"fragment_id": "prose_0003__sv_sentence_049", "record_id": "prose_0003", "text": "had no personal history of hypertension or gout."}
+{"fragment_id": "prose_0003__sv_sentence_050", "record_id": "prose_0003", "text": "Family history"}
+{"fragment_id": "prose_0003__sv_sentence_051", "record_id": "prose_0003", "text": "was significant for chronic kidney disease, including: (1) father with end-stage renal disease (status post renal transplantation), (2) maternal aunt with stage 4 chronic kidney disease (5-year duration), and (3) paternal grandmother who succumbed to uremia (Figure 4)."}
+{"fragment_id": "prose_0003__sv_sentence_052", "record_id": "prose_0003", "text": "Physical examination"}
+{"fragment_id": "prose_0003__sv_sentence_053", "record_id": "prose_0003", "text": "was unremarkable."}
+{"fragment_id": "prose_0005__sv_sentence_000", "record_id": "prose_0005", "text": "We"}
+{"fragment_id": "prose_0005__sv_sentence_001", "record_id": "prose_0005", "text": "had three cases of fetal kidneys with T2-hyperintense cortex and T2-hypointense medulla reversal of the correct appearance."}
+{"fragment_id": "prose_0005__sv_sentence_002", "record_id": "prose_0005", "text": "In all of them, the kidneys were enlarged and hyperechoic on US of the second or third trimester, and the inverted pattern of cortex and medulla was only found on MRI."}
+{"fragment_id": "prose_0005__sv_sentence_003", "record_id": "prose_0005", "text": "All fetuses had"}
+{"fragment_id": "prose_0005__sv_sentence_004", "record_id": "prose_0005", "text": "enlarged kidneys on MRI performed between 32 and 36 weeks (range 52\u201358 mm), weaker diffusion restriction in the kidneys than under normal conditions, had their bladders filled, and no oligohydramnios/anhydramnios."}
+{"fragment_id": "prose_0005__sv_sentence_005", "record_id": "prose_0005", "text": "Figure 1"}
+{"fragment_id": "prose_0005__sv_sentence_006", "record_id": "prose_0005", "text": "presents the MRI findings in fetus"}
+{"fragment_id": "prose_0005__sv_sentence_007", "record_id": "prose_0005", "text": "no. 1 compared with normal appearance of the fetal kidneys and with postnatal sonographic appearance."}
+{"fragment_id": "prose_0005__sv_sentence_008", "record_id": "prose_0005", "text": "In male case no. 1, amniocentesis was performed due to the first trimester sonographic abnormalities (tricuspid valve regurgitation, regurgitation wave A, enlarged urinary bladder)."}
+{"fragment_id": "prose_0005__sv_sentence_009", "record_id": "prose_0005", "text": "The array comparative genomic hybridization (aCGH) analysis of the DNA extracted from uncultured amniocytes"}
+{"fragment_id": "prose_0005__sv_sentence_010", "record_id": "prose_0005", "text": "showed the deletion at 17q12 region ~ 1.4 Mb in size encompassing the region of renal cysts and diabetes (RCAD) syndrome (OMIM 137920, ORPHA: 93111)."}
+{"fragment_id": "prose_0005__sv_sentence_011", "record_id": "prose_0005", "text": "The deletion"}
+{"fragment_id": "prose_0005__sv_sentence_012", "record_id": "prose_0005", "text": "included 15 protein-coding genes, including the HNF1B gene."}
+{"fragment_id": "prose_0005__sv_sentence_013", "record_id": "prose_0005", "text": "So far, no parental examination has been performed to assess the origin of the deletion of 17q12."}
+{"fragment_id": "prose_0005__sv_sentence_014", "record_id": "prose_0005", "text": "At the age of 14 months, the boy\u2019s kidney function parameters"}
+{"fragment_id": "prose_0005__sv_sentence_015", "record_id": "prose_0005", "text": "were within normal limits."}
+{"fragment_id": "prose_0005__sv_sentence_016", "record_id": "prose_0005", "text": "In female case no. 2, there was postnatal appearance of bilateral multicystic kidney, so the PKHD1 gene was sequenced and no pathogenic variants were identified."}
+{"fragment_id": "prose_0005__sv_sentence_017", "record_id": "prose_0005", "text": "As there was also a M\u00fcllerian duct anomaly (bicorporeal uterus with double cervix), microdeletion 17q12 syndrome was then suspected."}
+{"fragment_id": "prose_0005__sv_sentence_018", "record_id": "prose_0005", "text": "The results of Multiplex Ligation-dependent Probe Amplification (MLPA; Kit P297-D1, MRC-Holland, Amsterdam)"}
+{"fragment_id": "prose_0005__sv_sentence_019", "record_id": "prose_0005", "text": "revealed heterozygous deletion in the region of the long arm of chromosome 17 including genes ZNHIT3, LHX1, AATF, ACACA, and HNF1B, which refers to the region typical for 17q12 microdeletion syndrome."}
+{"fragment_id": "prose_0005__sv_sentence_020", "record_id": "prose_0005", "text": "The parents have"}
+{"fragment_id": "prose_0005__sv_sentence_021", "record_id": "prose_0005", "text": "declined testing themselves."}
+{"fragment_id": "prose_0005__sv_sentence_022", "record_id": "prose_0005", "text": "At the age of 4.5 years, the girl"}
+{"fragment_id": "prose_0005__sv_sentence_023", "record_id": "prose_0005", "text": "has normal kidney function, and on US, the kidneys show increased cortical echogenicity, preserved cortico-medullary differentiation, and a few cortical cysts up to 4 mm."}
+{"fragment_id": "prose_0005__sv_sentence_024", "record_id": "prose_0005", "text": "No more detailed examination of the reproductive system was performed."}
+{"fragment_id": "prose_0005__sv_sentence_025", "record_id": "prose_0005", "text": "The same 17q12 deletion as in case no. 1 was identified postnatally in male case no. 3 using the same technique (aCGH analysis of the DNA extracted from blood)."}
+{"fragment_id": "prose_0005__sv_sentence_026", "record_id": "prose_0005", "text": "The results of MLPA in the healthy young parents"}
+{"fragment_id": "prose_0005__sv_sentence_027", "record_id": "prose_0005", "text": "are pending."}
+{"fragment_id": "prose_0005__sv_sentence_028", "record_id": "prose_0005", "text": "Up until the age of 1 month, the boy"}
+{"fragment_id": "prose_0005__sv_sentence_029", "record_id": "prose_0005", "text": "showed no biochemical abnormalities, including kidney function parameters."}
+{"fragment_id": "prose_0007__sv_sentence_000", "record_id": "prose_0007", "text": "A 77-year-old man with a history of distal gastrectomy with Roux-en-Y reconstruction for gastric cancer presented with fever, general fatigue, and dysarthria."}
+{"fragment_id": "prose_0007__sv_sentence_001", "record_id": "prose_0007", "text": "Brain magnetic resonance imaging"}
+{"fragment_id": "prose_0007__sv_sentence_002", "record_id": "prose_0007", "text": "revealed acute cerebral infarction."}
+{"fragment_id": "prose_0007__sv_sentence_003", "record_id": "prose_0007", "text": "Blood cultures"}
+{"fragment_id": "prose_0007__sv_sentence_004", "record_id": "prose_0007", "text": "grew Streptococcus oralis, and echocardiography demonstrated vegetations on the mitral valve, leading to the diagnosis of IE."}
+{"fragment_id": "prose_0007__sv_sentence_005", "record_id": "prose_0007", "text": "Because the vegetation"}
+{"fragment_id": "prose_0007__sv_sentence_006", "record_id": "prose_0007", "text": "showed low mobility and mitral regurgitation was not severe, conservative treatment with intravenous antibiotic therapy was initiated."}
+{"fragment_id": "prose_0007__sv_sentence_007", "record_id": "prose_0007", "text": "Approximately 1 month later, the patient"}
+{"fragment_id": "prose_0007__sv_sentence_008", "record_id": "prose_0007", "text": "developed lower back pain, and lumbar magnetic resonance imaging revealed pyogenic spondylodiscitis (Fig 1)."}
+{"fragment_id": "prose_0007__sv_sentence_009", "record_id": "prose_0007", "text": "Concurrently, rapid morphological changes were observed in a previously diagnosed AAA, leading to the diagnosis of infected AAA with impending rupture (Fig 2)."}
+{"fragment_id": "prose_0007__sv_sentence_010", "record_id": "prose_0007", "text": "Inflammatory markers had"}
+{"fragment_id": "prose_0007__sv_sentence_011", "record_id": "prose_0007", "text": "normalized, and blood cultures had become negative, indicating clinical control of IE."}
+{"fragment_id": "prose_0007__sv_sentence_012", "record_id": "prose_0007", "text": "Semiurgent surgical intervention for the infected AAA was required."}
+{"fragment_id": "prose_0007__sv_sentence_013", "record_id": "prose_0007", "text": "However, the adjacent untreated spinal infection was considered to pose a high risk of graft reinfection."}
+{"fragment_id": "prose_0007__sv_sentence_014", "record_id": "prose_0007", "text": "Therefore, a single-stage multidisciplinary surgical approach was planned."}
+{"fragment_id": "prose_0007__sv_sentence_015", "record_id": "prose_0007", "text": "Because the patient"}
+{"fragment_id": "prose_0007__sv_sentence_016", "record_id": "prose_0007", "text": "had previously undergone robot-assisted distal gastrectomy with Roux-en-Y reconstruction, the availability of the greater omentum for graft coverage was uncertain."}
+{"fragment_id": "prose_0007__sv_sentence_017", "record_id": "prose_0007", "text": "Therefore, alternative reconstructive options, including a rectus abdominis muscle flap, were considered preoperatively."}
+{"fragment_id": "prose_0007__sv_sentence_018", "record_id": "prose_0007", "text": "During adhesiolysis, a viable residual omentum was identified and preserved for graft coverage."}
+{"fragment_id": "prose_0007__sv_sentence_019", "record_id": "prose_0007", "text": "The vascular surgery team"}
+{"fragment_id": "prose_0007__sv_sentence_020", "record_id": "prose_0007", "text": "performed complete resection of infected aortic tissue followed by in situ reconstruction using a rifampicin-soaked prosthetic graft."}
+{"fragment_id": "prose_0007__sv_sentence_021", "record_id": "prose_0007", "text": "The graft was routed through a pathway separate from the infected spinal field, representing an infection-avoiding graft-routing strategy (Fig 3)."}
+{"fragment_id": "prose_0007__sv_sentence_022", "record_id": "prose_0007", "text": "After extensive irrigation, the orthopedic surgery team"}
+{"fragment_id": "prose_0007__sv_sentence_023", "record_id": "prose_0007", "text": "performed L4/5 discectomy, curettage, and resection of the necrotic vertebral end plate, followed by anterior spinal reconstruction using an autologous iliac crest bone graft without instrumentation (Fig 4)."}
+{"fragment_id": "prose_0007__sv_sentence_024", "record_id": "prose_0007", "text": "The anterior vertebral periosteum was closed to the extent feasible to separate the spinal field from the vascular graft."}
+{"fragment_id": "prose_0007__sv_sentence_025", "record_id": "prose_0007", "text": "The graft was repeatedly irrigated intraoperatively and finally covered with the omental flap."}
+{"fragment_id": "prose_0007__sv_sentence_026", "record_id": "prose_0007", "text": "Intraoperative cultures from the aneurysm, vertebral body, and intervertebral disc"}
+{"fragment_id": "prose_0007__sv_sentence_027", "record_id": "prose_0007", "text": "showed no growth of pathogenic organisms."}
+{"fragment_id": "prose_0007__sv_sentence_028", "record_id": "prose_0007", "text": "Postoperatively, the patient"}
+{"fragment_id": "prose_0007__sv_sentence_029", "record_id": "prose_0007", "text": "developed chylous ascites, which subsequently resolved with temporary abdominal drainage and conservative management."}
+{"fragment_id": "prose_0007__sv_sentence_030", "record_id": "prose_0007", "text": "No recurrence of infection was observed, and the patient was discharged approximately 3 months after surgery with continued oral antibiotic therapy (Fig 5)."}
+{"fragment_id": "prose_0014__sv_sentence_000", "record_id": "prose_0014", "text": "An 8-year-old child"}
+{"fragment_id": "prose_0014__sv_sentence_001", "record_id": "prose_0014", "text": "presented to Nauru Medical Center with cough and failure to thrive."}
+{"fragment_id": "prose_0014__sv_sentence_002", "record_id": "prose_0014", "text": "The child was born to a 36-year-old G3P3 mother via normal vaginal delivery after a previous cesarean section."}
+{"fragment_id": "prose_0014__sv_sentence_003", "record_id": "prose_0014", "text": "Shortly after birth, the infant"}
+{"fragment_id": "prose_0014__sv_sentence_004", "record_id": "prose_0014", "text": "developed neonatal cyanosis, which initially resolved but later recurred, resulting in a 3-month admission to the neonatal intensive care unit, where oxygen therapy was required."}
+{"fragment_id": "prose_0014__sv_sentence_005", "record_id": "prose_0014", "text": "At the age of 3 months, a CT scan of the chest"}
+{"fragment_id": "prose_0014__sv_sentence_006", "record_id": "prose_0014", "text": "suggested the presence of only a functioning left lung."}
+{"fragment_id": "prose_0014__sv_sentence_007", "record_id": "prose_0014", "text": "During early childhood, the patient was considered medically fragile and required home oxygen therapy until the age of 2 years."}
+{"fragment_id": "prose_0014__sv_sentence_008", "record_id": "prose_0014", "text": "Despite early concerns regarding possible long-term disability, the child"}
+{"fragment_id": "prose_0014__sv_sentence_009", "record_id": "prose_0014", "text": "achieved all developmental milestones appropriately."}
+{"fragment_id": "prose_0014__sv_sentence_010", "record_id": "prose_0014", "text": "Since the age of 2 years, the patient has"}
+{"fragment_id": "prose_0014__sv_sentence_011", "record_id": "prose_0014", "text": "remained clinically stable, with no hospital admissions and only 1-2 minor respiratory illnesses per year, which were managed in the outpatient department."}
+{"fragment_id": "prose_0014__sv_sentence_012", "record_id": "prose_0014", "text": "The child currently"}
+{"fragment_id": "prose_0014__sv_sentence_013", "record_id": "prose_0014", "text": "attends regular school and is in Grade 2."}
+{"fragment_id": "prose_0014__sv_sentence_014", "record_id": "prose_0014", "text": "The parents"}
+{"fragment_id": "prose_0014__sv_sentence_015", "record_id": "prose_0014", "text": "reported a history of recurrent respiratory infections since infancy, occasionally associated with symptoms suggestive of cardiac failure."}
+{"fragment_id": "prose_0014__sv_sentence_016", "record_id": "prose_0014", "text": "These episodes"}
+{"fragment_id": "prose_0014__sv_sentence_017", "record_id": "prose_0014", "text": "required hospitalization on 1 occasion for 1 month, during which the patient was treated conservatively."}
+{"fragment_id": "prose_0014__sv_sentence_018", "record_id": "prose_0014", "text": "Before the arrival of a new medical team from GMSS, Nauru Medical Center did not have specialist medical services"}
+{"fragment_id": "prose_0014__sv_sentence_019", "record_id": "prose_0014", "text": "available."}
+{"fragment_id": "prose_0014__sv_sentence_020", "record_id": "prose_0014", "text": "The parents"}
+{"fragment_id": "prose_0014__sv_sentence_021", "record_id": "prose_0014", "text": "denied any history of tuberculosis, hepatitis, or other chronic infectious diseases."}
+{"fragment_id": "prose_0014__sv_sentence_022", "record_id": "prose_0014", "text": "They also"}
+{"fragment_id": "prose_0014__sv_sentence_023", "record_id": "prose_0014", "text": "denied any drug or food allergies."}
+{"fragment_id": "prose_0014__sv_sentence_024", "record_id": "prose_0014", "text": "There was no history of chills, vomiting, diarrhea, or convulsions."}
+{"fragment_id": "prose_0014__sv_sentence_025", "record_id": "prose_0014", "text": "On physical examination, the child"}
+{"fragment_id": "prose_0014__sv_sentence_026", "record_id": "prose_0014", "text": "appeared comfortable at rest."}
+{"fragment_id": "prose_0014__sv_sentence_027", "record_id": "prose_0014", "text": "Oxygen saturation on room air"}
+{"fragment_id": "prose_0014__sv_sentence_028", "record_id": "prose_0014", "text": "was 88%, likely reflecting chronic adaptation to long-standing hypoxemia."}
+{"fragment_id": "prose_0014__sv_sentence_029", "record_id": "prose_0014", "text": "The most notable finding"}
+{"fragment_id": "prose_0014__sv_sentence_030", "record_id": "prose_0014", "text": "was digital clubbing involving the toes."}
+{"fragment_id": "prose_0014__sv_sentence_031", "record_id": "prose_0014", "text": "The remainder of the physical examination"}
+{"fragment_id": "prose_0014__sv_sentence_032", "record_id": "prose_0014", "text": "was unremarkable."}
+{"fragment_id": "prose_0014__sv_sentence_033", "record_id": "prose_0014", "text": "Laboratory investigations"}
+{"fragment_id": "prose_0014__sv_sentence_034", "record_id": "prose_0014", "text": "showed an elevated hemoglobin level of 17.6 g/dL, above the normal range, likely to represent secondary polycythemia due to chronic hypoxemia."}
+{"fragment_id": "prose_0014__sv_sentence_035", "record_id": "prose_0014", "text": "Other laboratory parameters"}
+{"fragment_id": "prose_0014__sv_sentence_036", "record_id": "prose_0014", "text": "were within normal limits, including white blood cell count, red blood cell count, neutrophil count and percentage, lymphocyte ratio, and platelet count."}
+{"fragment_id": "prose_0014__sv_sentence_037", "record_id": "prose_0014", "text": "Additional investigations, including liver function tests, renal function tests, and immunoglobulin levels,"}
+{"fragment_id": "prose_0014__sv_sentence_038", "record_id": "prose_0014", "text": "were also normal."}
+{"fragment_id": "prose_0014__sv_sentence_039", "record_id": "prose_0014", "text": "The patient was referred to the radiology department for further cardiac evaluation and underwent transthoracic echocardiography."}
+{"fragment_id": "prose_0014__sv_sentence_040", "record_id": "prose_0014", "text": "Echocardiography"}
+{"fragment_id": "prose_0014__sv_sentence_041", "record_id": "prose_0014", "text": "demonstrated marked cardiac displacement to the right side hemithorax with preserved normal leftward apex orientation and situs solitus (cardiac dextroposition), along with right ventricular hypertrophy and dilation of the right atrium and IVC (Fig. 1)."}
+{"fragment_id": "prose_0014__sv_sentence_042", "record_id": "prose_0014", "text": "About 8 mm in size an ASD was also identified, showing a bidirectional shunt more form right to left consistent with advanced pulmonary vascular disease."}
+{"fragment_id": "prose_0014__sv_sentence_043", "record_id": "prose_0014", "text": "There was a large PDA and a dilated main pulmonary artery with pulmonary HTN measuring 44 mmHg."}
+{"fragment_id": "prose_0014__sv_sentence_044", "record_id": "prose_0014", "text": "The PDA"}
+{"fragment_id": "prose_0014__sv_sentence_045", "record_id": "prose_0014", "text": "demonstrated bidirectional flow on color Doppler imaging."}
+{"fragment_id": "prose_0014__sv_sentence_046", "record_id": "prose_0014", "text": "The left pulmonary veins drained into the left atrium, but the right pulmonary veins were not visualized draining into the left atrium."}
+{"fragment_id": "prose_0014__sv_sentence_047", "record_id": "prose_0014", "text": "Instead, they"}
+{"fragment_id": "prose_0014__sv_sentence_048", "record_id": "prose_0014", "text": "appeared to course inferiorly and join the IVC, raising strong suspicion for anomalous pulmonary venous return with complex congenital cardiac anomalies and advanced pulmonary hypertension resulting in Eisenmenger syndrome."}
+{"fragment_id": "prose_0014__sv_sentence_049", "record_id": "prose_0014", "text": "A chest radiograph was subsequently performed."}
+{"fragment_id": "prose_0014__sv_sentence_050", "record_id": "prose_0014", "text": "This"}
+{"fragment_id": "prose_0014__sv_sentence_051", "record_id": "prose_0014", "text": "showed a significant reduction in right lung volume with rightward mediastinal shift and relative hyperinflation of the left lung."}
+{"fragment_id": "prose_0015__sv_sentence_000", "record_id": "prose_0015", "text": "A 58-year-old man presented with recurrent bleeding from a permanent ileal conduit urostomy."}
+{"fragment_id": "prose_0015__sv_sentence_001", "record_id": "prose_0015", "text": "His medical history"}
+{"fragment_id": "prose_0015__sv_sentence_002", "record_id": "prose_0015", "text": "was notable for bladder and prostate cancer treated with cystoprostatectomy and ileal conduit urinary diversion 2 years prior to presentation."}
+{"fragment_id": "prose_0015__sv_sentence_003", "record_id": "prose_0015", "text": "Additional comorbidities"}
+{"fragment_id": "prose_0015__sv_sentence_004", "record_id": "prose_0015", "text": "included obesity (BMI 37 kg/m\u00b2), chronic kidney disease stage 3, prior venous thromboembolism on anticoagulation, and cirrhosis secondary to metabolic dysfunction\u2013associated steatohepatitis (MASH) with ongoing alcohol use."}
+{"fragment_id": "prose_0015__sv_sentence_005", "record_id": "prose_0015", "text": "The patient"}
+{"fragment_id": "prose_0015__sv_sentence_006", "record_id": "prose_0015", "text": "experienced multiple hospital admissions over an 18-month period for recurrent episodes of gross hematuria via the urostomy, resulting in symptomatic anemia requiring repeated blood transfusions."}
+{"fragment_id": "prose_0015__sv_sentence_007", "record_id": "prose_0015", "text": "He"}
+{"fragment_id": "prose_0015__sv_sentence_008", "record_id": "prose_0015", "text": "described steady, nonpulsatile bleeding from the stoma associated with fatigue and dyspnea."}
+{"fragment_id": "prose_0015__sv_sentence_009", "record_id": "prose_0015", "text": "Social history"}
+{"fragment_id": "prose_0015__sv_sentence_010", "record_id": "prose_0015", "text": "was significant for continued alcohol consumption of approximately 3-6 beers daily with heavier intake on weekends."}
+{"fragment_id": "prose_0015__sv_sentence_011", "record_id": "prose_0015", "text": "On examination, the patient"}
+{"fragment_id": "prose_0015__sv_sentence_012", "record_id": "prose_0015", "text": "was hemodynamically stable (blood pressure 127/79 mmHg, heart rate 84 bpm)."}
+{"fragment_id": "prose_0015__sv_sentence_013", "record_id": "prose_0015", "text": "The urostomy appliance"}
+{"fragment_id": "prose_0015__sv_sentence_014", "record_id": "prose_0015", "text": "contained gross blood."}
+{"fragment_id": "prose_0015__sv_sentence_015", "record_id": "prose_0015", "text": "There was no ascites, jaundice, or hepatic encephalopathy."}
+{"fragment_id": "prose_0015__sv_sentence_016", "record_id": "prose_0015", "text": "Laboratory evaluation"}
+{"fragment_id": "prose_0015__sv_sentence_017", "record_id": "prose_0015", "text": "demonstrated severe anemia (hemoglobin 6.8 g/dL), preserved hepatic synthetic function (albumin 3.9 g/dL, INR 1.1), and chronic kidney disease (creatinine 2.0 mg/dL)."}
+{"fragment_id": "prose_0015__sv_sentence_018", "record_id": "prose_0015", "text": "The Model for end-stage liver disease (MELD) score"}
+{"fragment_id": "prose_0015__sv_sentence_019", "record_id": "prose_0015", "text": "was 12, and Child\u2013Pugh class was A. Contrast-enhanced CT of the abdomen and pelvis demonstrated hepatic steatosis, mild splenomegaly, and prominent stomal venous collaterals extending from the right superficial inferior epigastric vein to the ileal conduit, consistent with stomal varices (Fig. 1)."}
+{"fragment_id": "prose_0015__sv_sentence_020", "record_id": "prose_0015", "text": "Transhepatic portal venography"}
+{"fragment_id": "prose_0015__sv_sentence_021", "record_id": "prose_0015", "text": "confirmed portal hypertension with a portosystemic pressure gradient of 12 mmHg and demonstrated stomal varices draining into superficial abdominal wall veins (Fig. 2)."}
+{"fragment_id": "prose_0015__sv_sentence_022", "record_id": "prose_0015", "text": "Endoscopic evaluation of the ileal conduit"}
+{"fragment_id": "prose_0015__sv_sentence_023", "record_id": "prose_0015", "text": "revealed mucosal congestion and vascular ectasia consistent with portal hypertensive enteropathy (PHE), as well as small grade I varices approximately 2 cm from the stoma without high-risk stigmata (Fig. 3, Fig. 4)."}
+{"fragment_id": "prose_0015__sv_sentence_024", "record_id": "prose_0015", "text": "Correlation of imaging, venography, and endoscopic findings"}
+{"fragment_id": "prose_0015__sv_sentence_025", "record_id": "prose_0015", "text": "established the diagnosis of urostomy-associated stomal variceal bleeding secondary to portal hypertension."}
+{"fragment_id": "prose_0015__sv_sentence_026", "record_id": "prose_0015", "text": "Initial management"}
+{"fragment_id": "prose_0015__sv_sentence_027", "record_id": "prose_0015", "text": "consisted of direct percutaneous puncture of the stomal varices under fluoroscopic guidance."}
+{"fragment_id": "prose_0015__sv_sentence_028", "record_id": "prose_0015", "text": "Venography"}
+{"fragment_id": "prose_0015__sv_sentence_029", "record_id": "prose_0015", "text": "confirmed variceal anatomy, and embolosclerotherapy was performed using 2 cc of sodium tetradecyl sulfate (STS) mixed with 6 cc of air, followed by Gelfoam slurry."}
+{"fragment_id": "prose_0015__sv_sentence_030", "record_id": "prose_0015", "text": "This"}
+{"fragment_id": "prose_0015__sv_sentence_031", "record_id": "prose_0015", "text": "resulted in transient hemostasis."}
+{"fragment_id": "prose_0015__sv_sentence_032", "record_id": "prose_0015", "text": "Bleeding"}
+{"fragment_id": "prose_0015__sv_sentence_033", "record_id": "prose_0015", "text": "recurred after 4 weeks, with active hemorrhage visualized at the urostomy stoma."}
+{"fragment_id": "prose_0015__sv_sentence_034", "record_id": "prose_0015", "text": "A transhepatic portal venous approach was subsequently pursued, and embolization of the stomal varices was performed using 0.018-inch detachable coils and Gelfoam (Fig. 5)."}
+{"fragment_id": "prose_0015__sv_sentence_035", "record_id": "prose_0015", "text": "Despite technical success, bleeding again"}
+{"fragment_id": "prose_0015__sv_sentence_036", "record_id": "prose_0015", "text": "recurred 6 weeks later."}
+{"fragment_id": "prose_0015__sv_sentence_037", "record_id": "prose_0015", "text": "Given prior evidence recommending carvedilol for treatment of increased hepatic vascular resistance, nonselective beta-blockade with carvedilol 6.25 mg twice daily was initiated for 6 weeks."}
+{"fragment_id": "prose_0015__sv_sentence_038", "record_id": "prose_0015", "text": "Despite achieving adequate heart rate reduction (66 bpm), intermittent bleeding"}
+{"fragment_id": "prose_0015__sv_sentence_039", "record_id": "prose_0015", "text": "persisted."}
+{"fragment_id": "prose_0015__sv_sentence_040", "record_id": "prose_0015", "text": "Due to the failure of local and embolization-based therapies, portal decompression was pursued."}
+{"fragment_id": "prose_0015__sv_sentence_041", "record_id": "prose_0015", "text": "A TIPS was placed via a transjugular approach, reducing the portosystemic gradient from 15 mmHg to 9 mmHg (Fig. 6)."}
+{"fragment_id": "prose_0015__sv_sentence_042", "record_id": "prose_0015", "text": "Following TIPS placement, the patient"}
+{"fragment_id": "prose_0015__sv_sentence_043", "record_id": "prose_0015", "text": "developed hepatic encephalopathy 1 week postprocedure, requiring hospitalization and initiation of lactulose and rifaximin."}
+{"fragment_id": "prose_0015__sv_sentence_044", "record_id": "prose_0015", "text": "Symptoms"}
+{"fragment_id": "prose_0015__sv_sentence_045", "record_id": "prose_0015", "text": "resolved within 48 hours, and the patient was discharged home."}
+{"fragment_id": "prose_0015__sv_sentence_046", "record_id": "prose_0015", "text": "At 3-, 6-, and 12-month follow-up, Doppler ultrasound"}
+{"fragment_id": "prose_0015__sv_sentence_047", "record_id": "prose_0015", "text": "demonstrated a patent TIPS with normal flow velocities, and the patient reported no further episodes of urostomy bleeding."}
+{"fragment_id": "prose_0024__sv_sentence_000", "record_id": "prose_0024", "text": "A previously healthy 4-year-old boy"}
+{"fragment_id": "prose_0024__sv_sentence_001", "record_id": "prose_0024", "text": "presented to the emergency department with intermittent abdominal pain and episodic non-bilious vomiting of several weeks\u2019 duration."}
+{"fragment_id": "prose_0024__sv_sentence_002", "record_id": "prose_0024", "text": "The pain"}
+{"fragment_id": "prose_0024__sv_sentence_003", "record_id": "prose_0024", "text": "was colicky, recurrent, and poorly localized."}
+{"fragment_id": "prose_0024__sv_sentence_004", "record_id": "prose_0024", "text": "There was no history of fever, weight loss, trauma, prior abdominal surgery, or exposure to livestock or unpasteurized dairy products."}
+{"fragment_id": "prose_0024__sv_sentence_005", "record_id": "prose_0024", "text": "On examination, the patient"}
+{"fragment_id": "prose_0024__sv_sentence_006", "record_id": "prose_0024", "text": "was hemodynamically stable."}
+{"fragment_id": "prose_0024__sv_sentence_007", "record_id": "prose_0024", "text": "The abdomen"}
+{"fragment_id": "prose_0024__sv_sentence_008", "record_id": "prose_0024", "text": "was mildly distended but soft, without guarding or rebound tenderness."}
+{"fragment_id": "prose_0024__sv_sentence_009", "record_id": "prose_0024", "text": "No palpable mass was identified."}
+{"fragment_id": "prose_0024__sv_sentence_010", "record_id": "prose_0024", "text": "Laboratory investigations"}
+{"fragment_id": "prose_0024__sv_sentence_011", "record_id": "prose_0024", "text": "were largely unremarkable."}
+{"fragment_id": "prose_0024__sv_sentence_012", "record_id": "prose_0024", "text": "The white blood cell count"}
+{"fragment_id": "prose_0024__sv_sentence_013", "record_id": "prose_0024", "text": "was within normal limits without leukocytosis."}
+{"fragment_id": "prose_0024__sv_sentence_014", "record_id": "prose_0024", "text": "Mild anemia was noted on subsequent testing."}
+{"fragment_id": "prose_0024__sv_sentence_015", "record_id": "prose_0024", "text": "Platelet count, erythrocyte sedimentation rate, and serum electrolytes"}
+{"fragment_id": "prose_0024__sv_sentence_016", "record_id": "prose_0024", "text": "were within normal limits."}
+{"fragment_id": "prose_0024__sv_sentence_017", "record_id": "prose_0024", "text": "Tumor markers (AFP and \u03b2-hCG)"}
+{"fragment_id": "prose_0024__sv_sentence_018", "record_id": "prose_0024", "text": "were normal."}
+{"fragment_id": "prose_0024__sv_sentence_019", "record_id": "prose_0024", "text": "Echinococcus serology"}
+{"fragment_id": "prose_0024__sv_sentence_020", "record_id": "prose_0024", "text": "was negative."}
+{"fragment_id": "prose_0024__sv_sentence_021", "record_id": "prose_0024", "text": "Contrast-enhanced CT of the abdomen"}
+{"fragment_id": "prose_0024__sv_sentence_022", "record_id": "prose_0024", "text": "demonstrated a left paracolic gutter fluid collection with multiple well defined internal components which could represent daughter cysts."}
+{"fragment_id": "prose_0024__sv_sentence_023", "record_id": "prose_0024", "text": "Additional findings"}
+{"fragment_id": "prose_0024__sv_sentence_024", "record_id": "prose_0024", "text": "included reactive mesenteric lymph nodes (largest approximately 1 \u00d7 0.8 cm), displacement of adjacent bowel loops without evidence of obstruction, and mild surrounding inflammatory changes."}
+{"fragment_id": "prose_0024__sv_sentence_025", "record_id": "prose_0024", "text": "No definite communication with adjacent bowel loops was identified on CT."}
+{"fragment_id": "prose_0024__sv_sentence_026", "record_id": "prose_0024", "text": "Based on these imaging features, hydatid disease was initially suspected."}
+{"fragment_id": "prose_0024__sv_sentence_027", "record_id": "prose_0024", "text": "(Fig. 1, Fig. 2)."}
+{"fragment_id": "prose_0024__sv_sentence_028", "record_id": "prose_0024", "text": "Follow-up MRI"}
+{"fragment_id": "prose_0024__sv_sentence_029", "record_id": "prose_0024", "text": "demonstrated interval migration of the lesion from the left paracolic gutter to the right lower quadrant, indicating lesion mobility."}
+{"fragment_id": "prose_0024__sv_sentence_030", "record_id": "prose_0024", "text": "The lesion"}
+{"fragment_id": "prose_0024__sv_sentence_031", "record_id": "prose_0024", "text": "showed heterogeneous signal on both T1- and T2-weighted images with multiple internal floating rounded components."}
+{"fragment_id": "prose_0024__sv_sentence_032", "record_id": "prose_0024", "text": "Focal internal calcification"}
+{"fragment_id": "prose_0024__sv_sentence_033", "record_id": "prose_0024", "text": "was present."}
+{"fragment_id": "prose_0024__sv_sentence_034", "record_id": "prose_0024", "text": "Post-contrast images"}
+{"fragment_id": "prose_0024__sv_sentence_035", "record_id": "prose_0024", "text": "demonstrated peripheral rim enhancement with adjacent mesenteric stranding and persistent mild intraperitoneal free fluid."}
+{"fragment_id": "prose_0024__sv_sentence_036", "record_id": "prose_0024", "text": "Diffusion-weighted imaging"}
+{"fragment_id": "prose_0024__sv_sentence_037", "record_id": "prose_0024", "text": "showed no definite restricted diffusion."}
+{"fragment_id": "prose_0024__sv_sentence_038", "record_id": "prose_0024", "text": "The interval positional change"}
+{"fragment_id": "prose_0024__sv_sentence_039", "record_id": "prose_0024", "text": "raised strong suspicion for bowel-related pathology rather than a fixed peritoneal cyst (Fig. 3, Fig. 4, Fig. 5, Fig. 6, Fig. 7)."}
+{"fragment_id": "prose_0024__sv_sentence_040", "record_id": "prose_0024", "text": "The patient"}
+{"fragment_id": "prose_0024__sv_sentence_041", "record_id": "prose_0024", "text": "underwent surgical exploration."}
+{"fragment_id": "prose_0024__sv_sentence_042", "record_id": "prose_0024", "text": "An inflamed Meckel\u2019s diverticulum arising from the ileum was identified and resected."}
+{"fragment_id": "prose_0024__sv_sentence_043", "record_id": "prose_0024", "text": "Enterolith formation surrounding the foreign body."}
+{"fragment_id": "prose_0024__sv_sentence_044", "record_id": "prose_0024", "text": "The presumed daughter"}
+{"fragment_id": "prose_0024__sv_sentence_045", "record_id": "prose_0024", "text": "cysts on imaging corresponded to inflammatory debris and enterolith fragments within the fluid-filled diverticulum."}
+{"fragment_id": "prose_0025__sv_sentence_000", "record_id": "prose_0025", "text": "A 58-year-old woman with a past medical history of uncomplicated sigmoid diverticulitis"}
+{"fragment_id": "prose_0025__sv_sentence_001", "record_id": "prose_0025", "text": "treated medically in the past and remote caesarean section, presented to the emergency department with 3 days of left lower quadrant pain."}
+{"fragment_id": "prose_0025__sv_sentence_002", "record_id": "prose_0025", "text": "An imaging and interventional overview of the patient\u2019s hospital course can be reviewed in Fig."}
+{"fragment_id": "prose_0025__sv_sentence_003", "record_id": "prose_0025", "text": "An IV contrast"}
+{"fragment_id": "prose_0025__sv_sentence_004", "record_id": "prose_0025", "text": "enhanced CT of the abdomen and pelvis in portal venous phase with coronal and sagittal reconstruction was obtained, employing iterative dose reduction technique (CECT)."}
+{"fragment_id": "prose_0025__sv_sentence_005", "record_id": "prose_0025", "text": "This"}
+{"fragment_id": "prose_0025__sv_sentence_006", "record_id": "prose_0025", "text": "demonstrated acute perforated sigmoid diverticulitis without abscess."}
+{"fragment_id": "prose_0025__sv_sentence_007", "record_id": "prose_0025", "text": "The patient was admitted for IV antibiotics, fluids and pain control, and discharged the next day."}
+{"fragment_id": "prose_0025__sv_sentence_008", "record_id": "prose_0025", "text": "However, the patient"}
+{"fragment_id": "prose_0025__sv_sentence_009", "record_id": "prose_0025", "text": "continued to have gradually increasing pain, and prompted by new fecal urgency, returned to ED 2 days after discharge."}
+{"fragment_id": "prose_0025__sv_sentence_010", "record_id": "prose_0025", "text": "On examination, the patient"}
+{"fragment_id": "prose_0025__sv_sentence_011", "record_id": "prose_0025", "text": "was tender to palpation in the LLQ without rebound, and afebrile with white cell count (WCC) of 10."}
+{"fragment_id": "prose_0025__sv_sentence_012", "record_id": "prose_0025", "text": "Portal venous phase CECT of the abdomen and pelvis"}
+{"fragment_id": "prose_0025__sv_sentence_013", "record_id": "prose_0025", "text": "revealed a 3 cm collection contiguous with inflamed sigmoid diverticula, involving the ovary and a gas-filled serpiginous structure, the left fallopian tube (Fig. 1)."}
+{"fragment_id": "prose_0025__sv_sentence_014", "record_id": "prose_0025", "text": "This"}
+{"fragment_id": "prose_0025__sv_sentence_015", "record_id": "prose_0025", "text": "was consistent with perforated sigmoid diverticulitis with abscess and the rare finding of pneumosalpinx."}
+{"fragment_id": "prose_0025__sv_sentence_016", "record_id": "prose_0025", "text": "The patient was admitted to surgery."}
+{"fragment_id": "prose_0025__sv_sentence_017", "record_id": "prose_0025", "text": "Interventional radiology was enlisted to drain the collection on the day of admission."}
+{"fragment_id": "prose_0025__sv_sentence_018", "record_id": "prose_0025", "text": "Nonenhanced CT biopsy was conducted."}
+{"fragment_id": "prose_0025__sv_sentence_019", "record_id": "prose_0025", "text": "A narrow window was identified between the broad ligament ovarian vessels and the iliac artery and vein was identified, whereupon an 18-gauge Chiba needle"}
+{"fragment_id": "prose_0025__sv_sentence_020", "record_id": "prose_0025", "text": "advanced inferior to the broad ligament until the needle tip was within the collection and 10 cc purulent material was aspirated."}
+{"fragment_id": "prose_0025__sv_sentence_021", "record_id": "prose_0025", "text": "Passed via wire, a 10 French cope loop drainage catheter was placed in the collection with near complete resolution (Fig. 3)."}
+{"fragment_id": "prose_0025__sv_sentence_022", "record_id": "prose_0025", "text": "IV broad spectrum antibiotics were continued."}
+{"fragment_id": "prose_0025__sv_sentence_023", "record_id": "prose_0025", "text": "WCC"}
+{"fragment_id": "prose_0025__sv_sentence_024", "record_id": "prose_0025", "text": "trended down over subsequent days and patient tolerated a diet, but began to require increasing pain control, prompting CECT of the abdomen and pelvis on day 5 of admission."}
+{"fragment_id": "prose_0025__sv_sentence_025", "record_id": "prose_0025", "text": "This"}
+{"fragment_id": "prose_0025__sv_sentence_026", "record_id": "prose_0025", "text": "revealed resolution of the drained abscess but interval progression of multiple abscesses in the region of the sigmoid and mesentery (Fig. 4)."}
+{"fragment_id": "prose_0025__sv_sentence_027", "record_id": "prose_0025", "text": "Monitoring"}
+{"fragment_id": "prose_0025__sv_sentence_028", "record_id": "prose_0025", "text": "continued."}
+{"fragment_id": "prose_0025__sv_sentence_029", "record_id": "prose_0025", "text": "Due to persistent elevated WCC, unremitting pain and progression of collections, patient was taken to OR day 6 following admission."}
+{"fragment_id": "prose_0025__sv_sentence_030", "record_id": "prose_0025", "text": "Robotic sigmoid colectomy, end colostomy (Hartmann's procedure), and drainage of intra-abdominal abscesses was performed by general surgery."}
+{"fragment_id": "prose_0025__sv_sentence_031", "record_id": "prose_0025", "text": "Hysterectomy and bilateral salpingo-oophorectomy (THBSO) was performed by gynecologic surgery."}
+{"fragment_id": "prose_0025__sv_sentence_032", "record_id": "prose_0025", "text": "Intraoperatively the left adnexa was noted to be adherent to a pelvic collection and to a portion of sigmoid colon, with fistulous communication."}
+{"fragment_id": "prose_0025__sv_sentence_033", "record_id": "prose_0025", "text": "IR drain was removed."}
+{"fragment_id": "prose_0025__sv_sentence_034", "record_id": "prose_0025", "text": "A Blake drain was placed in the largest collection in the right lower quadrant and removed before discharge following an unremarkable postoperative course."}
+{"fragment_id": "prose_0025__sv_sentence_035", "record_id": "prose_0025", "text": "OR wound cultures obtained on antibiotics"}
+{"fragment_id": "prose_0025__sv_sentence_036", "record_id": "prose_0025", "text": "were positive for candida albicans and fluconazole was added to the outpatient regimen."}
+{"fragment_id": "prose_0025__sv_sentence_037", "record_id": "prose_0025", "text": "Surgical pathology"}
+{"fragment_id": "prose_0025__sv_sentence_038", "record_id": "prose_0025", "text": "confirmed fallopian tubes showing florid bilateral salpingitis with abscess, and fibrinous adhesions with pyogenic material (Fig. 6)."}
+{"fragment_id": "prose_0025__sv_sentence_039", "record_id": "prose_0025", "text": "Robotic assisted colostomy reversal (reversal of Hartmann's) was performed successfully 4 months following the surgery."}

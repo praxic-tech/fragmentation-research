@@ -63,6 +63,7 @@ Run:  python analysis/cost_model_v2.py
 
 import argparse
 import json
+import math
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -89,6 +90,46 @@ BRIDGE_UPLIFT = 1.03               # bridge rounds added ~3% more pairs
 ONESHOT_OUT = {5: (179, 8958), 7: (132, 14144)}
 OUT_TOK_PER_FRAG_7 = (21234 - 14144) / (178 - 132)      # 154.1
 OUT_INTERCEPT_7 = 21234 - OUT_TOK_PER_FRAG_7 * 178
+
+# ── game O: ordering ONE document whose membership is given ──────────────────
+#
+# O is a SECOND THREAT MODEL, not a methodological convenience: the metadata
+# layer is compromised, the attacker learns which fragments belong together, but
+# content is still fragmented. It is also the only way to get a per-cell
+# ordering number whose denominator does not move between cells -- q = C/K under
+# J is measured on pairs the attacker itself grouped correctly, and that
+# denominator shifts whenever a strategy makes grouping harder.
+#
+# Measured on sonnet-5, batch, ordering one document (the O+L model's anchors,
+# still the best data for this shape):
+#     13 frags ->    323 tok        31 frags ->  3,440 tok (mean of two runs)
+#     22 frags ->    579 tok        76 frags -> 24,001 tok
+# Not a power law: roughly linear below ~22 fragments, then reasoning switches on
+# and it goes superlinear (log-log slope 1.88 above 31). The same document
+# measured twice at 31 fragments came back 1.82x apart, which is why the buffer
+# exists and why this arm is the most volatile line in the model.
+ORD_ANCHORS = [(13, 323), (22, 579), (31, 3440), (76, 24001)]
+O_DOCS_PER_CELL = 60          # enough to rank strategies unless effects are tiny
+
+
+def ordering_out_tokens(k):
+    """Output tokens to order a k-fragment document. Piecewise through anchors."""
+    k = max(3, k)
+    if k <= ORD_ANCHORS[0][0]:
+        return ORD_ANCHORS[0][1] * (k / ORD_ANCHORS[0][0]) ** 1.11
+    for (x1, y1), (x2, y2) in zip(ORD_ANCHORS, ORD_ANCHORS[1:]):
+        if k <= x2:
+            slope = math.log(y2 / y1) / math.log(x2 / x1)
+            return y1 * (k / x1) ** slope
+    return min(ORD_ANCHORS[-1][1] * (k / ORD_ANCHORS[-1][0]) ** 1.88, 64000)
+
+
+def ordering_cost(k, a):
+    """One game-O unit: one document, membership given, order it."""
+    inp = (CHARS_PER_FRAG_PROMPT * k / 4.0 + 150) * CAL_IN
+    out = ordering_out_tokens(k)
+    return (inp / 1e6 * IN_PER_M + out / 1e6 * OUT_PER_M) * (1 + a["retry_rate"])
+
 
 # ── the sampling frame and the grid ──────────────────────────────────────────
 N_POOLS_HEADLINE = 71
@@ -127,7 +168,7 @@ GRID_CELLS = [("sentence", 4), ("clause", 4),
 # every headline pool for $22, where medoid-3 would have bought tighter
 # per-pool numbers for $166.
 DEFAULTS = dict(j_over_l=1.15, medoid_k=1, retry_rate=0.15,
-                pair_model_tax=1.0, k=5, hier_pools=71)
+                pair_model_tax=1.0, k=5, hier_pools=71, o_arm=1)
 
 
 def oneshot_out_tokens(n_frags, n_groups=7):
@@ -193,16 +234,26 @@ def line_items(a):
     # repeats: reference cell x2, the variance bound
     repeats = 2 * per_cell["sentence"]
 
+    # Per-cell game O. FRAGMENTS PER DOCUMENT drives this, not pool size: O
+    # asks about one document at a time.
+    frags_per_doc_cap = FRAGS_PER_POOL_CAP / POOL_SIZE
+    o_arm = 0.0
+    if a["o_arm"]:
+        for gran, n_cells in GRID_CELLS:
+            k = frags_per_doc_cap * GRANULARITY_MULT[gran]
+            o_arm += n_cells * O_DOCS_PER_CELL * ordering_cost(k, a)
+
     return [
         ("G3  positive control, unmasked + masked", ctrl),
         ("G4  nuisance sizing (development, excluded)", g4),
-        (f"1   Headline J, 71 pools, one-shot x medoid-{a[chr(39)+chr(39)] if False else a['medoid_k']}", head_one),
+        (f"1   Headline J, 71 pools, one-shot x medoid-{a['medoid_k']}", head_one),
         (f"2   Headline J, hierarchical, {a['hier_pools']} pools", head_hier),
         ("3   Grid, 12 cells x 25 pools, capped", grid),
         ("4   J-vs-N curve, N = 1/3/5, reference cell", curve),
         ("5   L-only non-inferiority, paired, 25 pools", l_only),
         ("6   Repeats: reference cell x2", repeats),
         ("7   Memon joint attacker, every cell", 0.0),
+        (f"8   Per-cell game O, {O_DOCS_PER_CELL} docs x 12 cells", o_arm),
     ], per_cell
 
 
@@ -254,6 +305,7 @@ def main():
             ("...if repairs run hot (35% retry)", {"retry_rate": 0.35}),
             ("...and sonnet reasons 2x harder on pairs",
              {"pair_model_tax": 2.0}),
+            ("without the per-cell O arm", {"o_arm": 0}),
             ("fallback: drop the hierarchical arm", {"hier_pools": 0}),
             ("the old plan: medoid-3 everywhere", {"medoid_k": 3}),
     ):
