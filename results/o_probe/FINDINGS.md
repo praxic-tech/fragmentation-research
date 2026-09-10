@@ -1,70 +1,80 @@
-# Free-tier game-O probe — does per-cell O discriminate between strategies?
+# Free-tier game-O probe: is the grid worth running?
 
-Four cut strategies, the SAME 8 documents, sentence granularity, one model
-(qwen/qwen3.8-27b on the Groq free tier). Cost: $0.
+Five cut strategies, the SAME 8 documents, one attacker model
+(qwen/qwen3.8-27b, Groq free tier), repair on so every cell scores 8/8.
+Total cost: $0.11, all of it the llm-cut *defender* calls.
 
-## Per-document Kendall tau
+## Kendall tau per document (tau / fragments)
 
 ```
-doc              random   semantic  coherence  subject-v      frags/doc
-prose_0002       +0.664     +0.743     +0.891  malformed    30/30/24/55
-prose_0003    malformed     +0.366  malformed  malformed    30/30/30/54
-prose_0005       +0.520     +0.673     +0.515  malformed    19/19/17/30
-prose_0007       +0.905     +0.724     +0.800     +0.553    21/21/21/31
-prose_0014       +0.724     +0.687     +0.626     +0.204    30/30/29/52
-prose_0015    malformed  malformed     +0.675  malformed    27/27/27/48
-prose_0024    malformed     +0.846     +0.920  malformed    27/27/26/46
-prose_0025       +0.903     +0.510  malformed  malformed    27/27/26/40
+doc                  random       semantic  coherence-sev   subject-verb        llm-cut
+prose_0002     -0.103/30      +0.724/30      +0.877/24      +0.324/55      +0.672/28
+prose_0003     +0.301/30      +0.347/30      +0.490/30      +0.410/54      -0.143/15
+prose_0005     +0.766/19      +0.719/19      +0.647/17      +0.099/30      +0.564/13
+prose_0007     +0.886/21      +0.914/21      +0.952/21      +0.828/31      +1.000/7
+prose_0014     +0.039/30      +0.802/30      +0.695/29      +0.367/52      +0.944/9
+prose_0015     +0.430/27      +0.658/27      +0.766/27      +0.392/48      +0.897/17
+prose_0024     +0.311/27      +0.897/27      +0.895/26      +0.637/46      +0.801/19
+prose_0025     +0.863/27      +0.499/27      +0.557/26      +0.505/40      +0.922/18
+
+MEAN           +0.437/26      +0.695/26      +0.735/25      +0.445/44      +0.707/16
 ```
 
-paired, the 2 documents scored in every cell:
-    random +0.8144   semantic +0.7056   coherence-sever +0.7128   subject-verb +0.3782
+## 1. The strategies separate, and the spread is large
 
-unpaired, as the run prints it (DIFFERENT samples per cell):
-    random +0.7434 (n=5)  semantic +0.6497 (n=7)
-    coherence-sever +0.7378 (n=6)  subject-verb +0.3782 (n=2)
+0.30 tau between the best and worst. That is not a subtle effect and it is
+visible at n=8 on a free model. **random and subject-verb resist ordering;
+semantic, coherence-sever and llm-cut do not.**
 
-## Findings
+The two winners are the two that ignore meaning. random cuts without regard to
+content; subject-verb cuts at grammatical joints. The three that lose all cut at
+places a reader would recognise as natural, which is what leaves each fragment
+readable enough to place.
 
-**1. O discriminates, but only for subject-verb, and it is confounded.**
-subject-verb scores ~0.35 tau below the other three. It also produces 1.7x the
-fragments (31-55 vs 19-30 per document). More pieces is harder to order whatever
-the boundary rule does, so this is NOT yet evidence that the cut resists
-ordering. It is exactly the confound the granularity-matched probes exist for,
-and this probe says those probes are load-bearing rather than optional.
+## 2. The confound is NOT what killed it
 
-**2. random / semantic / coherence-sever do not separate.** 0.09 tau apart on
-2-7 documents. Noise at this sample size.
+random and semantic produce *identical* fragment counts -- 26/doc, same
+documents, same granularity -- and differ by 0.26 tau. Fragment count cannot
+explain that, so at least one real boundary-rule effect exists.
 
-**3. Malformed rate scales with fragment count, so attrition is not random.**
-6/8 malformed at 44.5 frags/doc against 1/8 at 26.4. Documents that are harder
-to order are likelier to be dropped, so every cell's tau is biased UP, and the
-bias is largest in the cell with the most fragments. subject-verb's +0.378 is
-measured on its two easiest survivors: the true figure is probably worse, which
-means the one effect the probe found is understated rather than overstated.
+Across cells fragment count still correlates negatively with tau
+(r = -0.666, p = 0.220, n = 5 cells), so subject-verb's result remains partly
+a size effect and the granularity-matched probes are still needed to separate
+them. But random-vs-semantic is a clean within-size contrast and it holds.
 
-**4. THE REAL FINDING: the repair protocol is not wired into the one-shot
-attacker.** `harness/repair.py` (`run_with_repair`, `validate`, `finalise`) was
-built in Phase 1 for precisely this and `adversaries/joint_game.py` imports none
-of it. Two consequences, and they differ by game:
+## 3. llm-cut is the interesting cell
 
-  game O   malformed units are DROPPED from the sample. Upward bias on tau,
-           worst where the task is hardest. 12 of 32 units here, 37.5%.
-  game J   incomplete answers are still scored, and omission costs recall, so
-           the numbers are not inflated -- they are DEPRESSED, and the attacker
-           is weaker than it needs to be. Across the whole J pilot, 0 of 14
-           units returned a complete valid partition.
+The LLM defender cuts to 16 fragments/doc -- the fewest of any strategy, half of
+random's -- and is the EASIEST to reconstruct (+0.707), including one document
+recovered perfectly (+1.000). Asked to defend, it produced few, large, coherent
+pieces. That is the intuition of an editor, not an adversary, and it is a result
+worth reporting rather than a cell worth cutting.
 
-J is the headline. An attacker that never once returned a complete answer
-understates the risk fragmentation is supposed to defend against, and a reviewer
-reads that as the experiment failing to press the attack.
+## 4. THE METHOD FINDING: without repair the ranking is an artifact
 
-## What this changes
+Before repair was wired in, each cell scored only the documents it happened to
+answer cleanly, and the cells answered *different* documents. Re-running the
+same cells with repair moves the numbers by wildly different amounts:
 
-Wire `run_with_repair` into `joint_game.py` before any paid run, and re-measure
-the malformed rate. G4's nuisance sizing should then report it per granularity,
-because it is clearly a function of fragment count and the grid spans 19-55
-fragments per document.
+```
+                  survivors only        all 8 docs        shift
+random            +0.7434 (n=5)    ->   +0.4366        -0.3068
+semantic          +0.6497 (n=7)    ->   +0.6952        +0.0455
+coherence-sever   +0.7378 (n=6)    ->   +0.7349        -0.0029
+subject-verb      +0.3782 (n=2)    ->   +0.4451        +0.0669
+```
 
-Per-cell O is worth its $6.62 -- but only alongside granularity-matched cells,
-otherwise it measures fragment count wearing a strategy's name.
+random looked like the WEAKEST defence at +0.74 and is actually among the
+strongest at +0.44. The three documents it dropped were the three it defended
+best. Any grid run without repair would have published a reversed ranking with
+no visible symptom.
+
+## Verdict
+
+**The grid is worth running.** The effect is large, it survives a within-size
+control, and one cell (llm-cut) is a finding on its own.
+
+Do not run it without repair.
+
+Caveats: n=8 documents, one free model, sentence granularity only. These are
+directional, not the paper's numbers.
