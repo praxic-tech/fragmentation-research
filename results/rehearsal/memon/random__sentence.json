@@ -1,0 +1,35 @@
+{
+  "cell": "results/o_probe/random__sentence",
+  "docs": 7,
+  "f1_joint": 0.11784936375100309,
+  "baseline_joint": 0.12421972534332085,
+  "advantage": -0.00727392677896867,
+  "f1_linkage": 0.2423478161183079,
+  "q": 0.48628192999053926,
+  "K": 2114,
+  "C": 1028,
+  "telemetry": {
+    "attacker": "memon-joint",
+    "n": 2,
+    "d": 2,
+    "seed": 42,
+    "mask_seed": 42,
+    "n_fragments": 184,
+    "n_docs_given": 7,
+    "grouping": {
+      "n_groups": 7,
+      "exact_n": true,
+      "maxclust_n_groups": 7,
+      "cut_tree_disagreed": false,
+      "largest": 174,
+      "singletons": 4
+    },
+    "score_pair_calls": 30116,
+    "context_coverage": 0.7403747927586958,
+    "zero_weight_pairs": 79,
+    "clusters_ordered": 3,
+    "all_orderings_connected": true,
+    "arbitrary_pairs": 0,
+    "mean_objective_frac": 0.881912063831224
+  }
+}

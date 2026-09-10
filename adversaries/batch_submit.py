@@ -113,8 +113,11 @@ def make_custom_id(cell, game, unit):
     Kept human-readable on purpose: when a wave comes back wrong the first thing
     anyone does is read the ids, and an opaque hash makes that impossible.
     """
-    if game not in ("O", "L"):
-        raise ValueError(f"game must be 'O' or 'L', got {game!r}")
+    # J is the headline game. This check predates the joint threat model, and
+    # it meant the paid path could not submit a single J request -- found by
+    # the G1 rehearsal on its first request, not by a failed paid batch.
+    if game not in ("O", "L", "J"):
+        raise ValueError(f"game must be 'O', 'L' or 'J', got {game!r}")
     cid = f"{_slug(cell)}.{game}.{_slug(unit)}".replace(".", "__")
     if len(cid) > CUSTOM_ID_MAX:
         raise ValueError(
@@ -321,7 +324,7 @@ def submit(spec, state_dir=DEFAULT_STATE_DIR, client=None,
 # ── fetch ────────────────────────────────────────────────────────────────────
 
 def fetch(state, state_dir=DEFAULT_STATE_DIR, client=None, wait=False,
-          poll_seconds=60, meter=None):
+          poll_seconds=60, meter=None, ledger=None):
     """Stream results to JSONL, appending each as it is read.
 
     Deliberately not collected in memory and written at the end: a fetch that
@@ -403,9 +406,19 @@ def fetch(state, state_dir=DEFAULT_STATE_DIR, client=None, wait=False,
               f"(errored / expired / canceled / empty), "
               f"e.g. {(sorted(missing) + unanswered)[:3]}. "
               "Scoring will refuse this set: resubmit these ids.")
+    # Settle once every request has come back, whatever its result type: the
+    # batch is finished and its bill is final. Cost is read from the usage
+    # stored on disk, not from this process's meter -- a resumed fetch skips
+    # rows already written, so its meter only ever sees the tail.
+    actual = results_cost(out)
+    settled = False
+    if ledger is not None and not missing:
+        ledger.settle(state["tag"], actual)
+        settled = True
     return {"status": "ended", "written": written, "counts": counts,
             "missing": sorted(missing), "unanswered": unanswered,
-            "complete": complete, "cost": meter.cost}
+            "complete": complete, "cost": meter.cost,
+            "actual_cost": actual, "settled": settled}
 
 
 # ── self test ────────────────────────────────────────────────────────────────
@@ -509,7 +522,8 @@ def main():
     if args.fetch:
         return fetch(read_state(args.fetch), state_dir=args.state_dir,
                      wait=args.wait, poll_seconds=args.poll_seconds,
-                     meter=SpendMeter(args.budget)) and None
+                     meter=SpendMeter(args.budget),
+                     ledger=Ledger(max_spend=args.max_spend)) and None
 
     if not args.spec:
         raise SystemExit("need --spec, --fetch or --self-test")
@@ -543,15 +557,36 @@ class IncompleteBatchError(RuntimeError):
     """A batch result set with any request missing or unanswered."""
 
 
-def _latest_rows(out_path):
+def _latest_rows(out_paths):
+    """Latest row per custom_id across one results file or several, in order.
+
+    A resubmitted request comes back in a DIFFERENT batch's results file, so a
+    later file's row for the same id supersedes an earlier one.
+    """
+    if isinstance(out_paths, (str, os.PathLike)):
+        out_paths = [out_paths]
     latest = {}
-    if os.path.exists(out_path):
-        with open(out_path, encoding="utf-8") as fh:
-            for line in fh:
-                if line.strip():
-                    row = json.loads(line)
-                    latest[row["custom_id"]] = row
+    for out_path in out_paths:
+        if os.path.exists(out_path):
+            with open(out_path, encoding="utf-8") as fh:
+                for line in fh:
+                    if line.strip():
+                        row = json.loads(line)
+                        latest[row["custom_id"]] = row
     return latest
+
+
+def results_cost(out_paths):
+    """Actual spend for results on disk, from the usage stored on each answer.
+
+    Errored and expired requests carry no usage and are not billed.
+    """
+    cost = 0.0
+    for row in _latest_rows(out_paths).values():
+        u = row.get("usage") or {}
+        cost += (u.get("input_tokens", 0) / 1e6 * IN_PER_M
+                 + u.get("output_tokens", 0) / 1e6 * OUT_PER_M)
+    return cost
 
 
 def failed_ids(out_path):

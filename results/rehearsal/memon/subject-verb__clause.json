@@ -1,0 +1,35 @@
+{
+  "cell": "results/o_probe/subject-verb__clause",
+  "docs": 7,
+  "f1_joint": 0.1294753645351255,
+  "baseline_joint": 0.12898608948927837,
+  "advantage": 0.000561730461411638,
+  "f1_linkage": 0.2561605430131327,
+  "q": 0.5054461667364893,
+  "K": 9548,
+  "C": 4826,
+  "telemetry": {
+    "attacker": "memon-joint",
+    "n": 2,
+    "d": 2,
+    "seed": 42,
+    "mask_seed": 42,
+    "n_fragments": 373,
+    "n_docs_given": 7,
+    "grouping": {
+      "n_groups": 7,
+      "exact_n": true,
+      "maxclust_n_groups": 7,
+      "cut_tree_disagreed": false,
+      "largest": 359,
+      "singletons": 1
+    },
+    "score_pair_calls": 128546,
+    "context_coverage": 0.3840998553047158,
+    "zero_weight_pairs": 11178,
+    "clusters_ordered": 6,
+    "all_orderings_connected": true,
+    "arbitrary_pairs": 0,
+    "mean_objective_frac": 0.7727246318416597
+  }
+}

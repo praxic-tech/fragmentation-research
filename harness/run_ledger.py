@@ -174,6 +174,29 @@ class Ledger:
         self.data["spend"]["committed_usd"] -= float(projected_usd)
         return self.mark(name, "failed", reserved=False, error=reason)
 
+    def settle(self, name, actual_usd):
+        """Replace a finished step's worst-case reservation with what it cost.
+
+        reserve() commits the WORST case -- every request running to its
+        max_tokens -- because that is the only safe number before create().
+        Leaving it there after the results are in means every completed wave
+        keeps counting at its worst case forever. With max_tokens sized for real
+        reasoning the worst case is roughly twice the actual, so the cap would
+        refuse the run at about half its real spend. Once usage is known, the
+        reservation is released and the actual cost committed and observed in
+        its place. Idempotent: a resumed fetch settles a step once.
+        """
+        entry = self.data["steps"].get(name)
+        if entry is None:
+            raise KeyError(f"no ledger step {name!r} to settle")
+        if entry.get("settled"):
+            return entry
+        reserved = float(entry.get("projected_usd") or 0.0)
+        self.data["spend"]["committed_usd"] += float(actual_usd) - reserved
+        self.data["spend"]["observed_usd"] += float(actual_usd)
+        return self.mark(name, "fetched", settled=True, reserved=False,
+                         actual_usd=float(actual_usd))
+
     def dangling_reservations(self):
         """Steps holding a reservation with no batch id -- a crash left these.
 

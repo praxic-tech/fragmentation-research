@@ -1,0 +1,35 @@
+{
+  "cell": "results/o_probe/subject-verb__sentence",
+  "docs": 7,
+  "f1_joint": 0.11931955804810793,
+  "baseline_joint": 0.12798948751642575,
+  "advantage": -0.00994245980317942,
+  "f1_linkage": 0.25287399154105566,
+  "q": 0.4718538166814029,
+  "K": 6786,
+  "C": 3202,
+  "telemetry": {
+    "attacker": "memon-joint",
+    "n": 2,
+    "d": 2,
+    "seed": 42,
+    "mask_seed": 42,
+    "n_fragments": 316,
+    "n_docs_given": 7,
+    "grouping": {
+      "n_groups": 7,
+      "exact_n": true,
+      "maxclust_n_groups": 7,
+      "cut_tree_disagreed": false,
+      "largest": 305,
+      "singletons": 2
+    },
+    "score_pair_calls": 92732,
+    "context_coverage": 0.32426778242677823,
+    "zero_weight_pairs": 11043,
+    "clusters_ordered": 5,
+    "all_orderings_connected": true,
+    "arbitrary_pairs": 0,
+    "mean_objective_frac": 0.916008403287571
+  }
+}

@@ -54,8 +54,8 @@ ASSUMED — these are where the forecast can be wrong
     RETRY_RATE      0.15   Fraction of units needing one repair round.
     PAIR_MODEL_TAX  1.0    The pair-output figure was measured on
                            gpt-oss-120b, not sonnet. 1.0 assumes they match.
-    PRICES          $1/$5 per M in/out — sonnet-5 introductory WITH the 50%
-                           batch discount already folded in. Verify at purchase.
+    PRICES          $1/$5 per M in/out: claude-sonnet-5 list $2/$10, halved by
+                           the Batches API. Verify at purchase.
 
 Run:  python analysis/cost_model_v2.py
       python analysis/cost_model_v2.py --sensitivity
@@ -72,7 +72,7 @@ ROOT = HERE.parent
 JSON_BEGIN = "===COST_MODEL_JSON_BEGIN==="
 JSON_END = "===COST_MODEL_JSON_END==="
 
-# ── prices (sonnet-5 introductory, batch discount folded in) ─────────────────
+# ── prices: claude-sonnet-5 lists at $2/$10 per M; batch is 50% -> $1/$5 ─────
 IN_PER_M, OUT_PER_M = 1.0, 5.0
 
 # ── measured constants ───────────────────────────────────────────────────────
@@ -129,6 +129,38 @@ def ordering_cost(k, a):
     inp = (CHARS_PER_FRAG_PROMPT * k / 4.0 + 150) * CAL_IN
     out = ordering_out_tokens(k)
     return (inp / 1e6 * IN_PER_M + out / 1e6 * OUT_PER_M) * (1 + a["retry_rate"])
+
+
+# ── max_tokens for the PAID path ─────────────────────────────────────────────
+#
+# claude-sonnet-5 runs ADAPTIVE THINKING BY DEFAULT, and thinking tokens are
+# billed as output and count against max_tokens even though the thinking text
+# comes back empty. So a cap sized to the bare JSON answer (~3 tok/fragment) is
+# sized to the wrong thing. batch_submit's default was 4,096 and the control
+# spec's 8,192, against measured sonnet output of ~14-21k for a 7-document pool:
+# the paid run would have come back empty or cut off mid-JSON, and the
+# completeness gate would then have refused it -- safe, and a waste of money.
+#
+# A generous cap costs nothing extra: batches bill ACTUAL usage. It is sized
+# from the SAME anchors that price the run, times SIZING_MARGIN for the
+# measured 1.82x run-to-run spread, so the forecast and the cap cannot drift.
+# 128,000 is sonnet-5's output ceiling.
+MODEL_MAX_OUTPUT = 128000
+SIZING_MARGIN = 2.0
+
+
+def max_tokens_for(game, n_frags, n_groups=1, margin=SIZING_MARGIN,
+                   cap=MODEL_MAX_OUTPUT):
+    """Per-request max_tokens for one game unit on the paid path."""
+    if game == "O" or n_groups <= 1:
+        need = ordering_out_tokens(n_frags)
+    elif game in ("J", "L"):
+        need = oneshot_out_tokens(n_frags, n_groups)
+        if game == "J":
+            need *= DEFAULTS["j_over_l"]
+    else:
+        raise ValueError(f"unknown game {game!r}")
+    return int(min(cap, max(2048, need * margin)))
 
 
 # ── the sampling frame and the grid ──────────────────────────────────────────

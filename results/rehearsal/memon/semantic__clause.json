@@ -1,0 +1,35 @@
+{
+  "cell": "results/o_probe/semantic__clause",
+  "docs": 7,
+  "f1_joint": 0.13107066210953025,
+  "baseline_joint": 0.12674360260913195,
+  "advantage": 0.004955084799065625,
+  "f1_linkage": 0.24974167395278596,
+  "q": 0.5248249522597072,
+  "K": 3142,
+  "C": 1649,
+  "telemetry": {
+    "attacker": "memon-joint",
+    "n": 2,
+    "d": 2,
+    "seed": 42,
+    "mask_seed": 42,
+    "n_fragments": 229,
+    "n_docs_given": 7,
+    "grouping": {
+      "n_groups": 7,
+      "exact_n": true,
+      "maxclust_n_groups": 7,
+      "cut_tree_disagreed": false,
+      "largest": 207,
+      "singletons": 1
+    },
+    "score_pair_calls": 42746,
+    "context_coverage": 0.2071538857436953,
+    "zero_weight_pairs": 8431,
+    "clusters_ordered": 6,
+    "all_orderings_connected": true,
+    "arbitrary_pairs": 0,
+    "mean_objective_frac": 0.6468969225910174
+  }
+}

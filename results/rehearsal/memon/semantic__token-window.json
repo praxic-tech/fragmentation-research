@@ -1,0 +1,35 @@
+{
+  "cell": "results/o_probe/semantic__token-window",
+  "docs": 7,
+  "f1_joint": 0.17619916300032193,
+  "baseline_joint": 0.12937130161714128,
+  "advantage": 0.05378625982598625,
+  "f1_linkage": 0.34284794505848265,
+  "q": 0.5139280125195618,
+  "K": 3195,
+  "C": 1642,
+  "telemetry": {
+    "attacker": "memon-joint",
+    "n": 2,
+    "d": 2,
+    "seed": 42,
+    "mask_seed": 42,
+    "n_fragments": 286,
+    "n_docs_given": 7,
+    "grouping": {
+      "n_groups": 7,
+      "exact_n": true,
+      "maxclust_n_groups": 7,
+      "cut_tree_disagreed": false,
+      "largest": 137,
+      "singletons": 0
+    },
+    "score_pair_calls": 25164,
+    "context_coverage": 0.7624980130344937,
+    "zero_weight_pairs": 78,
+    "clusters_ordered": 7,
+    "all_orderings_connected": true,
+    "arbitrary_pairs": 0,
+    "mean_objective_frac": 0.8083342028155257
+  }
+}
