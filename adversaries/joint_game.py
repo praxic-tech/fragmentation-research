@@ -445,14 +445,42 @@ def score_row(row, true_order, true_groups_by_unit):
 
 # ── driver ───────────────────────────────────────────────────────────────────
 
-def build_units(cell_dir, n_docs, pool_size, seed):
-    """Return (per-document units for O, per-pool units for L/J, truth tables)."""
+def build_units(cell_dir, n_docs, pool_size, seed, pools=None, o_docs=None):
+    """Return (per-document units for O, per-pool units for L/J, truth tables).
+
+    Without `pools`, pools are consecutive runs of the first n_docs sorted ids:
+    a free-tier convenience, NOT a sampling frame. The paid run passes the
+    PRE-REGISTERED pools explicitly as [(pool_id, [record_id, ...])].
+
+    Every pre-registered member must exist in the cell, or this raises. It does
+    not drop missing members: the grid cells were cut from the length-stratified
+    ordering sample, and 107 of the 175 members of the pre-registered grid pools
+    are not in it. Dropping them would quietly turn random 7-document pools into
+    smaller, non-random ones, and every score would still look reasonable.
+    """
     frags = load_jsonl(os.path.join(cell_dir, "prose_fragments.jsonl"))
     key = {r["record_id"]: r["order"]
            for r in load_jsonl(os.path.join(cell_dir, "prose_answer_key.jsonl"))}
     by_rec = {}
     for f in frags:
         by_rec.setdefault(f["record_id"], []).append(f)
+
+    if pools is not None:
+        wanted = {r for _pid, members in pools for r in members}
+        wanted |= set(o_docs or [])
+        missing = sorted(wanted - set(by_rec))
+        if missing:
+            raise ValueError(
+                f"{len(missing)} of {len(wanted)} pre-registered documents are "
+                f"not in {cell_dir}, e.g. {missing[:3]}. This cell was cut from "
+                "a different document sample. Re-cut it on the frame's "
+                "documents; never drop members to make the pools fit.")
+        pool_units = [(pid, [f for r in members for f in by_rec[r]], len(members))
+                      for pid, members in pools]
+        pool_truth = {pid: {r: [f["fragment_id"] for f in by_rec[r]]
+                            for r in members} for pid, members in pools}
+        rids = list(o_docs) if o_docs is not None else []
+        return ([(r, by_rec[r], 1) for r in rids], pool_units, key, pool_truth)
 
     rids = sorted(by_rec)[:n_docs]
     o_units = [(r, by_rec[r], 1) for r in rids]

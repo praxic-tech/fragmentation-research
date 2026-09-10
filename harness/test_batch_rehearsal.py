@@ -122,7 +122,8 @@ class Oracle:
         if cell_dir not in self.truth:
             _, _, key, pool_truth = build_units(
                 os.path.join(ROOT, cell_dir), self.build["docs"],
-                self.build["pool_size"], self.build["seed"])
+                self.build["pool_size"], self.build["seed"],
+                pools=self.build.get("pools"), o_docs=self.build.get("o_docs"))
             self.truth[cell_dir] = (key, pool_truth)
         return self.truth[cell_dir]
 

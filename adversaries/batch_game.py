@@ -86,8 +86,24 @@ def _abs(rel):
 
 # ── build ────────────────────────────────────────────────────────────────────
 
+def load_frame(pools_file, pool_ids_file=None):
+    """Pre-registered pools as [(pool_id, [record_id, ...])], in file order.
+
+    pool_ids_file (e.g. data/pools/linkage_grid.json) restricts to a subset.
+    """
+    with io.open(pools_file, encoding="utf-8") as fh:
+        pools = json.load(fh)["pools"]
+    keep = None
+    if pool_ids_file:
+        with io.open(pool_ids_file, encoding="utf-8") as fh:
+            keep = set(json.load(fh)["pool_ids"])
+    return [(p["pool_id"], list(p["members"])) for p in pools
+            if keep is None or p["pool_id"] in keep]
+
+
 def build_spec(cells, games, docs, pool_size, seed, tag, model=DEFAULT_MODEL,
-               margin=2.0, arm="masked", control=False):
+               margin=2.0, arm="masked", control=False, pools=None,
+               o_docs=None):
     """One request per (cell, game, unit), with a sidecar that makes it scoreable.
 
     arm="unmasked" is the G3 positive control: RAW fragment ids, presented in
@@ -101,9 +117,10 @@ def build_spec(cells, games, docs, pool_size, seed, tag, model=DEFAULT_MODEL,
     for cell_dir in cells:
         base = os.path.basename(os.path.normpath(cell_dir))
         cell = f"ctrl-{arm}-{base}" if control else base
-        o_units, pools, _key, _truth = build_units(cell_dir, docs, pool_size, seed)
+        o_units, pool_units, _key, _truth = build_units(
+            cell_dir, docs, pool_size, seed, pools=pools, o_docs=o_docs)
         for game in games:
-            for unit_id, frags, n_records in (o_units if game == "O" else pools):
+            for unit_id, frags, n_records in (o_units if game == "O" else pool_units):
                 if arm == "unmasked":
                     items = [(f["fragment_id"], f["text"]) for f in frags]
                     id_map = {f["fragment_id"]: f["fragment_id"] for f in frags}
@@ -135,7 +152,10 @@ def build_spec(cells, games, docs, pool_size, seed, tag, model=DEFAULT_MODEL,
     return {"tag": tag, "model": model,
             "build": {"docs": docs, "pool_size": pool_size, "seed": seed,
                       "margin": margin, "arm": arm, "games": list(games),
-                      "cells": [_rel(c) for c in cells]},
+                      "cells": [_rel(c) for c in cells],
+                      # the frame travels with the spec, so scoring rebuilds
+                      # exactly the units that were asked
+                      "pools": pools, "o_docs": o_docs},
             "requests": requests, "sidecar": sidecar}
 
 
@@ -296,9 +316,10 @@ def score(waves, out_root, allow_partial=False):
                          encoding="utf-8") as fh:
                 for row in rows.get((cell, g), []):
                     fh.write(json.dumps(row) + "\n")
-        o_units, pools, key, pool_truth = build_units(
-            _abs(cell_dir), build["docs"], build["pool_size"], build["seed"])
-        expected = {g: [u[0] for u in (o_units if g == "O" else pools)]
+        o_units, pool_units, key, pool_truth = build_units(
+            _abs(cell_dir), build["docs"], build["pool_size"], build["seed"],
+            pools=build.get("pools"), o_docs=build.get("o_docs"))
+        expected = {g: [u[0] for u in (o_units if g == "O" else pool_units)]
                     for g in sorted(games)}
         print()
         print("=" * 74)
@@ -343,6 +364,13 @@ def main():
     b.add_argument("--arm", choices=["masked", "unmasked"], default="masked")
     b.add_argument("--control", action="store_true",
                    help="tag cells ctrl-<arm>-... for the G3 positive control")
+    b.add_argument("--pools-file", default=None,
+                   help="pre-registered pools, e.g. data/pools/pools.json")
+    b.add_argument("--pool-ids-file", default=None,
+                   help="restrict to these pool ids, e.g. "
+                        "data/pools/linkage_grid.json")
+    b.add_argument("--o-docs-file", default=None,
+                   help="JSON list of record ids for the per-document O arm")
     b.add_argument("--tag", required=True)
     b.add_argument("--out", required=True)
 
@@ -368,8 +396,12 @@ def main():
 
     a = ap.parse_args()
     if a.cmd == "build":
+        frame = (load_frame(a.pools_file, a.pool_ids_file)
+                 if a.pools_file else None)
+        o_docs = _load(a.o_docs_file) if a.o_docs_file else None
         _dump(build_spec(a.cells, a.games, a.docs, a.pool_size, a.seed, a.tag,
-                         a.model, a.margin, a.arm, a.control), a.out)
+                         a.model, a.margin, a.arm, a.control, pools=frame,
+                         o_docs=o_docs), a.out)
     elif a.cmd == "resubmit":
         spec = build_resubmit_spec(_load(a.spec), a.results, a.tag)
         if not spec["requests"]:
