@@ -71,12 +71,39 @@ BASE_URL      = "https://api.anthropic.com/v1/"
 
 # A free-tier provider drops in here — the OpenAI-compatible surface is the same.
 # Groq: base_url https://api.groq.com/openai/v1, model llama-3.3-70b-versatile.
+# NVIDIA: base_url https://integrate.api.nvidia.com/v1, model moonshotai/kimi-k3
+# (docs/RUN_DECISIONS.md D3 — Kimi K3 replaces gpt-oss-120b as the LLM cutter).
 # `thinking` is Anthropic-only and is skipped automatically off that host.
 PROVIDERS = {
     "anthropic": ("https://api.anthropic.com/v1/", "claude-sonnet-5"),
     "groq":      ("https://api.groq.com/openai/v1", "llama-3.3-70b-versatile"),
+    "nvidia":    ("https://integrate.api.nvidia.com/v1", "moonshotai/kimi-k3"),
+}
+
+# Non-standard env var names that don't follow the f"{PROVIDER}_API_KEY" convention.
+PROVIDER_KEY_ENV = {
+    "nvidia": "NVIDIA_API_40RPM",  # rate-limited (40 req/min) free-tier key
+}
+
+# Pinned so the frozen config states one value, NOT because it makes Kimi
+# deterministic: at temperature 0 / seed 0 the same prose_0012 v1 call returned
+# 31, 28 and 75 cuts on three occasions. Reproducibility comes from the decision
+# cache, never from re-calling. Anthropic rejects temperature (RUN_PLAN §1).
+PROVIDER_TEMPERATURE = {
+    "nvidia": 0,
 }
 PAUSE_SECONDS = 1
+# nvidia's key is 40 req/min, but after a burst it stayed limited for 20+
+# minutes. So wait it out patiently: the SDK's own retries are off for nvidia
+# (make_client), and while limited we send at most one request per
+# RATE_LIMIT_MAX_WAIT seconds — far under 40/min — for up to ~an hour per
+# document, after which cut_corpus stops the run rather than keep trying.
+RATE_LIMIT_RETRIES = 40
+RATE_LIMIT_BACKOFF = 20
+RATE_LIMIT_MAX_WAIT = 90
+PROVIDER_PAUSE_SECONDS = {
+    "nvidia": 3,
+}
 
 # INTERACTIVE pricing (per million tokens). cost_model_v2 uses 1.0/5.0 because
 # it assumes the Batches API and its 50% discount; this script calls the
@@ -188,12 +215,17 @@ def make_client(provider="anthropic"):
     load_dotenv(os.path.join(ROOT, ".env"))
     base_url, _ = PROVIDERS[provider]
     # Provider-specific key first, so two providers can coexist in one env file.
-    key = (os.environ.get(f"{provider.upper()}_API_KEY")
+    key_env = PROVIDER_KEY_ENV.get(provider, f"{provider.upper()}_API_KEY")
+    key = (os.environ.get(key_env)
            or os.environ.get("LLM_API_KEY")
            or os.environ.get("API_KEY"))
     if not key:
-        sys.exit(f"ERROR: no API key for {provider}. Set {provider.upper()}_API_KEY "
+        sys.exit(f"ERROR: no API key for {provider}. Set {key_env} "
                  f"(or LLM_API_KEY / API_KEY) in apikey.env or .env at the repo root.")
+    # The SDK retries 429s twice on its own; stacked under our backoff loop that
+    # is up to 3 requests per attempt against a 40 req/min key.
+    if provider == "nvidia":
+        return OpenAI(base_url=base_url, api_key=key, max_retries=0)
     return OpenAI(base_url=base_url, api_key=key)
 
 
@@ -231,6 +263,23 @@ THINKING = {
     "adaptive": {},
 }
 
+# Kimi K3 (nvidia) takes `reasoning_effort` instead; "off" sends no field (the
+# model then reasons at its own default). On prose_0012 (v1), "low" cut all 75
+# boundaries at 3.5x the latency of default — but default ALSO cut all 75 on a
+# later call, so "low" is not shown to be worse, only not cheaper.
+REASONING_EFFORT_VALUES = {"low", "medium", "high", "max"}
+
+
+def _extra_body(provider, thinking):
+    if provider == "anthropic":
+        return dict(THINKING.get(thinking, {}))
+    if provider == "nvidia":
+        body = {"seed": 0}
+        if thinking in REASONING_EFFORT_VALUES:
+            body["reasoning_effort"] = thinking
+        return body
+    return {}
+
 
 def split_units(text, kind="clause"):
     """Candidate cut positions offered to the model.
@@ -256,15 +305,29 @@ def request_cut_points(client, units, model, max_tokens=4000, meter=None,
     body = PROMPTS[prompt].format(n=len(units), units=numbered,
                                   max_idx=len(units) - 1)
 
-    # `thinking` is an Anthropic parameter; sending it to another host 400s.
-    extra = THINKING.get(thinking, {}) if provider == "anthropic" else {}
+    # `thinking`/`reasoning_effort` are host-specific; sending the wrong one 400s.
+    extra = _extra_body(provider, thinking)
 
-    reply = client.chat.completions.create(
-        model=model,
-        max_tokens=max_tokens,
-        messages=[{"role": "user", "content": body}],
-        extra_body=extra,
-    )
+    kwargs = dict(model=model, max_tokens=max_tokens,
+                  messages=[{"role": "user", "content": body}], extra_body=extra)
+    if provider in PROVIDER_TEMPERATURE:
+        kwargs["temperature"] = PROVIDER_TEMPERATURE[provider]
+
+    # The SDK's short built-in retries were not enough: once the key was
+    # limited, every document 429'd in turn and two whole prompt passes were
+    # lost. Retry only 429 — anything else is a real failure and surfaces now.
+    from openai import RateLimitError
+    for attempt in range(RATE_LIMIT_RETRIES + 1):
+        try:
+            reply = client.chat.completions.create(**kwargs)
+            break
+        except RateLimitError:
+            if attempt == RATE_LIMIT_RETRIES:
+                raise
+            wait = min(RATE_LIMIT_BACKOFF * (2 ** attempt), RATE_LIMIT_MAX_WAIT)
+            print(f"    [429] rate limited — waiting {wait}s "
+                  f"(retry {attempt + 1}/{RATE_LIMIT_RETRIES})")
+            time.sleep(wait)
     usage = getattr(reply, "usage", None)
     if meter is not None:
         meter.record(usage)          # record BEFORE parsing — a failed parse still bills
@@ -384,11 +447,19 @@ def cut_corpus(raw_path, out_dir, cache_path=DEFAULT_CACHE,
                 skipped += 1
                 continue
             else:
+                from openai import RateLimitError
                 try:
                     cut_points, usage = request_cut_points(
                         client, units, model, max_tokens=max_tokens,
                         meter=meter, thinking=thinking, prompt=prompt,
                         provider=provider)
+                except RateLimitError:
+                    # Still limited after backoff: every later document would
+                    # only spend more of the quota on 429s. Stop; rerun resumes.
+                    print(f"  [RATE-LIMIT] {rid}: still 429 after retries — stopping "
+                          f"the run. Cached decisions are kept; rerun to resume.")
+                    skipped += 1
+                    break
                 except ZeroAnswerError as e:
                     print(f"  [ZERO-ANSWER] {rid}: {e}")
                     skipped += 1
@@ -410,7 +481,7 @@ def cut_corpus(raw_path, out_dir, cache_path=DEFAULT_CACHE,
                 called += 1
                 print(f"  {rid}: {len(units)} units -> {len(cut_points)} cuts   "
                       f"[${meter.cost:.4f} running]")
-                time.sleep(PAUSE_SECONDS)
+                time.sleep(PROVIDER_PAUSE_SECONDS.get(provider, PAUSE_SECONDS))
 
             fragments = assemble(units, set(cut_points))
             frag_counts.append(len(fragments))
@@ -455,7 +526,7 @@ def parse_args():
     p.add_argument("--cache", default=DEFAULT_CACHE,
                    help="cut decisions, reused across runs (default results/llm_cut_decisions.jsonl)")
     p.add_argument("--provider", default="anthropic", choices=list(PROVIDERS),
-                   help="groq is the free-tier option; model defaults follow it")
+                   help="groq and nvidia (Kimi K3) are free-tier; model defaults follow the provider")
     p.add_argument("--model", default=None,
                    help="overrides the provider default")
     p.add_argument("--prompt", default="v1", choices=list(PROMPTS),
@@ -469,9 +540,12 @@ def parse_args():
                    help="rebuild from cache only; never call the API")
     p.add_argument("--budget", type=float, default=None,
                    help="hard USD cap; stops before the call that would exceed it")
-    p.add_argument("--thinking", default="off", choices=["off", "adaptive"],
-                   help="adaptive thinking burns the output cap without answering "
-                        "on this task; 'off' is the default for that reason")
+    p.add_argument("--thinking", default="off",
+                   choices=["off", "adaptive", "low", "medium", "high", "max"],
+                   help="anthropic: off/adaptive (adaptive burns the output cap "
+                        "without answering on this task). nvidia: off/low/medium/"
+                        "high/max sets reasoning_effort ('off' sends no field "
+                        "and is what the frozen Kimi config uses)")
     p.add_argument("--max-tokens", type=int, default=4000)
     return p.parse_args()
 
