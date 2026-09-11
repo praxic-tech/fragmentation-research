@@ -101,9 +101,23 @@ def load_frame(pools_file, pool_ids_file=None):
             if keep is None or p["pool_id"] in keep]
 
 
+def headline_docs(pools_file=None, grid_ids_file=None):
+    """Every document in the 46 HEADLINE pools: pools.json minus the grid pools.
+
+    docs/RUN_DECISIONS.md D2: these stay completely untouched until the headline
+    run -- no testing, no tuning, no requests of any kind.
+    """
+    pools_file = pools_file or os.path.join(ROOT, "data", "pools", "pools.json")
+    grid_ids_file = grid_ids_file or os.path.join(ROOT, "data", "pools",
+                                                  "linkage_grid.json")
+    grid = {pid for pid, _m in load_frame(pools_file, grid_ids_file)}
+    return {m for pid, members in load_frame(pools_file) if pid not in grid
+            for m in members}
+
+
 def build_spec(cells, games, docs, pool_size, seed, tag, model=DEFAULT_MODEL,
                margin=2.0, arm="masked", control=False, pools=None,
-               o_docs=None):
+               o_docs=None, forbid_docs=None):
     """One request per (cell, game, unit), with a sidecar that makes it scoreable.
 
     arm="unmasked" is the G3 positive control: RAW fragment ids, presented in
@@ -119,6 +133,18 @@ def build_spec(cells, games, docs, pool_size, seed, tag, model=DEFAULT_MODEL,
         cell = f"ctrl-{arm}-{base}" if control else base
         o_units, pool_units, _key, _truth = build_units(
             cell_dir, docs, pool_size, seed, pools=pools, o_docs=o_docs)
+        if forbid_docs:
+            # D2 as a refusal, not a promise: a request carrying any document
+            # from the untouched headline pools cannot be built.
+            used = {f["record_id"] for g in games
+                    for _u, frags, _n in (o_units if g == "O" else pool_units)
+                    for f in frags}
+            bad = sorted(used & set(forbid_docs))
+            if bad:
+                raise ValueError(
+                    f"{len(bad)} documents in {cell} belong to the untouched "
+                    f"headline pools, e.g. {bad[:3]}. Headline documents may "
+                    "not be requested before the headline run (RUN_DECISIONS D2).")
         for game in games:
             for unit_id, frags, n_records in (o_units if game == "O" else pool_units):
                 if arm == "unmasked":
@@ -155,7 +181,8 @@ def build_spec(cells, games, docs, pool_size, seed, tag, model=DEFAULT_MODEL,
                       "cells": [_rel(c) for c in cells],
                       # the frame travels with the spec, so scoring rebuilds
                       # exactly the units that were asked
-                      "pools": pools, "o_docs": o_docs},
+                      "pools": pools, "o_docs": o_docs,
+                      "forbidden_docs": len(forbid_docs or ())},
             "requests": requests, "sidecar": sidecar}
 
 
@@ -369,6 +396,9 @@ def main():
     b.add_argument("--pool-ids-file", default=None,
                    help="restrict to these pool ids, e.g. "
                         "data/pools/linkage_grid.json")
+    b.add_argument("--forbid-headline", action="store_true",
+                   help="refuse to build if any request touches a document in "
+                        "the 46 untouched headline pools (RUN_DECISIONS D2)")
     b.add_argument("--o-docs-file", default=None,
                    help="JSON list of record ids for the per-document O arm")
     b.add_argument("--tag", required=True)
@@ -401,7 +431,9 @@ def main():
         o_docs = _load(a.o_docs_file) if a.o_docs_file else None
         _dump(build_spec(a.cells, a.games, a.docs, a.pool_size, a.seed, a.tag,
                          a.model, a.margin, a.arm, a.control, pools=frame,
-                         o_docs=o_docs), a.out)
+                         o_docs=o_docs,
+                         forbid_docs=headline_docs() if a.forbid_headline
+                         else None), a.out)
     elif a.cmd == "resubmit":
         spec = build_resubmit_spec(_load(a.spec), a.results, a.tag)
         if not spec["requests"]:
