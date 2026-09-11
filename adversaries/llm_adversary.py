@@ -95,13 +95,44 @@ def append_jsonl(row, path):
         handle.write(json.dumps(row) + "\n")
 
 
+_FENCE = re.compile(r"```(?:json)?\s*(.*?)```", re.S)
+
+
+def _longest_array(chunk):
+    """The longest span in chunk that a real JSON decoder reads as a list."""
+    dec, best, i = json.JSONDecoder(), None, 0
+    while True:
+        i = chunk.find("[", i)
+        if i == -1:
+            return best
+        try:
+            val, end = dec.raw_decode(chunk, i)
+        except ValueError:
+            i += 1
+            continue
+        if isinstance(val, list) and (best is None or end - i > best[0]):
+            best = (end - i, val)
+        i = end
+
+
 def extract_json_array(text):
-    """Return the first JSON array found in text, tolerating fences or prose."""
-    text = (text or "").replace("```json", "").replace("```", "").strip()
-    start, end = text.find("["), text.rfind("]")
-    if start == -1 or end == -1 or end < start:
-        raise ValueError(f"No JSON array in reply: {text[:200]}")
-    return json.loads(text[start:end + 1])
+    """Return the model's JSON array from a reply that may carry prose or fences.
+
+    A fenced block holding an array is the answer; otherwise the whole reply is
+    searched. Either way the LONGEST span a JSON decoder reads as a list wins,
+    so a J answer's outer list beats its inner lists and a stray "[1]" in the
+    prose cannot pre-empt the real answer.
+
+    The old rule -- first "[" to last "]" -- broke on grid pool 1: a complete
+    56-label answer in a ```json fence, preceded by prose containing
+    "[35-year-old with ...]", was scored as unparseable.
+    """
+    text = text or ""
+    for chunk in [m.group(1) for m in _FENCE.finditer(text)] + [text]:
+        best = _longest_array(chunk)
+        if best is not None:
+            return best[1]
+    raise ValueError(f"No JSON array in reply: {text[:200]}")
 
 
 # ── model call with retry / backoff ─────────────────────────────────────────────

@@ -237,9 +237,24 @@ class Ledger:
         """
         return max(self.committed, self.observed) + float(next_usd)
 
-    def check_spend(self, next_usd):
-        """Consulted BEFORE submitting. Returns (allowed, message)."""
+    def check_spend(self, next_usd, worst_usd=None):
+        """Consulted BEFORE submitting. Returns (allowed, message).
+
+        next_usd is what the tripwire sees. worst_usd, if given, is what the
+        submission would cost if every request ran to its max_tokens; that is
+        held against HARD_LIMIT, so the wallet cannot be breached even in the
+        worst case, whatever the forecast says.
+        """
         cap = self.data["max_spend_usd"]
+        if worst_usd is not None:
+            worst_total = self.projected_total(worst_usd)
+            if worst_total > HARD_LIMIT:
+                return False, (
+                    f"REFUSED: if every request in this submission ran to its "
+                    f"max_tokens, spend would reach ${worst_total:.2f}, over "
+                    f"the ${HARD_LIMIT:.2f} hard limit (committed "
+                    f"${self.committed:.2f}, this step's worst case "
+                    f"${float(worst_usd):.2f}). Submit it in smaller waves.")
         projected = self.projected_total(next_usd)
         if projected <= cap:
             return True, (f"projected ${projected:.2f} of ${cap:.2f} cap "

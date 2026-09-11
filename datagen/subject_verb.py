@@ -53,7 +53,11 @@ def _cut_unit(unit_text):
     for tok in doc:
         if tok.dep_ == "nsubj":
             head = tok.head
-            if head.i > 0:
+            # The cut must fall on WHITESPACE in the source. spaCy splits
+            # "patient’s" and "MP™" into tokens with no gap between them; a cut
+            # there made the rejoin insert a space, and 4 frame-A documents
+            # failed exact reconstruction. Same rule coherence-sever uses.
+            if head.i > 0 and doc[head.i - 1].whitespace_:
                 pre = doc[:head.i].text.strip()
                 post = doc[head.i:].text.strip()
                 if pre and post:

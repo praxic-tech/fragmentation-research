@@ -54,6 +54,11 @@ DEFAULT_STATE_DIR = os.path.join(ROOT, "results", "batches")
 # analysis/cost_model_v2.py — the two must not drift apart.
 IN_PER_M, OUT_PER_M = 1.0, 5.0
 
+# The tripwire reservation, as a multiple of the measured-rate forecast. The
+# forecast's rates are lower bounds and a single document has run 1.82x apart
+# on two identical requests, so 2x; settle() replaces it with the actual bill.
+RESERVE_MARGIN = 2.0
+
 # The API caps custom_id at 64 characters and restricts the alphabet.
 CUSTOM_ID_MAX = 64
 _CUSTOM_ID_OK = re.compile(r"^[A-Za-z0-9_-]+$")
@@ -66,6 +71,16 @@ class ZeroAnswerError(RuntimeError):
     parse failure, which is how it went unnoticed during llm_cutter calibration
     until the spend meter showed money leaving with nothing written. Worth its
     own type so it can be counted separately in the run report.
+    """
+
+
+class TruncatedAnswerError(RuntimeError):
+    """The call stopped at max_tokens. Its text, if any, is cut off.
+
+    Grid pool 1 had one: a "succeeded" O answer whose JSON list ended mid-label
+    at exactly its cap. Counted as an answer it would have been parsed, or
+    patched by the completion policy, or filed in the answer store and reused
+    in the real run. It is a hole, resubmitted with a larger cap.
     """
 
 
@@ -116,8 +131,9 @@ def make_custom_id(cell, game, unit):
     # J is the headline game. This check predates the joint threat model, and
     # it meant the paid path could not submit a single J request -- found by
     # the G1 rehearsal on its first request, not by a failed paid batch.
-    if game not in ("O", "L", "J"):
-        raise ValueError(f"game must be 'O', 'L' or 'J', got {game!r}")
+    # H = one pair batch of the hierarchical attacker (adversaries/hier_batch.py).
+    if game not in ("O", "L", "J", "H"):
+        raise ValueError(f"game must be 'O', 'L', 'J' or 'H', got {game!r}")
     cid = f"{_slug(cell)}.{game}.{_slug(unit)}".replace(".", "__")
     if len(cid) > CUSTOM_ID_MAX:
         raise ValueError(
@@ -267,7 +283,16 @@ def make_client():
 # ── submit ───────────────────────────────────────────────────────────────────
 
 def submit(spec, state_dir=DEFAULT_STATE_DIR, client=None,
-           max_spend=DEFAULT_MAX_SPEND, ledger=None):
+           max_spend=DEFAULT_MAX_SPEND, ledger=None, expected_usd=None):
+    """expected_usd (or spec["expected_usd"]): the forecast at measured rates.
+
+    With max_tokens at the model ceiling the worst case -- every request running
+    to its cap -- is several times the real cost, and reserving it would refuse
+    the run long before the money is spent. So the TRIPWIRE is checked and
+    reserved at RESERVE_MARGIN x the forecast, and the HARD LIMIT against the
+    worst case: a submission that could breach the wallet even in principle is
+    refused, which forces the run into waves small enough that it cannot.
+    """
     tag = spec["tag"]
     requests = build_requests(spec)
     sp = state_path(state_dir, tag)
@@ -290,18 +315,25 @@ def submit(spec, state_dir=DEFAULT_STATE_DIR, client=None,
     # more credit -- so this is the only real limit. Projected, not observed,
     # because after create() the money is already committed.
     led = ledger if ledger is not None else Ledger(max_spend=max_spend)
-    allowed, message = led.check_spend(est["est_cost_worst_case"])
+    worst = est["est_cost_worst_case"]
+    if expected_usd is None:
+        expected_usd = spec.get("expected_usd")
+    reserve_usd = (worst if expected_usd is None
+                   else min(worst, RESERVE_MARGIN * float(expected_usd)))
+    if expected_usd is not None:
+        print(f"  expected ${float(expected_usd):.2f}, reserving ${reserve_usd:.2f}")
+    allowed, message = led.check_spend(reserve_usd, worst_usd=worst)
     print(f"  {message}" if allowed else "")
     if not allowed:
         raise SystemExit(message)
 
     # RESERVE FIRST. If create() succeeds and this process dies before the id
     # is recorded, the ledger must already know money was committed.
-    led.reserve(tag, est["est_cost_worst_case"], len(requests))
+    led.reserve(tag, reserve_usd, len(requests))
     try:
         batch = client.messages.batches.create(requests=requests)
     except Exception:
-        led.release(tag, est["est_cost_worst_case"], reason="create() failed")
+        led.release(tag, reserve_usd, reason="create() failed")
         raise
     led.attach_batch(tag, batch.id)
 
@@ -349,7 +381,7 @@ def fetch(state, state_dir=DEFAULT_STATE_DIR, client=None, wait=False,
         print(f"  {status} ... waiting {poll_seconds}s")
         time.sleep(poll_seconds)
 
-    counts = {"succeeded": 0, "errored": 0, "zero_answer": 0,
+    counts = {"succeeded": 0, "errored": 0, "zero_answer": 0, "truncated": 0,
               "expired": 0, "canceled": 0, "skipped": 0}
     written = 0
 
@@ -373,7 +405,17 @@ def fetch(state, state_dir=DEFAULT_STATE_DIR, client=None, wait=False,
                          "output_tokens": msg.usage.output_tokens}
                 meter.record(usage)
                 row["usage"] = usage
-                if not text.strip():
+                # Why it stopped is the only reliable way to tell a finished
+                # answer from one cut off at the cap. Recorded on every row.
+                row["stop_reason"] = getattr(msg, "stop_reason", None)
+                if row["stop_reason"] == "max_tokens":
+                    row["error"] = TruncatedAnswerError.__name__
+                    row["detail"] = (f"stopped at max_tokens after "
+                                     f"{usage['output_tokens']} output tokens")
+                    if text.strip():
+                        row["partial_text"] = text
+                    counts["truncated"] += 1
+                elif not text.strip():
                     # Billed like a success, empty like a failure. Counted, kept.
                     row["error"] = ZeroAnswerError.__name__
                     row["detail"] = (f"empty answer after {usage['output_tokens']} "

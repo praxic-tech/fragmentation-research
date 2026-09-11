@@ -40,13 +40,14 @@ The sentence and clause splitters are IMPORTED from prose_cutter rather than
 reimplemented, so every strategy in the grid shares one spaCy tokenizer and one
 sentence base. See the "ONE TOKENIZER, ONE SENTENCE BASE" note there.
 
-CALIBRATION WARNING
--------------------
-On short documents whose consecutive sentences share little vocabulary, the
-`jaccard < TOPIC_SHIFT_THRESHOLD` test fires at nearly every boundary and
-coherence-sever collapses onto semantic (measured: 101 fragments vs semantic's
-104 on the 25-doc synthetic corpus). Check `--report-boundaries` output on the
-real corpus before treating these as two distinct grid conditions.
+CALIBRATION (resolved 2026-09-11, RUN_DECISIONS D7)
+---------------------------------------------------
+The old `jaccard < 0.12` topic-shift test fired at 82-84% of frame-A boundaries,
+exactly as this warning once predicted, and the strategy collapsed onto
+semantic (95% of boundaries cut). The rule is now "the adjacent units share no
+content word", which cuts 62.9% of sentence and 72.3% of clause boundaries.
+Token-window now counts WHITESPACE words, the same ruler as random and
+semantic token-window; it counted spaCy tokens before, giving 9.8-word windows.
 
 Install requirements: same as prose_cutter.py (pip install spacy &&
 python -m spacy download en_core_web_sm).
@@ -90,6 +91,8 @@ STOPWORDS = {
     "be", "has", "have", "had", "his", "her", "its", "their", "he", "she", "they",
 }
 
+# Historical: the Jaccard threshold the topic-shift rule used before D7. Kept
+# only so old configs still import; _is_topic_shift no longer reads it.
 TOPIC_SHIFT_THRESHOLD = 0.12
 
 
@@ -112,12 +115,22 @@ def _content_words(unit):
     return {w for w in re.findall(r"[a-z']+", unit.lower()) if w not in STOPWORDS and len(w) > 2}
 
 
-def _is_topic_shift(prev_unit, next_unit, overlap_threshold=TOPIC_SHIFT_THRESHOLD):
+def _is_topic_shift(prev_unit, next_unit):
+    """A topic shift: the two adjacent units share NO content word.
+
+    Was `content-word Jaccard < 0.12`. In these clinical case reports 57-69% of
+    adjacent units share no content word at all and the median overlap is 0,
+    so any positive threshold called nearly every boundary a topic shift: the
+    strategy cut 95% of candidate boundaries, i.e. it was semantic splitting
+    with ~5% merged (docs/audit_packet_final_run.md A4). Zero overlap has no
+    threshold to tune; it was chosen from text statistics alone, never from
+    attack scores (RUN_DECISIONS D7). Frame-A cut rate: 62.9% of sentence
+    boundaries, 72.3% of clause boundaries.
+    """
     prev_words, next_words = _content_words(prev_unit), _content_words(next_unit)
     if not prev_words or not next_words:
         return False
-    jaccard = len(prev_words & next_words) / len(prev_words | next_words)
-    return jaccard < overlap_threshold
+    return not (prev_words & next_words)
 
 
 def is_discourse_boundary(prev_unit, next_unit):
@@ -166,61 +179,47 @@ def _cut_by_units(text, granularity):
     return fragments
 
 
-def _find_discourse_tokens(doc):
-    """Token indices in a spaCy doc that open a discourse connective or a
-    dangling pronoun — candidate snap points for token-window edges."""
-    hits = []
-    for i, tok in enumerate(doc):
-        low = tok.text.lower()
-        if low in DISCOURSE_CONNECTIVES or low in PRONOUNS_NEEDING_ANTECEDENT:
-            hits.append(i)
-    return hits
+_EDGE_PUNCT = re.compile(r"^[^\w']+|[^\w']+$")
+_LINK_WORDS = DISCOURSE_CONNECTIVES | PRONOUNS_NEEDING_ANTECEDENT
+
+
+def _opens_link(word):
+    """A whitespace word that opens a discourse link: a connective or a pronoun
+    needing an antecedent, ignoring surrounding punctuation."""
+    return _EDGE_PUNCT.sub("", word.lower()) in _LINK_WORDS
 
 
 def _cut_token_window(text, window_size=DEFAULT_WINDOW, snap_radius=3):
-    """Fixed-size token windows whose edges are snapped to the nearest
-    discourse-link token within snap_radius, so windows land on coherence
-    breaks rather than arbitrary token counts. Falls back to the raw edge
-    (plain token-window behavior) if nothing is nearby.
+    """Windows of window_size WHITESPACE WORDS -- the ruler random and semantic
+    token-window use -- with each edge snapped to the nearest word that opens a
+    discourse link within the snap radius. Falls back to the raw edge (plain
+    token-window behaviour) if nothing is nearby.
+
+    It counted spaCy tokens before D7. spaCy counts punctuation as tokens, so
+    windows averaged 9.8 words against the other token-window cells' 11.9, with
+    21% more fragments, and this cell's scores were confounded with a finer
+    granularity (docs/audit_packet_final_run.md A4). Every cut now falls between
+    whitespace words, so the single-space rejoin is exact by construction -- the
+    whitespace-legality patch the spaCy version needed is no longer required.
 
     snap_radius scales with the window: at k=12 a radius of 10 could drag an
     edge most of a window away, which stops being 'snapping'.
     """
-    doc = _nlp()(re.sub(r"\s+", " ", text).strip())
-    n = len(doc)
-    discourse_tokens = _find_discourse_tokens(doc)
+    words = text.split()
+    n = len(words)
+    if n == 0:
+        return []
+    links = [i for i in range(1, n) if _opens_link(words[i])]
     radius = min(snap_radius, max(1, window_size // 4))
 
-    def legal(i):
-        # A cut before token i must fall on WHITESPACE in the source. spaCy
-        # splits "bloating," and "patient's" into separate tokens, so a raw
-        # token edge could land where the text has no gap, and the rejoin
-        # (single spaces) then inserted one: "bloating , heaviness",
-        # "patient 's". 172 of 175 grid documents failed the fidelity gate.
-        # Every other cutter splits on whitespace and never had this problem.
-        return 0 < i < n and doc[i - 1].whitespace_ != ""
-
-    edges = [0]
-    pos = window_size
+    edges, pos = [0], window_size
     while pos < n:
-        nearby = [t for t in discourse_tokens
-                  if abs(t - pos) <= radius and t > edges[-1] and legal(t)]
-        edge = min(nearby, key=lambda t: abs(t - pos)) if nearby else pos
-        while edge < n and not legal(edge):
-            edge += 1
-        if edge >= n:
-            break
-        if edge > edges[-1]:
-            edges.append(edge)
+        nearby = [t for t in links if abs(t - pos) <= radius and t > edges[-1]]
+        edge = min(nearby, key=lambda t: (abs(t - pos), t)) if nearby else pos
+        edges.append(edge)
         pos = edge + window_size
     edges.append(n)
-
-    fragments = []
-    for start, end in zip(edges, edges[1:]):
-        chunk = doc[start:end].text.strip()
-        if chunk:
-            fragments.append(chunk)
-    return fragments
+    return [" ".join(words[a:b]) for a, b in zip(edges, edges[1:]) if b > a]
 
 
 def cut(text, strategy="coherence-sever", granularity="sentence",

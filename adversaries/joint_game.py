@@ -118,15 +118,37 @@ def prompt_J(items, n_records):
 
 # ── presentation ─────────────────────────────────────────────────────────────
 
+def _unit_seed(fragments, seed, purpose):
+    """A seed for ONE unit: sha256 of its fragment ids AND texts, the run seed,
+    and what the randomness is for.
+
+    present() used seed=42 for both the label shuffle and the presentation
+    shuffle, so the permutation depended only on the fragment COUNT: every
+    same-size unit was scrambled identically, random and semantic cells (equal
+    counts) got byte-identical patterns, and on pool 1 every O prompt's shown
+    order was anti-correlated with the truth (tau -0.006 to -0.333). No leak
+    was measured, but a fixed permutation per size is not a shuffle. Texts are
+    hashed as well as ids because the same record keeps the same fragment ids
+    across cells. Separate purposes give independent label and order streams.
+    """
+    h = hashlib.sha256(f"{purpose}|{seed}".encode("utf-8"))
+    for f in sorted(fragments, key=lambda f: f["fragment_id"]):
+        h.update(b"\x00" + f["fragment_id"].encode("utf-8")
+                 + b"\x00" + f["text"].encode("utf-8"))
+    return int(h.hexdigest()[:16], 16)
+
+
 def present(fragments, seed):
     """Mask ids, shuffle, and return (items, alias_map, shown_order).
 
     alias_map is returned and stored, never recomputed. shown_order records what
     the model actually saw so a positional-leak check is possible after the fact.
+    Both shuffles are seeded per unit (_unit_seed), never by a shared constant.
     """
-    masked, id_map = mask_fragment_ids(fragments, seed=seed)
+    masked, id_map = mask_fragment_ids(fragments,
+                                       seed=_unit_seed(fragments, seed, "labels"))
     shown = list(masked)
-    random.Random(seed).shuffle(shown)
+    random.Random(_unit_seed(fragments, seed, "order")).shuffle(shown)
     items = [(m["fragment_id"], m["text"]) for m in shown]
     return items, id_map, [m["fragment_id"] for m in shown]
 
@@ -407,6 +429,7 @@ def score_row(row, true_order, true_groups_by_unit):
            "coverage_frac": len(placed & all_ids) / len(all_ids) if all_ids else 0.0,
            "n_groups_guessed": len(groups) - len(dropped), "n_groups_true": len(tg),
            "f1": lk["f1"], "baseline": bl["f1"],
+           "l_precision": lk["precision"], "l_recall": lk["recall"],
            "advantage": advantage(lk["f1"], bl["f1"]),
            "partition_valid": cov["valid"], "coverage": cov}
 
@@ -435,6 +458,7 @@ def score_row(row, true_order, true_groups_by_unit):
                     # F1_J = F1_L * q decomposition. q is None when K == 0.
                     "joint_f1": jp["f1"], "joint_p": jp["precision"],
                     "joint_r": jp["recall"],
+                    "pairs_guessed": jp["n_guessed"], "pairs_true": jp["n_true"],
                     "joint_baseline": dec["baseline_joint"],
                     "joint_advantage": dec["a_joint"],
                     "j_linkage_f1": dec["f1_linkage"],
@@ -497,7 +521,13 @@ def build_units(cell_dir, n_docs, pool_size, seed, pools=None, o_docs=None):
     return o_units, pools, key, pool_truth
 
 
-def cell_integrity(scored, expected_units, cap=POLICY_CAP):
+def load_rbnc(out_dir, game):
+    """Units recorded as resource-bounded non-completions (RUN_DECISIONS D6)."""
+    p = os.path.join(out_dir, f"{game}.rbnc.jsonl")
+    return load_jsonl(p) if os.path.exists(p) else []
+
+
+def cell_integrity(scored, expected_units, cap=POLICY_CAP, rbnc=()):
     """May this set of scored units be reported as a defence result at all?
 
     Two failures, both of which printed clean-looking, wrong means on the
@@ -511,8 +541,12 @@ def cell_integrity(scored, expected_units, cap=POLICY_CAP):
                      measures model capacity plus our policy, not the cut
     """
     by_unit = {r["unit"]: r for r in scored}
-    missing = sorted(u for u in expected_units
-                     if u not in by_unit or by_unit[u].get("no_model_answer"))
+    # A resource-bounded non-completion (D6) is reported, not refused: the
+    # attacker got its full budget and could not finish. Anything else without
+    # a model answer is still a hole.
+    rb = sorted(set(rbnc) & set(expected_units))
+    missing = sorted(u for u in expected_units if u not in rb and
+                     (u not in by_unit or by_unit[u].get("no_model_answer")))
     heavy = sorted(u for u, r in by_unit.items()
                    if not r.get("no_model_answer")
                    and r.get("policy_share", 0.0) > cap)
@@ -520,8 +554,8 @@ def cell_integrity(scored, expected_units, cap=POLICY_CAP):
               if not r.get("no_model_answer")]
     return {"ok": not missing and not heavy,
             "expected": len(expected_units),
-            "answered": len(expected_units) - len(missing),
-            "missing": missing, "policy_heavy": heavy,
+            "answered": len(expected_units) - len(missing) - len(rb),
+            "missing": missing, "rbnc": rb, "policy_heavy": heavy,
             "policy_share": (sum(shares) / len(shares)) if shares else 0.0}
 
 
@@ -542,10 +576,14 @@ def integrity_gate(out_dir, key, pool_truth, expected):
                                              if "coverage_frac" in s_row
                                              else _policy_share(raw_row))
                 scored.append(s_row)
-        v = cell_integrity(scored, exp)
+        v = cell_integrity(scored, exp,
+                           rbnc=[r["unit"] for r in load_rbnc(out_dir, gname)])
         print(f"  game {gname}: {'ok' if v['ok'] else 'REFUSED'}   model "
-              f"answered {v['answered']}/{v['expected']}   fragments placed by "
-              f"policy {v['policy_share']:.1%}")
+              f"answered {v['answered']}/{v['expected']}   non-completions "
+              f"{len(v['rbnc'])}   fragments placed by policy {v['policy_share']:.1%}")
+        if v["rbnc"]:
+            print(f"    resource-bounded, 128k exhausted (D6, not scored): "
+                  f"{', '.join(v['rbnc'][:8])}{' ...' if len(v['rbnc']) > 8 else ''}")
         if v["missing"]:
             more = " ..." if len(v["missing"]) > 8 else ""
             print(f"    no model answer: {', '.join(v['missing'][:8])}{more}")
@@ -556,6 +594,16 @@ def integrity_gate(out_dir, key, pool_truth, expected):
         if not v["ok"]:
             refused.add(gname)
     return refused
+
+
+def _completion(out_dir, game, n_scored):
+    """D6: completion = scored / attempted. A non-completion was attempted with
+    the full budget and is counted here, never scored."""
+    rb = load_rbnc(out_dir, game)
+    n = n_scored + len(rb)
+    if n:
+        print(f"  COMPLETION   {n_scored}/{n} ({n_scored / n:.0%})   "
+              f"resource-bounded non-completions {len(rb)}")
 
 
 def report(out_dir, key, pool_truth, withhold=frozenset()):
@@ -586,6 +634,7 @@ def report(out_dir, key, pool_truth, withhold=frozenset()):
         t = [r["tau"] for r in O]
         print(f"\nGAME O  (oracle linkage: membership given, order only)")
         print(f"  scored {len(O)}/{len(O)+len(Om)} documents   malformed {len(Om)}")
+        _completion(out_dir, "O", len(O) + len(Om))
         if O and "longest_run" in O[0]:
             n = len(O)
             print(f"  recovered: {sum(r['exact_positions'] for r in O)}"
@@ -603,9 +652,13 @@ def report(out_dir, key, pool_truth, withhold=frozenset()):
             continue
         print(f"\n{name}")
         print(f"  pools scored {len(S)}")
+        _completion(out_dir, name.split()[1], len(S))
         print(f"  linkage F1   mean {np.mean([r['f1'] for r in S]):.4f}   "
               f"baseline {np.mean([r['baseline'] for r in S]):.4f}   "
               f"advantage {np.mean([r['advantage'] for r in S]):+.4f}")
+        print(f"               precision {np.mean([r.get('l_precision', np.nan) for r in S]):.4f}"
+              f"   recall {np.mean([r.get('l_recall', np.nan) for r in S]):.4f}"
+              f"   (of guessed / of true same-record pairs)")
         print(f"  groups       guessed {np.mean([r['n_groups_guessed'] for r in S]):.1f} "
               f"vs {np.mean([r['n_groups_true'] for r in S]):.1f} asked   "
               f"exact count {sum(1 for r in S if r['n_groups_guessed']==r['n_groups_true'])}/{len(S)}")
@@ -618,6 +671,21 @@ def report(out_dir, key, pool_truth, withhold=frozenset()):
             print(f"  JOINT ordered-pair F1   mean {np.mean([r['joint_f1'] for r in S]):.4f}"
                   f"   baseline {np.mean([r['joint_baseline'] for r in S]):.4f}"
                   f"   advantage {np.mean([r['joint_advantage'] for r in S]):+.4f}")
+            # The breakdown: F1_J = F1_L x q (joint_metrics docstring). Pairs
+            # are SUMMED over pools, so with more than one pool these are micro
+            # figures and can differ slightly from the per-pool means above.
+            G = sum(r.get("pairs_guessed", 0) for r in S)
+            T = sum(r.get("pairs_true", 0) for r in S)
+            K, C = sum(r["K"] for r in S), sum(r["C"] for r in S)
+            d = lambda a, b: a / b if b else float("nan")
+            print(f"  F1 BREAKDOWN  (pairs summed over {len(S)} pools;  F1_J = linkage F1 x q)")
+            print(f"    pairs      guessed {G:,} same-record pairs   true {T:,}")
+            print(f"    linkage    {K:,} guessed pairs really share a record"
+                  f"   precision {d(K, G):.4f}  recall {d(K, T):.4f}  F1 {d(2 * K, G + T):.4f}")
+            print(f"    order      {C:,} of those {K:,} point the right way"
+                  f"   q = C/K {d(C, K):.4f}")
+            print(f"    joint      precision C/guessed {d(C, G):.4f}  recall C/true {d(C, T):.4f}"
+                  f"  F1 {d(2 * C, G + T):.4f} = {d(2 * K, G + T):.4f} x {d(C, K):.4f}")
             q, n_undef = micro_q(S)
             print(f"  direction accuracy      q_micro "
                   f"{('%.4f' % q) if q is not None else 'undefined'}"

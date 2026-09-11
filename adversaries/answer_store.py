@@ -67,6 +67,27 @@ class AnswerStore:
     def get(self, key):
         return self.rows.get(key)
 
+    def drop(self, key, reason):
+        """Remove a filed answer that should never have been filed.
+
+        First answer wins, so a bad entry would block the good answer to the
+        same request forever. The removed row goes to <store>.removed.jsonl
+        with the reason: nothing leaves the store without a record.
+        """
+        row = self.rows.pop(key, None)
+        if row is None:
+            return False
+        if self.path:
+            with io.open(self.path + ".removed.jsonl", "a", encoding="utf-8") as fh:
+                fh.write(json.dumps({**row, "removed_at": _now(),
+                                     "removed_because": reason}) + "\n")
+            tmp = self.path + ".tmp"
+            with io.open(tmp, "w", encoding="utf-8") as fh:
+                for r in self.rows.values():
+                    fh.write(json.dumps(r) + "\n")
+            os.replace(tmp, self.path)
+        return True
+
     def add(self, row):
         if row["key"] in self.rows:
             return False
@@ -83,6 +104,18 @@ def _sent_prompt(side):
     return side.get("prompt_sent", side["prompt"])
 
 
+def _cut_off(row, side):
+    """An answer stopped at max_tokens. Its text, if any, is not an answer.
+
+    Rows fetched before stop_reason was recorded carry only usage: an answer
+    that used every token it was allowed was cut off.
+    """
+    if "stop_reason" in row:
+        return row["stop_reason"] == "max_tokens"
+    used = (row.get("usage") or {}).get("output_tokens", 0)
+    return bool(side.get("max_tokens")) and used >= side["max_tokens"]
+
+
 def harvest(store, spec, results_files):
     """File every succeeded, non-empty answer of a wave. Returns how many were new.
 
@@ -96,7 +129,8 @@ def harvest(store, spec, results_files):
     for cid, side in spec["sidecar"].items():
         row = latest.get(cid)
         if (not row or row.get("result_type") != "succeeded" or row.get("error")
-                or not str(row.get("text", "")).strip() or row.get("reused_from")):
+                or not str(row.get("text", "")).strip() or row.get("reused_from")
+                or _cut_off(row, side)):
             continue
         model = side.get("model") or spec.get("model")
         prompt = _sent_prompt(side)

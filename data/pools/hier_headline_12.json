@@ -1,0 +1,28 @@
+{
+  "what": "the 12 headline pools the hierarchical attacker runs on (RUN_DECISIONS D8)",
+  "method": "the 46 headline pool ids ordered by sha256('hier-subset|' + pool_id); first 12. Chosen by id hash only: no fragment, text, score or outcome was read.",
+  "pool_ids": [
+    "pool_059",
+    "pool_061",
+    "pool_030",
+    "pool_053",
+    "pool_050",
+    "pool_020",
+    "pool_041",
+    "pool_062",
+    "pool_026",
+    "pool_070",
+    "pool_007",
+    "pool_032"
+  ],
+  "extension_to_20": [
+    "pool_022",
+    "pool_018",
+    "pool_021",
+    "pool_065",
+    "pool_066",
+    "pool_035",
+    "pool_009",
+    "pool_017"
+  ]
+}

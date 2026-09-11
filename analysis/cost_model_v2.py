@@ -42,12 +42,13 @@ MEASURED
     grid                         12 cells (13 rows, 1 skipped)
 
 ASSUMED — these are where the forecast can be wrong
-    J_OVER_L        1.15   The output anchors are GAME L. J asks for membership
-                           AND order in one answer, so it cannot be cheaper,
-                           and the answer JSON is identical in length. 1.15
-                           prices the extra reasoning. NOT measured on sonnet.
-                           G4 measures it; until then this is the single
-                           largest source of error in the total.
+    J_OVER_L        1.9    The output anchors are GAME L. J asks for membership
+                           AND order in one answer. Was an assumed 1.15;
+                           MEASURED 1.9 on grid pool 1 over the 4 J pools that
+                           finished, a LOWER BOUND because the 7 that ran into
+                           their cap wanted more. Re-measure after the re-ask.
+    O_OUT_MEASURED  1.6    Game O ran 1.6x its anchors on pool 1 (55 finished
+                           documents), also a lower bound.
     MEDOID_K        3      One-shot J only. [R4] forbids it on the hierarchical
                            attacker, where 3 pipelines would mean ~130 extra
                            calls per pool.
@@ -127,7 +128,7 @@ def ordering_out_tokens(k):
 def ordering_cost(k, a):
     """One game-O unit: one document, membership given, order it."""
     inp = (CHARS_PER_FRAG_PROMPT * k / 4.0 + 150) * CAL_IN
-    out = ordering_out_tokens(k)
+    out = ordering_out_tokens(k) * O_OUT_MEASURED
     return (inp / 1e6 * IN_PER_M + out / 1e6 * OUT_PER_M) * (1 + a["retry_rate"])
 
 
@@ -141,26 +142,48 @@ def ordering_cost(k, a):
 # the paid run would have come back empty or cut off mid-JSON, and the
 # completeness gate would then have refused it -- safe, and a waste of money.
 #
-# A generous cap costs nothing extra: batches bill ACTUAL usage. It is sized
-# from the SAME anchors that price the run, times SIZING_MARGIN for the
-# measured 1.82x run-to-run spread, so the forecast and the cap cannot drift.
-# 128,000 is sonnet-5's output ceiling.
+# A generous cap costs nothing extra: batches bill ACTUAL usage. 128,000 is
+# sonnet-5's output ceiling.
+#
+# RESIZED after grid pool 1 (batch msgbatch_018bZWoLWVBec9de8iR5wYYG). Sized at
+# 2x the anchors, 30 of 88 answers ran into their cap and came back empty or
+# cut off mid-JSON: 7 of 11 J pools and 23 of 77 O documents, five of them at
+# the old 2,048 floor. The 58 that finished used 1.6x the O anchors and 1.9x the
+# L anchors for J -- lower bounds, since the cut-off answers wanted more. So:
+#   J / L   always the ceiling. The worst J seen was cut off at 69,753 and a
+#           pool answer has no small case worth a tighter cap.
+#   O       also the ceiling (D6). Sized at SIZING_MARGIN x the measured rate
+#           with a 16k floor, 3 of 23 re-asked documents were cut off AGAIN at
+#           16-21k; a tighter cap buys nothing but re-asks.
+# A cap only truncates -- it never changes the tokens before the cut -- so an
+# answer that finished under the old caps is the answer it would have been
+# under these, and the 58 stay valid.
 MODEL_MAX_OUTPUT = 128000
-SIZING_MARGIN = 2.0
+SIZING_MARGIN = 3.0
+O_FLOOR = 16000
+O_OUT_MEASURED = 1.6               # pool 1: mean actual / ORD_ANCHORS model
+
+
+def expected_out_tokens(game, n_frags, n_groups=1):
+    """Expected output tokens for one unit, at the rates measured on pool 1."""
+    if game == "O" or n_groups <= 1:
+        return ordering_out_tokens(n_frags) * O_OUT_MEASURED
+    if game in ("J", "L"):
+        need = oneshot_out_tokens(n_frags, n_groups)
+        return need * DEFAULTS["j_over_l"] if game == "J" else need
+    raise ValueError(f"unknown game {game!r}")
 
 
 def max_tokens_for(game, n_frags, n_groups=1, margin=SIZING_MARGIN,
                    cap=MODEL_MAX_OUTPUT):
     """Per-request max_tokens for one game unit on the paid path."""
-    if game == "O" or n_groups <= 1:
-        need = ordering_out_tokens(n_frags)
-    elif game in ("J", "L"):
-        need = oneshot_out_tokens(n_frags, n_groups)
-        if game == "J":
-            need *= DEFAULTS["j_over_l"]
-    else:
+    if game not in ("O", "L", "J"):
         raise ValueError(f"unknown game {game!r}")
-    return int(min(cap, max(2048, need * margin)))
+    # RUN_DECISIONS D6: every request gets the model's full ceiling and ONE
+    # attempt. A cap below it only manufactures cut-offs -- pool 1's O documents
+    # sized at 3x the measured rate were still cut off at 16-21k and re-asked --
+    # and batches bill actual usage, so the ceiling costs nothing.
+    return cap
 
 
 # ── the sampling frame and the grid ──────────────────────────────────────────
@@ -199,7 +222,7 @@ GRID_CELLS = [("sentence", 4), ("clause", 4),
 # WHOLE headline instead of a 25-pool subset. That buys a second attacker on
 # every headline pool for $22, where medoid-3 would have bought tighter
 # per-pool numbers for $166.
-DEFAULTS = dict(j_over_l=1.15, medoid_k=1, retry_rate=0.15,
+DEFAULTS = dict(j_over_l=1.9, medoid_k=1, retry_rate=0.15,
                 pair_model_tax=1.0, k=5, hier_pools=71, o_arm=1)
 
 
@@ -332,8 +355,8 @@ def main():
     print(f"  {'configuration':<46}{'TOTAL':>9}{'vs $120/$150':>10}")
     for label, over in (
             ("SELECTED: medoid-1, hierarchical on all 71 pools", {}),
-            ("...if J turns out to cost 1.4x L", {"j_over_l": 1.4}),
-            ("...if J turns out to cost 1.8x L", {"j_over_l": 1.8}),
+            ("...if J turns out to cost 2.2x L", {"j_over_l": 2.2}),
+            ("...if J turns out to cost 2.6x L", {"j_over_l": 2.6}),
             ("...if repairs run hot (35% retry)", {"retry_rate": 0.35}),
             ("...and sonnet reasons 2x harder on pairs",
              {"pair_model_tax": 2.0}),
@@ -349,7 +372,7 @@ def main():
     if args.sensitivity:
         print("\nSENSITIVITY — the assumptions that can move the total")
         print(f"  {'parameter':<24}{'value':>8}{'TOTAL':>10}{'vs cap':>10}")
-        for key, values in (("j_over_l", (1.0, 1.15, 1.4, 1.8)),
+        for key, values in (("j_over_l", (1.15, 1.9, 2.2, 2.6)),
                             ("medoid_k", (1, 3, 5)),
                             ("retry_rate", (0.0, 0.15, 0.35)),
                             ("hier_pools", (0, 25, 71)),

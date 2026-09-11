@@ -30,7 +30,8 @@ FLOW
     submit     batch_submit.submit   (ledger reserve -> create -> attach)
     fetch      batch_submit.fetch    (streamed, resumable, settles the ledger)
     resubmit   requests that came back errored / expired / empty, unchanged.
-               A transport hole, not a model answer.
+               A transport hole, not a model answer. One cut off at max_tokens
+               goes back with the same prompt and a larger cap.
     repair     units whose answer is unparseable or incomplete: the original
                prompt plus bookkeeping-only feedback. An unparseable answer gets
                the original prompt again -- there is no answer to correct.
@@ -65,9 +66,12 @@ sys.path.insert(0, HERE)
 sys.path.insert(0, os.path.join(ROOT, "harness"))
 sys.path.insert(0, os.path.join(ROOT, "analysis"))
 
-from batch_submit import (_latest_rows, failed_ids, make_custom_id,  # noqa: E402
-                          require_complete)
-from cost_model_v2 import max_tokens_for                            # noqa: E402
+from answer_store import _cut_off as cut_off                       # noqa: E402
+from batch_submit import (IN_PER_M, OUT_PER_M,                      # noqa: E402
+                          IncompleteBatchError, _latest_rows,
+                          failed_ids, make_custom_id)
+from cost_model_v2 import (MODEL_MAX_OUTPUT, SIZING_MARGIN,         # noqa: E402
+                           expected_out_tokens, max_tokens_for)
 from joint_game import (_as_groups, build_units, integrity_gate,     # noqa: E402
                         present, prompt_J, prompt_L, prompt_O, report, sha)
 from llm_adversary import extract_json_array                        # noqa: E402
@@ -115,8 +119,22 @@ def headline_docs(pools_file=None, grid_ids_file=None):
             for m in members}
 
 
+def expected_cost(spec):
+    """The spec's forecast at the rates measured on pool 1 -- what the tripwire
+    reserves (x RESERVE_MARGIN). A request cut off before is expected to need
+    at least the tokens it already used."""
+    usd = 0.0
+    for r in spec["requests"]:
+        s = spec["sidecar"][make_custom_id(r["cell"], r["game"], r["unit"])]
+        out = max(expected_out_tokens(s["game"], s["n_fragments"], s["n_records"]),
+                  s.get("cut_off_at", 0))
+        usd += (len(r["prompt"]) / 4 / 1e6 * IN_PER_M
+                + min(out, r["max_tokens"]) / 1e6 * OUT_PER_M)
+    return round(usd, 6)
+
+
 def build_spec(cells, games, docs, pool_size, seed, tag, model=DEFAULT_MODEL,
-               margin=2.0, arm="masked", control=False, pools=None,
+               margin=SIZING_MARGIN, arm="masked", control=False, pools=None,
                o_docs=None, forbid_docs=None):
     """One request per (cell, game, unit), with a sidecar that makes it scoreable.
 
@@ -175,7 +193,7 @@ def build_spec(cells, games, docs, pool_size, seed, tag, model=DEFAULT_MODEL,
                     "prompt": prompt, "prompt_sha": sha(prompt),
                     "unmasked_control": arm == "unmasked", "model": model,
                 }
-    return {"tag": tag, "model": model,
+    spec = {"tag": tag, "model": model,
             "build": {"docs": docs, "pool_size": pool_size, "seed": seed,
                       "margin": margin, "arm": arm, "games": list(games),
                       "cells": [_rel(c) for c in cells],
@@ -184,23 +202,56 @@ def build_spec(cells, games, docs, pool_size, seed, tag, model=DEFAULT_MODEL,
                       "pools": pools, "o_docs": o_docs,
                       "forbidden_docs": len(forbid_docs or ())},
             "requests": requests, "sidecar": sidecar}
+    spec["expected_usd"] = expected_cost(spec)
+    return spec
 
 
 def build_resubmit_spec(spec, results_files, tag):
-    """The same requests, unchanged, for every id without a real answer yet.
+    """The same requests for every id without a real answer yet.
 
     A resubmission is a TRANSPORT retry. It shares custom_ids with the original
     wave; its results file is added to that wave's file list at scoring time.
+
+    The prompt never changes. The one thing that can: an answer cut off at
+    max_tokens goes back with a larger cap, because sent unchanged it would be
+    cut off in the same place. First to the current sizing, then to the model
+    ceiling. One already cut off AT the ceiling is not sent again -- it is
+    listed in "at_ceiling" and its unit stays a hole the integrity gate refuses.
     """
     have = _latest_rows(results_files)
-    bad = set(failed_ids(results_files)) | (set(spec["sidecar"]) - set(have))
-    requests = [r for r in spec["requests"]
-                if make_custom_id(r["cell"], r["game"], r["unit"]) in bad]
-    return {**spec, "tag": tag, "resubmit_of": spec["tag"], "requests": requests,
-            "sidecar": {c: spec["sidecar"][c] for c in sorted(bad)}}
+    side = spec["sidecar"]
+    cut = {c: have[c] for c in side if c in have and cut_off(have[c], side[c])}
+    bad = set(failed_ids(results_files)) | (set(side) - set(have)) | set(cut)
+    requests, sidecar, at_ceiling = [], {}, []
+    for r in spec["requests"]:
+        cid = make_custom_id(r["cell"], r["game"], r["unit"])
+        if cid not in bad:
+            continue
+        s = side[cid]
+        if cid in cut:
+            hit = (cut[cid].get("usage") or {}).get("output_tokens", 0)
+            if hit >= MODEL_MAX_OUTPUT:
+                at_ceiling.append(cid)
+                continue
+            mt = max_tokens_for(s["game"], s["n_fragments"], s["n_records"])
+            mt = mt if mt > hit else MODEL_MAX_OUTPUT
+            r = {**r, "max_tokens": mt}
+            s = {**s, "max_tokens": mt, "cut_off_at": hit}
+        requests.append(r)
+        sidecar[cid] = s
+    out = {**spec, "tag": tag, "resubmit_of": spec["tag"], "requests": requests,
+           "sidecar": sidecar, "at_ceiling": sorted(at_ceiling)}
+    out["expected_usd"] = expected_cost(out)
+    return out
 
 
 # ── read waves back ──────────────────────────────────────────────────────────
+
+def at_ceiling(row):
+    """The call exhausted the model's whole output ceiling (RUN_DECISIONS D6)."""
+    used = (row.get("usage") or {}).get("output_tokens", 0)
+    return row.get("stop_reason") == "max_tokens" and used >= MODEL_MAX_OUTPUT
+
 
 def _attempt(side, row):
     """One answer, parsed and validated against the unit's own labels.
@@ -211,6 +262,15 @@ def _attempt(side, row):
     never written.
     """
     labels = set(side["alias_map"])
+    if at_ceiling(row):
+        # D6: the call exhausted the model's whole output. Not a model answer,
+        # not a transport hole -- a resource-bounded non-completion, never re-asked.
+        return {"attempt": side["round"], "custom_id": row["custom_id"],
+                "error": "resource-bounded non-completion", "rbnc": True,
+                "groups": [], "report": None, "fetched_at": row.get("fetched_at"),
+                "n_returned": 0, "n_distinct": 0, "n_expected": len(labels),
+                "valid": False, "n_invalid": 0, "n_duplicated": 0,
+                "n_missing": len(labels), "n_groups": 0, "group_count_error": False}
     try:
         groups = _as_groups(extract_json_array(row.get("text", "")))
         error = None
@@ -239,7 +299,28 @@ def merge_waves(waves):
     side, attempts = {}, defaultdict(list)
     for spec, files in waves:
         cids = list(spec["sidecar"])
-        rows = require_complete(files, cids)
+        rows = _latest_rows(files)
+        missing = [c for c in cids if c not in rows]
+        # A call that exhausted the full 128k is a non-completion (D6), not a
+        # hole: it is kept as an attempt and never resubmitted. Every other
+        # failure is a hole and refuses scoring, exactly as before.
+        bad = sorted(c for c in set(failed_ids(files)) & set(cids)
+                     if not at_ceiling(rows[c]))
+        if missing or bad:
+            raise IncompleteBatchError(
+                f"{len(missing)} of {len(cids)} requests never came back and "
+                f"{len(bad)} came back without an answer, e.g. "
+                f"{(missing + bad)[:3]}. Resubmit them; do not score around them.")
+        # A cut-off answer can arrive as "succeeded" with text in it -- pool 1
+        # had one, a JSON list ending mid-label. Rows fetched before stop_reason
+        # was recorded are caught by having used their whole cap.
+        cut = sorted(c for c in cids if not at_ceiling(rows[c])
+                     and cut_off(rows[c], spec["sidecar"][c]))
+        if cut:
+            raise IncompleteBatchError(
+                f"{len(cut)} answers were cut off at max_tokens, e.g. "
+                f"{cut[:3]}. Resubmit them with a larger cap "
+                "(build_resubmit_spec does); a cut-off answer is not scored.")
         for cid in cids:
             s = spec["sidecar"][cid]
             if s["round"] == 0 or s["base_cid"] not in side:
@@ -258,6 +339,8 @@ def build_repair_spec(waves, round_no, max_rounds, tag, model=None):
         last = atts[-1]
         if last["error"] is None and last["valid"]:
             continue
+        if last.get("rbnc"):
+            continue                              # D6: exhausted 128k, never re-asked
         if len(atts) - 1 >= max_rounds:
             continue                              # budget spent; score as-is
         s = side[base]
@@ -266,17 +349,26 @@ def build_repair_spec(waves, round_no, max_rounds, tag, model=None):
         sent = s["prompt"] + ("\n\n" + feedback if feedback else "")
         unit_r = f"{s['unit']}-r{round_no}"
         cid = make_custom_id(s["cell"], s["game"], unit_r)
+        # Always the model ceiling. The sidecar holds the ROUND-0 cap, which
+        # knows nothing of a resubmission that needed more: pool 1's repair of
+        # random__token-window prose_0156 went out at 17,687 -- the cap that
+        # document had already overflowed -- although its answer came from a
+        # 128k resubmission, and was cut off. Batches bill actual usage, so
+        # the ceiling costs nothing extra.
+        mt = MODEL_MAX_OUTPUT
         req = {"cell": s["cell"], "game": s["game"], "unit": unit_r,
-               "prompt": sent, "max_tokens": s["max_tokens"]}
+               "prompt": sent, "max_tokens": mt}
         if s.get("unmasked_control"):
             req["unmasked_control"] = True
         requests.append(req)
         sidecar[cid] = {**s, "custom_id": cid, "round": round_no,
-                        "prompt_sent": sent}
+                        "prompt_sent": sent, "max_tokens": mt}
     spec0 = waves[0][0]
-    return {"tag": tag, "model": model or spec0.get("model", DEFAULT_MODEL),
-            "build": spec0["build"], "repair_round": round_no,
-            "requests": requests, "sidecar": sidecar}
+    out = {"tag": tag, "model": model or spec0.get("model", DEFAULT_MODEL),
+           "build": spec0["build"], "repair_round": round_no,
+           "requests": requests, "sidecar": sidecar}
+    out["expected_usd"] = expected_cost(out)
+    return out
 
 
 # ── score ────────────────────────────────────────────────────────────────────
@@ -323,11 +415,19 @@ def score(waves, out_root, allow_partial=False):
     """
     attempts, side = merge_waves(waves)
     build = waves[0][0]["build"]
-    rows = defaultdict(list)
+    rows, rbnc = defaultdict(list), defaultdict(list)
     for base in sorted(attempts):
-        row = finalise_row(side[base], attempts[base])
+        s = side[base]
+        row = finalise_row(s, attempts[base])
         if row is not None:
-            rows[(side[base]["cell"], side[base]["game"])].append(row)
+            rows[(s["cell"], s["game"])].append(row)
+        elif any(a.get("rbnc") for a in attempts[base]):
+            # D6: recorded beside the rows, never scored and never refused for
+            rbnc[(s["cell"], s["game"])].append({
+                "game": s["game"], "unit": s["unit"], "n_fragments": s["n_fragments"],
+                "custom_ids": [a["custom_id"] for a in attempts[base]],
+                "why": "exhausted the model's 128k output ceiling; not re-asked "
+                       "(RUN_DECISIONS D6)"})
 
     cells = {}
     for s in side.values():
@@ -342,6 +442,10 @@ def score(waves, out_root, allow_partial=False):
             with io.open(os.path.join(out_dir, f"{g}.jsonl"), "w",
                          encoding="utf-8") as fh:
                 for row in rows.get((cell, g), []):
+                    fh.write(json.dumps(row) + "\n")
+            with io.open(os.path.join(out_dir, f"{g}.rbnc.jsonl"), "w",
+                         encoding="utf-8") as fh:
+                for row in rbnc.get((cell, g), []):
                     fh.write(json.dumps(row) + "\n")
         o_units, pool_units, key, pool_truth = build_units(
             _abs(cell_dir), build["docs"], build["pool_size"], build["seed"],
@@ -387,7 +491,7 @@ def main():
     b.add_argument("--pool-size", type=int, default=7)
     b.add_argument("--seed", type=int, default=42)
     b.add_argument("--model", default=DEFAULT_MODEL)
-    b.add_argument("--margin", type=float, default=2.0)
+    b.add_argument("--margin", type=float, default=SIZING_MARGIN)
     b.add_argument("--arm", choices=["masked", "unmasked"], default="masked")
     b.add_argument("--control", action="store_true",
                    help="tag cells ctrl-<arm>-... for the G3 positive control")
