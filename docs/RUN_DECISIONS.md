@@ -84,7 +84,7 @@ Only an ANSWER-AFFECTING change (prompt, cut, masking, presentation, model)
 invalidates answers, and then only the affected ones: the answer store keys on
 the exact model and prompt, so a changed request can never be served an old answer.
 
-## Disclosure — 2026-09-10: headline documents touched BEFORE frame A existed
+## Development history — 2026-09-10: headline documents used before frame A existed
 
 Development work done before D2 was taken used documents that frame A later
 assigned to the 46 headline pools. Measured with batch_game.headline_docs():
@@ -100,10 +100,18 @@ Together: 21 headline documents in 18 of the 46 headline pools. 28 headline
 pools were never touched. Since 7ac35ad, build_spec refuses any request that
 touches a headline document, so no further contact is possible on the paid path.
 
-What the contact informed: operational design only (pool size, max_tokens
-sizing, repair, integrity checks) and the gpt-oss llm-cut prompt choice. The
+Attackers were run on these documents during development and their scores were
+seen. What that informed: operational design (pool size, max_tokens sizing,
+repair, integrity checks), the choice of J as the headline game alongside the
+threat-model argument, and the gpt-oss llm-cut prompt choice (on cut statistics,
+not attack scores). The
 llm-cut prompt is re-selected for Kimi on development and held-out documents only
 (D3), so that tuning contact does not carry into the final configuration. No
 strategy was selected and no headline estimate was computed on these documents.
 
-How the 18 touched pools are handled in the headline analysis: DECISION PENDING.
+Decision (2026-09-10, Aiden): ALL 46 POOLS ARE THE PRIMARY HEADLINE SET. No
+fragmentation strategy was chosen or rejected, and no prompt, threshold or
+hyperparameter feeding the headline was tuned on these documents' performance.
+The coherence-sever repair and the corpus rebuild were correctness fixes, not
+tuning. This is development history, not contamination; the 28 never-touched
+pools remain available as an optional robustness check.
