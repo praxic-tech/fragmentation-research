@@ -83,3 +83,27 @@ is traced to SCORING, the stored answers are re-scored and nothing is re-bought.
 Only an ANSWER-AFFECTING change (prompt, cut, masking, presentation, model)
 invalidates answers, and then only the affected ones: the answer store keys on
 the exact model and prompt, so a changed request can never be served an old answer.
+
+## Disclosure — 2026-09-10: headline documents touched BEFORE frame A existed
+
+Development work done before D2 was taken used documents that frame A later
+assigned to the 46 headline pools. Measured with batch_game.headline_docs():
+
+| development work                                             | docs | headline docs |
+|--------------------------------------------------------------|------|---------------|
+| 8-document free-tier probe (O runs, llm-cut defender, Memon)  |    8 |             5 |
+| 25-document pilot_reference (J pilots, Memon n-sweep, hier smoke) | 25 |        12 |
+| llm-cut decision cache (v1 / v2 / v3 prompt comparisons)      |   23 |            14 |
+| week-6 three-way llm-cut cells                                |   11 |             7 |
+
+Together: 21 headline documents in 18 of the 46 headline pools. 28 headline
+pools were never touched. Since 7ac35ad, build_spec refuses any request that
+touches a headline document, so no further contact is possible on the paid path.
+
+What the contact informed: operational design only (pool size, max_tokens
+sizing, repair, integrity checks) and the gpt-oss llm-cut prompt choice. The
+llm-cut prompt is re-selected for Kimi on development and held-out documents only
+(D3), so that tuning contact does not carry into the final configuration. No
+strategy was selected and no headline estimate was computed on these documents.
+
+How the 18 touched pools are handled in the headline analysis: DECISION PENDING.
