@@ -1,0 +1,52 @@
+{
+  "git_commit": "e2876dbd48d9aa7dcdaa86aa5862b4fb54db70bf",
+  "code_uncommitted_at_freeze": [
+    "M adversaries/answer_store.py",
+    " M adversaries/batch_game.py",
+    " M adversaries/batch_submit.py",
+    " M adversaries/joint_game.py",
+    " M adversaries/llm_adversary.py",
+    " M analysis/cost_model_v2.py",
+    " M datagen/coherence_sever.py",
+    " M datagen/llm_cutter.py",
+    " M datagen/subject_verb.py",
+    " M harness/run_ledger.py",
+    "?? adversaries/hier_batch.py",
+    "?? analysis/budget_final.py",
+    "?? analysis/llm_cut_prompt_compare.py",
+    "?? harness/test_hier_batch.py",
+    "?? harness/test_parser.py",
+    "?? harness/test_truncation.py"
+  ],
+  "model": "claude-sonnet-5",
+  "masking_seed": 42,
+  "presentation": "per-unit seeds (joint_game._unit_seed, D7)",
+  "prompt_templates_sha256": "5107194b0d84ae6a38c0feed8ca5b3ce5220b8da628c3aefa93395b41e77f992",
+  "max_tokens_sizing_sha256": "29e09f3a3b2c277d5ef4322db1abbcbecbe8b33036169b2b5e2e08ec2d3c67c4",
+  "max_tokens": 128000,
+  "what": "headline J, 46 untouched pools, semantic x sentence at full length",
+  "headline_unlock": "NOT YET -- awaiting the user's go",
+  "spec": "runs/final_headlineJ.json",
+  "spec_sha256": "f519a7f3f4a402432e044ebbad4cc8b6dd1ea4a019de88ea3fe8a66f003c1d2a",
+  "n_requests": 46,
+  "expected_usd_cost_model": 13.689822,
+  "estimate": {
+    "n_requests": 46,
+    "est_input_tokens": 412705,
+    "est_output_tokens_worst_case": 5888000,
+    "est_cost_worst_case": 29.852704999999997,
+    "est_cost_input_only": 0.412705
+  },
+  "preflight": {
+    "checked": 46,
+    "blocked": 0
+  },
+  "cells": [
+    {
+      "cell": "data/prose",
+      "fragments_sha256": "a59b87a10a4fd1b676b7567c9dc9d513556b09f098d806fd89df0618caca1242",
+      "answer_key_sha256": "1a05fef47218e73b99d74c00ea76ba509d4d7760f76e74000d7f3b163811785c",
+      "cell_manifest": null
+    }
+  ]
+}

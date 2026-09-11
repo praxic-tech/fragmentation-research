@@ -1,0 +1,64 @@
+TOKEN MODEL (pool 1, sonnet-5, each unit's final answer)
+  O: output ~ 0.47 x fragments^2.65   n=77   residual SD 0.63 (log)
+  J: output ~ 553.67 x fragments^0.88   n=11   residual SD 0.31 (log)
+  input: 0.393 tokens per prompt character (measured)
+
+PACKAGE C, REQUIRED                                                expected      RBNC
+  Grid J: 9 cells x pools 2-25 (216 pools)                            85.48      15.4
+      random__sentence                                                 7.29       0.0
+      random__clause                                                   8.94       0.2
+      random__token-window                                            11.17       2.8
+      semantic__sentence                                               7.29       0.0
+      semantic__clause                                                 8.96       0.2
+      coherence-sever__clause                                          6.79       0.0
+      coherence-sever__token-window                                   11.16       2.7
+      subject-verb__sentence                                          11.32       3.2
+      subject-verb__clause                                            12.55       6.4
+  Headline J: 46 pools                                                18.41       2.9
+  Grid O: 60 docs/cell x 9 cells (same docs every cell)               25.88       0.3
+  Headline O: 322 docs (all)                                          19.54       5.2
+  Headline O: 160 docs (length-stratified)                             9.99       3.2
+  Headline O: 100 docs (length-stratified)                             5.83       1.4
+
+HIERARCHICAL, BATCH PATH, fixed nested headline subsets                x1.0     x2.3     x5.0
+  12 pools                                                             5.67    11.44    23.41
+  20 pools                                                            10.09    20.35    41.65
+  46 pools                                                            22.38    45.11    92.32
+  (x1 reasons like gpt-oss; x2.3 sonnet's measured excess on O/J; x5 heavy thinking)
+
+OPTIONAL (first to go)                                             expected
+  Repeats, small: reference x1, 12 pools J + 60 docs O                 4.80
+  Repeats, full: reference x2, pools 2-25                             20.84
+
+PACKAGE C TOTALS  (spent $9.75; wall $167; tripwire $120)
+  expected = sim mean + hierarchical at x2.3;  P95 = joint-sim P95 (+15% repairs) + hierarchical at x5
+  headline O   hier pools   expected       P95   vs wall
+  322                   0     158.28    193.53   P95 over
+  322                  12     169.72    216.94   OVER
+  322                  20     178.63    235.17   OVER
+  322                  46     203.39    285.85   OVER
+  160                   0     148.73    182.94   P95 over
+  160                  12     160.17    206.36   P95 over
+  160                  20     169.08    224.59   OVER
+  160                  46     193.84    275.27   OVER
+  100                   0     144.22    176.84   P95 over
+  100                  12     155.66    200.26   P95 over
+  100                  20     164.57    218.49   P95 over
+  100                  46     189.33    269.17   OVER
+
+PRIORITY ORDER, cumulative  (spent $9.75 included; hierarchical x2.3 expected / x5 P95)
+  step                                            expected       P95   vs wall
+  1 Headline J, 46 pools (confirmatory)              28.00     33.38   fits
+  2 Grid J, 9 cells x 24 pools                      113.01    144.19   fits
+  3 Hierarchical, 12 headline pools (batch)         124.45    167.60   expected fits, P95 over
+  4 Grid O, 30 docs/cell                            138.51    181.71   expected fits, P95 over
+  5 Headline O, 100 docs (stratified)               144.38    188.85   expected fits, P95 over
+  6 Hierarchical, +8 -> 20 pools                    153.29    207.08   expected fits, P95 over
+  7 Grid O, +30 -> 60 docs/cell                     165.74    221.89   expected fits, P95 over
+
+SAMPLES (seeded, outcome-blind)
+  grid O: 60 of 168 pool 2-25 documents, the same in every cell
+  headline O 160: per length band 1-15: 14/29, 16-30: 75/151, 31-60: 59/118, 61-100: 9/19, 101-+: 3/5
+  headline O 100: per length band 1-15: 9/29, 16-30: 47/151, 31-60: 37/118, 61-100: 6/19, 101-+: 1/5
+  hierarchical 12: ['pool_059', 'pool_061', 'pool_030', 'pool_053', 'pool_050', 'pool_020', 'pool_041', 'pool_062', 'pool_026', 'pool_070', 'pool_007', 'pool_032']
+  headline J pools: median 218 fragments, max 537

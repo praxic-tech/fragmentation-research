@@ -1,0 +1,507 @@
+
+==========================================================================
+ CELL coherence-sever__clause
+
+INTEGRITY
+  game J: ok   model answered 1/1   fragments placed by policy 0.0%
+  game O: ok   model answered 7/7   fragments placed by policy 0.0%
+
+==========================================================================
+ THREE ATTACK CONDITIONS, SAME CORPUS, SAME MODEL
+==========================================================================
+
+GAME O  (oracle linkage: membership given, order only)
+  scored 7/7 documents   malformed 0
+  recovered: 58/159 fragments exactly placed   mean shift 2.1   longest intact run 6.4 of 22.7 (34%)
+  tau  mean +0.7915   median +0.7787   min +0.549  max +0.974
+
+GAME J  (joint: membership AND order, nothing given)
+  pools scored 1
+  linkage F1   mean 0.8915   baseline 0.2647   advantage +0.8525
+               precision 0.9062   recall 0.8773   (of guessed / of true same-record pairs)
+  groups       guessed 7.0 vs 7.0 asked   exact count 1/1
+  partition    valid 1/1   (after repairing dropped fragments to singletons)
+  COVERAGE     model placed 100.0% of fragments   dropped 0 total, worst pool 0
+  JOINT ordered-pair F1   mean 0.7202   baseline 0.1323   advantage +0.6776
+  F1 BREAKDOWN  (pairs summed over 1 pools;  F1_J = linkage F1 x q)
+    pairs      guessed 1,855 same-record pairs   true 1,916
+    linkage    1,681 guessed pairs really share a record   precision 0.9062  recall 0.8773  F1 0.8915
+    order      1,358 of those 1,681 point the right way   q = C/K 0.8079
+    joint      precision C/guessed 0.7321  recall C/true 0.7088  F1 0.7202 = 0.8915 x 0.8079
+  direction accuracy      q_micro 0.8079   (K=0 in 0/1 pools)
+  tau in matched groups   mean +0.5883  (n=1 pools)
+  records recovered EXACTLY (membership and order): 0/7  (0.0%)
+
+REFERENCE  membership-oracle tau +0.7915 = 0.8958 on the joint scale;  joint tau-in-matched +0.5883
+  Not a ceiling, not a decomposition -- see q_micro.
+
+==========================================================================
+ CELL coherence-sever__sentence
+
+INTEGRITY
+  game J: ok   model answered 1/1   fragments placed by policy 0.0%
+  game O: ok   model answered 7/7   fragments placed by policy 0.0%
+
+==========================================================================
+ THREE ATTACK CONDITIONS, SAME CORPUS, SAME MODEL
+==========================================================================
+
+GAME O  (oracle linkage: membership given, order only)
+  scored 7/7 documents   malformed 0
+  recovered: 56/128 fragments exactly placed   mean shift 1.4   longest intact run 5.1 of 18.3 (33%)
+  tau  mean +0.8300   median +0.8154   min +0.590  max +0.956
+
+GAME J  (joint: membership AND order, nothing given)
+  pools scored 1
+  linkage F1   mean 0.8030   baseline 0.2660   advantage +0.7315
+               precision 0.8225   recall 0.7843   (of guessed / of true same-record pairs)
+  groups       guessed 7.0 vs 7.0 asked   exact count 1/1
+  partition    valid 1/1   (after repairing dropped fragments to singletons)
+  COVERAGE     model placed 100.0% of fragments   dropped 0 total, worst pool 0
+  JOINT ordered-pair F1   mean 0.6158   baseline 0.1330   advantage +0.5568
+  F1 BREAKDOWN  (pairs summed over 1 pools;  F1_J = linkage F1 x q)
+    pairs      guessed 1,189 same-record pairs   true 1,247
+    linkage    978 guessed pairs really share a record   precision 0.8225  recall 0.7843  F1 0.8030
+    order      750 of those 978 point the right way   q = C/K 0.7669
+    joint      precision C/guessed 0.6308  recall C/true 0.6014  F1 0.6158 = 0.8030 x 0.7669
+  direction accuracy      q_micro 0.7669   (K=0 in 0/1 pools)
+  tau in matched groups   mean +0.5326  (n=1 pools)
+  records recovered EXACTLY (membership and order): 0/7  (0.0%)
+
+REFERENCE  membership-oracle tau +0.8300 = 0.9150 on the joint scale;  joint tau-in-matched +0.5326
+  Not a ceiling, not a decomposition -- see q_micro.
+
+==========================================================================
+ CELL coherence-sever__token-window
+
+INTEGRITY
+  game J: ok   model answered 1/1   fragments placed by policy 0.0%
+  game O: ok   model answered 7/7   fragments placed by policy 0.0%
+
+==========================================================================
+ THREE ATTACK CONDITIONS, SAME CORPUS, SAME MODEL
+==========================================================================
+
+GAME O  (oracle linkage: membership given, order only)
+  scored 7/7 documents   malformed 0
+  recovered: 207/268 fragments exactly placed   mean shift 1.1   longest intact run 24.3 of 38.3 (69%)
+  tau  mean +0.9445   median +0.9894   min +0.687  max +1.000
+
+GAME J  (joint: membership AND order, nothing given)
+  pools scored 1
+  linkage F1   mean 0.6125   baseline 0.2800   advantage +0.4619
+               precision 0.6399   recall 0.5874   (of guessed / of true same-record pairs)
+  groups       guessed 7.0 vs 7.0 asked   exact count 1/1
+  partition    valid 1/1   (after repairing dropped fragments to singletons)
+  COVERAGE     model placed 100.0% of fragments   dropped 0 total, worst pool 0
+  JOINT ordered-pair F1   mean 0.4879   baseline 0.1400   advantage +0.4046
+  F1 BREAKDOWN  (pairs summed over 1 pools;  F1_J = linkage F1 x q)
+    pairs      guessed 5,346 same-record pairs   true 5,824
+    linkage    3,421 guessed pairs really share a record   precision 0.6399  recall 0.5874  F1 0.6125
+    order      2,725 of those 3,421 point the right way   q = C/K 0.7966
+    joint      precision C/guessed 0.5097  recall C/true 0.4679  F1 0.4879 = 0.6125 x 0.7966
+  direction accuracy      q_micro 0.7966   (K=0 in 0/1 pools)
+  tau in matched groups   mean +0.6044  (n=1 pools)
+  records recovered EXACTLY (membership and order): 0/7  (0.0%)
+
+REFERENCE  membership-oracle tau +0.9445 = 0.9723 on the joint scale;  joint tau-in-matched +0.6044
+  Not a ceiling, not a decomposition -- see q_micro.
+
+==========================================================================
+ CELL random__clause
+
+INTEGRITY
+  game J: ok   model answered 1/1   fragments placed by policy 0.0%
+  game O: ok   model answered 7/7   fragments placed by policy 0.0%
+
+==========================================================================
+ THREE ATTACK CONDITIONS, SAME CORPUS, SAME MODEL
+==========================================================================
+
+GAME O  (oracle linkage: membership given, order only)
+  scored 7/7 documents   malformed 0
+  recovered: 127/171 fragments exactly placed   mean shift 0.6   longest intact run 13.9 of 24.4 (67%)
+  tau  mean +0.9559   median +0.9714   min +0.826  max +1.000
+
+GAME J  (joint: membership AND order, nothing given)
+  pools scored 1
+  linkage F1   mean 0.8798   baseline 0.2682   advantage +0.8358
+               precision 0.8800   recall 0.8796   (of guessed / of true same-record pairs)
+  groups       guessed 7.0 vs 7.0 asked   exact count 1/1
+  partition    valid 1/1   (after repairing dropped fragments to singletons)
+  COVERAGE     model placed 100.0% of fragments   dropped 0 total, worst pool 0
+  JOINT ordered-pair F1   mean 0.8180   baseline 0.1341   advantage +0.7899
+  F1 BREAKDOWN  (pairs summed over 1 pools;  F1_J = linkage F1 x q)
+    pairs      guessed 2,250 same-record pairs   true 2,251
+    linkage    1,980 guessed pairs really share a record   precision 0.8800  recall 0.8796  F1 0.8798
+    order      1,841 of those 1,980 point the right way   q = C/K 0.9298
+    joint      precision C/guessed 0.8182  recall C/true 0.8179  F1 0.8180 = 0.8798 x 0.9298
+  direction accuracy      q_micro 0.9298   (K=0 in 0/1 pools)
+  tau in matched groups   mean +0.8977  (n=1 pools)
+  records recovered EXACTLY (membership and order): 0/7  (0.0%)
+
+REFERENCE  membership-oracle tau +0.9559 = 0.9780 on the joint scale;  joint tau-in-matched +0.8977
+  Not a ceiling, not a decomposition -- see q_micro.
+
+==========================================================================
+ CELL random__sentence
+
+INTEGRITY
+  game J: ok   model answered 1/1   fragments placed by policy 0.0%
+  game O: ok   model answered 7/7   fragments placed by policy 0.0%
+
+==========================================================================
+ THREE ATTACK CONDITIONS, SAME CORPUS, SAME MODEL
+==========================================================================
+
+GAME O  (oracle linkage: membership given, order only)
+  scored 7/7 documents   malformed 0
+  recovered: 118/141 fragments exactly placed   mean shift 0.4   longest intact run 16.1 of 20.1 (84%)
+  tau  mean +0.9595   median +1.0000   min +0.850  max +1.000
+
+GAME J  (joint: membership AND order, nothing given)
+  pools scored 1
+  linkage F1   mean 0.7272   baseline 0.2655   advantage +0.6285
+               precision 0.7029   recall 0.7531   (of guessed / of true same-record pairs)
+  groups       guessed 7.0 vs 7.0 asked   exact count 1/1
+  partition    valid 1/1   (after repairing dropped fragments to singletons)
+  COVERAGE     model placed 100.0% of fragments   dropped 0 total, worst pool 0
+  JOINT ordered-pair F1   mean 0.6045   baseline 0.1328   advantage +0.5439
+  F1 BREAKDOWN  (pairs summed over 1 pools;  F1_J = linkage F1 x q)
+    pairs      guessed 1,619 same-record pairs   true 1,511
+    linkage    1,138 guessed pairs really share a record   precision 0.7029  recall 0.7531  F1 0.7272
+    order      946 of those 1,138 point the right way   q = C/K 0.8313
+    joint      precision C/guessed 0.5843  recall C/true 0.6261  F1 0.6045 = 0.7272 x 0.8313
+  direction accuracy      q_micro 0.8313   (K=0 in 0/1 pools)
+  tau in matched groups   mean +0.6637  (n=1 pools)
+  records recovered EXACTLY (membership and order): 0/7  (0.0%)
+
+REFERENCE  membership-oracle tau +0.9595 = 0.9798 on the joint scale;  joint tau-in-matched +0.6637
+  Not a ceiling, not a decomposition -- see q_micro.
+
+==========================================================================
+ CELL random__token-window
+
+INTEGRITY
+  game J: ok   model answered 1/1   fragments placed by policy 0.0%
+  game O: ok   model answered 7/7   fragments placed by policy 0.0%
+
+==========================================================================
+ THREE ATTACK CONDITIONS, SAME CORPUS, SAME MODEL
+==========================================================================
+
+GAME O  (oracle linkage: membership given, order only)
+  scored 7/7 documents   malformed 0
+  recovered: 138/220 fragments exactly placed   mean shift 1.5   longest intact run 19.1 of 31.4 (64%)
+  tau  mean +0.8985   median +0.9766   min +0.552  max +1.000
+
+GAME J  (joint: membership AND order, nothing given)
+  pools scored 1
+  linkage F1   mean 0.7680   baseline 0.2810   advantage +0.6774
+               precision 0.7558   recall 0.7806   (of guessed / of true same-record pairs)
+  groups       guessed 7.0 vs 7.0 asked   exact count 1/1
+  partition    valid 1/1   (after repairing dropped fragments to singletons)
+  COVERAGE     model placed 100.0% of fragments   dropped 0 total, worst pool 0
+  JOINT ordered-pair F1   mean 0.6681   baseline 0.1405   advantage +0.6138
+  F1 BREAKDOWN  (pairs summed over 1 pools;  F1_J = linkage F1 x q)
+    pairs      guessed 4,067 same-record pairs   true 3,938
+    linkage    3,074 guessed pairs really share a record   precision 0.7558  recall 0.7806  F1 0.7680
+    order      2,674 of those 3,074 point the right way   q = C/K 0.8699
+    joint      precision C/guessed 0.6575  recall C/true 0.6790  F1 0.6681 = 0.7680 x 0.8699
+  direction accuracy      q_micro 0.8699   (K=0 in 0/1 pools)
+  tau in matched groups   mean +0.7590  (n=1 pools)
+  records recovered EXACTLY (membership and order): 0/7  (0.0%)
+
+REFERENCE  membership-oracle tau +0.8985 = 0.9493 on the joint scale;  joint tau-in-matched +0.7590
+  Not a ceiling, not a decomposition -- see q_micro.
+
+==========================================================================
+ CELL semantic__clause
+
+INTEGRITY
+  game J: ok   model answered 1/1   fragments placed by policy 0.0%
+  game O: ok   model answered 7/7   fragments placed by policy 0.0%
+
+==========================================================================
+ THREE ATTACK CONDITIONS, SAME CORPUS, SAME MODEL
+==========================================================================
+
+GAME O  (oracle linkage: membership given, order only)
+  scored 7/7 documents   malformed 0
+  recovered: 57/171 fragments exactly placed   mean shift 2.6   longest intact run 6.6 of 24.4 (33%)
+  tau  mean +0.7580   median +0.7809   min +0.506  max +0.974
+
+GAME J  (joint: membership AND order, nothing given)
+  pools scored 1
+  linkage F1   mean 0.8358   baseline 0.2682   advantage +0.7756
+               precision 0.8478   recall 0.8241   (of guessed / of true same-record pairs)
+  groups       guessed 7.0 vs 7.0 asked   exact count 1/1
+  partition    valid 1/1   (after repairing dropped fragments to singletons)
+  COVERAGE     model placed 100.0% of fragments   dropped 0 total, worst pool 0
+  JOINT ordered-pair F1   mean 0.7141   baseline 0.1341   advantage +0.6699
+  F1 BREAKDOWN  (pairs summed over 1 pools;  F1_J = linkage F1 x q)
+    pairs      guessed 2,188 same-record pairs   true 2,251
+    linkage    1,855 guessed pairs really share a record   precision 0.8478  recall 0.8241  F1 0.8358
+    order      1,585 of those 1,855 point the right way   q = C/K 0.8544
+    joint      precision C/guessed 0.7244  recall C/true 0.7041  F1 0.7141 = 0.8358 x 0.8544
+  direction accuracy      q_micro 0.8544   (K=0 in 0/1 pools)
+  tau in matched groups   mean +0.6987  (n=1 pools)
+  records recovered EXACTLY (membership and order): 0/7  (0.0%)
+
+REFERENCE  membership-oracle tau +0.7580 = 0.8790 on the joint scale;  joint tau-in-matched +0.6987
+  Not a ceiling, not a decomposition -- see q_micro.
+
+==========================================================================
+ CELL semantic__sentence
+
+INTEGRITY
+  game J: ok   model answered 1/1   fragments placed by policy 0.0%
+  game O: ok   model answered 7/7   fragments placed by policy 0.0%
+
+==========================================================================
+ THREE ATTACK CONDITIONS, SAME CORPUS, SAME MODEL
+==========================================================================
+
+GAME O  (oracle linkage: membership given, order only)
+  scored 7/7 documents   malformed 0
+  recovered: 63/141 fragments exactly placed   mean shift 1.5   longest intact run 6.4 of 20.1 (38%)
+  tau  mean +0.8241   median +0.8167   min +0.619  max +0.964
+
+GAME J  (joint: membership AND order, nothing given)
+  pools scored 1
+  linkage F1   mean 0.8110   baseline 0.2655   advantage +0.7426
+               precision 0.8307   recall 0.7922   (of guessed / of true same-record pairs)
+  groups       guessed 7.0 vs 7.0 asked   exact count 1/1
+  partition    valid 1/1   (after repairing dropped fragments to singletons)
+  COVERAGE     model placed 100.0% of fragments   dropped 0 total, worst pool 0
+  JOINT ordered-pair F1   mean 0.6416   baseline 0.1328   advantage +0.5867
+  F1 BREAKDOWN  (pairs summed over 1 pools;  F1_J = linkage F1 x q)
+    pairs      guessed 1,441 same-record pairs   true 1,511
+    linkage    1,197 guessed pairs really share a record   precision 0.8307  recall 0.7922  F1 0.8110
+    order      947 of those 1,197 point the right way   q = C/K 0.7911
+    joint      precision C/guessed 0.6572  recall C/true 0.6267  F1 0.6416 = 0.8110 x 0.7911
+  direction accuracy      q_micro 0.7911   (K=0 in 0/1 pools)
+  tau in matched groups   mean +0.5861  (n=1 pools)
+  records recovered EXACTLY (membership and order): 0/7  (0.0%)
+
+REFERENCE  membership-oracle tau +0.8241 = 0.9120 on the joint scale;  joint tau-in-matched +0.5861
+  Not a ceiling, not a decomposition -- see q_micro.
+
+==========================================================================
+ CELL semantic__token-window
+
+INTEGRITY
+  game J: ok   model answered 1/1   fragments placed by policy 0.0%
+  game O: ok   model answered 7/7   fragments placed by policy 0.0%
+
+==========================================================================
+ THREE ATTACK CONDITIONS, SAME CORPUS, SAME MODEL
+==========================================================================
+
+GAME O  (oracle linkage: membership given, order only)
+  scored 7/7 documents   malformed 0
+  recovered: 153/220 fragments exactly placed   mean shift 1.5   longest intact run 23.3 of 31.4 (84%)
+  tau  mean +0.9301   median +1.0000   min +0.603  max +1.000
+
+GAME J  (joint: membership AND order, nothing given)
+  pools scored 1
+  linkage F1   mean 0.8208   baseline 0.2810   advantage +0.7507
+               precision 0.8049   recall 0.8372   (of guessed / of true same-record pairs)
+  groups       guessed 7.0 vs 7.0 asked   exact count 1/1
+  partition    valid 1/1   (after repairing dropped fragments to singletons)
+  COVERAGE     model placed 100.0% of fragments   dropped 0 total, worst pool 0
+  JOINT ordered-pair F1   mean 0.6692   baseline 0.1405   advantage +0.6151
+  F1 BREAKDOWN  (pairs summed over 1 pools;  F1_J = linkage F1 x q)
+    pairs      guessed 4,096 same-record pairs   true 3,938
+    linkage    3,297 guessed pairs really share a record   precision 0.8049  recall 0.8372  F1 0.8208
+    order      2,688 of those 3,297 point the right way   q = C/K 0.8153
+    joint      precision C/guessed 0.6562  recall C/true 0.6826  F1 0.6692 = 0.8208 x 0.8153
+  direction accuracy      q_micro 0.8153   (K=0 in 0/1 pools)
+  tau in matched groups   mean +0.5633  (n=1 pools)
+  records recovered EXACTLY (membership and order): 0/7  (0.0%)
+
+REFERENCE  membership-oracle tau +0.9301 = 0.9650 on the joint scale;  joint tau-in-matched +0.5633
+  Not a ceiling, not a decomposition -- see q_micro.
+
+==========================================================================
+ CELL subject-verb__clause
+
+INTEGRITY
+  game J: ok   model answered 1/1   fragments placed by policy 0.0%
+  game O: ok   model answered 7/7   fragments placed by policy 0.0%
+
+==========================================================================
+ THREE ATTACK CONDITIONS, SAME CORPUS, SAME MODEL
+==========================================================================
+
+GAME O  (oracle linkage: membership given, order only)
+  scored 7/7 documents   malformed 0
+  recovered: 71/272 fragments exactly placed   mean shift 4.4   longest intact run 7.4 of 38.9 (21%)
+  tau  mean +0.7109   median +0.7027   min +0.550  max +0.942
+
+GAME J  (joint: membership AND order, nothing given)
+  pools scored 1
+  linkage F1   mean 0.5828   baseline 0.2666   advantage +0.4312
+               precision 0.5977   recall 0.5687   (of guessed / of true same-record pairs)
+  groups       guessed 7.0 vs 7.0 asked   exact count 1/1
+  partition    valid 1/1   (after repairing dropped fragments to singletons)
+  COVERAGE     model placed 100.0% of fragments   dropped 0 total, worst pool 0
+  JOINT ordered-pair F1   mean 0.4572   baseline 0.1333   advantage +0.3737
+  F1 BREAKDOWN  (pairs summed over 1 pools;  F1_J = linkage F1 x q)
+    pairs      guessed 5,394 same-record pairs   true 5,669
+    linkage    3,224 guessed pairs really share a record   precision 0.5977  recall 0.5687  F1 0.5828
+    order      2,529 of those 3,224 point the right way   q = C/K 0.7844
+    joint      precision C/guessed 0.4689  recall C/true 0.4461  F1 0.4572 = 0.5828 x 0.7844
+  direction accuracy      q_micro 0.7844   (K=0 in 0/1 pools)
+  tau in matched groups   mean +0.5526  (n=1 pools)
+  records recovered EXACTLY (membership and order): 0/7  (0.0%)
+
+REFERENCE  membership-oracle tau +0.7109 = 0.8555 on the joint scale;  joint tau-in-matched +0.5526
+  Not a ceiling, not a decomposition -- see q_micro.
+
+==========================================================================
+ CELL subject-verb__sentence
+
+INTEGRITY
+  game J: ok   model answered 1/1   fragments placed by policy 0.0%
+  game O: ok   model answered 7/7   fragments placed by policy 0.0%
+
+==========================================================================
+ THREE ATTACK CONDITIONS, SAME CORPUS, SAME MODEL
+==========================================================================
+
+GAME O  (oracle linkage: membership given, order only)
+  scored 7/7 documents   malformed 0
+  recovered: 81/237 fragments exactly placed   mean shift 4.3   longest intact run 9.4 of 33.9 (31%)
+  tau  mean +0.6804   median +0.7097   min +0.477  max +0.952
+
+GAME J  (joint: membership AND order, nothing given)
+  pools scored 1
+  linkage F1   mean 0.6818   baseline 0.2638   advantage +0.5678
+               precision 0.6935   recall 0.6705   (of guessed / of true same-record pairs)
+  groups       guessed 7.0 vs 7.0 asked   exact count 1/1
+  partition    valid 1/1   (after repairing dropped fragments to singletons)
+  COVERAGE     model placed 100.0% of fragments   dropped 0 total, worst pool 0
+  JOINT ordered-pair F1   mean 0.4935   baseline 0.1319   advantage +0.4165
+  F1 BREAKDOWN  (pairs summed over 1 pools;  F1_J = linkage F1 x q)
+    pairs      guessed 4,108 same-record pairs   true 4,249
+    linkage    2,849 guessed pairs really share a record   precision 0.6935  recall 0.6705  F1 0.6818
+    order      2,062 of those 2,849 point the right way   q = C/K 0.7238
+    joint      precision C/guessed 0.5019  recall C/true 0.4853  F1 0.4935 = 0.6818 x 0.7238
+  direction accuracy      q_micro 0.7238   (K=0 in 0/1 pools)
+  tau in matched groups   mean +0.4496  (n=1 pools)
+  records recovered EXACTLY (membership and order): 0/7  (0.0%)
+
+REFERENCE  membership-oracle tau +0.6804 = 0.8402 on the joint scale;  joint tau-in-matched +0.4496
+  Not a ceiling, not a decomposition -- see q_micro.
+
+==========================================================================
+ PREDECLARED CHECKS (RUN_DECISIONS D4)
+==========================================================================
+  1 masking       88 prompts preflighted, 0 blocked, 0 headline documents
+  2 transport     88/88 answered after 2 resubmissions
+  3 integrity     11 of 11 cells pass the gate
+  4 repair        1 round run, 4 units
+  5 spend         observed $9.75, 5 waves, all settled: True
+  6 reproducible  re-scoring the stored answers: identical
+
+==========================================================================
+ SUMMARY -- every metric, one row per cell  (7 documents, 1 pool per cell)
+==========================================================================
+GAME O (membership given, order only)
+  cell                               tau pairs ok  exact  shift  longest run  run%
+  coherence-sever__clause         +0.792      90%    40%    2.1    6.4 of 22.7   34%
+  coherence-sever__sentence       +0.830      91%    48%    1.4    5.1 of 18.3   33%
+  coherence-sever__token-window   +0.945      97%    83%    1.1   24.3 of 38.3   69%
+  random__clause                  +0.956      98%    81%    0.6   13.9 of 24.4   67%
+  random__sentence                +0.960      98%    85%    0.4   16.1 of 20.1   84%
+  random__token-window            +0.899      95%    70%    1.5   19.1 of 31.4   64%
+  semantic__clause                +0.758      88%    40%    2.6    6.6 of 24.4   33%
+  semantic__sentence              +0.824      91%    47%    1.5    6.4 of 20.1   38%
+  semantic__token-window          +0.930      97%    81%    1.5   23.3 of 31.4   84%
+  subject-verb__clause            +0.711      86%    30%    4.4    7.4 of 38.9   21%
+  subject-verb__sentence          +0.680      84%    37%    4.3    9.4 of 33.9   31%
+
+GAME J (membership AND order, nothing given) -- headline: ordered-pair F1 vs chance
+  F1 breakdown: joint F1 = linkage F1 x q
+    linkage  are the fragments it paired really from the same record?  P = of its pairs, R = of the true pairs
+    q        of the correctly linked pairs, the share it put in the right order
+  cell                            link P link R link F1      q joint P joint R joint F1 chance    adv    gate
+  coherence-sever__clause          0.906  0.877   0.892  0.808   0.732   0.709    0.720  0.132 +0.678      ok
+  coherence-sever__sentence        0.823  0.784   0.803  0.767   0.631   0.601    0.616  0.133 +0.557      ok
+  coherence-sever__token-window    0.640  0.587   0.613  0.797   0.510   0.468    0.488  0.140 +0.405      ok
+  random__clause                   0.880  0.880   0.880  0.930   0.818   0.818    0.818  0.134 +0.790      ok
+  random__sentence                 0.703  0.753   0.727  0.831   0.584   0.626    0.604  0.133 +0.544      ok
+  random__token-window             0.756  0.781   0.768  0.870   0.657   0.679    0.668  0.141 +0.614      ok
+  semantic__clause                 0.848  0.824   0.836  0.854   0.724   0.704    0.714  0.134 +0.670      ok
+  semantic__sentence               0.831  0.792   0.811  0.791   0.657   0.627    0.642  0.133 +0.587      ok
+  semantic__token-window           0.805  0.837   0.821  0.815   0.656   0.683    0.669  0.141 +0.615      ok
+  subject-verb__clause             0.598  0.569   0.583  0.784   0.469   0.446    0.457  0.133 +0.374      ok
+  subject-verb__sentence           0.694  0.671   0.682  0.724   0.502   0.485    0.493  0.132 +0.417      ok
+  (pair counts and records recovered exactly: per-cell reports above)
+
+==========================================================================
+ WHAT EACH COLUMN MEANS
+==========================================================================
+GAME O -- the attacker is TOLD which fragments make up one document and only
+has to put them in order. One row = mean over the cell's documents.
+  tau          Kendall's tau between the model's order and the true order.
+               +1 perfect, 0 no better than a random shuffle, -1 fully reversed.
+  pairs ok     (1 + tau) / 2: share of all fragment pairs put in the right
+               relative order. 50% = random shuffle.
+  exact        share of fragments sitting in exactly their true position.
+  shift        average number of positions a fragment is away from where it
+               belongs. 0 = perfect.
+  longest run  the longest stretch that is consecutive in the original AND
+               placed consecutively in the right order: the biggest piece of
+               the document the attacker got back intact. "of N" = fragments
+               per document.
+  run%         longest run / fragments in the document: the share of the
+               document recovered as one intact stretch.
+
+GAME J -- nothing is given. The attacker gets every fragment of a pool of 7
+records mixed together and must sort them into records AND order each one.
+Scored on PAIRS of fragments.
+  link P       linkage precision: of the pairs the model put in the same record,
+               the share that really come from the same record.
+  link R       linkage recall: of the pairs that really share a record, the
+               share the model put together.
+  link F1      harmonic mean of link P and link R: how well it separated the
+               records, ignoring order.
+  q            direction accuracy: of the CORRECTLY linked pairs, the share it
+               put in the right order. 0.5 = coin flip.
+  joint P      of every pair the model claimed, the share that are same-record
+               AND in the right order.
+  joint R      of every true same-record pair, the share the model recovered in
+               the right order.
+  joint F1     harmonic mean of joint P and joint R. THE HEADLINE. It equals
+               link F1 x q, so the two columns show which half the defence won.
+  chance       the joint F1 of a trivial attacker that puts every fragment in
+               one pile in random order. Computed exactly for each pool.
+  adv          advantage over chance = (joint F1 - chance) / (1 - chance).
+               0 = chance, 1 = perfect reconstruction, below 0 = worse than chance.
+  gate         integrity gate. "ok" only if every document/pool has a real model
+               answer and no answer needed more than 25% of its fragments placed
+               by the scorer. Otherwise the cell is REFUSED, never scored around.
+
+TERMS IN THE PER-CELL REPORTS
+  fragments placed by policy  share of fragments the model left out that the
+               scorer placed itself (as singletons / appended). Over 25% refuses.
+  malformed    game O answers that are not a usable ordering; excluded, counted.
+  COVERAGE     share of fragments the model placed; "dropped" ones become
+               singletons, which claim no pairs (so they cost recall, not precision).
+  groups guessed vs asked   records the model formed vs the 7 in the pool.
+  F1 BREAKDOWN pair counts behind link P/R, q and joint P/R: pairs guessed,
+               pairs true, K = guessed pairs that really share a record,
+               C = those K that also point the right way. q = C / K.
+  q_micro      q from pairs summed over pools (same as the q column at 1 pool).
+  tau in matched groups   DIAGNOSTIC, not a headline: each guessed record is
+               matched to its true record and tau is taken on their overlap.
+  records recovered EXACTLY   records the model got completely right: every
+               fragment, nothing extra, perfect order.
+  REFERENCE    game O's tau put on J's scale, (1 + tau) / 2, for a like-for-like
+               read. Not a ceiling and not a decomposition.
+
+SAMPLE SIZE: pool 1 only -- 7 documents per cell for O, 1 pool per cell for J.
+An operational slice of the grid, not a result.
+

@@ -1,0 +1,21 @@
+{
+  "spec": "runs/g3_control.json",
+  "spec_sha256": "ffe2dc7835547ae70a036d67803b9391962be9cc22a76acc460ee47ef478886f",
+  "git_commit": "e2876dbd48d9aa7dcdaa86aa5862b4fb54db70bf",
+  "n_requests": 4,
+  "estimate": {
+    "n_requests": 4,
+    "est_input_tokens": 21611,
+    "est_output_tokens_worst_case": 512000,
+    "est_cost_worst_case": 2.581611,
+    "est_cost_input_only": 0.021611
+  },
+  "expected_usd": 0.6117980000000001,
+  "pools": [
+    "pool_000"
+  ],
+  "cells": [
+    "results/grid_A/semantic__sentence",
+    "results/grid_A/random__sentence"
+  ]
+}

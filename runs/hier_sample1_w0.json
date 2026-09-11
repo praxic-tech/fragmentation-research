@@ -1,0 +1,2902 @@
+{
+ "tag": "hier-sample1-w0",
+ "model": "claude-sonnet-5",
+ "attacker": "hierarchical",
+ "wave": 0,
+ "build": {
+  "cells": [
+   "results/grid_A/semantic__sentence"
+  ],
+  "pools": [
+   [
+    "pool_000",
+    [
+     "prose_0045",
+     "prose_0053",
+     "prose_0072",
+     "prose_0156",
+     "prose_0164",
+     "prose_0315",
+     "prose_0383"
+    ]
+   ]
+  ],
+  "seed": 42,
+  "k": 5,
+  "pairs_per_call": 20
+ },
+ "requests": [
+  {
+   "cell": "semantic__sentence",
+   "game": "H",
+   "unit": "pool_000-w0-c000",
+   "prompt": "Each item below is a PAIR of text fragments taken from a collection of documents that were split up and mixed together.\n\nFor each pair, judge two things independently:\n  same   - the probability the two fragments came from the SAME document, from 0.0 to 1.0\n  before - ASSUMING they are from the same document, the probability that A appeared BEFORE B in it, from 0.0 to 1.0\n\npair_id 1\n  A: Family history was notable for gastric cancer in her mother and breast cancer in her sister.\n  B: She sought emergency care, two days after onset of symptoms, where a chest X-ray suggested pneumonia, resulting in her hospitalization.\n\npair_id 2\n  A: She was discharged 7 days after surgery on her cardiac medications.\n  B: Family history was notable for gastric cancer in her mother and breast cancer in her sister.\n\npair_id 3\n  A: The patient exhibited no significant past medical, surgical, or familial history and was otherwise in good health.\n  B: Family history was notable for gastric cancer in her mother and breast cancer in her sister.\n\npair_id 4\n  A: The vulvar lesion was asymptomatic but appeared more hypopigmented and verrucous compared with her other lesions.\n  B: Family history was notable for gastric cancer in her mother and breast cancer in her sister.\n\npair_id 5\n  A: Family history was notable for gastric cancer in her mother and breast cancer in her sister.\n  B: Her family history was notable for melanoma in her father.\n\npair_id 6\n  A: At that time, an evaluation for epidermal nevus syndrome was reportedly negative.\n  B: For the other infectious agents, the results were negative.\n\npair_id 7\n  A: At that time, an evaluation for epidermal nevus syndrome was reportedly negative.\n  B: Histopathology demonstrated epidermal acanthosis with compact hyperkeratosis and prominent epidermolytic hyperkeratosis (EHK) confined to the follicular epithelium, without involvement of the interfollicular epidermis (Fig 2, A-C), consistent with a follicular epidermal nevus with EHK.\n\npair_id 8\n  A: The workup included an abdominal ultrasonography that reported normal abdominal organs.\n  B: At that time, an evaluation for epidermal nevus syndrome was reportedly negative.\n\npair_id 9\n  A: Over time, the eruption slowly progressed but remained blaschkoid.\n  B: At that time, an evaluation for epidermal nevus syndrome was reportedly negative.\n\npair_id 10\n  A: The clinical examination revealed that the vital signs were within normal limits.\n  B: At that time, an evaluation for epidermal nevus syndrome was reportedly negative.\n\npair_id 11\n  A: The peritoneal cavity contained ~400 mL of free reactive fluid, with no pus or blood.\n  B: Abdominal US (ultrasonography) demonstrated multiple dilated fluid-filled bowel loops with sluggish peristalsis and free fluid.\n\npair_id 12\n  A: Abdominal US (ultrasonography) demonstrated multiple dilated fluid-filled bowel loops with sluggish peristalsis and free fluid.\n  B: The workup included an abdominal ultrasonography that reported normal abdominal organs.\n\npair_id 13\n  A: The affected small bowel segment was ischemic with multiple patches of gangrene, but without perforation.\n  B: Abdominal US (ultrasonography) demonstrated multiple dilated fluid-filled bowel loops with sluggish peristalsis and free fluid.\n\npair_id 14\n  A: Subsequently, a computed tomography (CT) scan of the abdomen with oral and intravenous contrast demonstrated multiple dilated small bowel loops with a distal ileal transition point in the pelvis, mild terminal ileal wall thickening, and mild ascites, without definite evidence of bowel ischemia, suggestive of adhesive SBO (Fig. 2).\n  B: Abdominal US (ultrasonography) demonstrated multiple dilated fluid-filled bowel loops with sluggish peristalsis and free fluid.\n\npair_id 15\n  A: Abdominal US (ultrasonography) demonstrated multiple dilated fluid-filled bowel loops with sluggish peristalsis and free fluid.\n  B: Intraoperatively, the small bowel was dilated due to terminal ileal obstruction from a compressing adhesive band arising from a previous hysterectomy.\n\npair_id 16\n  A: Abdominal US (ultrasonography) demonstrated multiple dilated fluid-filled bowel loops with sluggish peristalsis and free fluid.\n  B: For the next \u223c23 m, his skin disease demonstrated marginal improvement following multiple treatments, including prednisone, hydroxychloroquine, UVA-1 phototherapy, methotrexate, isotretinoin, and mycophenolate.\n\npair_id 17\n  A: FDG-PET/CT revealed intense hypermetabolism of the cervical mass, with a maximum standardized uptake value (SUVmax) of 35.2, extending into the uterus (Fig. 6A).\n  B: A left external iliac lymph node measuring 1.2 cm demonstrated marked hypermetabolism SUVmax of 25.2 (Fig.\n\npair_id 18\n  A: A left external iliac lymph node measuring 1.2 cm demonstrated marked hypermetabolism SUVmax of 25.2 (Fig.\n  B: TTTS was diagnosed in MC pregnancies using standard amniotic-fluid criteria: before 20 weeks, the maximum vertical pocket (MVP) of the recipient fetus was \u2265 8 cm, while the MVP of the donor fetus was \u2264 2 cm; after 20 weeks, the MVP of the recipient fetus was \u2265 10 cm, while the MVP of the donor fetus was \u2264 2 cm.\n\npair_id 19\n  A: A left external iliac lymph node measuring 1.2 cm demonstrated marked hypermetabolism SUVmax of 25.2 (Fig.\n  B: The endocervical canal demonstrated preserved high T2 signal, and the ectocervical contour remained smooth despite marked cervical expansion.\n\npair_id 20\n  A: A mildly enlarged left external iliac lymph node measuring 1.1 \u00d7 1.3 cm was present (Fig. 2).\n  B: A left external iliac lymph node measuring 1.2 cm demonstrated marked hypermetabolism SUVmax of 25.2 (Fig.\n\nReturn ONLY a JSON array of 20 objects, each {\"pair_id\": <the number shown above>, \"same\": <number>, \"before\": <number>}. Include pair_id on every object so the answers can be matched up. No explanation, no markdown.",
+   "max_tokens": 128000
+  },
+  {
+   "cell": "semantic__sentence",
+   "game": "H",
+   "unit": "pool_000-w0-c001",
+   "prompt": "Each item below is a PAIR of text fragments taken from a collection of documents that were split up and mixed together.\n\nFor each pair, judge two things independently:\n  same   - the probability the two fragments came from the SAME document, from 0.0 to 1.0\n  before - ASSUMING they are from the same document, the probability that A appeared BEFORE B in it, from 0.0 to 1.0\n\npair_id 1\n  A: A left external iliac lymph node measuring 1.2 cm demonstrated marked hypermetabolism SUVmax of 25.2 (Fig.\n  B: The endometrial canal, containing air from a recent biopsy, was displaced anteriorly by posterior myometrial invasion measuring 5.2 \u00d7 3.6 \u00d7 4.1 cm (Fig. 1).\n\npair_id 2\n  A: A left external iliac lymph node measuring 1.2 cm demonstrated marked hypermetabolism SUVmax of 25.2 (Fig.\n  B: Additional mildly hypermetabolic mediastinal and left supraclavicular lymph nodes were present, with SUVmax values ranging from 2.5 to 3.9 (Fig.\n\npair_id 3\n  A: Diffusion-weighted imaging (DWI) demonstrated marked diffusion restriction, with the cervical mass appearing hyperintense on DWI and correspondingly hypointense on the apparent diffusion coefficient (ADC) map (Fig.\n  B: A left external iliac lymph node measuring 1.2 cm demonstrated marked hypermetabolism SUVmax of 25.2 (Fig.\n\npair_id 4\n  A: The patient was counseled on the benign nature of the lesions and the mosaic implications of EHK, and management was continued with topical keratolytics.\n  B: The patient was alert, oriented, and hemodynamically stable.\n\npair_id 5\n  A: The patient was alert, oriented, and hemodynamically stable.\n  B: The patient improved clinically.\n\npair_id 6\n  A: The patient was admitted, and high-dose esomeprazole was initiated.\n  B: The patient was alert, oriented, and hemodynamically stable.\n\npair_id 7\n  A: The lesions remained stable throughout childhood and early adulthood and were treated with ammonium lactate.\n  B: The patient was alert, oriented, and hemodynamically stable.\n\npair_id 8\n  A: The patient had a hemodynamic worsening, and subsequently died.\n  B: The patient was alert, oriented, and hemodynamically stable.\n\npair_id 9\n  A: 5A, B), consistent with high tumor cellularity.\n  B: A possible diagnosis based on imaging studies was the first solitary fibrous tumor and neurogenic tumors or EGIST could be other possibilities.\n\npair_id 10\n  A: 5A, B), consistent with high tumor cellularity.\n  B: Furthermore, in extensive regions, tumor cells assumed spindle cell cytomorphology, compatible with elongated centrocytes exhibiting pleomorphic nuclei, interweaving between collagen bundles, and associated with myxoid stroma (Fig 4, F).\n\npair_id 11\n  A: 5A, B), consistent with high tumor cellularity.\n  B: Histologic examination demonstrated diffuse effacement of the cervical stroma by sheets of large atypical lymphoid cells, consistent with diffuse large B-cell lymphoma (DLBCL) according to the World Health Organization Classification of Tumours of Haematolymphoid Neoplasms, 5th edition (2022).\n\npair_id 12\n  A: 5A, B), consistent with high tumor cellularity.\n  B: Immunohistochemical analysis showed diffuse positivity for CD20 and expression of CD10, consistent with a germinal center B-cell subtype.\n\npair_id 13\n  A: 5A, B), consistent with high tumor cellularity.\n  B: The patient was admitted, and high-dose esomeprazole was initiated.\n\npair_id 14\n  A: 5A, B), consistent with high tumor cellularity.\n  B: No cystic change or tumor necrosis was identified.\n\npair_id 15\n  A: BCL2 was positive, and the Ki-67 proliferation index was approximately 95%, indicating a high proliferative rate.\n  B: 5A, B), consistent with high tumor cellularity.\n\npair_id 16\n  A: 5A, B), consistent with high tumor cellularity.\n  B: The integrated histomorphologic and immunophenotypic profile was consistent with follicle center B-cell lymphoma, spindle cell type.\n\npair_id 17\n  A: She had gastrointestinal bleeding, considered secondary to the SBO rather than solely the cardia tear.\n  B: Esophagogastroduodenoscopy (EGD) showed blood in the esophagus and stomach with a tear in the cardia, while full assessment was limited by patient irritability (Fig. 1).\n\npair_id 18\n  A: She had gastrointestinal bleeding, considered secondary to the SBO rather than solely the cardia tear.\n  B: Orotracheal intubation was performed on the third day of illness, when massive bleeding through the endotracheal tube was identified.\n\npair_id 19\n  A: She had gastrointestinal bleeding, considered secondary to the SBO rather than solely the cardia tear.\n  B: She had a history of ischemic heart disease (IHD) and was on a beta-blocker and clopidogrel oral medications.\n\npair_id 20\n  A: She had gastrointestinal bleeding, considered secondary to the SBO rather than solely the cardia tear.\n  B: The lesions appeared centered on hair follicles with relative sparing of intervening skin, giving a keratosis pilaris\u2013like appearance rather than the confluent plaques seen in epidermal nevi.\n\nReturn ONLY a JSON array of 20 objects, each {\"pair_id\": <the number shown above>, \"same\": <number>, \"before\": <number>}. Include pair_id on every object so the answers can be matched up. No explanation, no markdown.",
+   "max_tokens": 128000
+  },
+  {
+   "cell": "semantic__sentence",
+   "game": "H",
+   "unit": "pool_000-w0-c002",
+   "prompt": "Each item below is a PAIR of text fragments taken from a collection of documents that were split up and mixed together.\n\nFor each pair, judge two things independently:\n  same   - the probability the two fragments came from the SAME document, from 0.0 to 1.0\n  before - ASSUMING they are from the same document, the probability that A appeared BEFORE B in it, from 0.0 to 1.0\n\npair_id 1\n  A: She had gastrointestinal bleeding, considered secondary to the SBO rather than solely the cardia tear.\n  B: The patient had a hemodynamic worsening, and subsequently died.\n\npair_id 2\n  A: The patient was counseled on the benign nature of the lesions and the mosaic implications of EHK, and management was continued with topical keratolytics.\n  B: The lesions were first evaluated in infancy, with a biopsy performed at 3 months of age.\n\npair_id 3\n  A: Given this atypical morphology, a biopsy was obtained.\n  B: The lesions were first evaluated in infancy, with a biopsy performed at 3 months of age.\n\npair_id 4\n  A: A 53-year-old male with no pertinent medical history presented with erythematous brown, mildly pruritic small papulonodules over the chest, back, neck, arms, and posterior scalp for the previous 2 months, unresponsive to prednisone, prompting evaluation at our institution (Fig 1, A).\n  B: The lesions were first evaluated in infancy, with a biopsy performed at 3 months of age.\n\npair_id 5\n  A: Segmental resection with enterostomy was performed.\n  B: The lesions were first evaluated in infancy, with a biopsy performed at 3 months of age.\n\npair_id 6\n  A: The spleen was normal, and no osseous lesions were identified.\n  B: The lesions were first evaluated in infancy, with a biopsy performed at 3 months of age.\n\npair_id 7\n  A: A midline laparotomy was performed.\n  B: The lesions were first evaluated in infancy, with a biopsy performed at 3 months of age.\n\npair_id 8\n  A: All fetoscopic procedures were performed by the same experienced physician in fetal medicine.\n  B: The lesions were first evaluated in infancy, with a biopsy performed at 3 months of age.\n\npair_id 9\n  A: The lesions were first evaluated in infancy, with a biopsy performed at 3 months of age.\n  B: The infiltrative mass in the posterior body of the uterus displaced the endometrium anteriorly (Fig. 3).\n\npair_id 10\n  A: The lesions remained stable throughout childhood and early adulthood and were treated with ammonium lactate.\n  B: The lesions were first evaluated in infancy, with a biopsy performed at 3 months of age.\n\npair_id 11\n  A: The patient remained in the intensive care unit for the first 3 days due to hypotension requiring noradrenaline support.\n  B: The lesions were first evaluated in infancy, with a biopsy performed at 3 months of age.\n\npair_id 12\n  A: The lesions appeared centered on hair follicles with relative sparing of intervening skin, giving a keratosis pilaris\u2013like appearance rather than the confluent plaques seen in epidermal nevi.\n  B: The lesions were first evaluated in infancy, with a biopsy performed at 3 months of age.\n\npair_id 13\n  A: Five months later, atrophic macules developed on his anterior hips with a \u201ccigarette paper\u201d appearance (Fig 1, B).\n  B: The lesions were first evaluated in infancy, with a biopsy performed at 3 months of age.\n\npair_id 14\n  A: The patient was counseled on the benign nature of the lesions and the mosaic implications of EHK, and management was continued with topical keratolytics.\n  B: Histopathology demonstrated epidermal acanthosis with compact hyperkeratosis and prominent epidermolytic hyperkeratosis (EHK) confined to the follicular epithelium, without involvement of the interfollicular epidermis (Fig 2, A-C), consistent with a follicular epidermal nevus with EHK.\n\npair_id 15\n  A: The patient was counseled on the benign nature of the lesions and the mosaic implications of EHK, and management was continued with topical keratolytics.\n  B: The spleen was normal, and no osseous lesions were identified.\n\npair_id 16\n  A: The patient was counseled on the benign nature of the lesions and the mosaic implications of EHK, and management was continued with topical keratolytics.\n  B: The vulvar lesion was asymptomatic but appeared more hypopigmented and verrucous compared with her other lesions.\n\npair_id 17\n  A: The patient also expressed concern about fertility and the potential genetic implications of epidermolytic hyperkeratosis.\n  B: The patient was counseled on the benign nature of the lesions and the mosaic implications of EHK, and management was continued with topical keratolytics.\n\npair_id 18\n  A: The patient was counseled on the benign nature of the lesions and the mosaic implications of EHK, and management was continued with topical keratolytics.\n  B: Importantly, the biopsy demonstrated epidermolytic alteration with coarse keratohyalin granules and vacuolar degeneration of keratinocytes without suprabasal acantholysis or the dyskeratotic corps ronds and grains characteristic of Darier disease, supporting EHK over focal acantholytic dyskeratosis as the underlying pattern.\n\npair_id 19\n  A: Esophagogastroduodenoscopy (EGD) showed blood in the esophagus and stomach with a tear in the cardia, while full assessment was limited by patient irritability (Fig. 1).\n  B: The patient was referred to our center after ultrasound showed an amniotic band constricting the right ankle of Fetus A, accompanied by marked distal edema (Figure 5).\n\npair_id 20\n  A: Cutaneous examination revealed an extensive blaschkoid distribution of monomorphic, rusty to skin-colored follicular scaly papules extending from the right flank and hip over the buttock, posterior thigh, and calf to the ankle and dorsal foot (Fig 1, A-E).\n  B: The patient was referred to our center after ultrasound showed an amniotic band constricting the right ankle of Fetus A, accompanied by marked distal edema (Figure 5).\n\nReturn ONLY a JSON array of 20 objects, each {\"pair_id\": <the number shown above>, \"same\": <number>, \"before\": <number>}. Include pair_id on every object so the answers can be matched up. No explanation, no markdown.",
+   "max_tokens": 128000
+  },
+  {
+   "cell": "semantic__sentence",
+   "game": "H",
+   "unit": "pool_000-w0-c003",
+   "prompt": "Each item below is a PAIR of text fragments taken from a collection of documents that were split up and mixed together.\n\nFor each pair, judge two things independently:\n  same   - the probability the two fragments came from the SAME document, from 0.0 to 1.0\n  before - ASSUMING they are from the same document, the probability that A appeared BEFORE B in it, from 0.0 to 1.0\n\npair_id 1\n  A: The patient was referred to our center after ultrasound showed an amniotic band constricting the right ankle of Fetus A, accompanied by marked distal edema (Figure 5).\n  B: Fetoscopy revealed floating amniotic membranes around the recipient fetus and a tight band encircling the abdomen (Figure 2).\n\npair_id 2\n  A: The patient was referred to our center after ultrasound showed an amniotic band constricting the right ankle of Fetus A, accompanied by marked distal edema (Figure 5).\n  B: Her condition progressively worsened on the next day, with increased dyspnea and cough accompanied by headache and right-sided chest pain.\n\npair_id 3\n  A: The patient was referred to our center after ultrasound showed an amniotic band constricting the right ankle of Fetus A, accompanied by marked distal edema (Figure 5).\n  B: The amniotic bands around the fetal abdomen were divided by scissors successfully and immediate loosening of the constriction was observed after band division.\n\npair_id 4\n  A: The patient was referred to our center after ultrasound showed an amniotic band constricting the right ankle of Fetus A, accompanied by marked distal edema (Figure 5).\n  B: A 32-year-old woman had a monochorionic triamniotic triplet pregnancy complicated by TRAP sequence with an acardiac fetus (Fetus C), diagnosed at 17 weeks.\n\npair_id 5\n  A: The patient was referred to our center after ultrasound showed an amniotic band constricting the right ankle of Fetus A, accompanied by marked distal edema (Figure 5).\n  B: The lungs exhibited a purplish color with hemorrhagic spots; cut surfaces showed congestion and hemorrhage; petechiae were diffusely distributed in the pericardium, along with mild cerebral edema and tonsillar herniation.\n\npair_id 6\n  A: The patient was referred to our center after ultrasound showed an amniotic band constricting the right ankle of Fetus A, accompanied by marked distal edema (Figure 5).\n  B: Microscopic findings showed diffuse alveolar hemorrhage and pulmonary edema (Fig. 1).\n\npair_id 7\n  A: A 35-year-old woman, gravida 2, para 1, with monochorionic diamniotic twin pregnancy, was referred to our fetal medicine center at 18 weeks of gestation for stage II TTTS.\n  B: The patient was referred to our center after ultrasound showed an amniotic band constricting the right ankle of Fetus A, accompanied by marked distal edema (Figure 5).\n\npair_id 8\n  A: However, 4 weeks postoperatively (at 22 + 5 weeks of gestation), ultrasound revealed amniotic bands encircling the recipient twin, with marked constriction at the abdominal level (Figure 1).\n  B: The patient was referred to our center after ultrasound showed an amniotic band constricting the right ankle of Fetus A, accompanied by marked distal edema (Figure 5).\n\npair_id 9\n  A: Surgical procedures were performed after multidisciplinary discussion including fetal surgeons, a pediatrician and a maternal-fetal medicine specialist, counseling with the parents, and after obtaining the patient\u2019s informed consent.\n  B: No intraoperative maternal or fetal complications occurred.\n\npair_id 10\n  A: Follow-up ultrasound showed persistent abdominal indentation but no progression of constriction, and fetal growth remained appropriate.\n  B: No intraoperative maternal or fetal complications occurred.\n\npair_id 11\n  A: The peritoneal cavity contained ~400 mL of free reactive fluid, with no pus or blood.\n  B: No intraoperative maternal or fetal complications occurred.\n\npair_id 12\n  A: No intraoperative maternal or fetal complications occurred.\n  B: After counseling, the parents accepted FLP of placental vascular anastomoses at 18 + 3 weeks without immediate maternal or fetal complications.\n\npair_id 13\n  A: No intraoperative maternal or fetal complications occurred.\n  B: No ascites or peritoneal masses were identified.\n\npair_id 14\n  A: Abdominal examination revealed no masses or tenderness.\n  B: No intraoperative maternal or fetal complications occurred.\n\npair_id 15\n  A: No intraoperative maternal or fetal complications occurred.\n  B: No lymphadenopathy was appreciated on exam.\n\npair_id 16\n  A: At 34 + 6 weeks\u2019 gestation, preterm premature rupture of membranes (PPROM) occurred, and an emergency cesarean delivery was performed..\n  B: No intraoperative maternal or fetal complications occurred.\n\npair_id 17\n  A: No intraoperative maternal or fetal complications occurred.\n  B: Intraoperative antibiotic prophylaxis with 1 g cefazolin was administered intravenously.\n\npair_id 18\n  A: Diluted lidocaine was administered for local anesthesia of the skin and subcutaneous tissue.\n  B: Examination under anesthesia with cervical biopsies and loop electrosurgical excision procedure was performed.\n\npair_id 19\n  A: The fetoscopic amniotic band release procedure was performed through a single uterine entry using a 1.3-mm fetoscope with scissors via an 8-Fr catheter.\n  B: Examination under anesthesia with cervical biopsies and loop electrosurgical excision procedure was performed.\n\npair_id 20\n  A: Abdominal examination revealed no masses or tenderness.\n  B: Examination under anesthesia with cervical biopsies and loop electrosurgical excision procedure was performed.\n\nReturn ONLY a JSON array of 20 objects, each {\"pair_id\": <the number shown above>, \"same\": <number>, \"before\": <number>}. Include pair_id on every object so the answers can be matched up. No explanation, no markdown.",
+   "max_tokens": 128000
+  },
+  {
+   "cell": "semantic__sentence",
+   "game": "H",
+   "unit": "pool_000-w0-c004",
+   "prompt": "Each item below is a PAIR of text fragments taken from a collection of documents that were split up and mixed together.\n\nFor each pair, judge two things independently:\n  same   - the probability the two fragments came from the SAME document, from 0.0 to 1.0\n  before - ASSUMING they are from the same document, the probability that A appeared BEFORE B in it, from 0.0 to 1.0\n\npair_id 1\n  A: Examination under anesthesia with cervical biopsies and loop electrosurgical excision procedure was performed.\n  B: Segmental resection with enterostomy was performed.\n\npair_id 2\n  A: Microwave ablation of the acardiac fetus was performed at 19 + 1 weeks, and amniocentesis was conducted d for the structurally normal Fetus A during the same procedure.\n  B: Examination under anesthesia with cervical biopsies and loop electrosurgical excision procedure was performed.\n\npair_id 3\n  A: Examination under anesthesia with cervical biopsies and loop electrosurgical excision procedure was performed.\n  B: A midline laparotomy was performed.\n\npair_id 4\n  A: Examination under anesthesia with cervical biopsies and loop electrosurgical excision procedure was performed.\n  B: An amnioinfusion of saline solution was performed to improve visualization during the procedure.\n\npair_id 5\n  A: Oral intake was started after 3 days.\n  B: A 74-year-old female presented with hematemesis and abdominal pain for 2 days.\n\npair_id 6\n  A: Associated symptoms included lightheadedness, fatigue, pelvic pain, nausea, and decreased appetite.\n  B: A 74-year-old female presented with hematemesis and abdominal pain for 2 days.\n\npair_id 7\n  A: A 74-year-old female presented with hematemesis and abdominal pain for 2 days.\n  B: A 65-year-old Iranian female arrived with stomach bloating, heaviness, and constipation as her early symptoms.\n\npair_id 8\n  A: A 74-year-old female presented with hematemesis and abdominal pain for 2 days.\n  B: A 16-year-old female with no previous comorbidities presented with dyspnea, odynophagia, and hemoptysis-associated cough.\n\npair_id 9\n  A: A 53-year-old male with no pertinent medical history presented with erythematous brown, mildly pruritic small papulonodules over the chest, back, neck, arms, and posterior scalp for the previous 2 months, unresponsive to prednisone, prompting evaluation at our institution (Fig 1, A).\n  B: A 74-year-old female presented with hematemesis and abdominal pain for 2 days.\n\npair_id 10\n  A: A 36-year-old woman with a congenital birthmark following the lines of Blaschko presented for evaluation of progressive lesion extension.\n  B: A 74-year-old female presented with hematemesis and abdominal pain for 2 days.\n\npair_id 11\n  A: Samples were collected for reverse transcriptase polymerase chain reaction testing for arboviruses and respiratory viruses.\n  B: A 74-year-old female presented with hematemesis and abdominal pain for 2 days.\n\npair_id 12\n  A: A 74-year-old female presented with hematemesis and abdominal pain for 2 days.\n  B: The recipient presented with a residual abdominal constriction ring with skin laceration below the umbilicus (Figure 3).\n\npair_id 13\n  A: A 74-year-old female presented with hematemesis and abdominal pain for 2 days.\n  B: An 89-year-old woman (G5P5), menopausal since age 48, presented with one month of heavy vaginal bleeding, saturating approximately 10 pads per day.\n\npair_id 14\n  A: The patient remained in the intensive care unit for the first 3 days due to hypotension requiring noradrenaline support.\n  B: A 74-year-old female presented with hematemesis and abdominal pain for 2 days.\n\npair_id 15\n  A: For the other infectious agents, the results were negative.\n  B: Results were positive for OROV and H1N1.\n\npair_id 16\n  A: Blood tests, including a full blood count, urea and electrolytes, and liver function tests, were performed and yielded unremarkable results within normal limits.\n  B: Results were positive for OROV and H1N1.\n\npair_id 17\n  A: Results were positive for OROV and H1N1.\n  B: Samples were collected for reverse transcriptase polymerase chain reaction testing for arboviruses and respiratory viruses.\n\npair_id 18\n  A: Results were positive for OROV and H1N1.\n  B: She was from a rural area in Maranh\u00e3o, a state of autochthonous OROV transmission located near the Brazilian Amazon region, and denied recent travel.\n\npair_id 19\n  A: Results were positive for OROV and H1N1.\n  B: Birth weights were 2,260 g for the recipient twin and 2,090 g for the donor twin..\n\npair_id 20\n  A: Results were positive for OROV and H1N1.\n  B: BCL2 was positive, and the Ki-67 proliferation index was approximately 95%, indicating a high proliferative rate.\n\nReturn ONLY a JSON array of 20 objects, each {\"pair_id\": <the number shown above>, \"same\": <number>, \"before\": <number>}. Include pair_id on every object so the answers can be matched up. No explanation, no markdown.",
+   "max_tokens": 128000
+  },
+  {
+   "cell": "semantic__sentence",
+   "game": "H",
+   "unit": "pool_000-w0-c005",
+   "prompt": "Each item below is a PAIR of text fragments taken from a collection of documents that were split up and mixed together.\n\nFor each pair, judge two things independently:\n  same   - the probability the two fragments came from the SAME document, from 0.0 to 1.0\n  before - ASSUMING they are from the same document, the probability that A appeared BEFORE B in it, from 0.0 to 1.0\n\npair_id 1\n  A: TTTS was diagnosed in MC pregnancies using standard amniotic-fluid criteria: before 20 weeks, the maximum vertical pocket (MVP) of the recipient fetus was \u2265 8 cm, while the MVP of the donor fetus was \u2264 2 cm; after 20 weeks, the MVP of the recipient fetus was \u2265 10 cm, while the MVP of the donor fetus was \u2264 2 cm.\n  B: Esophagogastroduodenoscopy (EGD) showed blood in the esophagus and stomach with a tear in the cardia, while full assessment was limited by patient irritability (Fig. 1).\n\npair_id 2\n  A: Esophagogastroduodenoscopy (EGD) showed blood in the esophagus and stomach with a tear in the cardia, while full assessment was limited by patient irritability (Fig. 1).\n  B: Blood tests, including a full blood count, urea and electrolytes, and liver function tests, were performed and yielded unremarkable results within normal limits.\n\npair_id 3\n  A: Esophagogastroduodenoscopy (EGD) showed blood in the esophagus and stomach with a tear in the cardia, while full assessment was limited by patient irritability (Fig. 1).\n  B: Blood preparation and repeat EGD within 24\u201348 h were recommended.\n\npair_id 4\n  A: He deferred skin-directed treatment, and no systemic therapy was indicated.\n  B: Diluted lidocaine was administered for local anesthesia of the skin and subcutaneous tissue.\n\npair_id 5\n  A: The spleen was normal, and no osseous lesions were identified.\n  B: He deferred skin-directed treatment, and no systemic therapy was indicated.\n\npair_id 6\n  A: He deferred skin-directed treatment, and no systemic therapy was indicated.\n  B: No cystic change or tumor necrosis was identified.\n\npair_id 7\n  A: The recipient presented with a residual abdominal constriction ring with skin laceration below the umbilicus (Figure 3).\n  B: He deferred skin-directed treatment, and no systemic therapy was indicated.\n\npair_id 8\n  A: No lymphadenopathy was appreciated on exam.\n  B: He deferred skin-directed treatment, and no systemic therapy was indicated.\n\npair_id 9\n  A: She sought emergency care, two days after onset of symptoms, where a chest X-ray suggested pneumonia, resulting in her hospitalization.\n  B: Oral intake was started after 3 days.\n\npair_id 10\n  A: Oral intake was started after 3 days.\n  B: She was discharged 7 days after surgery on her cardiac medications.\n\npair_id 11\n  A: Oral intake was started after 3 days.\n  B: She had a history of ischemic heart disease (IHD) and was on a beta-blocker and clopidogrel oral medications.\n\npair_id 12\n  A: The patient remained in the intensive care unit for the first 3 days due to hypotension requiring noradrenaline support.\n  B: Oral intake was started after 3 days.\n\npair_id 13\n  A: Cutaneous examination revealed an extensive blaschkoid distribution of monomorphic, rusty to skin-colored follicular scaly papules extending from the right flank and hip over the buttock, posterior thigh, and calf to the ankle and dorsal foot (Fig 1, A-E).\n  B: Histopathology demonstrated epidermal acanthosis with compact hyperkeratosis and prominent epidermolytic hyperkeratosis (EHK) confined to the follicular epithelium, without involvement of the interfollicular epidermis (Fig 2, A-C), consistent with a follicular epidermal nevus with EHK.\n\npair_id 14\n  A: Over time, the eruption slowly progressed but remained blaschkoid.\n  B: Cutaneous examination revealed an extensive blaschkoid distribution of monomorphic, rusty to skin-colored follicular scaly papules extending from the right flank and hip over the buttock, posterior thigh, and calf to the ankle and dorsal foot (Fig 1, A-E).\n\npair_id 15\n  A: Cutaneous examination revealed an extensive blaschkoid distribution of monomorphic, rusty to skin-colored follicular scaly papules extending from the right flank and hip over the buttock, posterior thigh, and calf to the ankle and dorsal foot (Fig 1, A-E).\n  B: The endometrial canal, containing air from a recent biopsy, was displaced anteriorly by posterior myometrial invasion measuring 5.2 \u00d7 3.6 \u00d7 4.1 cm (Fig. 1).\n\npair_id 16\n  A: Cutaneous examination revealed an extensive blaschkoid distribution of monomorphic, rusty to skin-colored follicular scaly papules extending from the right flank and hip over the buttock, posterior thigh, and calf to the ankle and dorsal foot (Fig 1, A-E).\n  B: Following an unrevealing PET/CT scan, the patient was diagnosed with primary cutaneous follicle center B-cell lymphoma, stage T1aN0M0, involving 1% to 2% of body surface area.\n\npair_id 17\n  A: Differential considerations included cervical carcinoma, endometrial carcinoma, and lymphoma.\n  B: Associated symptoms included lightheadedness, fatigue, pelvic pain, nausea, and decreased appetite.\n\npair_id 18\n  A: Associated symptoms included lightheadedness, fatigue, pelvic pain, nausea, and decreased appetite.\n  B: A 16-year-old female with no previous comorbidities presented with dyspnea, odynophagia, and hemoptysis-associated cough.\n\npair_id 19\n  A: Associated symptoms included lightheadedness, fatigue, pelvic pain, nausea, and decreased appetite.\n  B: Surgical history included cholecystectomy and hysterectomy.\n\npair_id 20\n  A: Symptoms such as anorexia, nausea, vomiting, pain, or weight loss were notable absences.\n  B: Associated symptoms included lightheadedness, fatigue, pelvic pain, nausea, and decreased appetite.\n\nReturn ONLY a JSON array of 20 objects, each {\"pair_id\": <the number shown above>, \"same\": <number>, \"before\": <number>}. Include pair_id on every object so the answers can be matched up. No explanation, no markdown.",
+   "max_tokens": 128000
+  },
+  {
+   "cell": "semantic__sentence",
+   "game": "H",
+   "unit": "pool_000-w0-c006",
+   "prompt": "Each item below is a PAIR of text fragments taken from a collection of documents that were split up and mixed together.\n\nFor each pair, judge two things independently:\n  same   - the probability the two fragments came from the SAME document, from 0.0 to 1.0\n  before - ASSUMING they are from the same document, the probability that A appeared BEFORE B in it, from 0.0 to 1.0\n\npair_id 1\n  A: For the other infectious agents, the results were negative.\n  B: A possible diagnosis based on imaging studies was the first solitary fibrous tumor and neurogenic tumors or EGIST could be other possibilities.\n\npair_id 2\n  A: For the other infectious agents, the results were negative.\n  B: Blood tests, including a full blood count, urea and electrolytes, and liver function tests, were performed and yielded unremarkable results within normal limits.\n\npair_id 3\n  A: For the other infectious agents, the results were negative.\n  B: For the complete list of infectious agents tested, see Table 1.\n\npair_id 4\n  A: For the other infectious agents, the results were negative.\n  B: The vulvar lesion was asymptomatic but appeared more hypopigmented and verrucous compared with her other lesions.\n\npair_id 5\n  A: Samples were collected for reverse transcriptase polymerase chain reaction testing for arboviruses and respiratory viruses.\n  B: For the other infectious agents, the results were negative.\n\npair_id 6\n  A: Additional Chest x-ray revealed normal.\n  B: Additional involvement was present in the left axilla and medial upper extremity.\n\npair_id 7\n  A: A mildly enlarged left external iliac lymph node measuring 1.1 \u00d7 1.3 cm was present (Fig. 2).\n  B: Additional involvement was present in the left axilla and medial upper extremity.\n\npair_id 8\n  A: Additional involvement was present in the left axilla and medial upper extremity.\n  B: Following a 22-m drug holiday, the patient returned to clinic with a firm, pink, arcuate nodule with fine telangiectasias on the left medial clavicle (Fig 3, A), a nontender pink to red patch with centrally located multilobular nodularity on the mid-paraspinal back (Fig 3, B), and scattered atrophic indentations on the bilateral upper extremities.\n\npair_id 9\n  A: Additional involvement was present in the left axilla and medial upper extremity.\n  B: Additional mildly hypermetabolic mediastinal and left supraclavicular lymph nodes were present, with SUVmax values ranging from 2.5 to 3.9 (Fig.\n\npair_id 10\n  A: Additional involvement was present in the left axilla and medial upper extremity.\n  B: Over the preceding 2 years, she noted extension involving the trunk, axilla, and extremities.\n\npair_id 11\n  A: Given the patient\u2019s concern about progression and desire to avoid vulvar biopsy, a punch biopsy was obtained from a lesion on the left axilla.\n  B: Additional involvement was present in the left axilla and medial upper extremity.\n\npair_id 12\n  A: The patient had regular ultrasound examination postoperatively and both twins were alive with concordant MVP, visible bladders and normal umbilical artery blood flow.\n  B: Pelvic examination revealed a smooth but markedly enlarged and firm cervix with dark blood at the external os.\n\npair_id 13\n  A: Pelvic examination revealed a smooth but markedly enlarged and firm cervix with dark blood at the external os.\n  B: The endocervical canal demonstrated preserved high T2 signal, and the ectocervical contour remained smooth despite marked cervical expansion.\n\npair_id 14\n  A: Pelvic examination revealed a smooth but markedly enlarged and firm cervix with dark blood at the external os.\n  B: Abdominal examination revealed no masses or tenderness.\n\npair_id 15\n  A: Other Imaging work-up of MRI with rectal-pelvic protocol revealed a well-circumscribed iso to high T1W and intermediate T2W in the ischioanal space, which seemed to be intramuscular without invasion to adjacent structures such as the rectum (Fig. 1).\n  B: Pelvic examination revealed a smooth but markedly enlarged and firm cervix with dark blood at the external os.\n\npair_id 16\n  A: A mildly enlarged left external iliac lymph node measuring 1.1 \u00d7 1.3 cm was present (Fig. 2).\n  B: Pelvic examination revealed a smooth but markedly enlarged and firm cervix with dark blood at the external os.\n\npair_id 17\n  A: The clinical examination revealed that the vital signs were within normal limits.\n  B: Pelvic examination revealed a smooth but markedly enlarged and firm cervix with dark blood at the external os.\n\npair_id 18\n  A: The neoplastic cells exhibited vesicular chromatin, prominent nucleoli, frequent mitotic figures, and numerous apoptotic bodies.\n  B: Some neoplastic cells expressed BCL2 CD21 highlighted follicular dendritic meshworks in the nodular areas (Fig 4, C), with the BCL6-positive neoplastic cellular population spilling out beyond lymphoid follicular architecture.\n\npair_id 19\n  A: The neoplastic cells exhibited vesicular chromatin, prominent nucleoli, frequent mitotic figures, and numerous apoptotic bodies.\n  B: Neoplastic cells expressed CD20 (Fig 4, B), PAX5, and BCL6, but not CD10 or MUM1.\n\npair_id 20\n  A: Histopathology demonstrated epidermal acanthosis with compact hyperkeratosis and prominent epidermolytic hyperkeratosis (EHK) confined to the follicular epithelium, without involvement of the interfollicular epidermis (Fig 2, A-C), consistent with a follicular epidermal nevus with EHK.\n  B: The neoplastic cells exhibited vesicular chromatin, prominent nucleoli, frequent mitotic figures, and numerous apoptotic bodies.\n\nReturn ONLY a JSON array of 20 objects, each {\"pair_id\": <the number shown above>, \"same\": <number>, \"before\": <number>}. Include pair_id on every object so the answers can be matched up. No explanation, no markdown.",
+   "max_tokens": 128000
+  },
+  {
+   "cell": "semantic__sentence",
+   "game": "H",
+   "unit": "pool_000-w0-c007",
+   "prompt": "Each item below is a PAIR of text fragments taken from a collection of documents that were split up and mixed together.\n\nFor each pair, judge two things independently:\n  same   - the probability the two fragments came from the SAME document, from 0.0 to 1.0\n  before - ASSUMING they are from the same document, the probability that A appeared BEFORE B in it, from 0.0 to 1.0\n\npair_id 1\n  A: The patient exhibited no significant past medical, surgical, or familial history and was otherwise in good health.\n  B: The neoplastic cells exhibited vesicular chromatin, prominent nucleoli, frequent mitotic figures, and numerous apoptotic bodies.\n\npair_id 2\n  A: The neoplastic cells exhibited vesicular chromatin, prominent nucleoli, frequent mitotic figures, and numerous apoptotic bodies.\n  B: The liver exhibited only vascular congestion.\n\npair_id 3\n  A: A subsequent vulvar biopsy performed by gynecology showed similar findings without dysplasia or malignancy, supporting involvement by the same process.\n  B: Within the year preceding presentation, a new lesion developed on the left labia minora, prompting referral from gynecology for dermatologic evaluation and to rule out malignancy.\n\npair_id 4\n  A: Within the year preceding presentation, a new lesion developed on the left labia minora, prompting referral from gynecology for dermatologic evaluation and to rule out malignancy.\n  B: A 53-year-old male with no pertinent medical history presented with erythematous brown, mildly pruritic small papulonodules over the chest, back, neck, arms, and posterior scalp for the previous 2 months, unresponsive to prednisone, prompting evaluation at our institution (Fig 1, A).\n\npair_id 5\n  A: A 36-year-old woman with a congenital birthmark following the lines of Blaschko presented for evaluation of progressive lesion extension.\n  B: Within the year preceding presentation, a new lesion developed on the left labia minora, prompting referral from gynecology for dermatologic evaluation and to rule out malignancy.\n\npair_id 6\n  A: Over the preceding 2 years, she noted extension involving the trunk, axilla, and extremities.\n  B: Within the year preceding presentation, a new lesion developed on the left labia minora, prompting referral from gynecology for dermatologic evaluation and to rule out malignancy.\n\npair_id 7\n  A: Within the year preceding presentation, a new lesion developed on the left labia minora, prompting referral from gynecology for dermatologic evaluation and to rule out malignancy.\n  B: Five months later, atrophic macules developed on his anterior hips with a \u201ccigarette paper\u201d appearance (Fig 1, B).\n\npair_id 8\n  A: Within the year preceding presentation, a new lesion developed on the left labia minora, prompting referral from gynecology for dermatologic evaluation and to rule out malignancy.\n  B: Given the patient\u2019s concern about progression and desire to avoid vulvar biopsy, a punch biopsy was obtained from a lesion on the left axilla.\n\npair_id 9\n  A: The endometrial canal, containing air from a recent biopsy, was displaced anteriorly by posterior myometrial invasion measuring 5.2 \u00d7 3.6 \u00d7 4.1 cm (Fig. 1).\n  B: Given this atypical morphology, a biopsy was obtained.\n\npair_id 10\n  A: Skin punch biopsy revealed increased scattered interstitial spindle cells (Fig 2, A) with strong diffuse CD34 expression (Fig 2, B).\n  B: Given this atypical morphology, a biopsy was obtained.\n\npair_id 11\n  A: Given this atypical morphology, a biopsy was obtained.\n  B: Skin biopsy of the left medial clavicle lesion showed a nodular and diffuse dermal atypical lymphoid infiltrate manifesting disrupted germinal center architecture featuring intermediate sized lymphocytes with irregular nuclear contours, without appreciable tingible body macrophages or plasma cells (Fig 4, A).\n\npair_id 12\n  A: Given this atypical morphology, a biopsy was obtained.\n  B: Given the patient\u2019s concern about progression and desire to avoid vulvar biopsy, a punch biopsy was obtained from a lesion on the left axilla.\n\npair_id 13\n  A: A 65-year-old Iranian female arrived with stomach bloating, heaviness, and constipation as her early symptoms.\n  B: Further diagnostic tests, including thyroid-stimulating hormone, as well as serum and urine immunofixation electrophoresis, were unremarkable.\n\npair_id 14\n  A: Further diagnostic tests, including thyroid-stimulating hormone, as well as serum and urine immunofixation electrophoresis, were unremarkable.\n  B: Surgical procedures were performed after multidisciplinary discussion including fetal surgeons, a pediatrician and a maternal-fetal medicine specialist, counseling with the parents, and after obtaining the patient\u2019s informed consent.\n\npair_id 15\n  A: Blood tests, including a full blood count, urea and electrolytes, and liver function tests, were performed and yielded unremarkable results within normal limits.\n  B: Further diagnostic tests, including thyroid-stimulating hormone, as well as serum and urine immunofixation electrophoresis, were unremarkable.\n\npair_id 16\n  A: Other Imaging work-up of MRI with rectal-pelvic protocol revealed a well-circumscribed iso to high T1W and intermediate T2W in the ischioanal space, which seemed to be intramuscular without invasion to adjacent structures such as the rectum (Fig. 1).\n  B: Further diagnostic tests, including thyroid-stimulating hormone, as well as serum and urine immunofixation electrophoresis, were unremarkable.\n\npair_id 17\n  A: Symptoms such as anorexia, nausea, vomiting, pain, or weight loss were notable absences.\n  B: Further diagnostic tests, including thyroid-stimulating hormone, as well as serum and urine immunofixation electrophoresis, were unremarkable.\n\npair_id 18\n  A: A large mass replaced the entire cervix, extended into the posterior uterine body, and appeared mildly hyperintense on T2-weighted (T2W) imaging.\n  B: \u00d7 10.2 cm mass involving the entire cervix, with possible extension into the lower uterine segment.\n\npair_id 19\n  A: Other Imaging work-up of MRI with rectal-pelvic protocol revealed a well-circumscribed iso to high T1W and intermediate T2W in the ischioanal space, which seemed to be intramuscular without invasion to adjacent structures such as the rectum (Fig. 1).\n  B: A large mass replaced the entire cervix, extended into the posterior uterine body, and appeared mildly hyperintense on T2-weighted (T2W) imaging.\n\npair_id 20\n  A: The infiltrative mass in the posterior body of the uterus displaced the endometrium anteriorly (Fig. 3).\n  B: A large mass replaced the entire cervix, extended into the posterior uterine body, and appeared mildly hyperintense on T2-weighted (T2W) imaging.\n\nReturn ONLY a JSON array of 20 objects, each {\"pair_id\": <the number shown above>, \"same\": <number>, \"before\": <number>}. Include pair_id on every object so the answers can be matched up. No explanation, no markdown.",
+   "max_tokens": 128000
+  },
+  {
+   "cell": "semantic__sentence",
+   "game": "H",
+   "unit": "pool_000-w0-c008",
+   "prompt": "Each item below is a PAIR of text fragments taken from a collection of documents that were split up and mixed together.\n\nFor each pair, judge two things independently:\n  same   - the probability the two fragments came from the SAME document, from 0.0 to 1.0\n  before - ASSUMING they are from the same document, the probability that A appeared BEFORE B in it, from 0.0 to 1.0\n\npair_id 1\n  A: The ovaries appeared normal.\n  B: A large mass replaced the entire cervix, extended into the posterior uterine body, and appeared mildly hyperintense on T2-weighted (T2W) imaging.\n\npair_id 2\n  A: A large mass replaced the entire cervix, extended into the posterior uterine body, and appeared mildly hyperintense on T2-weighted (T2W) imaging.\n  B: The normal inner low\u2013T2 stromal ring and outer intermediate\u2013T2 stroma were completely replaced by abnormal, heterogeneous high T2 signal.\n\npair_id 3\n  A: The autopsy revealed a bilateral large serosanguineous pleural effusion totaling approximately one liter.\n  B: A large mass replaced the entire cervix, extended into the posterior uterine body, and appeared mildly hyperintense on T2-weighted (T2W) imaging.\n\npair_id 4\n  A: A large mass replaced the entire cervix, extended into the posterior uterine body, and appeared mildly hyperintense on T2-weighted (T2W) imaging.\n  B: Diffusion-weighted imaging (DWI) demonstrated marked diffusion restriction, with the cervical mass appearing hyperintense on DWI and correspondingly hypointense on the apparent diffusion coefficient (ADC) map (Fig.\n\npair_id 5\n  A: A 65-year-old Iranian female arrived with stomach bloating, heaviness, and constipation as her early symptoms.\n  B: A 16-year-old female with no previous comorbidities presented with dyspnea, odynophagia, and hemoptysis-associated cough.\n\npair_id 6\n  A: Her family history was notable for melanoma in her father.\n  B: A 65-year-old Iranian female arrived with stomach bloating, heaviness, and constipation as her early symptoms.\n\npair_id 7\n  A: The lesions remained stable throughout childhood and early adulthood and were treated with ammonium lactate.\n  B: A 65-year-old Iranian female arrived with stomach bloating, heaviness, and constipation as her early symptoms.\n\npair_id 8\n  A: A 65-year-old Iranian female arrived with stomach bloating, heaviness, and constipation as her early symptoms.\n  B: Symptoms such as anorexia, nausea, vomiting, pain, or weight loss were notable absences.\n\npair_id 9\n  A: The patient exhibited no significant past medical, surgical, or familial history and was otherwise in good health.\n  B: The patient improved clinically.\n\npair_id 10\n  A: The patient was admitted, and high-dose esomeprazole was initiated.\n  B: The patient improved clinically.\n\npair_id 11\n  A: The patient improved clinically.\n  B: The patient also expressed concern about fertility and the potential genetic implications of epidermolytic hyperkeratosis.\n\npair_id 12\n  A: The patient improved clinically.\n  B: The patient had a hemodynamic worsening, and subsequently died.\n\npair_id 13\n  A: TTTS was diagnosed in MC pregnancies using standard amniotic-fluid criteria: before 20 weeks, the maximum vertical pocket (MVP) of the recipient fetus was \u2265 8 cm, while the MVP of the donor fetus was \u2264 2 cm; after 20 weeks, the MVP of the recipient fetus was \u2265 10 cm, while the MVP of the donor fetus was \u2264 2 cm.\n  B: Fetoscopy revealed floating amniotic membranes around the recipient fetus and a tight band encircling the abdomen (Figure 2).\n\npair_id 14\n  A: Fetoscopy revealed floating amniotic membranes around the recipient fetus and a tight band encircling the abdomen (Figure 2).\n  B: Functional and morphological recovery of the abdomen was confirmed at 1 month (Figure 4).\n\npair_id 15\n  A: Fetoscopy revealed floating amniotic membranes around the recipient fetus and a tight band encircling the abdomen (Figure 2).\n  B: The amniotic bands around the fetal abdomen were divided by scissors successfully and immediate loosening of the constriction was observed after band division.\n\npair_id 16\n  A: Most remaining floating amniotic bands were released indirectly by dissecting them away from the umbilical cord using scissors.\n  B: Fetoscopy revealed floating amniotic membranes around the recipient fetus and a tight band encircling the abdomen (Figure 2).\n\npair_id 17\n  A: The recipient presented with a residual abdominal constriction ring with skin laceration below the umbilicus (Figure 3).\n  B: Fetoscopy revealed floating amniotic membranes around the recipient fetus and a tight band encircling the abdomen (Figure 2).\n\npair_id 18\n  A: However, 4 weeks postoperatively (at 22 + 5 weeks of gestation), ultrasound revealed amniotic bands encircling the recipient twin, with marked constriction at the abdominal level (Figure 1).\n  B: Fetoscopy revealed floating amniotic membranes around the recipient fetus and a tight band encircling the abdomen (Figure 2).\n\npair_id 19\n  A: The affected infant underwent surgical removal of the residual band ring and accepted a surgical repair of the abdomen by Z-plasty.\n  B: Fetoscopy revealed floating amniotic membranes around the recipient fetus and a tight band encircling the abdomen (Figure 2).\n\npair_id 20\n  A: Other Imaging work-up of MRI with rectal-pelvic protocol revealed a well-circumscribed iso to high T1W and intermediate T2W in the ischioanal space, which seemed to be intramuscular without invasion to adjacent structures such as the rectum (Fig. 1).\n  B: A possible diagnosis based on imaging studies was the first solitary fibrous tumor and neurogenic tumors or EGIST could be other possibilities.\n\nReturn ONLY a JSON array of 20 objects, each {\"pair_id\": <the number shown above>, \"same\": <number>, \"before\": <number>}. Include pair_id on every object so the answers can be matched up. No explanation, no markdown.",
+   "max_tokens": 128000
+  },
+  {
+   "cell": "semantic__sentence",
+   "game": "H",
+   "unit": "pool_000-w0-c009",
+   "prompt": "Each item below is a PAIR of text fragments taken from a collection of documents that were split up and mixed together.\n\nFor each pair, judge two things independently:\n  same   - the probability the two fragments came from the SAME document, from 0.0 to 1.0\n  before - ASSUMING they are from the same document, the probability that A appeared BEFORE B in it, from 0.0 to 1.0\n\npair_id 1\n  A: A possible diagnosis based on imaging studies was the first solitary fibrous tumor and neurogenic tumors or EGIST could be other possibilities.\n  B: No cystic change or tumor necrosis was identified.\n\npair_id 2\n  A: A possible diagnosis based on imaging studies was the first solitary fibrous tumor and neurogenic tumors or EGIST could be other possibilities.\n  B: The dermis was fibrotic, and increased interstitial mucin was identified (Fig 2, C), leading to a diagnosis of localized lichen myxedematosus.\n\npair_id 3\n  A: Surgical procedures were performed after multidisciplinary discussion including fetal surgeons, a pediatrician and a maternal-fetal medicine specialist, counseling with the parents, and after obtaining the patient\u2019s informed consent.\n  B: After counseling, the parents accepted FLP of placental vascular anastomoses at 18 + 3 weeks without immediate maternal or fetal complications.\n\npair_id 4\n  A: The amniotic bands around the fetal abdomen were divided by scissors successfully and immediate loosening of the constriction was observed after band division.\n  B: Surgical procedures were performed after multidisciplinary discussion including fetal surgeons, a pediatrician and a maternal-fetal medicine specialist, counseling with the parents, and after obtaining the patient\u2019s informed consent.\n\npair_id 5\n  A: All fetoscopic procedures were performed by the same experienced physician in fetal medicine.\n  B: Surgical procedures were performed after multidisciplinary discussion including fetal surgeons, a pediatrician and a maternal-fetal medicine specialist, counseling with the parents, and after obtaining the patient\u2019s informed consent.\n\npair_id 6\n  A: A 35-year-old woman, gravida 2, para 1, with monochorionic diamniotic twin pregnancy, was referred to our fetal medicine center at 18 weeks of gestation for stage II TTTS.\n  B: Surgical procedures were performed after multidisciplinary discussion including fetal surgeons, a pediatrician and a maternal-fetal medicine specialist, counseling with the parents, and after obtaining the patient\u2019s informed consent.\n\npair_id 7\n  A: Differential considerations included cervical carcinoma, endometrial carcinoma, and lymphoma.\n  B: Histologic examination demonstrated diffuse effacement of the cervical stroma by sheets of large atypical lymphoid cells, consistent with diffuse large B-cell lymphoma (DLBCL) according to the World Health Organization Classification of Tumours of Haematolymphoid Neoplasms, 5th edition (2022).\n\npair_id 8\n  A: The workup included an abdominal ultrasonography that reported normal abdominal organs.\n  B: Differential considerations included cervical carcinoma, endometrial carcinoma, and lymphoma.\n\npair_id 9\n  A: The endometrial canal, containing air from a recent biopsy, was displaced anteriorly by posterior myometrial invasion measuring 5.2 \u00d7 3.6 \u00d7 4.1 cm (Fig. 1).\n  B: Differential considerations included cervical carcinoma, endometrial carcinoma, and lymphoma.\n\npair_id 10\n  A: Surgical history included cholecystectomy and hysterectomy.\n  B: Differential considerations included cervical carcinoma, endometrial carcinoma, and lymphoma.\n\npair_id 11\n  A: TTTS was diagnosed in MC pregnancies using standard amniotic-fluid criteria: before 20 weeks, the maximum vertical pocket (MVP) of the recipient fetus was \u2265 8 cm, while the MVP of the donor fetus was \u2264 2 cm; after 20 weeks, the MVP of the recipient fetus was \u2265 10 cm, while the MVP of the donor fetus was \u2264 2 cm.\n  B: The stages of TTTS were determined according to Quintero criteria, as follows: stage I: the bladder of the donor fetus is visible; stage II: the bladder of the donor fetus is no longer visible; stage III: the presence of any fetus showing abnormal blood flow; stage IV: recipient fetal edema; and stage V: any or all fetuses are dead.\n\npair_id 12\n  A: The patient had regular ultrasound examination postoperatively and both twins were alive with concordant MVP, visible bladders and normal umbilical artery blood flow.\n  B: The stages of TTTS were determined according to Quintero criteria, as follows: stage I: the bladder of the donor fetus is visible; stage II: the bladder of the donor fetus is no longer visible; stage III: the presence of any fetus showing abnormal blood flow; stage IV: recipient fetal edema; and stage V: any or all fetuses are dead.\n\npair_id 13\n  A: Ultrasound showed polyhydramnios in the recipient sac (MVP = 12.3 cm) and anhydramnios in the donor sac (MVP = 0 cm) with an absent donor bladder.\n  B: The stages of TTTS were determined according to Quintero criteria, as follows: stage I: the bladder of the donor fetus is visible; stage II: the bladder of the donor fetus is no longer visible; stage III: the presence of any fetus showing abnormal blood flow; stage IV: recipient fetal edema; and stage V: any or all fetuses are dead.\n\npair_id 14\n  A: The stages of TTTS were determined according to Quintero criteria, as follows: stage I: the bladder of the donor fetus is visible; stage II: the bladder of the donor fetus is no longer visible; stage III: the presence of any fetus showing abnormal blood flow; stage IV: recipient fetal edema; and stage V: any or all fetuses are dead.\n  B: Furthermore, the individual denied any use of tobacco, alcohol, recreational drugs, or any relevant psychosocial history.\n\npair_id 15\n  A: A 35-year-old woman, gravida 2, para 1, with monochorionic diamniotic twin pregnancy, was referred to our fetal medicine center at 18 weeks of gestation for stage II TTTS.\n  B: The stages of TTTS were determined according to Quintero criteria, as follows: stage I: the bladder of the donor fetus is visible; stage II: the bladder of the donor fetus is no longer visible; stage III: the presence of any fetus showing abnormal blood flow; stage IV: recipient fetal edema; and stage V: any or all fetuses are dead.\n\npair_id 16\n  A: Follow-up ultrasound showed persistent abdominal indentation but no progression of constriction, and fetal growth remained appropriate.\n  B: Abdominal examination revealed no masses or tenderness.\n\npair_id 17\n  A: Follow-up ultrasound showed persistent abdominal indentation but no progression of constriction, and fetal growth remained appropriate.\n  B: Over time, the eruption slowly progressed but remained blaschkoid.\n\npair_id 18\n  A: The recipient presented with a residual abdominal constriction ring with skin laceration below the umbilicus (Figure 3).\n  B: Follow-up ultrasound showed persistent abdominal indentation but no progression of constriction, and fetal growth remained appropriate.\n\npair_id 19\n  A: Follow-up ultrasound showed persistent abdominal indentation but no progression of constriction, and fetal growth remained appropriate.\n  B: However, 4 weeks postoperatively (at 22 + 5 weeks of gestation), ultrasound revealed amniotic bands encircling the recipient twin, with marked constriction at the abdominal level (Figure 1).\n\npair_id 20\n  A: The peritoneal cavity contained ~400 mL of free reactive fluid, with no pus or blood.\n  B: No ascites or peritoneal masses were identified.\n\nReturn ONLY a JSON array of 20 objects, each {\"pair_id\": <the number shown above>, \"same\": <number>, \"before\": <number>}. Include pair_id on every object so the answers can be matched up. No explanation, no markdown.",
+   "max_tokens": 128000
+  },
+  {
+   "cell": "semantic__sentence",
+   "game": "H",
+   "unit": "pool_000-w0-c010",
+   "prompt": "Each item below is a PAIR of text fragments taken from a collection of documents that were split up and mixed together.\n\nFor each pair, judge two things independently:\n  same   - the probability the two fragments came from the SAME document, from 0.0 to 1.0\n  before - ASSUMING they are from the same document, the probability that A appeared BEFORE B in it, from 0.0 to 1.0\n\npair_id 1\n  A: The peritoneal cavity contained ~400 mL of free reactive fluid, with no pus or blood.\n  B: Abdominal examination revealed no masses or tenderness.\n\npair_id 2\n  A: The peritoneal cavity contained ~400 mL of free reactive fluid, with no pus or blood.\n  B: CD3 identified background small reactive T lymphocytes.\n\npair_id 3\n  A: FDG-PET/CT revealed intense hypermetabolism of the cervical mass, with a maximum standardized uptake value (SUVmax) of 35.2, extending into the uterus (Fig. 6A).\n  B: CT of the abdomen and pelvis demonstrated a 10.1 \u00d7 10.5\n\npair_id 4\n  A: \u00d7 10.2 cm mass involving the entire cervix, with possible extension into the lower uterine segment.\n  B: FDG-PET/CT revealed intense hypermetabolism of the cervical mass, with a maximum standardized uptake value (SUVmax) of 35.2, extending into the uterus (Fig. 6A).\n\npair_id 5\n  A: The infiltrative mass in the posterior body of the uterus displaced the endometrium anteriorly (Fig. 3).\n  B: FDG-PET/CT revealed intense hypermetabolism of the cervical mass, with a maximum standardized uptake value (SUVmax) of 35.2, extending into the uterus (Fig. 6A).\n\npair_id 6\n  A: Following an unrevealing PET/CT scan, the patient was diagnosed with primary cutaneous follicle center B-cell lymphoma, stage T1aN0M0, involving 1% to 2% of body surface area.\n  B: FDG-PET/CT revealed intense hypermetabolism of the cervical mass, with a maximum standardized uptake value (SUVmax) of 35.2, extending into the uterus (Fig. 6A).\n\npair_id 7\n  A: Diffusion-weighted imaging (DWI) demonstrated marked diffusion restriction, with the cervical mass appearing hyperintense on DWI and correspondingly hypointense on the apparent diffusion coefficient (ADC) map (Fig.\n  B: FDG-PET/CT revealed intense hypermetabolism of the cervical mass, with a maximum standardized uptake value (SUVmax) of 35.2, extending into the uterus (Fig. 6A).\n\npair_id 8\n  A: She was discharged 7 days after surgery on her cardiac medications.\n  B: She sought emergency care, two days after onset of symptoms, where a chest X-ray suggested pneumonia, resulting in her hospitalization.\n\npair_id 9\n  A: Two male neonates were delivered with 1- and 5-min Apgar scores of 8 and 10, respectively.\n  B: She sought emergency care, two days after onset of symptoms, where a chest X-ray suggested pneumonia, resulting in her hospitalization.\n\npair_id 10\n  A: She sought emergency care, two days after onset of symptoms, where a chest X-ray suggested pneumonia, resulting in her hospitalization.\n  B: Additional Chest x-ray revealed normal.\n\npair_id 11\n  A: Her family history was notable for melanoma in her father.\n  B: She sought emergency care, two days after onset of symptoms, where a chest X-ray suggested pneumonia, resulting in her hospitalization.\n\npair_id 12\n  A: She sought emergency care, two days after onset of symptoms, where a chest X-ray suggested pneumonia, resulting in her hospitalization.\n  B: The patient remained in the intensive care unit for the first 3 days due to hypotension requiring noradrenaline support.\n\npair_id 13\n  A: Histologic examination demonstrated diffuse effacement of the cervical stroma by sheets of large atypical lymphoid cells, consistent with diffuse large B-cell lymphoma (DLBCL) according to the World Health Organization Classification of Tumours of Haematolymphoid Neoplasms, 5th edition (2022).\n  B: Furthermore, in extensive regions, tumor cells assumed spindle cell cytomorphology, compatible with elongated centrocytes exhibiting pleomorphic nuclei, interweaving between collagen bundles, and associated with myxoid stroma (Fig 4, F).\n\npair_id 14\n  A: Neoplastic cells expressed CD20 (Fig 4, B), PAX5, and BCL6, but not CD10 or MUM1.\n  B: Furthermore, in extensive regions, tumor cells assumed spindle cell cytomorphology, compatible with elongated centrocytes exhibiting pleomorphic nuclei, interweaving between collagen bundles, and associated with myxoid stroma (Fig 4, F).\n\npair_id 15\n  A: Furthermore, in extensive regions, tumor cells assumed spindle cell cytomorphology, compatible with elongated centrocytes exhibiting pleomorphic nuclei, interweaving between collagen bundles, and associated with myxoid stroma (Fig 4, F).\n  B: Skin punch biopsy revealed increased scattered interstitial spindle cells (Fig 2, A) with strong diffuse CD34 expression (Fig 2, B).\n\npair_id 16\n  A: Furthermore, in extensive regions, tumor cells assumed spindle cell cytomorphology, compatible with elongated centrocytes exhibiting pleomorphic nuclei, interweaving between collagen bundles, and associated with myxoid stroma (Fig 4, F).\n  B: The integrated histomorphologic and immunophenotypic profile was consistent with follicle center B-cell lymphoma, spindle cell type.\n\npair_id 17\n  A: Diluted lidocaine was administered for local anesthesia of the skin and subcutaneous tissue.\n  B: The recipient presented with a residual abdominal constriction ring with skin laceration below the umbilicus (Figure 3).\n\npair_id 18\n  A: Diluted lidocaine was administered for local anesthesia of the skin and subcutaneous tissue.\n  B: Intraoperative antibiotic prophylaxis with 1 g cefazolin was administered intravenously.\n\npair_id 19\n  A: For the next \u223c23 m, his skin disease demonstrated marginal improvement following multiple treatments, including prednisone, hydroxychloroquine, UVA-1 phototherapy, methotrexate, isotretinoin, and mycophenolate.\n  B: Diluted lidocaine was administered for local anesthesia of the skin and subcutaneous tissue.\n\npair_id 20\n  A: All fetoscopic procedures were performed by the same experienced physician in fetal medicine.\n  B: A subsequent vulvar biopsy performed by gynecology showed similar findings without dysplasia or malignancy, supporting involvement by the same process.\n\nReturn ONLY a JSON array of 20 objects, each {\"pair_id\": <the number shown above>, \"same\": <number>, \"before\": <number>}. Include pair_id on every object so the answers can be matched up. No explanation, no markdown.",
+   "max_tokens": 128000
+  },
+  {
+   "cell": "semantic__sentence",
+   "game": "H",
+   "unit": "pool_000-w0-c011",
+   "prompt": "Each item below is a PAIR of text fragments taken from a collection of documents that were split up and mixed together.\n\nFor each pair, judge two things independently:\n  same   - the probability the two fragments came from the SAME document, from 0.0 to 1.0\n  before - ASSUMING they are from the same document, the probability that A appeared BEFORE B in it, from 0.0 to 1.0\n\npair_id 1\n  A: A subsequent vulvar biopsy performed by gynecology showed similar findings without dysplasia or malignancy, supporting involvement by the same process.\n  B: Microscopic findings showed diffuse alveolar hemorrhage and pulmonary edema (Fig. 1).\n\npair_id 2\n  A: A subsequent vulvar biopsy performed by gynecology showed similar findings without dysplasia or malignancy, supporting involvement by the same process.\n  B: Given the patient\u2019s concern about progression and desire to avoid vulvar biopsy, a punch biopsy was obtained from a lesion on the left axilla.\n\npair_id 3\n  A: A subsequent vulvar biopsy performed by gynecology showed similar findings without dysplasia or malignancy, supporting involvement by the same process.\n  B: Importantly, the biopsy demonstrated epidermolytic alteration with coarse keratohyalin granules and vacuolar degeneration of keratinocytes without suprabasal acantholysis or the dyskeratotic corps ronds and grains characteristic of Darier disease, supporting EHK over focal acantholytic dyskeratosis as the underlying pattern.\n\npair_id 4\n  A: She was discharged 7 days after surgery on her cardiac medications.\n  B: She had a history of ischemic heart disease (IHD) and was on a beta-blocker and clopidogrel oral medications.\n\npair_id 5\n  A: Her family history was notable for melanoma in her father.\n  B: She was discharged 7 days after surgery on her cardiac medications.\n\npair_id 6\n  A: She was discharged 7 days after surgery on her cardiac medications.\n  B: Fetoscopic laser surgery was performed using a 1.3-mm fetoscope (Storz, Germany) and a 400-\u03bcm Nd-YAG laser fiber (Dornier MedTech, Germany) via an 8-Fr cannula.\n\npair_id 7\n  A: Some neoplastic cells expressed BCL2 CD21 highlighted follicular dendritic meshworks in the nodular areas (Fig 4, C), with the BCL6-positive neoplastic cellular population spilling out beyond lymphoid follicular architecture.\n  B: Neoplastic cells expressed CD20 (Fig 4, B), PAX5, and BCL6, but not CD10 or MUM1.\n\npair_id 8\n  A: Some neoplastic cells expressed BCL2 CD21 highlighted follicular dendritic meshworks in the nodular areas (Fig 4, C), with the BCL6-positive neoplastic cellular population spilling out beyond lymphoid follicular architecture.\n  B: Histopathology demonstrated epidermal acanthosis with compact hyperkeratosis and prominent epidermolytic hyperkeratosis (EHK) confined to the follicular epithelium, without involvement of the interfollicular epidermis (Fig 2, A-C), consistent with a follicular epidermal nevus with EHK.\n\npair_id 9\n  A: BCL2 was positive, and the Ki-67 proliferation index was approximately 95%, indicating a high proliferative rate.\n  B: Some neoplastic cells expressed BCL2 CD21 highlighted follicular dendritic meshworks in the nodular areas (Fig 4, C), with the BCL6-positive neoplastic cellular population spilling out beyond lymphoid follicular architecture.\n\npair_id 10\n  A: Some neoplastic cells expressed BCL2 CD21 highlighted follicular dendritic meshworks in the nodular areas (Fig 4, C), with the BCL6-positive neoplastic cellular population spilling out beyond lymphoid follicular architecture.\n  B: Skin biopsy of the left medial clavicle lesion showed a nodular and diffuse dermal atypical lymphoid infiltrate manifesting disrupted germinal center architecture featuring intermediate sized lymphocytes with irregular nuclear contours, without appreciable tingible body macrophages or plasma cells (Fig 4, A).\n\npair_id 11\n  A: The kidneys showed acute tubular necrosis with vascular congestion.\n  B: After counseling, the parents accepted FLP of placental vascular anastomoses at 18 + 3 weeks without immediate maternal or fetal complications.\n\npair_id 12\n  A: The amniotic bands around the fetal abdomen were divided by scissors successfully and immediate loosening of the constriction was observed after band division.\n  B: After counseling, the parents accepted FLP of placental vascular anastomoses at 18 + 3 weeks without immediate maternal or fetal complications.\n\npair_id 13\n  A: After counseling, the parents accepted FLP of placental vascular anastomoses at 18 + 3 weeks without immediate maternal or fetal complications.\n  B: A 35-year-old woman, gravida 2, para 1, with monochorionic diamniotic twin pregnancy, was referred to our fetal medicine center at 18 weeks of gestation for stage II TTTS.\n\npair_id 14\n  A: After counseling, the parents accepted FLP of placental vascular anastomoses at 18 + 3 weeks without immediate maternal or fetal complications.\n  B: The liver exhibited only vascular congestion.\n\npair_id 15\n  A: Immunohistochemical analysis showed diffuse positivity for CD20 and expression of CD10, consistent with a germinal center B-cell subtype.\n  B: Histologic examination demonstrated diffuse effacement of the cervical stroma by sheets of large atypical lymphoid cells, consistent with diffuse large B-cell lymphoma (DLBCL) according to the World Health Organization Classification of Tumours of Haematolymphoid Neoplasms, 5th edition (2022).\n\npair_id 16\n  A: Following administration of 8 mL of intravenous gadobutrol (Gadavist; Bayer, Leverkusen, Germany), T1-weighted (T1W) fat-saturated images demonstrated diffuse, heterogeneous enhancement of the cervical mass, while the endocervical canal remained preserved and hypointense (Fig.\n  B: Histologic examination demonstrated diffuse effacement of the cervical stroma by sheets of large atypical lymphoid cells, consistent with diffuse large B-cell lymphoma (DLBCL) according to the World Health Organization Classification of Tumours of Haematolymphoid Neoplasms, 5th edition (2022).\n\npair_id 17\n  A: Histologic examination demonstrated diffuse effacement of the cervical stroma by sheets of large atypical lymphoid cells, consistent with diffuse large B-cell lymphoma (DLBCL) according to the World Health Organization Classification of Tumours of Haematolymphoid Neoplasms, 5th edition (2022).\n  B: MRI of the pelvis demonstrated diffuse enlargement of the cervix with loss of the normal three-zone cervical anatomy.\n\npair_id 18\n  A: Skin punch biopsy revealed increased scattered interstitial spindle cells (Fig 2, A) with strong diffuse CD34 expression (Fig 2, B).\n  B: Histologic examination demonstrated diffuse effacement of the cervical stroma by sheets of large atypical lymphoid cells, consistent with diffuse large B-cell lymphoma (DLBCL) according to the World Health Organization Classification of Tumours of Haematolymphoid Neoplasms, 5th edition (2022).\n\npair_id 19\n  A: Histologic examination demonstrated diffuse effacement of the cervical stroma by sheets of large atypical lymphoid cells, consistent with diffuse large B-cell lymphoma (DLBCL) according to the World Health Organization Classification of Tumours of Haematolymphoid Neoplasms, 5th edition (2022).\n  B: The integrated histomorphologic and immunophenotypic profile was consistent with follicle center B-cell lymphoma, spindle cell type.\n\npair_id 20\n  A: Histologic examination demonstrated diffuse effacement of the cervical stroma by sheets of large atypical lymphoid cells, consistent with diffuse large B-cell lymphoma (DLBCL) according to the World Health Organization Classification of Tumours of Haematolymphoid Neoplasms, 5th edition (2022).\n  B: Skin biopsy of the left medial clavicle lesion showed a nodular and diffuse dermal atypical lymphoid infiltrate manifesting disrupted germinal center architecture featuring intermediate sized lymphocytes with irregular nuclear contours, without appreciable tingible body macrophages or plasma cells (Fig 4, A).\n\nReturn ONLY a JSON array of 20 objects, each {\"pair_id\": <the number shown above>, \"same\": <number>, \"before\": <number>}. Include pair_id on every object so the answers can be matched up. No explanation, no markdown.",
+   "max_tokens": 128000
+  },
+  {
+   "cell": "semantic__sentence",
+   "game": "H",
+   "unit": "pool_000-w0-c012",
+   "prompt": "Each item below is a PAIR of text fragments taken from a collection of documents that were split up and mixed together.\n\nFor each pair, judge two things independently:\n  same   - the probability the two fragments came from the SAME document, from 0.0 to 1.0\n  before - ASSUMING they are from the same document, the probability that A appeared BEFORE B in it, from 0.0 to 1.0\n\npair_id 1\n  A: The autopsy revealed a bilateral large serosanguineous pleural effusion totaling approximately one liter.\n  B: Histologic examination demonstrated diffuse effacement of the cervical stroma by sheets of large atypical lymphoid cells, consistent with diffuse large B-cell lymphoma (DLBCL) according to the World Health Organization Classification of Tumours of Haematolymphoid Neoplasms, 5th edition (2022).\n\npair_id 2\n  A: Neoplastic cells expressed CD20 (Fig 4, B), PAX5, and BCL6, but not CD10 or MUM1.\n  B: Immunohistochemical analysis showed diffuse positivity for CD20 and expression of CD10, consistent with a germinal center B-cell subtype.\n\npair_id 3\n  A: Neoplastic cells expressed CD20 (Fig 4, B), PAX5, and BCL6, but not CD10 or MUM1.\n  B: The patient also expressed concern about fertility and the potential genetic implications of epidermolytic hyperkeratosis.\n\npair_id 4\n  A: Neoplastic cells expressed CD20 (Fig 4, B), PAX5, and BCL6, but not CD10 or MUM1.\n  B: Skin punch biopsy revealed increased scattered interstitial spindle cells (Fig 2, A) with strong diffuse CD34 expression (Fig 2, B).\n\npair_id 5\n  A: Skin biopsy of the left medial clavicle lesion showed a nodular and diffuse dermal atypical lymphoid infiltrate manifesting disrupted germinal center architecture featuring intermediate sized lymphocytes with irregular nuclear contours, without appreciable tingible body macrophages or plasma cells (Fig 4, A).\n  B: Neoplastic cells expressed CD20 (Fig 4, B), PAX5, and BCL6, but not CD10 or MUM1.\n\npair_id 6\n  A: Immunohistochemical analysis showed diffuse positivity for CD20 and expression of CD10, consistent with a germinal center B-cell subtype.\n  B: Microscopic findings showed diffuse alveolar hemorrhage and pulmonary edema (Fig. 1).\n\npair_id 7\n  A: Following an unrevealing PET/CT scan, the patient was diagnosed with primary cutaneous follicle center B-cell lymphoma, stage T1aN0M0, involving 1% to 2% of body surface area.\n  B: Immunohistochemical analysis showed diffuse positivity for CD20 and expression of CD10, consistent with a germinal center B-cell subtype.\n\npair_id 8\n  A: Skin punch biopsy revealed increased scattered interstitial spindle cells (Fig 2, A) with strong diffuse CD34 expression (Fig 2, B).\n  B: Immunohistochemical analysis showed diffuse positivity for CD20 and expression of CD10, consistent with a germinal center B-cell subtype.\n\npair_id 9\n  A: Immunohistochemical analysis showed diffuse positivity for CD20 and expression of CD10, consistent with a germinal center B-cell subtype.\n  B: The integrated histomorphologic and immunophenotypic profile was consistent with follicle center B-cell lymphoma, spindle cell type.\n\npair_id 10\n  A: Skin biopsy of the left medial clavicle lesion showed a nodular and diffuse dermal atypical lymphoid infiltrate manifesting disrupted germinal center architecture featuring intermediate sized lymphocytes with irregular nuclear contours, without appreciable tingible body macrophages or plasma cells (Fig 4, A).\n  B: Immunohistochemical analysis showed diffuse positivity for CD20 and expression of CD10, consistent with a germinal center B-cell subtype.\n\npair_id 11\n  A: \u00d7 10.2 cm mass involving the entire cervix, with possible extension into the lower uterine segment.\n  B: TTTS was diagnosed in MC pregnancies using standard amniotic-fluid criteria: before 20 weeks, the maximum vertical pocket (MVP) of the recipient fetus was \u2265 8 cm, while the MVP of the donor fetus was \u2264 2 cm; after 20 weeks, the MVP of the recipient fetus was \u2265 10 cm, while the MVP of the donor fetus was \u2264 2 cm.\n\npair_id 12\n  A: TTTS was diagnosed in MC pregnancies using standard amniotic-fluid criteria: before 20 weeks, the maximum vertical pocket (MVP) of the recipient fetus was \u2265 8 cm, while the MVP of the donor fetus was \u2264 2 cm; after 20 weeks, the MVP of the recipient fetus was \u2265 10 cm, while the MVP of the donor fetus was \u2264 2 cm.\n  B: Two male neonates were delivered with 1- and 5-min Apgar scores of 8 and 10, respectively.\n\npair_id 13\n  A: Ultrasound showed polyhydramnios in the recipient sac (MVP = 12.3 cm) and anhydramnios in the donor sac (MVP = 0 cm) with an absent donor bladder.\n  B: TTTS was diagnosed in MC pregnancies using standard amniotic-fluid criteria: before 20 weeks, the maximum vertical pocket (MVP) of the recipient fetus was \u2265 8 cm, while the MVP of the donor fetus was \u2264 2 cm; after 20 weeks, the MVP of the recipient fetus was \u2265 10 cm, while the MVP of the donor fetus was \u2264 2 cm.\n\npair_id 14\n  A: A 32-year-old woman had a monochorionic triamniotic triplet pregnancy complicated by TRAP sequence with an acardiac fetus (Fetus C), diagnosed at 17 weeks.\n  B: TTTS was diagnosed in MC pregnancies using standard amniotic-fluid criteria: before 20 weeks, the maximum vertical pocket (MVP) of the recipient fetus was \u2265 8 cm, while the MVP of the donor fetus was \u2264 2 cm; after 20 weeks, the MVP of the recipient fetus was \u2265 10 cm, while the MVP of the donor fetus was \u2264 2 cm.\n\npair_id 15\n  A: TTTS was diagnosed in MC pregnancies using standard amniotic-fluid criteria: before 20 weeks, the maximum vertical pocket (MVP) of the recipient fetus was \u2265 8 cm, while the MVP of the donor fetus was \u2264 2 cm; after 20 weeks, the MVP of the recipient fetus was \u2265 10 cm, while the MVP of the donor fetus was \u2264 2 cm.\n  B: Microwave ablation of the acardiac fetus was performed at 19 + 1 weeks, and amniocentesis was conducted d for the structurally normal Fetus A during the same procedure.\n\npair_id 16\n  A: TTTS was diagnosed in MC pregnancies using standard amniotic-fluid criteria: before 20 weeks, the maximum vertical pocket (MVP) of the recipient fetus was \u2265 8 cm, while the MVP of the donor fetus was \u2264 2 cm; after 20 weeks, the MVP of the recipient fetus was \u2265 10 cm, while the MVP of the donor fetus was \u2264 2 cm.\n  B: Birth weights were 2,260 g for the recipient twin and 2,090 g for the donor twin..\n\npair_id 17\n  A: The dermis was fibrotic, and increased interstitial mucin was identified (Fig 2, C), leading to a diagnosis of localized lichen myxedematosus.\n  B: Histopathology demonstrated epidermal acanthosis with compact hyperkeratosis and prominent epidermolytic hyperkeratosis (EHK) confined to the follicular epithelium, without involvement of the interfollicular epidermis (Fig 2, A-C), consistent with a follicular epidermal nevus with EHK.\n\npair_id 18\n  A: The patient also expressed concern about fertility and the potential genetic implications of epidermolytic hyperkeratosis.\n  B: Histopathology demonstrated epidermal acanthosis with compact hyperkeratosis and prominent epidermolytic hyperkeratosis (EHK) confined to the follicular epithelium, without involvement of the interfollicular epidermis (Fig 2, A-C), consistent with a follicular epidermal nevus with EHK.\n\npair_id 19\n  A: The lesions appeared centered on hair follicles with relative sparing of intervening skin, giving a keratosis pilaris\u2013like appearance rather than the confluent plaques seen in epidermal nevi.\n  B: Histopathology demonstrated epidermal acanthosis with compact hyperkeratosis and prominent epidermolytic hyperkeratosis (EHK) confined to the follicular epithelium, without involvement of the interfollicular epidermis (Fig 2, A-C), consistent with a follicular epidermal nevus with EHK.\n\npair_id 20\n  A: Histopathology demonstrated epidermal acanthosis with compact hyperkeratosis and prominent epidermolytic hyperkeratosis (EHK) confined to the follicular epithelium, without involvement of the interfollicular epidermis (Fig 2, A-C), consistent with a follicular epidermal nevus with EHK.\n  B: Importantly, the biopsy demonstrated epidermolytic alteration with coarse keratohyalin granules and vacuolar degeneration of keratinocytes without suprabasal acantholysis or the dyskeratotic corps ronds and grains characteristic of Darier disease, supporting EHK over focal acantholytic dyskeratosis as the underlying pattern.\n\nReturn ONLY a JSON array of 20 objects, each {\"pair_id\": <the number shown above>, \"same\": <number>, \"before\": <number>}. Include pair_id on every object so the answers can be matched up. No explanation, no markdown.",
+   "max_tokens": 128000
+  },
+  {
+   "cell": "semantic__sentence",
+   "game": "H",
+   "unit": "pool_000-w0-c013",
+   "prompt": "Each item below is a PAIR of text fragments taken from a collection of documents that were split up and mixed together.\n\nFor each pair, judge two things independently:\n  same   - the probability the two fragments came from the SAME document, from 0.0 to 1.0\n  before - ASSUMING they are from the same document, the probability that A appeared BEFORE B in it, from 0.0 to 1.0\n\npair_id 1\n  A: The workup included an abdominal ultrasonography that reported normal abdominal organs.\n  B: Abdominal examination revealed no masses or tenderness.\n\npair_id 2\n  A: The workup included an abdominal ultrasonography that reported normal abdominal organs.\n  B: The clinical examination revealed that the vital signs were within normal limits.\n\npair_id 3\n  A: Surgical history included cholecystectomy and hysterectomy.\n  B: The workup included an abdominal ultrasonography that reported normal abdominal organs.\n\npair_id 4\n  A: A 16-year-old female with no previous comorbidities presented with dyspnea, odynophagia, and hemoptysis-associated cough.\n  B: Her condition progressively worsened on the next day, with increased dyspnea and cough accompanied by headache and right-sided chest pain.\n\npair_id 5\n  A: Her condition progressively worsened on the next day, with increased dyspnea and cough accompanied by headache and right-sided chest pain.\n  B: Orotracheal intubation was performed on the third day of illness, when massive bleeding through the endotracheal tube was identified.\n\npair_id 6\n  A: Her condition progressively worsened on the next day, with increased dyspnea and cough accompanied by headache and right-sided chest pain.\n  B: Additional Chest x-ray revealed normal.\n\npair_id 7\n  A: Her condition progressively worsened on the next day, with increased dyspnea and cough accompanied by headache and right-sided chest pain.\n  B: Her family history was notable for melanoma in her father.\n\npair_id 8\n  A: The patient exhibited no significant past medical, surgical, or familial history and was otherwise in good health.\n  B: A 53-year-old male with no pertinent medical history presented with erythematous brown, mildly pruritic small papulonodules over the chest, back, neck, arms, and posterior scalp for the previous 2 months, unresponsive to prednisone, prompting evaluation at our institution (Fig 1, A).\n\npair_id 9\n  A: The patient exhibited no significant past medical, surgical, or familial history and was otherwise in good health.\n  B: Furthermore, the individual denied any use of tobacco, alcohol, recreational drugs, or any relevant psychosocial history.\n\npair_id 10\n  A: Her family history was notable for melanoma in her father.\n  B: The patient exhibited no significant past medical, surgical, or familial history and was otherwise in good health.\n\npair_id 11\n  A: The patient exhibited no significant past medical, surgical, or familial history and was otherwise in good health.\n  B: Surgical history included cholecystectomy and hysterectomy.\n\npair_id 12\n  A: The affected infant underwent surgical removal of the residual band ring and accepted a surgical repair of the abdomen by Z-plasty.\n  B: The patient exhibited no significant past medical, surgical, or familial history and was otherwise in good health.\n\npair_id 13\n  A: The patient exhibited no significant past medical, surgical, or familial history and was otherwise in good health.\n  B: The liver exhibited only vascular congestion.\n\npair_id 14\n  A: CT of the abdomen and pelvis demonstrated a 10.1 \u00d7 10.5\n  B: \u00d7 10.2 cm mass involving the entire cervix, with possible extension into the lower uterine segment.\n\npair_id 15\n  A: Pathological examination of the placenta demonstrated a laser coagulation line and no residual anastomosis.\n  B: CT of the abdomen and pelvis demonstrated a 10.1 \u00d7 10.5\n\npair_id 16\n  A: Two male neonates were delivered with 1- and 5-min Apgar scores of 8 and 10, respectively.\n  B: CT of the abdomen and pelvis demonstrated a 10.1 \u00d7 10.5\n\npair_id 17\n  A: Functional and morphological recovery of the abdomen was confirmed at 1 month (Figure 4).\n  B: CT of the abdomen and pelvis demonstrated a 10.1 \u00d7 10.5\n\npair_id 18\n  A: CT of the abdomen and pelvis demonstrated a 10.1 \u00d7 10.5\n  B: For the complete list of infectious agents tested, see Table 1.\n\npair_id 19\n  A: MRI of the pelvis demonstrated diffuse enlargement of the cervix with loss of the normal three-zone cervical anatomy.\n  B: CT of the abdomen and pelvis demonstrated a 10.1 \u00d7 10.5\n\npair_id 20\n  A: CT of the abdomen and pelvis demonstrated a 10.1 \u00d7 10.5\n  B: Subsequently, a computed tomography (CT) scan of the abdomen with oral and intravenous contrast demonstrated multiple dilated small bowel loops with a distal ileal transition point in the pelvis, mild terminal ileal wall thickening, and mild ascites, without definite evidence of bowel ischemia, suggestive of adhesive SBO (Fig. 2).\n\nReturn ONLY a JSON array of 20 objects, each {\"pair_id\": <the number shown above>, \"same\": <number>, \"before\": <number>}. Include pair_id on every object so the answers can be matched up. No explanation, no markdown.",
+   "max_tokens": 128000
+  },
+  {
+   "cell": "semantic__sentence",
+   "game": "H",
+   "unit": "pool_000-w0-c014",
+   "prompt": "Each item below is a PAIR of text fragments taken from a collection of documents that were split up and mixed together.\n\nFor each pair, judge two things independently:\n  same   - the probability the two fragments came from the SAME document, from 0.0 to 1.0\n  before - ASSUMING they are from the same document, the probability that A appeared BEFORE B in it, from 0.0 to 1.0\n\npair_id 1\n  A: CT of the abdomen and pelvis demonstrated a 10.1 \u00d7 10.5\n  B: The endometrial canal, containing air from a recent biopsy, was displaced anteriorly by posterior myometrial invasion measuring 5.2 \u00d7 3.6 \u00d7 4.1 cm (Fig. 1).\n\npair_id 2\n  A: An 89-year-old woman (G5P5), menopausal since age 48, presented with one month of heavy vaginal bleeding, saturating approximately 10 pads per day.\n  B: CT of the abdomen and pelvis demonstrated a 10.1 \u00d7 10.5\n\npair_id 3\n  A: CT of the abdomen and pelvis demonstrated a 10.1 \u00d7 10.5\n  B: Following an unrevealing PET/CT scan, the patient was diagnosed with primary cutaneous follicle center B-cell lymphoma, stage T1aN0M0, involving 1% to 2% of body surface area.\n\npair_id 4\n  A: The lungs exhibited a purplish color with hemorrhagic spots; cut surfaces showed congestion and hemorrhage; petechiae were diffusely distributed in the pericardium, along with mild cerebral edema and tonsillar herniation.\n  B: The kidneys showed acute tubular necrosis with vascular congestion.\n\npair_id 5\n  A: Microscopic findings showed diffuse alveolar hemorrhage and pulmonary edema (Fig. 1).\n  B: The kidneys showed acute tubular necrosis with vascular congestion.\n\npair_id 6\n  A: The kidneys showed acute tubular necrosis with vascular congestion.\n  B: No cystic change or tumor necrosis was identified.\n\npair_id 7\n  A: The kidneys showed acute tubular necrosis with vascular congestion.\n  B: The liver exhibited only vascular congestion.\n\npair_id 8\n  A: Orotracheal intubation was performed on the third day of illness, when massive bleeding through the endotracheal tube was identified.\n  B: The fetoscopic amniotic band release procedure was performed through a single uterine entry using a 1.3-mm fetoscope with scissors via an 8-Fr catheter.\n\npair_id 9\n  A: The amniotic bands around the fetal abdomen were divided by scissors successfully and immediate loosening of the constriction was observed after band division.\n  B: The fetoscopic amniotic band release procedure was performed through a single uterine entry using a 1.3-mm fetoscope with scissors via an 8-Fr catheter.\n\npair_id 10\n  A: Most remaining floating amniotic bands were released indirectly by dissecting them away from the umbilical cord using scissors.\n  B: The fetoscopic amniotic band release procedure was performed through a single uterine entry using a 1.3-mm fetoscope with scissors via an 8-Fr catheter.\n\npair_id 11\n  A: An amnioinfusion of saline solution was performed to improve visualization during the procedure.\n  B: The fetoscopic amniotic band release procedure was performed through a single uterine entry using a 1.3-mm fetoscope with scissors via an 8-Fr catheter.\n\npair_id 12\n  A: The fetoscopic amniotic band release procedure was performed through a single uterine entry using a 1.3-mm fetoscope with scissors via an 8-Fr catheter.\n  B: Because of concern for possible fetal compromise, fetoscopic release of amniotic bands was performed at 23 weeks by one-trocar approach.\n\npair_id 13\n  A: The fetoscopic amniotic band release procedure was performed through a single uterine entry using a 1.3-mm fetoscope with scissors via an 8-Fr catheter.\n  B: Fetoscopic laser surgery was performed using a 1.3-mm fetoscope (Storz, Germany) and a 400-\u03bcm Nd-YAG laser fiber (Dornier MedTech, Germany) via an 8-Fr cannula.\n\npair_id 14\n  A: A 53-year-old male with no pertinent medical history presented with erythematous brown, mildly pruritic small papulonodules over the chest, back, neck, arms, and posterior scalp for the previous 2 months, unresponsive to prednisone, prompting evaluation at our institution (Fig 1, A).\n  B: A 16-year-old female with no previous comorbidities presented with dyspnea, odynophagia, and hemoptysis-associated cough.\n\npair_id 15\n  A: A 16-year-old female with no previous comorbidities presented with dyspnea, odynophagia, and hemoptysis-associated cough.\n  B: A 36-year-old woman with a congenital birthmark following the lines of Blaschko presented for evaluation of progressive lesion extension.\n\npair_id 16\n  A: A 16-year-old female with no previous comorbidities presented with dyspnea, odynophagia, and hemoptysis-associated cough.\n  B: An 89-year-old woman (G5P5), menopausal since age 48, presented with one month of heavy vaginal bleeding, saturating approximately 10 pads per day.\n\npair_id 17\n  A: Two male neonates were delivered with 1- and 5-min Apgar scores of 8 and 10, respectively.\n  B: A 53-year-old male with no pertinent medical history presented with erythematous brown, mildly pruritic small papulonodules over the chest, back, neck, arms, and posterior scalp for the previous 2 months, unresponsive to prednisone, prompting evaluation at our institution (Fig 1, A).\n\npair_id 18\n  A: A 36-year-old woman with a congenital birthmark following the lines of Blaschko presented for evaluation of progressive lesion extension.\n  B: A 53-year-old male with no pertinent medical history presented with erythematous brown, mildly pruritic small papulonodules over the chest, back, neck, arms, and posterior scalp for the previous 2 months, unresponsive to prednisone, prompting evaluation at our institution (Fig 1, A).\n\npair_id 19\n  A: Intraoperatively, the small bowel was dilated due to terminal ileal obstruction from a compressing adhesive band arising from a previous hysterectomy.\n  B: A 53-year-old male with no pertinent medical history presented with erythematous brown, mildly pruritic small papulonodules over the chest, back, neck, arms, and posterior scalp for the previous 2 months, unresponsive to prednisone, prompting evaluation at our institution (Fig 1, A).\n\npair_id 20\n  A: A 53-year-old male with no pertinent medical history presented with erythematous brown, mildly pruritic small papulonodules over the chest, back, neck, arms, and posterior scalp for the previous 2 months, unresponsive to prednisone, prompting evaluation at our institution (Fig 1, A).\n  B: A 35-year-old woman, gravida 2, para 1, with monochorionic diamniotic twin pregnancy, was referred to our fetal medicine center at 18 weeks of gestation for stage II TTTS.\n\nReturn ONLY a JSON array of 20 objects, each {\"pair_id\": <the number shown above>, \"same\": <number>, \"before\": <number>}. Include pair_id on every object so the answers can be matched up. No explanation, no markdown.",
+   "max_tokens": 128000
+  },
+  {
+   "cell": "semantic__sentence",
+   "game": "H",
+   "unit": "pool_000-w0-c015",
+   "prompt": "Each item below is a PAIR of text fragments taken from a collection of documents that were split up and mixed together.\n\nFor each pair, judge two things independently:\n  same   - the probability the two fragments came from the SAME document, from 0.0 to 1.0\n  before - ASSUMING they are from the same document, the probability that A appeared BEFORE B in it, from 0.0 to 1.0\n\npair_id 1\n  A: A 53-year-old male with no pertinent medical history presented with erythematous brown, mildly pruritic small papulonodules over the chest, back, neck, arms, and posterior scalp for the previous 2 months, unresponsive to prednisone, prompting evaluation at our institution (Fig 1, A).\n  B: For the next \u223c23 m, his skin disease demonstrated marginal improvement following multiple treatments, including prednisone, hydroxychloroquine, UVA-1 phototherapy, methotrexate, isotretinoin, and mycophenolate.\n\npair_id 2\n  A: A 53-year-old male with no pertinent medical history presented with erythematous brown, mildly pruritic small papulonodules over the chest, back, neck, arms, and posterior scalp for the previous 2 months, unresponsive to prednisone, prompting evaluation at our institution (Fig 1, A).\n  B: Five months later, atrophic macules developed on his anterior hips with a \u201ccigarette paper\u201d appearance (Fig 1, B).\n\npair_id 3\n  A: The patient had regular ultrasound examination postoperatively and both twins were alive with concordant MVP, visible bladders and normal umbilical artery blood flow.\n  B: Ultrasound showed polyhydramnios in the recipient sac (MVP = 12.3 cm) and anhydramnios in the donor sac (MVP = 0 cm) with an absent donor bladder.\n\npair_id 4\n  A: The patient had regular ultrasound examination postoperatively and both twins were alive with concordant MVP, visible bladders and normal umbilical artery blood flow.\n  B: Blood preparation and repeat EGD within 24\u201348 h were recommended.\n\npair_id 5\n  A: The clinical examination revealed that the vital signs were within normal limits.\n  B: The patient had regular ultrasound examination postoperatively and both twins were alive with concordant MVP, visible bladders and normal umbilical artery blood flow.\n\npair_id 6\n  A: However, 4 weeks postoperatively (at 22 + 5 weeks of gestation), ultrasound revealed amniotic bands encircling the recipient twin, with marked constriction at the abdominal level (Figure 1).\n  B: The patient had regular ultrasound examination postoperatively and both twins were alive with concordant MVP, visible bladders and normal umbilical artery blood flow.\n\npair_id 7\n  A: The patient had a hemodynamic worsening, and subsequently died.\n  B: The patient had regular ultrasound examination postoperatively and both twins were alive with concordant MVP, visible bladders and normal umbilical artery blood flow.\n\npair_id 8\n  A: The endocervical canal demonstrated preserved high T2 signal, and the ectocervical contour remained smooth despite marked cervical expansion.\n  B: Following administration of 8 mL of intravenous gadobutrol (Gadavist; Bayer, Leverkusen, Germany), T1-weighted (T1W) fat-saturated images demonstrated diffuse, heterogeneous enhancement of the cervical mass, while the endocervical canal remained preserved and hypointense (Fig.\n\npair_id 9\n  A: The endocervical canal demonstrated preserved high T2 signal, and the ectocervical contour remained smooth despite marked cervical expansion.\n  B: The patient was admitted, and high-dose esomeprazole was initiated.\n\npair_id 10\n  A: The endocervical canal demonstrated preserved high T2 signal, and the ectocervical contour remained smooth despite marked cervical expansion.\n  B: The normal inner low\u2013T2 stromal ring and outer intermediate\u2013T2 stroma were completely replaced by abnormal, heterogeneous high T2 signal.\n\npair_id 11\n  A: The endocervical canal demonstrated preserved high T2 signal, and the ectocervical contour remained smooth despite marked cervical expansion.\n  B: Diffusion-weighted imaging (DWI) demonstrated marked diffusion restriction, with the cervical mass appearing hyperintense on DWI and correspondingly hypointense on the apparent diffusion coefficient (ADC) map (Fig.\n\npair_id 12\n  A: The affected small bowel segment was ischemic with multiple patches of gangrene, but without perforation.\n  B: \u00d7 10.2 cm mass involving the entire cervix, with possible extension into the lower uterine segment.\n\npair_id 13\n  A: Over the preceding 2 years, she noted extension involving the trunk, axilla, and extremities.\n  B: \u00d7 10.2 cm mass involving the entire cervix, with possible extension into the lower uterine segment.\n\npair_id 14\n  A: Ultrasound showed polyhydramnios in the recipient sac (MVP = 12.3 cm) and anhydramnios in the donor sac (MVP = 0 cm) with an absent donor bladder.\n  B: Laboratory investigations showed mild leukocytes 11.7 \u00d7 109/L (normal range: 3.4\u20139.6 \u00d7 109/L) and C-reactive protein 13.3 mg/L (normal range: below 3.0 mg/L), indicating an underlying inflammation (Table 1).\n\npair_id 15\n  A: Laboratory investigations showed mild leukocytes 11.7 \u00d7 109/L (normal range: 3.4\u20139.6 \u00d7 109/L) and C-reactive protein 13.3 mg/L (normal range: below 3.0 mg/L), indicating an underlying inflammation (Table 1).\n  B: For the complete list of infectious agents tested, see Table 1.\n\npair_id 16\n  A: Laboratory investigations showed mild leukocytes 11.7 \u00d7 109/L (normal range: 3.4\u20139.6 \u00d7 109/L) and C-reactive protein 13.3 mg/L (normal range: below 3.0 mg/L), indicating an underlying inflammation (Table 1).\n  B: The recipient presented with a residual abdominal constriction ring with skin laceration below the umbilicus (Figure 3).\n\npair_id 17\n  A: The endometrial canal, containing air from a recent biopsy, was displaced anteriorly by posterior myometrial invasion measuring 5.2 \u00d7 3.6 \u00d7 4.1 cm (Fig. 1).\n  B: Laboratory investigations showed mild leukocytes 11.7 \u00d7 109/L (normal range: 3.4\u20139.6 \u00d7 109/L) and C-reactive protein 13.3 mg/L (normal range: below 3.0 mg/L), indicating an underlying inflammation (Table 1).\n\npair_id 18\n  A: Laboratory investigations showed mild leukocytes 11.7 \u00d7 109/L (normal range: 3.4\u20139.6 \u00d7 109/L) and C-reactive protein 13.3 mg/L (normal range: below 3.0 mg/L), indicating an underlying inflammation (Table 1).\n  B: The ovaries appeared normal.\n\npair_id 19\n  A: Additional mildly hypermetabolic mediastinal and left supraclavicular lymph nodes were present, with SUVmax values ranging from 2.5 to 3.9 (Fig.\n  B: Laboratory investigations showed mild leukocytes 11.7 \u00d7 109/L (normal range: 3.4\u20139.6 \u00d7 109/L) and C-reactive protein 13.3 mg/L (normal range: below 3.0 mg/L), indicating an underlying inflammation (Table 1).\n\npair_id 20\n  A: No ascites or peritoneal masses were identified.\n  B: Abdominal examination revealed no masses or tenderness.\n\nReturn ONLY a JSON array of 20 objects, each {\"pair_id\": <the number shown above>, \"same\": <number>, \"before\": <number>}. Include pair_id on every object so the answers can be matched up. No explanation, no markdown.",
+   "max_tokens": 128000
+  },
+  {
+   "cell": "semantic__sentence",
+   "game": "H",
+   "unit": "pool_000-w0-c016",
+   "prompt": "Each item below is a PAIR of text fragments taken from a collection of documents that were split up and mixed together.\n\nFor each pair, judge two things independently:\n  same   - the probability the two fragments came from the SAME document, from 0.0 to 1.0\n  before - ASSUMING they are from the same document, the probability that A appeared BEFORE B in it, from 0.0 to 1.0\n\npair_id 1\n  A: No ascites or peritoneal masses were identified.\n  B: CD3 identified background small reactive T lymphocytes.\n\npair_id 2\n  A: No ascites or peritoneal masses were identified.\n  B: The spleen was normal, and no osseous lesions were identified.\n\npair_id 3\n  A: No ascites or peritoneal masses were identified.\n  B: No cystic change or tumor necrosis was identified.\n\npair_id 4\n  A: No ascites or peritoneal masses were identified.\n  B: No lymphadenopathy was appreciated on exam.\n\npair_id 5\n  A: Pathological examination of the placenta demonstrated a laser coagulation line and no residual anastomosis.\n  B: Abdominal examination revealed no masses or tenderness.\n\npair_id 6\n  A: Abdominal examination revealed no masses or tenderness.\n  B: No cystic change or tumor necrosis was identified.\n\npair_id 7\n  A: The clinical examination revealed that the vital signs were within normal limits.\n  B: Abdominal examination revealed no masses or tenderness.\n\npair_id 8\n  A: Abdominal examination revealed no masses or tenderness.\n  B: No lymphadenopathy was appreciated on exam.\n\npair_id 9\n  A: Orotracheal intubation was performed on the third day of illness, when massive bleeding through the endotracheal tube was identified.\n  B: Segmental resection with enterostomy was performed.\n\npair_id 10\n  A: Orotracheal intubation was performed on the third day of illness, when massive bleeding through the endotracheal tube was identified.\n  B: The spleen was normal, and no osseous lesions were identified.\n\npair_id 11\n  A: Orotracheal intubation was performed on the third day of illness, when massive bleeding through the endotracheal tube was identified.\n  B: No cystic change or tumor necrosis was identified.\n\npair_id 12\n  A: An 89-year-old woman (G5P5), menopausal since age 48, presented with one month of heavy vaginal bleeding, saturating approximately 10 pads per day.\n  B: Orotracheal intubation was performed on the third day of illness, when massive bleeding through the endotracheal tube was identified.\n\npair_id 13\n  A: Pathological examination of the placenta demonstrated a laser coagulation line and no residual anastomosis.\n  B: The recipient presented with a residual abdominal constriction ring with skin laceration below the umbilicus (Figure 3).\n\npair_id 14\n  A: Fetoscopic laser surgery was performed using a 1.3-mm fetoscope (Storz, Germany) and a 400-\u03bcm Nd-YAG laser fiber (Dornier MedTech, Germany) via an 8-Fr cannula.\n  B: Pathological examination of the placenta demonstrated a laser coagulation line and no residual anastomosis.\n\npair_id 15\n  A: Pathological examination of the placenta demonstrated a laser coagulation line and no residual anastomosis.\n  B: The affected infant underwent surgical removal of the residual band ring and accepted a surgical repair of the abdomen by Z-plasty.\n\npair_id 16\n  A: Segmental resection with enterostomy was performed.\n  B: A midline laparotomy was performed.\n\npair_id 17\n  A: An amnioinfusion of saline solution was performed to improve visualization during the procedure.\n  B: Segmental resection with enterostomy was performed.\n\npair_id 18\n  A: Following administration of 8 mL of intravenous gadobutrol (Gadavist; Bayer, Leverkusen, Germany), T1-weighted (T1W) fat-saturated images demonstrated diffuse, heterogeneous enhancement of the cervical mass, while the endocervical canal remained preserved and hypointense (Fig.\n  B: MRI of the pelvis demonstrated diffuse enlargement of the cervix with loss of the normal three-zone cervical anatomy.\n\npair_id 19\n  A: Fetoscopic laser surgery was performed using a 1.3-mm fetoscope (Storz, Germany) and a 400-\u03bcm Nd-YAG laser fiber (Dornier MedTech, Germany) via an 8-Fr cannula.\n  B: Following administration of 8 mL of intravenous gadobutrol (Gadavist; Bayer, Leverkusen, Germany), T1-weighted (T1W) fat-saturated images demonstrated diffuse, heterogeneous enhancement of the cervical mass, while the endocervical canal remained preserved and hypointense (Fig.\n\npair_id 20\n  A: Diffusion-weighted imaging (DWI) demonstrated marked diffusion restriction, with the cervical mass appearing hyperintense on DWI and correspondingly hypointense on the apparent diffusion coefficient (ADC) map (Fig.\n  B: Following administration of 8 mL of intravenous gadobutrol (Gadavist; Bayer, Leverkusen, Germany), T1-weighted (T1W) fat-saturated images demonstrated diffuse, heterogeneous enhancement of the cervical mass, while the endocervical canal remained preserved and hypointense (Fig.\n\nReturn ONLY a JSON array of 20 objects, each {\"pair_id\": <the number shown above>, \"same\": <number>, \"before\": <number>}. Include pair_id on every object so the answers can be matched up. No explanation, no markdown.",
+   "max_tokens": 128000
+  },
+  {
+   "cell": "semantic__sentence",
+   "game": "H",
+   "unit": "pool_000-w0-c017",
+   "prompt": "Each item below is a PAIR of text fragments taken from a collection of documents that were split up and mixed together.\n\nFor each pair, judge two things independently:\n  same   - the probability the two fragments came from the SAME document, from 0.0 to 1.0\n  before - ASSUMING they are from the same document, the probability that A appeared BEFORE B in it, from 0.0 to 1.0\n\npair_id 1\n  A: Two male neonates were delivered with 1- and 5-min Apgar scores of 8 and 10, respectively.\n  B: The endometrial canal, containing air from a recent biopsy, was displaced anteriorly by posterior myometrial invasion measuring 5.2 \u00d7 3.6 \u00d7 4.1 cm (Fig. 1).\n\npair_id 2\n  A: The endometrial canal, containing air from a recent biopsy, was displaced anteriorly by posterior myometrial invasion measuring 5.2 \u00d7 3.6 \u00d7 4.1 cm (Fig. 1).\n  B: Functional and morphological recovery of the abdomen was confirmed at 1 month (Figure 4).\n\npair_id 3\n  A: An 89-year-old woman (G5P5), menopausal since age 48, presented with one month of heavy vaginal bleeding, saturating approximately 10 pads per day.\n  B: Functional and morphological recovery of the abdomen was confirmed at 1 month (Figure 4).\n\npair_id 4\n  A: However, 4 weeks postoperatively (at 22 + 5 weeks of gestation), ultrasound revealed amniotic bands encircling the recipient twin, with marked constriction at the abdominal level (Figure 1).\n  B: Functional and morphological recovery of the abdomen was confirmed at 1 month (Figure 4).\n\npair_id 5\n  A: The spleen was normal, and no osseous lesions were identified.\n  B: CD3 identified background small reactive T lymphocytes.\n\npair_id 6\n  A: CD3 identified background small reactive T lymphocytes.\n  B: The affected small bowel segment was ischemic with multiple patches of gangrene, but without perforation.\n\npair_id 7\n  A: CD3 identified background small reactive T lymphocytes.\n  B: No cystic change or tumor necrosis was identified.\n\npair_id 8\n  A: The vulvar lesion was asymptomatic but appeared more hypopigmented and verrucous compared with her other lesions.\n  B: The spleen was normal, and no osseous lesions were identified.\n\npair_id 9\n  A: The spleen was normal, and no osseous lesions were identified.\n  B: No cystic change or tumor necrosis was identified.\n\npair_id 10\n  A: The dermis was fibrotic, and increased interstitial mucin was identified (Fig 2, C), leading to a diagnosis of localized lichen myxedematosus.\n  B: The spleen was normal, and no osseous lesions were identified.\n\npair_id 11\n  A: The spleen was normal, and no osseous lesions were identified.\n  B: The lesions remained stable throughout childhood and early adulthood and were treated with ammonium lactate.\n\npair_id 12\n  A: The spleen was normal, and no osseous lesions were identified.\n  B: The ovaries appeared normal.\n\npair_id 13\n  A: The spleen was normal, and no osseous lesions were identified.\n  B: No lymphadenopathy was appreciated on exam.\n\npair_id 14\n  A: The normal inner low\u2013T2 stromal ring and outer intermediate\u2013T2 stroma were completely replaced by abnormal, heterogeneous high T2 signal.\n  B: The spleen was normal, and no osseous lesions were identified.\n\npair_id 15\n  A: The patient was admitted, and high-dose esomeprazole was initiated.\n  B: BCL2 was positive, and the Ki-67 proliferation index was approximately 95%, indicating a high proliferative rate.\n\npair_id 16\n  A: Most remaining floating amniotic bands were released indirectly by dissecting them away from the umbilical cord using scissors.\n  B: The amniotic bands around the fetal abdomen were divided by scissors successfully and immediate loosening of the constriction was observed after band division.\n\npair_id 17\n  A: The amniotic bands around the fetal abdomen were divided by scissors successfully and immediate loosening of the constriction was observed after band division.\n  B: Because of concern for possible fetal compromise, fetoscopic release of amniotic bands was performed at 23 weeks by one-trocar approach.\n\npair_id 18\n  A: The affected infant underwent surgical removal of the residual band ring and accepted a surgical repair of the abdomen by Z-plasty.\n  B: The amniotic bands around the fetal abdomen were divided by scissors successfully and immediate loosening of the constriction was observed after band division.\n\npair_id 19\n  A: A mildly enlarged left external iliac lymph node measuring 1.1 \u00d7 1.3 cm was present (Fig. 2).\n  B: Ultrasound showed polyhydramnios in the recipient sac (MVP = 12.3 cm) and anhydramnios in the donor sac (MVP = 0 cm) with an absent donor bladder.\n\npair_id 20\n  A: Birth weights were 2,260 g for the recipient twin and 2,090 g for the donor twin..\n  B: Ultrasound showed polyhydramnios in the recipient sac (MVP = 12.3 cm) and anhydramnios in the donor sac (MVP = 0 cm) with an absent donor bladder.\n\nReturn ONLY a JSON array of 20 objects, each {\"pair_id\": <the number shown above>, \"same\": <number>, \"before\": <number>}. Include pair_id on every object so the answers can be matched up. No explanation, no markdown.",
+   "max_tokens": 128000
+  },
+  {
+   "cell": "semantic__sentence",
+   "game": "H",
+   "unit": "pool_000-w0-c018",
+   "prompt": "Each item below is a PAIR of text fragments taken from a collection of documents that were split up and mixed together.\n\nFor each pair, judge two things independently:\n  same   - the probability the two fragments came from the SAME document, from 0.0 to 1.0\n  before - ASSUMING they are from the same document, the probability that A appeared BEFORE B in it, from 0.0 to 1.0\n\npair_id 1\n  A: The affected small bowel segment was ischemic with multiple patches of gangrene, but without perforation.\n  B: Over time, the eruption slowly progressed but remained blaschkoid.\n\npair_id 2\n  A: She had a history of ischemic heart disease (IHD) and was on a beta-blocker and clopidogrel oral medications.\n  B: The affected small bowel segment was ischemic with multiple patches of gangrene, but without perforation.\n\npair_id 3\n  A: The affected small bowel segment was ischemic with multiple patches of gangrene, but without perforation.\n  B: Subsequently, a computed tomography (CT) scan of the abdomen with oral and intravenous contrast demonstrated multiple dilated small bowel loops with a distal ileal transition point in the pelvis, mild terminal ileal wall thickening, and mild ascites, without definite evidence of bowel ischemia, suggestive of adhesive SBO (Fig. 2).\n\npair_id 4\n  A: The affected small bowel segment was ischemic with multiple patches of gangrene, but without perforation.\n  B: Intraoperatively, the small bowel was dilated due to terminal ileal obstruction from a compressing adhesive band arising from a previous hysterectomy.\n\npair_id 5\n  A: The clinical examination revealed that the vital signs were within normal limits.\n  B: Additional Chest x-ray revealed normal.\n\npair_id 6\n  A: Additional Chest x-ray revealed normal.\n  B: The ovaries appeared normal.\n\npair_id 7\n  A: Additional mildly hypermetabolic mediastinal and left supraclavicular lymph nodes were present, with SUVmax values ranging from 2.5 to 3.9 (Fig.\n  B: Additional Chest x-ray revealed normal.\n\npair_id 8\n  A: Blood tests, including a full blood count, urea and electrolytes, and liver function tests, were performed and yielded unremarkable results within normal limits.\n  B: Blood preparation and repeat EGD within 24\u201348 h were recommended.\n\npair_id 9\n  A: The clinical examination revealed that the vital signs were within normal limits.\n  B: Blood tests, including a full blood count, urea and electrolytes, and liver function tests, were performed and yielded unremarkable results within normal limits.\n\npair_id 10\n  A: Blood tests, including a full blood count, urea and electrolytes, and liver function tests, were performed and yielded unremarkable results within normal limits.\n  B: The liver exhibited only vascular congestion.\n\npair_id 11\n  A: Over time, the eruption slowly progressed but remained blaschkoid.\n  B: The lesions remained stable throughout childhood and early adulthood and were treated with ammonium lactate.\n\npair_id 12\n  A: Over time, the eruption slowly progressed but remained blaschkoid.\n  B: Over the preceding 2 years, she noted extension involving the trunk, axilla, and extremities.\n\npair_id 13\n  A: A 36-year-old woman with a congenital birthmark following the lines of Blaschko presented for evaluation of progressive lesion extension.\n  B: A 32-year-old woman had a monochorionic triamniotic triplet pregnancy complicated by TRAP sequence with an acardiac fetus (Fetus C), diagnosed at 17 weeks.\n\npair_id 14\n  A: A 36-year-old woman with a congenital birthmark following the lines of Blaschko presented for evaluation of progressive lesion extension.\n  B: An 89-year-old woman (G5P5), menopausal since age 48, presented with one month of heavy vaginal bleeding, saturating approximately 10 pads per day.\n\npair_id 15\n  A: Symptoms such as anorexia, nausea, vomiting, pain, or weight loss were notable absences.\n  B: Other Imaging work-up of MRI with rectal-pelvic protocol revealed a well-circumscribed iso to high T1W and intermediate T2W in the ischioanal space, which seemed to be intramuscular without invasion to adjacent structures such as the rectum (Fig. 1).\n\npair_id 16\n  A: For the complete list of infectious agents tested, see Table 1.\n  B: A mildly enlarged left external iliac lymph node measuring 1.1 \u00d7 1.3 cm was present (Fig. 2).\n\npair_id 17\n  A: A mildly enlarged left external iliac lymph node measuring 1.1 \u00d7 1.3 cm was present (Fig. 2).\n  B: The endometrial canal, containing air from a recent biopsy, was displaced anteriorly by posterior myometrial invasion measuring 5.2 \u00d7 3.6 \u00d7 4.1 cm (Fig. 1).\n\npair_id 18\n  A: Scattered tingible body macrophages were present, producing a characteristic starry-sky appearance (Fig.\n  B: A mildly enlarged left external iliac lymph node measuring 1.1 \u00d7 1.3 cm was present (Fig. 2).\n\npair_id 19\n  A: Additional mildly hypermetabolic mediastinal and left supraclavicular lymph nodes were present, with SUVmax values ranging from 2.5 to 3.9 (Fig.\n  B: A mildly enlarged left external iliac lymph node measuring 1.1 \u00d7 1.3 cm was present (Fig. 2).\n\npair_id 20\n  A: A mildly enlarged left external iliac lymph node measuring 1.1 \u00d7 1.3 cm was present (Fig. 2).\n  B: Intraoperative antibiotic prophylaxis with 1 g cefazolin was administered intravenously.\n\nReturn ONLY a JSON array of 20 objects, each {\"pair_id\": <the number shown above>, \"same\": <number>, \"before\": <number>}. Include pair_id on every object so the answers can be matched up. No explanation, no markdown.",
+   "max_tokens": 128000
+  },
+  {
+   "cell": "semantic__sentence",
+   "game": "H",
+   "unit": "pool_000-w0-c019",
+   "prompt": "Each item below is a PAIR of text fragments taken from a collection of documents that were split up and mixed together.\n\nFor each pair, judge two things independently:\n  same   - the probability the two fragments came from the SAME document, from 0.0 to 1.0\n  before - ASSUMING they are from the same document, the probability that A appeared BEFORE B in it, from 0.0 to 1.0\n\npair_id 1\n  A: A 32-year-old woman had a monochorionic triamniotic triplet pregnancy complicated by TRAP sequence with an acardiac fetus (Fetus C), diagnosed at 17 weeks.\n  B: Microwave ablation of the acardiac fetus was performed at 19 + 1 weeks, and amniocentesis was conducted d for the structurally normal Fetus A during the same procedure.\n\npair_id 2\n  A: A 35-year-old woman, gravida 2, para 1, with monochorionic diamniotic twin pregnancy, was referred to our fetal medicine center at 18 weeks of gestation for stage II TTTS.\n  B: A 32-year-old woman had a monochorionic triamniotic triplet pregnancy complicated by TRAP sequence with an acardiac fetus (Fetus C), diagnosed at 17 weeks.\n\npair_id 3\n  A: Microscopic findings showed diffuse alveolar hemorrhage and pulmonary edema (Fig. 1).\n  B: The lungs exhibited a purplish color with hemorrhagic spots; cut surfaces showed congestion and hemorrhage; petechiae were diffusely distributed in the pericardium, along with mild cerebral edema and tonsillar herniation.\n\npair_id 4\n  A: Subsequently, a computed tomography (CT) scan of the abdomen with oral and intravenous contrast demonstrated multiple dilated small bowel loops with a distal ileal transition point in the pelvis, mild terminal ileal wall thickening, and mild ascites, without definite evidence of bowel ischemia, suggestive of adhesive SBO (Fig. 2).\n  B: The lungs exhibited a purplish color with hemorrhagic spots; cut surfaces showed congestion and hemorrhage; petechiae were diffusely distributed in the pericardium, along with mild cerebral edema and tonsillar herniation.\n\npair_id 5\n  A: The liver exhibited only vascular congestion.\n  B: The lungs exhibited a purplish color with hemorrhagic spots; cut surfaces showed congestion and hemorrhage; petechiae were diffusely distributed in the pericardium, along with mild cerebral edema and tonsillar herniation.\n\npair_id 6\n  A: For the complete list of infectious agents tested, see Table 1.\n  B: Microwave ablation of the acardiac fetus was performed at 19 + 1 weeks, and amniocentesis was conducted d for the structurally normal Fetus A during the same procedure.\n\npair_id 7\n  A: A midline laparotomy was performed.\n  B: Microwave ablation of the acardiac fetus was performed at 19 + 1 weeks, and amniocentesis was conducted d for the structurally normal Fetus A during the same procedure.\n\npair_id 8\n  A: All fetoscopic procedures were performed by the same experienced physician in fetal medicine.\n  B: Microwave ablation of the acardiac fetus was performed at 19 + 1 weeks, and amniocentesis was conducted d for the structurally normal Fetus A during the same procedure.\n\npair_id 9\n  A: Microwave ablation of the acardiac fetus was performed at 19 + 1 weeks, and amniocentesis was conducted d for the structurally normal Fetus A during the same procedure.\n  B: An amnioinfusion of saline solution was performed to improve visualization during the procedure.\n\npair_id 10\n  A: Microwave ablation of the acardiac fetus was performed at 19 + 1 weeks, and amniocentesis was conducted d for the structurally normal Fetus A during the same procedure.\n  B: Because of concern for possible fetal compromise, fetoscopic release of amniotic bands was performed at 23 weeks by one-trocar approach.\n\npair_id 11\n  A: Microwave ablation of the acardiac fetus was performed at 19 + 1 weeks, and amniocentesis was conducted d for the structurally normal Fetus A during the same procedure.\n  B: However, 4 weeks postoperatively (at 22 + 5 weeks of gestation), ultrasound revealed amniotic bands encircling the recipient twin, with marked constriction at the abdominal level (Figure 1).\n\npair_id 12\n  A: Microwave ablation of the acardiac fetus was performed at 19 + 1 weeks, and amniocentesis was conducted d for the structurally normal Fetus A during the same procedure.\n  B: At 34 + 6 weeks\u2019 gestation, preterm premature rupture of membranes (PPROM) occurred, and an emergency cesarean delivery was performed..\n\npair_id 13\n  A: Her family history was notable for melanoma in her father.\n  B: The vulvar lesion was asymptomatic but appeared more hypopigmented and verrucous compared with her other lesions.\n\npair_id 14\n  A: The vulvar lesion was asymptomatic but appeared more hypopigmented and verrucous compared with her other lesions.\n  B: The ovaries appeared normal.\n\npair_id 15\n  A: The lesions appeared centered on hair follicles with relative sparing of intervening skin, giving a keratosis pilaris\u2013like appearance rather than the confluent plaques seen in epidermal nevi.\n  B: The vulvar lesion was asymptomatic but appeared more hypopigmented and verrucous compared with her other lesions.\n\npair_id 16\n  A: Given the patient\u2019s concern about progression and desire to avoid vulvar biopsy, a punch biopsy was obtained from a lesion on the left axilla.\n  B: The vulvar lesion was asymptomatic but appeared more hypopigmented and verrucous compared with her other lesions.\n\npair_id 17\n  A: An amnioinfusion of saline solution was performed to improve visualization during the procedure.\n  B: A midline laparotomy was performed.\n\npair_id 18\n  A: MRI of the pelvis demonstrated diffuse enlargement of the cervix with loss of the normal three-zone cervical anatomy.\n  B: The ovaries appeared normal.\n\npair_id 19\n  A: MRI of the pelvis demonstrated diffuse enlargement of the cervix with loss of the normal three-zone cervical anatomy.\n  B: Symptoms such as anorexia, nausea, vomiting, pain, or weight loss were notable absences.\n\npair_id 20\n  A: Because of concern for possible fetal compromise, fetoscopic release of amniotic bands was performed at 23 weeks by one-trocar approach.\n  B: All fetoscopic procedures were performed by the same experienced physician in fetal medicine.\n\nReturn ONLY a JSON array of 20 objects, each {\"pair_id\": <the number shown above>, \"same\": <number>, \"before\": <number>}. Include pair_id on every object so the answers can be matched up. No explanation, no markdown.",
+   "max_tokens": 128000
+  },
+  {
+   "cell": "semantic__sentence",
+   "game": "H",
+   "unit": "pool_000-w0-c020",
+   "prompt": "Each item below is a PAIR of text fragments taken from a collection of documents that were split up and mixed together.\n\nFor each pair, judge two things independently:\n  same   - the probability the two fragments came from the SAME document, from 0.0 to 1.0\n  before - ASSUMING they are from the same document, the probability that A appeared BEFORE B in it, from 0.0 to 1.0\n\npair_id 1\n  A: A 35-year-old woman, gravida 2, para 1, with monochorionic diamniotic twin pregnancy, was referred to our fetal medicine center at 18 weeks of gestation for stage II TTTS.\n  B: All fetoscopic procedures were performed by the same experienced physician in fetal medicine.\n\npair_id 2\n  A: Fetoscopic laser surgery was performed using a 1.3-mm fetoscope (Storz, Germany) and a 400-\u03bcm Nd-YAG laser fiber (Dornier MedTech, Germany) via an 8-Fr cannula.\n  B: All fetoscopic procedures were performed by the same experienced physician in fetal medicine.\n\npair_id 3\n  A: Skin punch biopsy revealed increased scattered interstitial spindle cells (Fig 2, A) with strong diffuse CD34 expression (Fig 2, B).\n  B: Microscopic findings showed diffuse alveolar hemorrhage and pulmonary edema (Fig. 1).\n\npair_id 4\n  A: The infiltrative mass in the posterior body of the uterus displaced the endometrium anteriorly (Fig. 3).\n  B: The endometrial canal, containing air from a recent biopsy, was displaced anteriorly by posterior myometrial invasion measuring 5.2 \u00d7 3.6 \u00d7 4.1 cm (Fig. 1).\n\npair_id 5\n  A: The infiltrative mass in the posterior body of the uterus displaced the endometrium anteriorly (Fig. 3).\n  B: Scattered tingible body macrophages were present, producing a characteristic starry-sky appearance (Fig.\n\npair_id 6\n  A: She was from a rural area in Maranh\u00e3o, a state of autochthonous OROV transmission located near the Brazilian Amazon region, and denied recent travel.\n  B: She had a history of ischemic heart disease (IHD) and was on a beta-blocker and clopidogrel oral medications.\n\npair_id 7\n  A: The patient had a hemodynamic worsening, and subsequently died.\n  B: She had a history of ischemic heart disease (IHD) and was on a beta-blocker and clopidogrel oral medications.\n\npair_id 8\n  A: No cystic change or tumor necrosis was identified.\n  B: The dermis was fibrotic, and increased interstitial mucin was identified (Fig 2, C), leading to a diagnosis of localized lichen myxedematosus.\n\npair_id 9\n  A: No cystic change or tumor necrosis was identified.\n  B: No lymphadenopathy was appreciated on exam.\n\npair_id 10\n  A: Her family history was notable for melanoma in her father.\n  B: Furthermore, the individual denied any use of tobacco, alcohol, recreational drugs, or any relevant psychosocial history.\n\npair_id 11\n  A: Furthermore, the individual denied any use of tobacco, alcohol, recreational drugs, or any relevant psychosocial history.\n  B: She was from a rural area in Maranh\u00e3o, a state of autochthonous OROV transmission located near the Brazilian Amazon region, and denied recent travel.\n\npair_id 12\n  A: Furthermore, the individual denied any use of tobacco, alcohol, recreational drugs, or any relevant psychosocial history.\n  B: Surgical history included cholecystectomy and hysterectomy.\n\npair_id 13\n  A: The dermis was fibrotic, and increased interstitial mucin was identified (Fig 2, C), leading to a diagnosis of localized lichen myxedematosus.\n  B: Skin punch biopsy revealed increased scattered interstitial spindle cells (Fig 2, A) with strong diffuse CD34 expression (Fig 2, B).\n\npair_id 14\n  A: The clinical examination revealed that the vital signs were within normal limits.\n  B: Blood preparation and repeat EGD within 24\u201348 h were recommended.\n\npair_id 15\n  A: An 89-year-old woman (G5P5), menopausal since age 48, presented with one month of heavy vaginal bleeding, saturating approximately 10 pads per day.\n  B: Blood preparation and repeat EGD within 24\u201348 h were recommended.\n\npair_id 16\n  A: Because of concern for possible fetal compromise, fetoscopic release of amniotic bands was performed at 23 weeks by one-trocar approach.\n  B: Most remaining floating amniotic bands were released indirectly by dissecting them away from the umbilical cord using scissors.\n\npair_id 17\n  A: However, 4 weeks postoperatively (at 22 + 5 weeks of gestation), ultrasound revealed amniotic bands encircling the recipient twin, with marked constriction at the abdominal level (Figure 1).\n  B: Most remaining floating amniotic bands were released indirectly by dissecting them away from the umbilical cord using scissors.\n\npair_id 18\n  A: Samples were collected for reverse transcriptase polymerase chain reaction testing for arboviruses and respiratory viruses.\n  B: Her family history was notable for melanoma in her father.\n\npair_id 19\n  A: Her family history was notable for melanoma in her father.\n  B: Surgical history included cholecystectomy and hysterectomy.\n\npair_id 20\n  A: Symptoms such as anorexia, nausea, vomiting, pain, or weight loss were notable absences.\n  B: Her family history was notable for melanoma in her father.\n\nReturn ONLY a JSON array of 20 objects, each {\"pair_id\": <the number shown above>, \"same\": <number>, \"before\": <number>}. Include pair_id on every object so the answers can be matched up. No explanation, no markdown.",
+   "max_tokens": 128000
+  },
+  {
+   "cell": "semantic__sentence",
+   "game": "H",
+   "unit": "pool_000-w0-c021",
+   "prompt": "Each item below is a PAIR of text fragments taken from a collection of documents that were split up and mixed together.\n\nFor each pair, judge two things independently:\n  same   - the probability the two fragments came from the SAME document, from 0.0 to 1.0\n  before - ASSUMING they are from the same document, the probability that A appeared BEFORE B in it, from 0.0 to 1.0\n\npair_id 1\n  A: At 34 + 6 weeks\u2019 gestation, preterm premature rupture of membranes (PPROM) occurred, and an emergency cesarean delivery was performed..\n  B: An amnioinfusion of saline solution was performed to improve visualization during the procedure.\n\npair_id 2\n  A: Samples were collected for reverse transcriptase polymerase chain reaction testing for arboviruses and respiratory viruses.\n  B: Birth weights were 2,260 g for the recipient twin and 2,090 g for the donor twin..\n\npair_id 3\n  A: Intraoperatively, the small bowel was dilated due to terminal ileal obstruction from a compressing adhesive band arising from a previous hysterectomy.\n  B: Subsequently, a computed tomography (CT) scan of the abdomen with oral and intravenous contrast demonstrated multiple dilated small bowel loops with a distal ileal transition point in the pelvis, mild terminal ileal wall thickening, and mild ascites, without definite evidence of bowel ischemia, suggestive of adhesive SBO (Fig. 2).\n\npair_id 4\n  A: Subsequently, a computed tomography (CT) scan of the abdomen with oral and intravenous contrast demonstrated multiple dilated small bowel loops with a distal ileal transition point in the pelvis, mild terminal ileal wall thickening, and mild ascites, without definite evidence of bowel ischemia, suggestive of adhesive SBO (Fig. 2).\n  B: Following an unrevealing PET/CT scan, the patient was diagnosed with primary cutaneous follicle center B-cell lymphoma, stage T1aN0M0, involving 1% to 2% of body surface area.\n\npair_id 5\n  A: The patient had a hemodynamic worsening, and subsequently died.\n  B: Subsequently, a computed tomography (CT) scan of the abdomen with oral and intravenous contrast demonstrated multiple dilated small bowel loops with a distal ileal transition point in the pelvis, mild terminal ileal wall thickening, and mild ascites, without definite evidence of bowel ischemia, suggestive of adhesive SBO (Fig. 2).\n\npair_id 6\n  A: She was from a rural area in Maranh\u00e3o, a state of autochthonous OROV transmission located near the Brazilian Amazon region, and denied recent travel.\n  B: Intraoperatively, the small bowel was dilated due to terminal ileal obstruction from a compressing adhesive band arising from a previous hysterectomy.\n\npair_id 7\n  A: Intraoperatively, the small bowel was dilated due to terminal ileal obstruction from a compressing adhesive band arising from a previous hysterectomy.\n  B: Surgical history included cholecystectomy and hysterectomy.\n\npair_id 8\n  A: The patient remained in the intensive care unit for the first 3 days due to hypotension requiring noradrenaline support.\n  B: Intraoperatively, the small bowel was dilated due to terminal ileal obstruction from a compressing adhesive band arising from a previous hysterectomy.\n\npair_id 9\n  A: The patient also expressed concern about fertility and the potential genetic implications of epidermolytic hyperkeratosis.\n  B: Because of concern for possible fetal compromise, fetoscopic release of amniotic bands was performed at 23 weeks by one-trocar approach.\n\npair_id 10\n  A: The patient also expressed concern about fertility and the potential genetic implications of epidermolytic hyperkeratosis.\n  B: Given the patient\u2019s concern about progression and desire to avoid vulvar biopsy, a punch biopsy was obtained from a lesion on the left axilla.\n\npair_id 11\n  A: Importantly, the biopsy demonstrated epidermolytic alteration with coarse keratohyalin granules and vacuolar degeneration of keratinocytes without suprabasal acantholysis or the dyskeratotic corps ronds and grains characteristic of Darier disease, supporting EHK over focal acantholytic dyskeratosis as the underlying pattern.\n  B: The patient also expressed concern about fertility and the potential genetic implications of epidermolytic hyperkeratosis.\n\npair_id 12\n  A: Skin punch biopsy revealed increased scattered interstitial spindle cells (Fig 2, A) with strong diffuse CD34 expression (Fig 2, B).\n  B: Following a 22-m drug holiday, the patient returned to clinic with a firm, pink, arcuate nodule with fine telangiectasias on the left medial clavicle (Fig 3, A), a nontender pink to red patch with centrally located multilobular nodularity on the mid-paraspinal back (Fig 3, B), and scattered atrophic indentations on the bilateral upper extremities.\n\npair_id 13\n  A: Skin biopsy of the left medial clavicle lesion showed a nodular and diffuse dermal atypical lymphoid infiltrate manifesting disrupted germinal center architecture featuring intermediate sized lymphocytes with irregular nuclear contours, without appreciable tingible body macrophages or plasma cells (Fig 4, A).\n  B: Following a 22-m drug holiday, the patient returned to clinic with a firm, pink, arcuate nodule with fine telangiectasias on the left medial clavicle (Fig 3, A), a nontender pink to red patch with centrally located multilobular nodularity on the mid-paraspinal back (Fig 3, B), and scattered atrophic indentations on the bilateral upper extremities.\n\npair_id 14\n  A: Following a 22-m drug holiday, the patient returned to clinic with a firm, pink, arcuate nodule with fine telangiectasias on the left medial clavicle (Fig 3, A), a nontender pink to red patch with centrally located multilobular nodularity on the mid-paraspinal back (Fig 3, B), and scattered atrophic indentations on the bilateral upper extremities.\n  B: Five months later, atrophic macules developed on his anterior hips with a \u201ccigarette paper\u201d appearance (Fig 1, B).\n\npair_id 15\n  A: Following a 22-m drug holiday, the patient returned to clinic with a firm, pink, arcuate nodule with fine telangiectasias on the left medial clavicle (Fig 3, A), a nontender pink to red patch with centrally located multilobular nodularity on the mid-paraspinal back (Fig 3, B), and scattered atrophic indentations on the bilateral upper extremities.\n  B: Given the patient\u2019s concern about progression and desire to avoid vulvar biopsy, a punch biopsy was obtained from a lesion on the left axilla.\n\npair_id 16\n  A: However, 4 weeks postoperatively (at 22 + 5 weeks of gestation), ultrasound revealed amniotic bands encircling the recipient twin, with marked constriction at the abdominal level (Figure 1).\n  B: Because of concern for possible fetal compromise, fetoscopic release of amniotic bands was performed at 23 weeks by one-trocar approach.\n\npair_id 17\n  A: At 34 + 6 weeks\u2019 gestation, preterm premature rupture of membranes (PPROM) occurred, and an emergency cesarean delivery was performed..\n  B: Because of concern for possible fetal compromise, fetoscopic release of amniotic bands was performed at 23 weeks by one-trocar approach.\n\npair_id 18\n  A: Because of concern for possible fetal compromise, fetoscopic release of amniotic bands was performed at 23 weeks by one-trocar approach.\n  B: The autopsy revealed a bilateral large serosanguineous pleural effusion totaling approximately one liter.\n\npair_id 19\n  A: For the next \u223c23 m, his skin disease demonstrated marginal improvement following multiple treatments, including prednisone, hydroxychloroquine, UVA-1 phototherapy, methotrexate, isotretinoin, and mycophenolate.\n  B: Because of concern for possible fetal compromise, fetoscopic release of amniotic bands was performed at 23 weeks by one-trocar approach.\n\npair_id 20\n  A: She was from a rural area in Maranh\u00e3o, a state of autochthonous OROV transmission located near the Brazilian Amazon region, and denied recent travel.\n  B: The endometrial canal, containing air from a recent biopsy, was displaced anteriorly by posterior myometrial invasion measuring 5.2 \u00d7 3.6 \u00d7 4.1 cm (Fig. 1).\n\nReturn ONLY a JSON array of 20 objects, each {\"pair_id\": <the number shown above>, \"same\": <number>, \"before\": <number>}. Include pair_id on every object so the answers can be matched up. No explanation, no markdown.",
+   "max_tokens": 128000
+  },
+  {
+   "cell": "semantic__sentence",
+   "game": "H",
+   "unit": "pool_000-w0-c022",
+   "prompt": "Each item below is a PAIR of text fragments taken from a collection of documents that were split up and mixed together.\n\nFor each pair, judge two things independently:\n  same   - the probability the two fragments came from the SAME document, from 0.0 to 1.0\n  before - ASSUMING they are from the same document, the probability that A appeared BEFORE B in it, from 0.0 to 1.0\n\npair_id 1\n  A: The recipient presented with a residual abdominal constriction ring with skin laceration below the umbilicus (Figure 3).\n  B: However, 4 weeks postoperatively (at 22 + 5 weeks of gestation), ultrasound revealed amniotic bands encircling the recipient twin, with marked constriction at the abdominal level (Figure 1).\n\npair_id 2\n  A: The recipient presented with a residual abdominal constriction ring with skin laceration below the umbilicus (Figure 3).\n  B: The affected infant underwent surgical removal of the residual band ring and accepted a surgical repair of the abdomen by Z-plasty.\n\npair_id 3\n  A: The recipient presented with a residual abdominal constriction ring with skin laceration below the umbilicus (Figure 3).\n  B: The normal inner low\u2013T2 stromal ring and outer intermediate\u2013T2 stroma were completely replaced by abnormal, heterogeneous high T2 signal.\n\npair_id 4\n  A: The endometrial canal, containing air from a recent biopsy, was displaced anteriorly by posterior myometrial invasion measuring 5.2 \u00d7 3.6 \u00d7 4.1 cm (Fig. 1).\n  B: Additional mildly hypermetabolic mediastinal and left supraclavicular lymph nodes were present, with SUVmax values ranging from 2.5 to 3.9 (Fig.\n\npair_id 5\n  A: The endometrial canal, containing air from a recent biopsy, was displaced anteriorly by posterior myometrial invasion measuring 5.2 \u00d7 3.6 \u00d7 4.1 cm (Fig. 1).\n  B: Intraoperative antibiotic prophylaxis with 1 g cefazolin was administered intravenously.\n\npair_id 6\n  A: A 35-year-old woman, gravida 2, para 1, with monochorionic diamniotic twin pregnancy, was referred to our fetal medicine center at 18 weeks of gestation for stage II TTTS.\n  B: However, 4 weeks postoperatively (at 22 + 5 weeks of gestation), ultrasound revealed amniotic bands encircling the recipient twin, with marked constriction at the abdominal level (Figure 1).\n\npair_id 7\n  A: A 35-year-old woman, gravida 2, para 1, with monochorionic diamniotic twin pregnancy, was referred to our fetal medicine center at 18 weeks of gestation for stage II TTTS.\n  B: Birth weights were 2,260 g for the recipient twin and 2,090 g for the donor twin..\n\npair_id 8\n  A: A 35-year-old woman, gravida 2, para 1, with monochorionic diamniotic twin pregnancy, was referred to our fetal medicine center at 18 weeks of gestation for stage II TTTS.\n  B: Following an unrevealing PET/CT scan, the patient was diagnosed with primary cutaneous follicle center B-cell lymphoma, stage T1aN0M0, involving 1% to 2% of body surface area.\n\npair_id 9\n  A: A 35-year-old woman, gravida 2, para 1, with monochorionic diamniotic twin pregnancy, was referred to our fetal medicine center at 18 weeks of gestation for stage II TTTS.\n  B: At 34 + 6 weeks\u2019 gestation, preterm premature rupture of membranes (PPROM) occurred, and an emergency cesarean delivery was performed..\n\npair_id 10\n  A: An 89-year-old woman (G5P5), menopausal since age 48, presented with one month of heavy vaginal bleeding, saturating approximately 10 pads per day.\n  B: The autopsy revealed a bilateral large serosanguineous pleural effusion totaling approximately one liter.\n\npair_id 11\n  A: However, 4 weeks postoperatively (at 22 + 5 weeks of gestation), ultrasound revealed amniotic bands encircling the recipient twin, with marked constriction at the abdominal level (Figure 1).\n  B: Birth weights were 2,260 g for the recipient twin and 2,090 g for the donor twin..\n\npair_id 12\n  A: However, 4 weeks postoperatively (at 22 + 5 weeks of gestation), ultrasound revealed amniotic bands encircling the recipient twin, with marked constriction at the abdominal level (Figure 1).\n  B: At 34 + 6 weeks\u2019 gestation, preterm premature rupture of membranes (PPROM) occurred, and an emergency cesarean delivery was performed..\n\npair_id 13\n  A: The affected infant underwent surgical removal of the residual band ring and accepted a surgical repair of the abdomen by Z-plasty.\n  B: Surgical history included cholecystectomy and hysterectomy.\n\npair_id 14\n  A: Intraoperative antibiotic prophylaxis with 1 g cefazolin was administered intravenously.\n  B: Birth weights were 2,260 g for the recipient twin and 2,090 g for the donor twin..\n\npair_id 15\n  A: The lesions appeared centered on hair follicles with relative sparing of intervening skin, giving a keratosis pilaris\u2013like appearance rather than the confluent plaques seen in epidermal nevi.\n  B: The ovaries appeared normal.\n\npair_id 16\n  A: Following an unrevealing PET/CT scan, the patient was diagnosed with primary cutaneous follicle center B-cell lymphoma, stage T1aN0M0, involving 1% to 2% of body surface area.\n  B: The integrated histomorphologic and immunophenotypic profile was consistent with follicle center B-cell lymphoma, spindle cell type.\n\npair_id 17\n  A: Following an unrevealing PET/CT scan, the patient was diagnosed with primary cutaneous follicle center B-cell lymphoma, stage T1aN0M0, involving 1% to 2% of body surface area.\n  B: Over the preceding 2 years, she noted extension involving the trunk, axilla, and extremities.\n\npair_id 18\n  A: BCL2 was positive, and the Ki-67 proliferation index was approximately 95%, indicating a high proliferative rate.\n  B: The autopsy revealed a bilateral large serosanguineous pleural effusion totaling approximately one liter.\n\npair_id 19\n  A: Skin punch biopsy revealed increased scattered interstitial spindle cells (Fig 2, A) with strong diffuse CD34 expression (Fig 2, B).\n  B: Skin biopsy of the left medial clavicle lesion showed a nodular and diffuse dermal atypical lymphoid infiltrate manifesting disrupted germinal center architecture featuring intermediate sized lymphocytes with irregular nuclear contours, without appreciable tingible body macrophages or plasma cells (Fig 4, A).\n\npair_id 20\n  A: Scattered tingible body macrophages were present, producing a characteristic starry-sky appearance (Fig.\n  B: Skin punch biopsy revealed increased scattered interstitial spindle cells (Fig 2, A) with strong diffuse CD34 expression (Fig 2, B).\n\nReturn ONLY a JSON array of 20 objects, each {\"pair_id\": <the number shown above>, \"same\": <number>, \"before\": <number>}. Include pair_id on every object so the answers can be matched up. No explanation, no markdown.",
+   "max_tokens": 128000
+  },
+  {
+   "cell": "semantic__sentence",
+   "game": "H",
+   "unit": "pool_000-w0-c023",
+   "prompt": "Each item below is a PAIR of text fragments taken from a collection of documents that were split up and mixed together.\n\nFor each pair, judge two things independently:\n  same   - the probability the two fragments came from the SAME document, from 0.0 to 1.0\n  before - ASSUMING they are from the same document, the probability that A appeared BEFORE B in it, from 0.0 to 1.0\n\npair_id 1\n  A: Given the patient\u2019s concern about progression and desire to avoid vulvar biopsy, a punch biopsy was obtained from a lesion on the left axilla.\n  B: Skin punch biopsy revealed increased scattered interstitial spindle cells (Fig 2, A) with strong diffuse CD34 expression (Fig 2, B).\n\npair_id 2\n  A: Scattered tingible body macrophages were present, producing a characteristic starry-sky appearance (Fig.\n  B: Skin biopsy of the left medial clavicle lesion showed a nodular and diffuse dermal atypical lymphoid infiltrate manifesting disrupted germinal center architecture featuring intermediate sized lymphocytes with irregular nuclear contours, without appreciable tingible body macrophages or plasma cells (Fig 4, A).\n\npair_id 3\n  A: The normal inner low\u2013T2 stromal ring and outer intermediate\u2013T2 stroma were completely replaced by abnormal, heterogeneous high T2 signal.\n  B: The affected infant underwent surgical removal of the residual band ring and accepted a surgical repair of the abdomen by Z-plasty.\n\npair_id 4\n  A: Additional mildly hypermetabolic mediastinal and left supraclavicular lymph nodes were present, with SUVmax values ranging from 2.5 to 3.9 (Fig.\n  B: Scattered tingible body macrophages were present, producing a characteristic starry-sky appearance (Fig.\n\npair_id 5\n  A: Scattered tingible body macrophages were present, producing a characteristic starry-sky appearance (Fig.\n  B: Five months later, atrophic macules developed on his anterior hips with a \u201ccigarette paper\u201d appearance (Fig 1, B).\n\npair_id 6\n  A: Importantly, the biopsy demonstrated epidermolytic alteration with coarse keratohyalin granules and vacuolar degeneration of keratinocytes without suprabasal acantholysis or the dyskeratotic corps ronds and grains characteristic of Darier disease, supporting EHK over focal acantholytic dyskeratosis as the underlying pattern.\n  B: Scattered tingible body macrophages were present, producing a characteristic starry-sky appearance (Fig.\n\npair_id 7\n  A: Five months later, atrophic macules developed on his anterior hips with a \u201ccigarette paper\u201d appearance (Fig 1, B).\n  B: For the next \u223c23 m, his skin disease demonstrated marginal improvement following multiple treatments, including prednisone, hydroxychloroquine, UVA-1 phototherapy, methotrexate, isotretinoin, and mycophenolate.\n\nReturn ONLY a JSON array of 7 objects, each {\"pair_id\": <the number shown above>, \"same\": <number>, \"before\": <number>}. Include pair_id on every object so the answers can be matched up. No explanation, no markdown.",
+   "max_tokens": 128000
+  }
+ ],
+ "sidecar": {
+  "semantic-sentence__H__pool-000-w0-c000": {
+   "custom_id": "semantic-sentence__H__pool-000-w0-c000",
+   "cell": "semantic__sentence",
+   "cell_dir": "results/grid_A/semantic__sentence",
+   "game": "H",
+   "pool": "pool_000",
+   "wave": 0,
+   "chunk": 0,
+   "pairs": {
+    "1": [
+     "m_0000000",
+     "m_0000037",
+     false
+    ],
+    "2": [
+     "m_0000000",
+     "m_0000041",
+     true
+    ],
+    "3": [
+     "m_0000000",
+     "m_0000051",
+     true
+    ],
+    "4": [
+     "m_0000000",
+     "m_0000085",
+     true
+    ],
+    "5": [
+     "m_0000000",
+     "m_0000097",
+     false
+    ],
+    "6": [
+     "m_0000001",
+     "m_0000019",
+     false
+    ],
+    "7": [
+     "m_0000001",
+     "m_0000048",
+     false
+    ],
+    "8": [
+     "m_0000001",
+     "m_0000049",
+     true
+    ],
+    "9": [
+     "m_0000001",
+     "m_0000077",
+     true
+    ],
+    "10": [
+     "m_0000001",
+     "m_0000103",
+     true
+    ],
+    "11": [
+     "m_0000002",
+     "m_0000035",
+     true
+    ],
+    "12": [
+     "m_0000002",
+     "m_0000049",
+     false
+    ],
+    "13": [
+     "m_0000002",
+     "m_0000074",
+     true
+    ],
+    "14": [
+     "m_0000002",
+     "m_0000100",
+     true
+    ],
+    "15": [
+     "m_0000002",
+     "m_0000101",
+     false
+    ],
+    "16": [
+     "m_0000002",
+     "m_0000136",
+     false
+    ],
+    "17": [
+     "m_0000003",
+     "m_0000036",
+     true
+    ],
+    "18": [
+     "m_0000003",
+     "m_0000047",
+     false
+    ],
+    "19": [
+     "m_0000003",
+     "m_0000058",
+     false
+    ],
+    "20": [
+     "m_0000003",
+     "m_0000080",
+     true
+    ]
+   },
+   "prompt_sha": "8c710ef867ba1e8f",
+   "max_tokens": 128000,
+   "model": "claude-sonnet-5",
+   "cache": "results/hier/sample1/semantic__sentence/pool_000/pairs.jsonl"
+  },
+  "semantic-sentence__H__pool-000-w0-c001": {
+   "custom_id": "semantic-sentence__H__pool-000-w0-c001",
+   "cell": "semantic__sentence",
+   "cell_dir": "results/grid_A/semantic__sentence",
+   "game": "H",
+   "pool": "pool_000",
+   "wave": 0,
+   "chunk": 1,
+   "pairs": {
+    "1": [
+     "m_0000003",
+     "m_0000108",
+     false
+    ],
+    "2": [
+     "m_0000003",
+     "m_0000126",
+     false
+    ],
+    "3": [
+     "m_0000003",
+     "m_0000134",
+     true
+    ],
+    "4": [
+     "m_0000004",
+     "m_0000008",
+     true
+    ],
+    "5": [
+     "m_0000004",
+     "m_0000028",
+     false
+    ],
+    "6": [
+     "m_0000004",
+     "m_0000071",
+     true
+    ],
+    "7": [
+     "m_0000004",
+     "m_0000113",
+     true
+    ],
+    "8": [
+     "m_0000004",
+     "m_0000139",
+     true
+    ],
+    "9": [
+     "m_0000005",
+     "m_0000030",
+     false
+    ],
+    "10": [
+     "m_0000005",
+     "m_0000038",
+     false
+    ],
+    "11": [
+     "m_0000005",
+     "m_0000044",
+     false
+    ],
+    "12": [
+     "m_0000005",
+     "m_0000046",
+     false
+    ],
+    "13": [
+     "m_0000005",
+     "m_0000071",
+     false
+    ],
+    "14": [
+     "m_0000005",
+     "m_0000092",
+     false
+    ],
+    "15": [
+     "m_0000005",
+     "m_0000117",
+     true
+    ],
+    "16": [
+     "m_0000005",
+     "m_0000121",
+     false
+    ],
+    "17": [
+     "m_0000006",
+     "m_0000014",
+     false
+    ],
+    "18": [
+     "m_0000006",
+     "m_0000063",
+     false
+    ],
+    "19": [
+     "m_0000006",
+     "m_0000091",
+     false
+    ],
+    "20": [
+     "m_0000006",
+     "m_0000130",
+     false
+    ]
+   },
+   "prompt_sha": "5ad60b955c2d2d89",
+   "max_tokens": 128000,
+   "model": "claude-sonnet-5",
+   "cache": "results/hier/sample1/semantic__sentence/pool_000/pairs.jsonl"
+  },
+  "semantic-sentence__H__pool-000-w0-c002": {
+   "custom_id": "semantic-sentence__H__pool-000-w0-c002",
+   "cell": "semantic__sentence",
+   "cell_dir": "results/grid_A/semantic__sentence",
+   "game": "H",
+   "pool": "pool_000",
+   "wave": 0,
+   "chunk": 2,
+   "pairs": {
+    "1": [
+     "m_0000006",
+     "m_0000139",
+     false
+    ],
+    "2": [
+     "m_0000007",
+     "m_0000008",
+     true
+    ],
+    "3": [
+     "m_0000007",
+     "m_0000024",
+     true
+    ],
+    "4": [
+     "m_0000007",
+     "m_0000056",
+     true
+    ],
+    "5": [
+     "m_0000007",
+     "m_0000065",
+     true
+    ],
+    "6": [
+     "m_0000007",
+     "m_0000070",
+     true
+    ],
+    "7": [
+     "m_0000007",
+     "m_0000086",
+     true
+    ],
+    "8": [
+     "m_0000007",
+     "m_0000088",
+     true
+    ],
+    "9": [
+     "m_0000007",
+     "m_0000090",
+     false
+    ],
+    "10": [
+     "m_0000007",
+     "m_0000113",
+     true
+    ],
+    "11": [
+     "m_0000007",
+     "m_0000125",
+     true
+    ],
+    "12": [
+     "m_0000007",
+     "m_0000130",
+     true
+    ],
+    "13": [
+     "m_0000007",
+     "m_0000137",
+     true
+    ],
+    "14": [
+     "m_0000008",
+     "m_0000048",
+     false
+    ],
+    "15": [
+     "m_0000008",
+     "m_0000070",
+     false
+    ],
+    "16": [
+     "m_0000008",
+     "m_0000085",
+     false
+    ],
+    "17": [
+     "m_0000008",
+     "m_0000102",
+     true
+    ],
+    "18": [
+     "m_0000008",
+     "m_0000140",
+     false
+    ],
+    "19": [
+     "m_0000009",
+     "m_0000014",
+     true
+    ],
+    "20": [
+     "m_0000009",
+     "m_0000017",
+     true
+    ]
+   },
+   "prompt_sha": "c7ea8a2b3f64c166",
+   "max_tokens": 128000,
+   "model": "claude-sonnet-5",
+   "cache": "results/hier/sample1/semantic__sentence/pool_000/pairs.jsonl"
+  },
+  "semantic-sentence__H__pool-000-w0-c003": {
+   "custom_id": "semantic-sentence__H__pool-000-w0-c003",
+   "cell": "semantic__sentence",
+   "cell_dir": "results/grid_A/semantic__sentence",
+   "game": "H",
+   "pool": "pool_000",
+   "wave": 0,
+   "chunk": 3,
+   "pairs": {
+    "1": [
+     "m_0000009",
+     "m_0000029",
+     false
+    ],
+    "2": [
+     "m_0000009",
+     "m_0000050",
+     false
+    ],
+    "3": [
+     "m_0000009",
+     "m_0000072",
+     false
+    ],
+    "4": [
+     "m_0000009",
+     "m_0000081",
+     false
+    ],
+    "5": [
+     "m_0000009",
+     "m_0000082",
+     false
+    ],
+    "6": [
+     "m_0000009",
+     "m_0000089",
+     false
+    ],
+    "7": [
+     "m_0000009",
+     "m_0000109",
+     true
+    ],
+    "8": [
+     "m_0000009",
+     "m_0000111",
+     true
+    ],
+    "9": [
+     "m_0000010",
+     "m_0000031",
+     true
+    ],
+    "10": [
+     "m_0000010",
+     "m_0000034",
+     true
+    ],
+    "11": [
+     "m_0000010",
+     "m_0000035",
+     true
+    ],
+    "12": [
+     "m_0000010",
+     "m_0000043",
+     false
+    ],
+    "13": [
+     "m_0000010",
+     "m_0000061",
+     false
+    ],
+    "14": [
+     "m_0000010",
+     "m_0000062",
+     true
+    ],
+    "15": [
+     "m_0000010",
+     "m_0000118",
+     false
+    ],
+    "16": [
+     "m_0000010",
+     "m_0000127",
+     true
+    ],
+    "17": [
+     "m_0000010",
+     "m_0000135",
+     false
+    ],
+    "18": [
+     "m_0000011",
+     "m_0000039",
+     true
+    ],
+    "19": [
+     "m_0000011",
+     "m_0000054",
+     true
+    ],
+    "20": [
+     "m_0000011",
+     "m_0000062",
+     true
+    ]
+   },
+   "prompt_sha": "7368e71ebc736e77",
+   "max_tokens": 128000,
+   "model": "claude-sonnet-5",
+   "cache": "results/hier/sample1/semantic__sentence/pool_000/pairs.jsonl"
+  },
+  "semantic-sentence__H__pool-000-w0-c004": {
+   "custom_id": "semantic-sentence__H__pool-000-w0-c004",
+   "cell": "semantic__sentence",
+   "cell_dir": "results/grid_A/semantic__sentence",
+   "game": "H",
+   "pool": "pool_000",
+   "wave": 0,
+   "chunk": 4,
+   "pairs": {
+    "1": [
+     "m_0000011",
+     "m_0000065",
+     false
+    ],
+    "2": [
+     "m_0000011",
+     "m_0000083",
+     true
+    ],
+    "3": [
+     "m_0000011",
+     "m_0000086",
+     false
+    ],
+    "4": [
+     "m_0000011",
+     "m_0000098",
+     false
+    ],
+    "5": [
+     "m_0000012",
+     "m_0000016",
+     true
+    ],
+    "6": [
+     "m_0000012",
+     "m_0000018",
+     true
+    ],
+    "7": [
+     "m_0000012",
+     "m_0000027",
+     false
+    ],
+    "8": [
+     "m_0000012",
+     "m_0000055",
+     false
+    ],
+    "9": [
+     "m_0000012",
+     "m_0000056",
+     true
+    ],
+    "10": [
+     "m_0000012",
+     "m_0000078",
+     true
+    ],
+    "11": [
+     "m_0000012",
+     "m_0000099",
+     true
+    ],
+    "12": [
+     "m_0000012",
+     "m_0000107",
+     false
+    ],
+    "13": [
+     "m_0000012",
+     "m_0000110",
+     false
+    ],
+    "14": [
+     "m_0000012",
+     "m_0000125",
+     true
+    ],
+    "15": [
+     "m_0000013",
+     "m_0000019",
+     true
+    ],
+    "16": [
+     "m_0000013",
+     "m_0000076",
+     true
+    ],
+    "17": [
+     "m_0000013",
+     "m_0000099",
+     false
+    ],
+    "18": [
+     "m_0000013",
+     "m_0000106",
+     false
+    ],
+    "19": [
+     "m_0000013",
+     "m_0000114",
+     false
+    ],
+    "20": [
+     "m_0000013",
+     "m_0000117",
+     false
+    ]
+   },
+   "prompt_sha": "7dafdc2a95b28e5f",
+   "max_tokens": 128000,
+   "model": "claude-sonnet-5",
+   "cache": "results/hier/sample1/semantic__sentence/pool_000/pairs.jsonl"
+  },
+  "semantic-sentence__H__pool-000-w0-c005": {
+   "custom_id": "semantic-sentence__H__pool-000-w0-c005",
+   "cell": "semantic__sentence",
+   "cell_dir": "results/grid_A/semantic__sentence",
+   "game": "H",
+   "pool": "pool_000",
+   "wave": 0,
+   "chunk": 5,
+   "pairs": {
+    "1": [
+     "m_0000014",
+     "m_0000047",
+     true
+    ],
+    "2": [
+     "m_0000014",
+     "m_0000076",
+     false
+    ],
+    "3": [
+     "m_0000014",
+     "m_0000095",
+     false
+    ],
+    "4": [
+     "m_0000015",
+     "m_0000039",
+     false
+    ],
+    "5": [
+     "m_0000015",
+     "m_0000070",
+     true
+    ],
+    "6": [
+     "m_0000015",
+     "m_0000092",
+     false
+    ],
+    "7": [
+     "m_0000015",
+     "m_0000107",
+     true
+    ],
+    "8": [
+     "m_0000015",
+     "m_0000118",
+     true
+    ],
+    "9": [
+     "m_0000016",
+     "m_0000037",
+     true
+    ],
+    "10": [
+     "m_0000016",
+     "m_0000041",
+     false
+    ],
+    "11": [
+     "m_0000016",
+     "m_0000091",
+     false
+    ],
+    "12": [
+     "m_0000016",
+     "m_0000125",
+     true
+    ],
+    "13": [
+     "m_0000017",
+     "m_0000048",
+     false
+    ],
+    "14": [
+     "m_0000017",
+     "m_0000077",
+     true
+    ],
+    "15": [
+     "m_0000017",
+     "m_0000108",
+     false
+    ],
+    "16": [
+     "m_0000017",
+     "m_0000116",
+     false
+    ],
+    "17": [
+     "m_0000018",
+     "m_0000032",
+     true
+    ],
+    "18": [
+     "m_0000018",
+     "m_0000055",
+     false
+    ],
+    "19": [
+     "m_0000018",
+     "m_0000112",
+     false
+    ],
+    "20": [
+     "m_0000018",
+     "m_0000129",
+     true
+    ]
+   },
+   "prompt_sha": "0da45ffb68b7b155",
+   "max_tokens": 128000,
+   "model": "claude-sonnet-5",
+   "cache": "results/hier/sample1/semantic__sentence/pool_000/pairs.jsonl"
+  },
+  "semantic-sentence__H__pool-000-w0-c006": {
+   "custom_id": "semantic-sentence__H__pool-000-w0-c006",
+   "cell": "semantic__sentence",
+   "cell_dir": "results/grid_A/semantic__sentence",
+   "game": "H",
+   "pool": "pool_000",
+   "wave": 0,
+   "chunk": 6,
+   "pairs": {
+    "1": [
+     "m_0000019",
+     "m_0000030",
+     false
+    ],
+    "2": [
+     "m_0000019",
+     "m_0000076",
+     false
+    ],
+    "3": [
+     "m_0000019",
+     "m_0000084",
+     false
+    ],
+    "4": [
+     "m_0000019",
+     "m_0000085",
+     false
+    ],
+    "5": [
+     "m_0000019",
+     "m_0000099",
+     true
+    ],
+    "6": [
+     "m_0000020",
+     "m_0000075",
+     true
+    ],
+    "7": [
+     "m_0000020",
+     "m_0000080",
+     true
+    ],
+    "8": [
+     "m_0000020",
+     "m_0000104",
+     false
+    ],
+    "9": [
+     "m_0000020",
+     "m_0000126",
+     false
+    ],
+    "10": [
+     "m_0000020",
+     "m_0000132",
+     false
+    ],
+    "11": [
+     "m_0000020",
+     "m_0000138",
+     true
+    ],
+    "12": [
+     "m_0000021",
+     "m_0000057",
+     true
+    ],
+    "13": [
+     "m_0000021",
+     "m_0000058",
+     false
+    ],
+    "14": [
+     "m_0000021",
+     "m_0000062",
+     false
+    ],
+    "15": [
+     "m_0000021",
+     "m_0000079",
+     true
+    ],
+    "16": [
+     "m_0000021",
+     "m_0000080",
+     true
+    ],
+    "17": [
+     "m_0000021",
+     "m_0000103",
+     true
+    ],
+    "18": [
+     "m_0000022",
+     "m_0000042",
+     false
+    ],
+    "19": [
+     "m_0000022",
+     "m_0000045",
+     false
+    ],
+    "20": [
+     "m_0000022",
+     "m_0000048",
+     true
+    ]
+   },
+   "prompt_sha": "4093dbd5dc7100c4",
+   "max_tokens": 128000,
+   "model": "claude-sonnet-5",
+   "cache": "results/hier/sample1/semantic__sentence/pool_000/pairs.jsonl"
+  },
+  "semantic-sentence__H__pool-000-w0-c007": {
+   "custom_id": "semantic-sentence__H__pool-000-w0-c007",
+   "cell": "semantic__sentence",
+   "cell_dir": "results/grid_A/semantic__sentence",
+   "game": "H",
+   "pool": "pool_000",
+   "wave": 0,
+   "chunk": 7,
+   "pairs": {
+    "1": [
+     "m_0000022",
+     "m_0000051",
+     true
+    ],
+    "2": [
+     "m_0000022",
+     "m_0000128",
+     false
+    ],
+    "3": [
+     "m_0000023",
+     "m_0000040",
+     true
+    ],
+    "4": [
+     "m_0000023",
+     "m_0000056",
+     false
+    ],
+    "5": [
+     "m_0000023",
+     "m_0000078",
+     true
+    ],
+    "6": [
+     "m_0000023",
+     "m_0000132",
+     true
+    ],
+    "7": [
+     "m_0000023",
+     "m_0000137",
+     false
+    ],
+    "8": [
+     "m_0000023",
+     "m_0000138",
+     false
+    ],
+    "9": [
+     "m_0000024",
+     "m_0000108",
+     true
+    ],
+    "10": [
+     "m_0000024",
+     "m_0000119",
+     true
+    ],
+    "11": [
+     "m_0000024",
+     "m_0000122",
+     false
+    ],
+    "12": [
+     "m_0000024",
+     "m_0000138",
+     false
+    ],
+    "13": [
+     "m_0000025",
+     "m_0000027",
+     true
+    ],
+    "14": [
+     "m_0000025",
+     "m_0000031",
+     false
+    ],
+    "15": [
+     "m_0000025",
+     "m_0000076",
+     true
+    ],
+    "16": [
+     "m_0000025",
+     "m_0000079",
+     true
+    ],
+    "17": [
+     "m_0000025",
+     "m_0000129",
+     true
+    ],
+    "18": [
+     "m_0000026",
+     "m_0000059",
+     false
+    ],
+    "19": [
+     "m_0000026",
+     "m_0000079",
+     true
+    ],
+    "20": [
+     "m_0000026",
+     "m_0000090",
+     true
+    ]
+   },
+   "prompt_sha": "0541f4be5c561a87",
+   "max_tokens": 128000,
+   "model": "claude-sonnet-5",
+   "cache": "results/hier/sample1/semantic__sentence/pool_000/pairs.jsonl"
+  },
+  "semantic-sentence__H__pool-000-w0-c008": {
+   "custom_id": "semantic-sentence__H__pool-000-w0-c008",
+   "cell": "semantic__sentence",
+   "cell_dir": "results/grid_A/semantic__sentence",
+   "game": "H",
+   "pool": "pool_000",
+   "wave": 0,
+   "chunk": 8,
+   "pairs": {
+    "1": [
+     "m_0000026",
+     "m_0000115",
+     true
+    ],
+    "2": [
+     "m_0000026",
+     "m_0000131",
+     false
+    ],
+    "3": [
+     "m_0000026",
+     "m_0000133",
+     true
+    ],
+    "4": [
+     "m_0000026",
+     "m_0000134",
+     false
+    ],
+    "5": [
+     "m_0000027",
+     "m_0000055",
+     false
+    ],
+    "6": [
+     "m_0000027",
+     "m_0000097",
+     true
+    ],
+    "7": [
+     "m_0000027",
+     "m_0000113",
+     true
+    ],
+    "8": [
+     "m_0000027",
+     "m_0000129",
+     false
+    ],
+    "9": [
+     "m_0000028",
+     "m_0000051",
+     true
+    ],
+    "10": [
+     "m_0000028",
+     "m_0000071",
+     true
+    ],
+    "11": [
+     "m_0000028",
+     "m_0000102",
+     false
+    ],
+    "12": [
+     "m_0000028",
+     "m_0000139",
+     false
+    ],
+    "13": [
+     "m_0000029",
+     "m_0000047",
+     true
+    ],
+    "14": [
+     "m_0000029",
+     "m_0000068",
+     false
+    ],
+    "15": [
+     "m_0000029",
+     "m_0000072",
+     false
+    ],
+    "16": [
+     "m_0000029",
+     "m_0000096",
+     true
+    ],
+    "17": [
+     "m_0000029",
+     "m_0000107",
+     true
+    ],
+    "18": [
+     "m_0000029",
+     "m_0000111",
+     true
+    ],
+    "19": [
+     "m_0000029",
+     "m_0000123",
+     true
+    ],
+    "20": [
+     "m_0000030",
+     "m_0000079",
+     true
+    ]
+   },
+   "prompt_sha": "b619a25f078625c1",
+   "max_tokens": 128000,
+   "model": "claude-sonnet-5",
+   "cache": "results/hier/sample1/semantic__sentence/pool_000/pairs.jsonl"
+  },
+  "semantic-sentence__H__pool-000-w0-c009": {
+   "custom_id": "semantic-sentence__H__pool-000-w0-c009",
+   "cell": "semantic__sentence",
+   "cell_dir": "results/grid_A/semantic__sentence",
+   "game": "H",
+   "pool": "pool_000",
+   "wave": 0,
+   "chunk": 9,
+   "pairs": {
+    "1": [
+     "m_0000030",
+     "m_0000092",
+     false
+    ],
+    "2": [
+     "m_0000030",
+     "m_0000094",
+     false
+    ],
+    "3": [
+     "m_0000031",
+     "m_0000043",
+     false
+    ],
+    "4": [
+     "m_0000031",
+     "m_0000072",
+     true
+    ],
+    "5": [
+     "m_0000031",
+     "m_0000088",
+     true
+    ],
+    "6": [
+     "m_0000031",
+     "m_0000109",
+     true
+    ],
+    "7": [
+     "m_0000032",
+     "m_0000044",
+     false
+    ],
+    "8": [
+     "m_0000032",
+     "m_0000049",
+     true
+    ],
+    "9": [
+     "m_0000032",
+     "m_0000108",
+     true
+    ],
+    "10": [
+     "m_0000032",
+     "m_0000112",
+     true
+    ],
+    "11": [
+     "m_0000033",
+     "m_0000047",
+     true
+    ],
+    "12": [
+     "m_0000033",
+     "m_0000057",
+     true
+    ],
+    "13": [
+     "m_0000033",
+     "m_0000073",
+     true
+    ],
+    "14": [
+     "m_0000033",
+     "m_0000093",
+     false
+    ],
+    "15": [
+     "m_0000033",
+     "m_0000109",
+     true
+    ],
+    "16": [
+     "m_0000034",
+     "m_0000062",
+     false
+    ],
+    "17": [
+     "m_0000034",
+     "m_0000077",
+     false
+    ],
+    "18": [
+     "m_0000034",
+     "m_0000107",
+     true
+    ],
+    "19": [
+     "m_0000034",
+     "m_0000111",
+     false
+    ],
+    "20": [
+     "m_0000035",
+     "m_0000061",
+     false
+    ]
+   },
+   "prompt_sha": "60d85f9ddb9d4391",
+   "max_tokens": 128000,
+   "model": "claude-sonnet-5",
+   "cache": "results/hier/sample1/semantic__sentence/pool_000/pairs.jsonl"
+  },
+  "semantic-sentence__H__pool-000-w0-c010": {
+   "custom_id": "semantic-sentence__H__pool-000-w0-c010",
+   "cell": "semantic__sentence",
+   "cell_dir": "results/grid_A/semantic__sentence",
+   "game": "H",
+   "pool": "pool_000",
+   "wave": 0,
+   "chunk": 10,
+   "pairs": {
+    "1": [
+     "m_0000035",
+     "m_0000062",
+     false
+    ],
+    "2": [
+     "m_0000035",
+     "m_0000069",
+     false
+    ],
+    "3": [
+     "m_0000036",
+     "m_0000052",
+     false
+    ],
+    "4": [
+     "m_0000036",
+     "m_0000059",
+     true
+    ],
+    "5": [
+     "m_0000036",
+     "m_0000090",
+     true
+    ],
+    "6": [
+     "m_0000036",
+     "m_0000116",
+     true
+    ],
+    "7": [
+     "m_0000036",
+     "m_0000134",
+     true
+    ],
+    "8": [
+     "m_0000037",
+     "m_0000041",
+     true
+    ],
+    "9": [
+     "m_0000037",
+     "m_0000067",
+     true
+    ],
+    "10": [
+     "m_0000037",
+     "m_0000075",
+     false
+    ],
+    "11": [
+     "m_0000037",
+     "m_0000097",
+     true
+    ],
+    "12": [
+     "m_0000037",
+     "m_0000125",
+     false
+    ],
+    "13": [
+     "m_0000038",
+     "m_0000044",
+     true
+    ],
+    "14": [
+     "m_0000038",
+     "m_0000045",
+     true
+    ],
+    "15": [
+     "m_0000038",
+     "m_0000119",
+     false
+    ],
+    "16": [
+     "m_0000038",
+     "m_0000121",
+     false
+    ],
+    "17": [
+     "m_0000039",
+     "m_0000107",
+     false
+    ],
+    "18": [
+     "m_0000039",
+     "m_0000135",
+     false
+    ],
+    "19": [
+     "m_0000039",
+     "m_0000136",
+     true
+    ],
+    "20": [
+     "m_0000040",
+     "m_0000088",
+     true
+    ]
+   },
+   "prompt_sha": "9cbc0a51c78fd88f",
+   "max_tokens": 128000,
+   "model": "claude-sonnet-5",
+   "cache": "results/hier/sample1/semantic__sentence/pool_000/pairs.jsonl"
+  },
+  "semantic-sentence__H__pool-000-w0-c011": {
+   "custom_id": "semantic-sentence__H__pool-000-w0-c011",
+   "cell": "semantic__sentence",
+   "cell_dir": "results/grid_A/semantic__sentence",
+   "game": "H",
+   "pool": "pool_000",
+   "wave": 0,
+   "chunk": 11,
+   "pairs": {
+    "1": [
+     "m_0000040",
+     "m_0000089",
+     false
+    ],
+    "2": [
+     "m_0000040",
+     "m_0000138",
+     false
+    ],
+    "3": [
+     "m_0000040",
+     "m_0000140",
+     false
+    ],
+    "4": [
+     "m_0000041",
+     "m_0000091",
+     false
+    ],
+    "5": [
+     "m_0000041",
+     "m_0000097",
+     true
+    ],
+    "6": [
+     "m_0000041",
+     "m_0000120",
+     false
+    ],
+    "7": [
+     "m_0000042",
+     "m_0000045",
+     false
+    ],
+    "8": [
+     "m_0000042",
+     "m_0000048",
+     false
+    ],
+    "9": [
+     "m_0000042",
+     "m_0000117",
+     true
+    ],
+    "10": [
+     "m_0000042",
+     "m_0000122",
+     false
+    ],
+    "11": [
+     "m_0000043",
+     "m_0000053",
+     true
+    ],
+    "12": [
+     "m_0000043",
+     "m_0000072",
+     true
+    ],
+    "13": [
+     "m_0000043",
+     "m_0000109",
+     false
+    ],
+    "14": [
+     "m_0000043",
+     "m_0000128",
+     false
+    ],
+    "15": [
+     "m_0000044",
+     "m_0000046",
+     true
+    ],
+    "16": [
+     "m_0000044",
+     "m_0000066",
+     true
+    ],
+    "17": [
+     "m_0000044",
+     "m_0000087",
+     false
+    ],
+    "18": [
+     "m_0000044",
+     "m_0000119",
+     true
+    ],
+    "19": [
+     "m_0000044",
+     "m_0000121",
+     false
+    ],
+    "20": [
+     "m_0000044",
+     "m_0000122",
+     false
+    ]
+   },
+   "prompt_sha": "2888db159f967c7b",
+   "max_tokens": 128000,
+   "model": "claude-sonnet-5",
+   "cache": "results/hier/sample1/semantic__sentence/pool_000/pairs.jsonl"
+  },
+  "semantic-sentence__H__pool-000-w0-c012": {
+   "custom_id": "semantic-sentence__H__pool-000-w0-c012",
+   "cell": "semantic__sentence",
+   "cell_dir": "results/grid_A/semantic__sentence",
+   "game": "H",
+   "pool": "pool_000",
+   "wave": 0,
+   "chunk": 12,
+   "pairs": {
+    "1": [
+     "m_0000044",
+     "m_0000133",
+     true
+    ],
+    "2": [
+     "m_0000045",
+     "m_0000046",
+     false
+    ],
+    "3": [
+     "m_0000045",
+     "m_0000102",
+     false
+    ],
+    "4": [
+     "m_0000045",
+     "m_0000119",
+     false
+    ],
+    "5": [
+     "m_0000045",
+     "m_0000122",
+     true
+    ],
+    "6": [
+     "m_0000046",
+     "m_0000089",
+     false
+    ],
+    "7": [
+     "m_0000046",
+     "m_0000116",
+     true
+    ],
+    "8": [
+     "m_0000046",
+     "m_0000119",
+     true
+    ],
+    "9": [
+     "m_0000046",
+     "m_0000121",
+     false
+    ],
+    "10": [
+     "m_0000046",
+     "m_0000122",
+     true
+    ],
+    "11": [
+     "m_0000047",
+     "m_0000059",
+     true
+    ],
+    "12": [
+     "m_0000047",
+     "m_0000067",
+     false
+    ],
+    "13": [
+     "m_0000047",
+     "m_0000073",
+     true
+    ],
+    "14": [
+     "m_0000047",
+     "m_0000081",
+     true
+    ],
+    "15": [
+     "m_0000047",
+     "m_0000083",
+     false
+    ],
+    "16": [
+     "m_0000047",
+     "m_0000114",
+     false
+    ],
+    "17": [
+     "m_0000048",
+     "m_0000094",
+     true
+    ],
+    "18": [
+     "m_0000048",
+     "m_0000102",
+     true
+    ],
+    "19": [
+     "m_0000048",
+     "m_0000130",
+     true
+    ],
+    "20": [
+     "m_0000048",
+     "m_0000140",
+     false
+    ]
+   },
+   "prompt_sha": "09a49e829f6e526d",
+   "max_tokens": 128000,
+   "model": "claude-sonnet-5",
+   "cache": "results/hier/sample1/semantic__sentence/pool_000/pairs.jsonl"
+  },
+  "semantic-sentence__H__pool-000-w0-c013": {
+   "custom_id": "semantic-sentence__H__pool-000-w0-c013",
+   "cell": "semantic__sentence",
+   "cell_dir": "results/grid_A/semantic__sentence",
+   "game": "H",
+   "pool": "pool_000",
+   "wave": 0,
+   "chunk": 13,
+   "pairs": {
+    "1": [
+     "m_0000049",
+     "m_0000062",
+     false
+    ],
+    "2": [
+     "m_0000049",
+     "m_0000103",
+     false
+    ],
+    "3": [
+     "m_0000049",
+     "m_0000112",
+     true
+    ],
+    "4": [
+     "m_0000050",
+     "m_0000055",
+     true
+    ],
+    "5": [
+     "m_0000050",
+     "m_0000063",
+     false
+    ],
+    "6": [
+     "m_0000050",
+     "m_0000075",
+     false
+    ],
+    "7": [
+     "m_0000050",
+     "m_0000097",
+     false
+    ],
+    "8": [
+     "m_0000051",
+     "m_0000056",
+     false
+    ],
+    "9": [
+     "m_0000051",
+     "m_0000093",
+     false
+    ],
+    "10": [
+     "m_0000051",
+     "m_0000097",
+     true
+    ],
+    "11": [
+     "m_0000051",
+     "m_0000112",
+     false
+    ],
+    "12": [
+     "m_0000051",
+     "m_0000123",
+     true
+    ],
+    "13": [
+     "m_0000051",
+     "m_0000128",
+     false
+    ],
+    "14": [
+     "m_0000052",
+     "m_0000059",
+     false
+    ],
+    "15": [
+     "m_0000052",
+     "m_0000064",
+     true
+    ],
+    "16": [
+     "m_0000052",
+     "m_0000067",
+     true
+    ],
+    "17": [
+     "m_0000052",
+     "m_0000068",
+     true
+    ],
+    "18": [
+     "m_0000052",
+     "m_0000084",
+     false
+    ],
+    "19": [
+     "m_0000052",
+     "m_0000087",
+     true
+    ],
+    "20": [
+     "m_0000052",
+     "m_0000100",
+     false
+    ]
+   },
+   "prompt_sha": "91bff0769441cbe8",
+   "max_tokens": 128000,
+   "model": "claude-sonnet-5",
+   "cache": "results/hier/sample1/semantic__sentence/pool_000/pairs.jsonl"
+  },
+  "semantic-sentence__H__pool-000-w0-c014": {
+   "custom_id": "semantic-sentence__H__pool-000-w0-c014",
+   "cell": "semantic__sentence",
+   "cell_dir": "results/grid_A/semantic__sentence",
+   "game": "H",
+   "pool": "pool_000",
+   "wave": 0,
+   "chunk": 14,
+   "pairs": {
+    "1": [
+     "m_0000052",
+     "m_0000108",
+     false
+    ],
+    "2": [
+     "m_0000052",
+     "m_0000110",
+     true
+    ],
+    "3": [
+     "m_0000052",
+     "m_0000116",
+     false
+    ],
+    "4": [
+     "m_0000053",
+     "m_0000082",
+     true
+    ],
+    "5": [
+     "m_0000053",
+     "m_0000089",
+     true
+    ],
+    "6": [
+     "m_0000053",
+     "m_0000092",
+     false
+    ],
+    "7": [
+     "m_0000053",
+     "m_0000128",
+     false
+    ],
+    "8": [
+     "m_0000054",
+     "m_0000063",
+     true
+    ],
+    "9": [
+     "m_0000054",
+     "m_0000072",
+     true
+    ],
+    "10": [
+     "m_0000054",
+     "m_0000096",
+     true
+    ],
+    "11": [
+     "m_0000054",
+     "m_0000098",
+     true
+    ],
+    "12": [
+     "m_0000054",
+     "m_0000105",
+     false
+    ],
+    "13": [
+     "m_0000054",
+     "m_0000120",
+     false
+    ],
+    "14": [
+     "m_0000055",
+     "m_0000056",
+     true
+    ],
+    "15": [
+     "m_0000055",
+     "m_0000078",
+     false
+    ],
+    "16": [
+     "m_0000055",
+     "m_0000110",
+     false
+    ],
+    "17": [
+     "m_0000056",
+     "m_0000067",
+     true
+    ],
+    "18": [
+     "m_0000056",
+     "m_0000078",
+     true
+    ],
+    "19": [
+     "m_0000056",
+     "m_0000101",
+     true
+    ],
+    "20": [
+     "m_0000056",
+     "m_0000109",
+     false
+    ]
+   },
+   "prompt_sha": "6c6663b34a3fed19",
+   "max_tokens": 128000,
+   "model": "claude-sonnet-5",
+   "cache": "results/hier/sample1/semantic__sentence/pool_000/pairs.jsonl"
+  },
+  "semantic-sentence__H__pool-000-w0-c015": {
+   "custom_id": "semantic-sentence__H__pool-000-w0-c015",
+   "cell": "semantic__sentence",
+   "cell_dir": "results/grid_A/semantic__sentence",
+   "game": "H",
+   "pool": "pool_000",
+   "wave": 0,
+   "chunk": 15,
+   "pairs": {
+    "1": [
+     "m_0000056",
+     "m_0000136",
+     false
+    ],
+    "2": [
+     "m_0000056",
+     "m_0000137",
+     false
+    ],
+    "3": [
+     "m_0000057",
+     "m_0000073",
+     false
+    ],
+    "4": [
+     "m_0000057",
+     "m_0000095",
+     false
+    ],
+    "5": [
+     "m_0000057",
+     "m_0000103",
+     true
+    ],
+    "6": [
+     "m_0000057",
+     "m_0000111",
+     true
+    ],
+    "7": [
+     "m_0000057",
+     "m_0000139",
+     true
+    ],
+    "8": [
+     "m_0000058",
+     "m_0000066",
+     false
+    ],
+    "9": [
+     "m_0000058",
+     "m_0000071",
+     false
+    ],
+    "10": [
+     "m_0000058",
+     "m_0000131",
+     false
+    ],
+    "11": [
+     "m_0000058",
+     "m_0000134",
+     false
+    ],
+    "12": [
+     "m_0000059",
+     "m_0000074",
+     true
+    ],
+    "13": [
+     "m_0000059",
+     "m_0000132",
+     true
+    ],
+    "14": [
+     "m_0000060",
+     "m_0000073",
+     true
+    ],
+    "15": [
+     "m_0000060",
+     "m_0000084",
+     false
+    ],
+    "16": [
+     "m_0000060",
+     "m_0000107",
+     false
+    ],
+    "17": [
+     "m_0000060",
+     "m_0000108",
+     true
+    ],
+    "18": [
+     "m_0000060",
+     "m_0000115",
+     false
+    ],
+    "19": [
+     "m_0000060",
+     "m_0000126",
+     true
+    ],
+    "20": [
+     "m_0000061",
+     "m_0000062",
+     false
+    ]
+   },
+   "prompt_sha": "d22e4378809cd4f6",
+   "max_tokens": 128000,
+   "model": "claude-sonnet-5",
+   "cache": "results/hier/sample1/semantic__sentence/pool_000/pairs.jsonl"
+  },
+  "semantic-sentence__H__pool-000-w0-c016": {
+   "custom_id": "semantic-sentence__H__pool-000-w0-c016",
+   "cell": "semantic__sentence",
+   "cell_dir": "results/grid_A/semantic__sentence",
+   "game": "H",
+   "pool": "pool_000",
+   "wave": 0,
+   "chunk": 16,
+   "pairs": {
+    "1": [
+     "m_0000061",
+     "m_0000069",
+     false
+    ],
+    "2": [
+     "m_0000061",
+     "m_0000070",
+     false
+    ],
+    "3": [
+     "m_0000061",
+     "m_0000092",
+     false
+    ],
+    "4": [
+     "m_0000061",
+     "m_0000118",
+     false
+    ],
+    "5": [
+     "m_0000062",
+     "m_0000064",
+     true
+    ],
+    "6": [
+     "m_0000062",
+     "m_0000092",
+     false
+    ],
+    "7": [
+     "m_0000062",
+     "m_0000103",
+     true
+    ],
+    "8": [
+     "m_0000062",
+     "m_0000118",
+     false
+    ],
+    "9": [
+     "m_0000063",
+     "m_0000065",
+     false
+    ],
+    "10": [
+     "m_0000063",
+     "m_0000070",
+     false
+    ],
+    "11": [
+     "m_0000063",
+     "m_0000092",
+     false
+    ],
+    "12": [
+     "m_0000063",
+     "m_0000110",
+     true
+    ],
+    "13": [
+     "m_0000064",
+     "m_0000107",
+     false
+    ],
+    "14": [
+     "m_0000064",
+     "m_0000120",
+     true
+    ],
+    "15": [
+     "m_0000064",
+     "m_0000123",
+     false
+    ],
+    "16": [
+     "m_0000065",
+     "m_0000086",
+     false
+    ],
+    "17": [
+     "m_0000065",
+     "m_0000098",
+     true
+    ],
+    "18": [
+     "m_0000066",
+     "m_0000087",
+     false
+    ],
+    "19": [
+     "m_0000066",
+     "m_0000120",
+     true
+    ],
+    "20": [
+     "m_0000066",
+     "m_0000134",
+     true
+    ]
+   },
+   "prompt_sha": "3233ac89e4979af4",
+   "max_tokens": 128000,
+   "model": "claude-sonnet-5",
+   "cache": "results/hier/sample1/semantic__sentence/pool_000/pairs.jsonl"
+  },
+  "semantic-sentence__H__pool-000-w0-c017": {
+   "custom_id": "semantic-sentence__H__pool-000-w0-c017",
+   "cell": "semantic__sentence",
+   "cell_dir": "results/grid_A/semantic__sentence",
+   "game": "H",
+   "pool": "pool_000",
+   "wave": 0,
+   "chunk": 17,
+   "pairs": {
+    "1": [
+     "m_0000067",
+     "m_0000108",
+     false
+    ],
+    "2": [
+     "m_0000068",
+     "m_0000108",
+     true
+    ],
+    "3": [
+     "m_0000068",
+     "m_0000110",
+     true
+    ],
+    "4": [
+     "m_0000068",
+     "m_0000111",
+     true
+    ],
+    "5": [
+     "m_0000069",
+     "m_0000070",
+     true
+    ],
+    "6": [
+     "m_0000069",
+     "m_0000074",
+     false
+    ],
+    "7": [
+     "m_0000069",
+     "m_0000092",
+     false
+    ],
+    "8": [
+     "m_0000070",
+     "m_0000085",
+     true
+    ],
+    "9": [
+     "m_0000070",
+     "m_0000092",
+     false
+    ],
+    "10": [
+     "m_0000070",
+     "m_0000094",
+     true
+    ],
+    "11": [
+     "m_0000070",
+     "m_0000113",
+     false
+    ],
+    "12": [
+     "m_0000070",
+     "m_0000115",
+     false
+    ],
+    "13": [
+     "m_0000070",
+     "m_0000118",
+     false
+    ],
+    "14": [
+     "m_0000070",
+     "m_0000131",
+     true
+    ],
+    "15": [
+     "m_0000071",
+     "m_0000117",
+     false
+    ],
+    "16": [
+     "m_0000072",
+     "m_0000096",
+     true
+    ],
+    "17": [
+     "m_0000072",
+     "m_0000105",
+     false
+    ],
+    "18": [
+     "m_0000072",
+     "m_0000123",
+     true
+    ],
+    "19": [
+     "m_0000073",
+     "m_0000080",
+     true
+    ],
+    "20": [
+     "m_0000073",
+     "m_0000114",
+     true
+    ]
+   },
+   "prompt_sha": "8fb6b968454b097c",
+   "max_tokens": 128000,
+   "model": "claude-sonnet-5",
+   "cache": "results/hier/sample1/semantic__sentence/pool_000/pairs.jsonl"
+  },
+  "semantic-sentence__H__pool-000-w0-c018": {
+   "custom_id": "semantic-sentence__H__pool-000-w0-c018",
+   "cell": "semantic__sentence",
+   "cell_dir": "results/grid_A/semantic__sentence",
+   "game": "H",
+   "pool": "pool_000",
+   "wave": 0,
+   "chunk": 18,
+   "pairs": {
+    "1": [
+     "m_0000074",
+     "m_0000077",
+     false
+    ],
+    "2": [
+     "m_0000074",
+     "m_0000091",
+     true
+    ],
+    "3": [
+     "m_0000074",
+     "m_0000100",
+     false
+    ],
+    "4": [
+     "m_0000074",
+     "m_0000101",
+     false
+    ],
+    "5": [
+     "m_0000075",
+     "m_0000103",
+     true
+    ],
+    "6": [
+     "m_0000075",
+     "m_0000115",
+     false
+    ],
+    "7": [
+     "m_0000075",
+     "m_0000126",
+     true
+    ],
+    "8": [
+     "m_0000076",
+     "m_0000095",
+     false
+    ],
+    "9": [
+     "m_0000076",
+     "m_0000103",
+     true
+    ],
+    "10": [
+     "m_0000076",
+     "m_0000128",
+     false
+    ],
+    "11": [
+     "m_0000077",
+     "m_0000113",
+     false
+    ],
+    "12": [
+     "m_0000077",
+     "m_0000132",
+     false
+    ],
+    "13": [
+     "m_0000078",
+     "m_0000081",
+     false
+    ],
+    "14": [
+     "m_0000078",
+     "m_0000110",
+     false
+    ],
+    "15": [
+     "m_0000079",
+     "m_0000129",
+     true
+    ],
+    "16": [
+     "m_0000080",
+     "m_0000084",
+     true
+    ],
+    "17": [
+     "m_0000080",
+     "m_0000108",
+     false
+    ],
+    "18": [
+     "m_0000080",
+     "m_0000124",
+     true
+    ],
+    "19": [
+     "m_0000080",
+     "m_0000126",
+     true
+    ],
+    "20": [
+     "m_0000080",
+     "m_0000135",
+     false
+    ]
+   },
+   "prompt_sha": "100d36df72203b79",
+   "max_tokens": 128000,
+   "model": "claude-sonnet-5",
+   "cache": "results/hier/sample1/semantic__sentence/pool_000/pairs.jsonl"
+  },
+  "semantic-sentence__H__pool-000-w0-c019": {
+   "custom_id": "semantic-sentence__H__pool-000-w0-c019",
+   "cell": "semantic__sentence",
+   "cell_dir": "results/grid_A/semantic__sentence",
+   "game": "H",
+   "pool": "pool_000",
+   "wave": 0,
+   "chunk": 19,
+   "pairs": {
+    "1": [
+     "m_0000081",
+     "m_0000083",
+     false
+    ],
+    "2": [
+     "m_0000081",
+     "m_0000109",
+     true
+    ],
+    "3": [
+     "m_0000082",
+     "m_0000089",
+     true
+    ],
+    "4": [
+     "m_0000082",
+     "m_0000100",
+     true
+    ],
+    "5": [
+     "m_0000082",
+     "m_0000128",
+     true
+    ],
+    "6": [
+     "m_0000083",
+     "m_0000084",
+     true
+    ],
+    "7": [
+     "m_0000083",
+     "m_0000086",
+     true
+    ],
+    "8": [
+     "m_0000083",
+     "m_0000088",
+     true
+    ],
+    "9": [
+     "m_0000083",
+     "m_0000098",
+     false
+    ],
+    "10": [
+     "m_0000083",
+     "m_0000105",
+     false
+    ],
+    "11": [
+     "m_0000083",
+     "m_0000111",
+     false
+    ],
+    "12": [
+     "m_0000083",
+     "m_0000127",
+     false
+    ],
+    "13": [
+     "m_0000085",
+     "m_0000097",
+     true
+    ],
+    "14": [
+     "m_0000085",
+     "m_0000115",
+     false
+    ],
+    "15": [
+     "m_0000085",
+     "m_0000130",
+     true
+    ],
+    "16": [
+     "m_0000085",
+     "m_0000138",
+     true
+    ],
+    "17": [
+     "m_0000086",
+     "m_0000098",
+     true
+    ],
+    "18": [
+     "m_0000087",
+     "m_0000115",
+     false
+    ],
+    "19": [
+     "m_0000087",
+     "m_0000129",
+     false
+    ],
+    "20": [
+     "m_0000088",
+     "m_0000105",
+     true
+    ]
+   },
+   "prompt_sha": "5ec1fcd37cc8a34e",
+   "max_tokens": 128000,
+   "model": "claude-sonnet-5",
+   "cache": "results/hier/sample1/semantic__sentence/pool_000/pairs.jsonl"
+  },
+  "semantic-sentence__H__pool-000-w0-c020": {
+   "custom_id": "semantic-sentence__H__pool-000-w0-c020",
+   "cell": "semantic__sentence",
+   "cell_dir": "results/grid_A/semantic__sentence",
+   "game": "H",
+   "pool": "pool_000",
+   "wave": 0,
+   "chunk": 20,
+   "pairs": {
+    "1": [
+     "m_0000088",
+     "m_0000109",
+     true
+    ],
+    "2": [
+     "m_0000088",
+     "m_0000120",
+     true
+    ],
+    "3": [
+     "m_0000089",
+     "m_0000119",
+     true
+    ],
+    "4": [
+     "m_0000090",
+     "m_0000108",
+     false
+    ],
+    "5": [
+     "m_0000090",
+     "m_0000124",
+     false
+    ],
+    "6": [
+     "m_0000091",
+     "m_0000106",
+     true
+    ],
+    "7": [
+     "m_0000091",
+     "m_0000139",
+     true
+    ],
+    "8": [
+     "m_0000092",
+     "m_0000094",
+     false
+    ],
+    "9": [
+     "m_0000092",
+     "m_0000118",
+     false
+    ],
+    "10": [
+     "m_0000093",
+     "m_0000097",
+     true
+    ],
+    "11": [
+     "m_0000093",
+     "m_0000106",
+     false
+    ],
+    "12": [
+     "m_0000093",
+     "m_0000112",
+     false
+    ],
+    "13": [
+     "m_0000094",
+     "m_0000119",
+     false
+    ],
+    "14": [
+     "m_0000095",
+     "m_0000103",
+     true
+    ],
+    "15": [
+     "m_0000095",
+     "m_0000110",
+     true
+    ],
+    "16": [
+     "m_0000096",
+     "m_0000105",
+     true
+    ],
+    "17": [
+     "m_0000096",
+     "m_0000111",
+     true
+    ],
+    "18": [
+     "m_0000097",
+     "m_0000099",
+     true
+    ],
+    "19": [
+     "m_0000097",
+     "m_0000112",
+     false
+    ],
+    "20": [
+     "m_0000097",
+     "m_0000129",
+     true
+    ]
+   },
+   "prompt_sha": "e631f996bc7aab39",
+   "max_tokens": 128000,
+   "model": "claude-sonnet-5",
+   "cache": "results/hier/sample1/semantic__sentence/pool_000/pairs.jsonl"
+  },
+  "semantic-sentence__H__pool-000-w0-c021": {
+   "custom_id": "semantic-sentence__H__pool-000-w0-c021",
+   "cell": "semantic__sentence",
+   "cell_dir": "results/grid_A/semantic__sentence",
+   "game": "H",
+   "pool": "pool_000",
+   "wave": 0,
+   "chunk": 21,
+   "pairs": {
+    "1": [
+     "m_0000098",
+     "m_0000127",
+     true
+    ],
+    "2": [
+     "m_0000099",
+     "m_0000114",
+     false
+    ],
+    "3": [
+     "m_0000100",
+     "m_0000101",
+     true
+    ],
+    "4": [
+     "m_0000100",
+     "m_0000116",
+     false
+    ],
+    "5": [
+     "m_0000100",
+     "m_0000139",
+     true
+    ],
+    "6": [
+     "m_0000101",
+     "m_0000106",
+     true
+    ],
+    "7": [
+     "m_0000101",
+     "m_0000112",
+     false
+    ],
+    "8": [
+     "m_0000101",
+     "m_0000125",
+     true
+    ],
+    "9": [
+     "m_0000102",
+     "m_0000105",
+     false
+    ],
+    "10": [
+     "m_0000102",
+     "m_0000138",
+     false
+    ],
+    "11": [
+     "m_0000102",
+     "m_0000140",
+     true
+    ],
+    "12": [
+     "m_0000104",
+     "m_0000119",
+     true
+    ],
+    "13": [
+     "m_0000104",
+     "m_0000122",
+     true
+    ],
+    "14": [
+     "m_0000104",
+     "m_0000137",
+     false
+    ],
+    "15": [
+     "m_0000104",
+     "m_0000138",
+     false
+    ],
+    "16": [
+     "m_0000105",
+     "m_0000111",
+     true
+    ],
+    "17": [
+     "m_0000105",
+     "m_0000127",
+     true
+    ],
+    "18": [
+     "m_0000105",
+     "m_0000133",
+     false
+    ],
+    "19": [
+     "m_0000105",
+     "m_0000136",
+     true
+    ],
+    "20": [
+     "m_0000106",
+     "m_0000108",
+     false
+    ]
+   },
+   "prompt_sha": "4812fb1d2e030be2",
+   "max_tokens": 128000,
+   "model": "claude-sonnet-5",
+   "cache": "results/hier/sample1/semantic__sentence/pool_000/pairs.jsonl"
+  },
+  "semantic-sentence__H__pool-000-w0-c022": {
+   "custom_id": "semantic-sentence__H__pool-000-w0-c022",
+   "cell": "semantic__sentence",
+   "cell_dir": "results/grid_A/semantic__sentence",
+   "game": "H",
+   "pool": "pool_000",
+   "wave": 0,
+   "chunk": 22,
+   "pairs": {
+    "1": [
+     "m_0000107",
+     "m_0000111",
+     false
+    ],
+    "2": [
+     "m_0000107",
+     "m_0000123",
+     false
+    ],
+    "3": [
+     "m_0000107",
+     "m_0000131",
+     false
+    ],
+    "4": [
+     "m_0000108",
+     "m_0000126",
+     false
+    ],
+    "5": [
+     "m_0000108",
+     "m_0000135",
+     false
+    ],
+    "6": [
+     "m_0000109",
+     "m_0000111",
+     false
+    ],
+    "7": [
+     "m_0000109",
+     "m_0000114",
+     false
+    ],
+    "8": [
+     "m_0000109",
+     "m_0000116",
+     false
+    ],
+    "9": [
+     "m_0000109",
+     "m_0000127",
+     false
+    ],
+    "10": [
+     "m_0000110",
+     "m_0000133",
+     false
+    ],
+    "11": [
+     "m_0000111",
+     "m_0000114",
+     false
+    ],
+    "12": [
+     "m_0000111",
+     "m_0000127",
+     false
+    ],
+    "13": [
+     "m_0000112",
+     "m_0000123",
+     true
+    ],
+    "14": [
+     "m_0000114",
+     "m_0000135",
+     true
+    ],
+    "15": [
+     "m_0000115",
+     "m_0000130",
+     true
+    ],
+    "16": [
+     "m_0000116",
+     "m_0000121",
+     false
+    ],
+    "17": [
+     "m_0000116",
+     "m_0000132",
+     false
+    ],
+    "18": [
+     "m_0000117",
+     "m_0000133",
+     false
+    ],
+    "19": [
+     "m_0000119",
+     "m_0000122",
+     false
+    ],
+    "20": [
+     "m_0000119",
+     "m_0000124",
+     true
+    ]
+   },
+   "prompt_sha": "f8b29ec48d3b78ec",
+   "max_tokens": 128000,
+   "model": "claude-sonnet-5",
+   "cache": "results/hier/sample1/semantic__sentence/pool_000/pairs.jsonl"
+  },
+  "semantic-sentence__H__pool-000-w0-c023": {
+   "custom_id": "semantic-sentence__H__pool-000-w0-c023",
+   "cell": "semantic__sentence",
+   "cell_dir": "results/grid_A/semantic__sentence",
+   "game": "H",
+   "pool": "pool_000",
+   "wave": 0,
+   "chunk": 23,
+   "pairs": {
+    "1": [
+     "m_0000119",
+     "m_0000138",
+     true
+    ],
+    "2": [
+     "m_0000122",
+     "m_0000124",
+     true
+    ],
+    "3": [
+     "m_0000123",
+     "m_0000131",
+     true
+    ],
+    "4": [
+     "m_0000124",
+     "m_0000126",
+     true
+    ],
+    "5": [
+     "m_0000124",
+     "m_0000137",
+     false
+    ],
+    "6": [
+     "m_0000124",
+     "m_0000140",
+     true
+    ],
+    "7": [
+     "m_0000136",
+     "m_0000137",
+     true
+    ]
+   },
+   "prompt_sha": "ac5b403834e7dfb0",
+   "max_tokens": 128000,
+   "model": "claude-sonnet-5",
+   "cache": "results/hier/sample1/semantic__sentence/pool_000/pairs.jsonl"
+  }
+ },
+ "done": [],
+ "expected_by_tax": {
+  "x1": 0.251,
+  "x2.3": 0.5025,
+  "x5": 1.0248
+ },
+ "expected_usd": 0.5025
+}

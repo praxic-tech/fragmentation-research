@@ -1,0 +1,346 @@
+{
+  "git_commit": "e2876dbd48d9aa7dcdaa86aa5862b4fb54db70bf",
+  "code_uncommitted_at_freeze": [
+    "M adversaries/answer_store.py",
+    " M adversaries/batch_game.py",
+    " M adversaries/batch_submit.py",
+    " M adversaries/joint_game.py",
+    " M adversaries/llm_adversary.py",
+    " M analysis/cost_model_v2.py",
+    " M datagen/coherence_sever.py",
+    " M datagen/llm_cutter.py",
+    " M datagen/subject_verb.py",
+    " M harness/run_ledger.py",
+    "?? adversaries/hier_batch.py",
+    "?? analysis/budget_final.py",
+    "?? analysis/llm_cut_prompt_compare.py",
+    "?? harness/test_hier_batch.py",
+    "?? harness/test_parser.py",
+    "?? harness/test_truncation.py"
+  ],
+  "model": "claude-sonnet-5",
+  "masking_seed": 42,
+  "presentation": "per-unit seeds (joint_game._unit_seed, D7)",
+  "prompt_templates_sha256": "5107194b0d84ae6a38c0feed8ca5b3ce5220b8da628c3aefa93395b41e77f992",
+  "max_tokens_sizing_sha256": "29e09f3a3b2c277d5ef4322db1abbcbecbe8b33036169b2b5e2e08ec2d3c67c4",
+  "max_tokens": 128000,
+  "what": "grid J, 9 cells x ['pool_027', 'pool_033', 'pool_034', 'pool_036', 'pool_040', 'pool_042']",
+  "headline_documents_requested": 0,
+  "spec": "runs/final_gridJ_w2.json",
+  "spec_sha256": "d9bffe8f11970c92f2cbb8a1a1b0d25cc39b1919b692e1d2c26f5e5a794376f5",
+  "n_requests": 54,
+  "expected_usd_cost_model": 15.431304,
+  "estimate": {
+    "n_requests": 54,
+    "est_input_tokens": 354908,
+    "est_output_tokens_worst_case": 6912000,
+    "est_cost_worst_case": 34.914908000000004,
+    "est_cost_input_only": 0.354908
+  },
+  "preflight": {
+    "checked": 54,
+    "blocked": 0
+  },
+  "cells": [
+    {
+      "cell": "results\\grid_A\\random__sentence",
+      "fragments_sha256": "1a19498bc32160c478767fc1e93a47f239f38a88cdd8436d590258dc2dc19707",
+      "answer_key_sha256": "82ff738ad027906e45f94218bb92d010c310dcba172dba437130041eb53b8557",
+      "cell_manifest": {
+        "cell": "random__sentence",
+        "strategy": "random",
+        "granularity": "sentence",
+        "cutter_module": "random_cut",
+        "cutter_function": "cut_corpus",
+        "params": {
+          "granularity": "sentence",
+          "seed": 42
+        },
+        "source": "data/grid_corpus_A/prose_raw.jsonl",
+        "source_sha256": "66b646c9c02ca59821f455981c8e1e0669a1ccda7e6be6ea0325d680bf652dcc",
+        "selection": "data/pools/grid_selection_A.json",
+        "git_commit": "fe7bdc94c11def23713001ad53b9aa5d15936481",
+        "cut_at": "2026-09-11T00:28:45.686308+00:00",
+        "n_docs": 175,
+        "n_fragments": 4267,
+        "fidelity_gate": "pass"
+      }
+    },
+    {
+      "cell": "results\\grid_A\\random__clause",
+      "fragments_sha256": "87f5877cba6db37d746d2adc16f43eba4559477f8add2bf677f75524e3e764e0",
+      "answer_key_sha256": "e55b6e9471d5c31ec2dca2c47e56987147f2b8994370622c80020b9d486541b1",
+      "cell_manifest": {
+        "cell": "random__clause",
+        "strategy": "random",
+        "granularity": "clause",
+        "cutter_module": "random_cut",
+        "cutter_function": "cut_corpus",
+        "params": {
+          "granularity": "clause",
+          "seed": 42
+        },
+        "source": "data/grid_corpus_A/prose_raw.jsonl",
+        "source_sha256": "66b646c9c02ca59821f455981c8e1e0669a1ccda7e6be6ea0325d680bf652dcc",
+        "selection": "data/pools/grid_selection_A.json",
+        "git_commit": "fe7bdc94c11def23713001ad53b9aa5d15936481",
+        "cut_at": "2026-09-11T00:30:19.391560+00:00",
+        "n_docs": 175,
+        "n_fragments": 5363,
+        "fidelity_gate": "pass"
+      }
+    },
+    {
+      "cell": "results\\grid_A\\random__token-window",
+      "fragments_sha256": "b2a07b25ede76a03bb1f3775f55bcaff02124f2fee9fe2c3894ab9502ca30483",
+      "answer_key_sha256": "63a4538703c030112253f38dae32909d86c104a5619224c31c2ac1ba8f9301cd",
+      "cell_manifest": {
+        "cell": "random__token-window",
+        "strategy": "random",
+        "granularity": "token-window",
+        "cutter_module": "random_cut",
+        "cutter_function": "cut_corpus",
+        "params": {
+          "granularity": "token-window",
+          "seed": 42
+        },
+        "source": "data/grid_corpus_A/prose_raw.jsonl",
+        "source_sha256": "66b646c9c02ca59821f455981c8e1e0669a1ccda7e6be6ea0325d680bf652dcc",
+        "selection": "data/pools/grid_selection_A.json",
+        "git_commit": "fe7bdc94c11def23713001ad53b9aa5d15936481",
+        "cut_at": "2026-09-11T00:30:20.057563+00:00",
+        "n_docs": 175,
+        "n_fragments": 6987,
+        "fidelity_gate": "pass"
+      }
+    },
+    {
+      "cell": "results\\grid_A\\semantic__sentence",
+      "fragments_sha256": "24f0531b624f93cb7b0dc7cb351ef15e53e8086f5aa73f2829ec7f6ce3cf2a4d",
+      "answer_key_sha256": "2f770d9b4182fca99db047f5790a2691ca58f50609860d1d70fbd46ad2378e09",
+      "cell_manifest": {
+        "cell": "semantic__sentence",
+        "strategy": "semantic",
+        "granularity": "sentence",
+        "cutter_module": "prose_cutter",
+        "cutter_function": "cut_corpus",
+        "params": {
+          "granularity": "sentence",
+          "strategy": "semantic"
+        },
+        "source": "data/grid_corpus_A/prose_raw.jsonl",
+        "source_sha256": "66b646c9c02ca59821f455981c8e1e0669a1ccda7e6be6ea0325d680bf652dcc",
+        "selection": "data/pools/grid_selection_A.json",
+        "git_commit": "fe7bdc94c11def23713001ad53b9aa5d15936481",
+        "cut_at": "2026-09-11T00:30:33.493277+00:00",
+        "n_docs": 175,
+        "n_fragments": 4267,
+        "fidelity_gate": "pass"
+      }
+    },
+    {
+      "cell": "results\\grid_A\\semantic__clause",
+      "fragments_sha256": "24c534f72240a8ac12de03430db915682afa9596fc8f1245d4fe1de3420afcca",
+      "answer_key_sha256": "c54c8968148ed84929b28a0563354d466d79e43503fb3beb1ad8ef0de3eb1ad3",
+      "cell_manifest": {
+        "cell": "semantic__clause",
+        "strategy": "semantic",
+        "granularity": "clause",
+        "cutter_module": "prose_cutter",
+        "cutter_function": "cut_corpus",
+        "params": {
+          "granularity": "clause",
+          "strategy": "semantic"
+        },
+        "source": "data/grid_corpus_A/prose_raw.jsonl",
+        "source_sha256": "66b646c9c02ca59821f455981c8e1e0669a1ccda7e6be6ea0325d680bf652dcc",
+        "selection": "data/pools/grid_selection_A.json",
+        "git_commit": "fe7bdc94c11def23713001ad53b9aa5d15936481",
+        "cut_at": "2026-09-11T00:31:16.997221+00:00",
+        "n_docs": 175,
+        "n_fragments": 5363,
+        "fidelity_gate": "pass"
+      }
+    },
+    {
+      "cell": "results\\grid_A\\coherence-sever__clause",
+      "fragments_sha256": "2de26b8ea51fcce1a7e14c1d1ae7d52abd266726b0fdd620828332157c0c4952",
+      "answer_key_sha256": "68a25ac0aa09c0acb9c7cf765d349422547d46a5577e54a67bc7badc53aef341",
+      "cell_manifest": {
+        "cell": "coherence-sever__clause",
+        "strategy": "coherence-sever",
+        "granularity": "clause",
+        "cutter_module": "coherence_sever",
+        "cutter_function": "cut_corpus",
+        "params": {
+          "granularity": "clause"
+        },
+        "source": "data/grid_corpus_A/prose_raw.jsonl",
+        "source_sha256": "66b646c9c02ca59821f455981c8e1e0669a1ccda7e6be6ea0325d680bf652dcc",
+        "selection": "data/pools/grid_selection_A.json",
+        "git_commit": "e2876dbd48d9aa7dcdaa86aa5862b4fb54db70bf",
+        "code_uncommitted": [
+          "M adversaries/answer_store.py",
+          " M adversaries/batch_game.py",
+          " M adversaries/batch_submit.py",
+          " M adversaries/joint_game.py",
+          " M adversaries/llm_adversary.py",
+          " M analysis/cost_model_v2.py",
+          " M datagen/coherence_sever.py",
+          " M datagen/llm_cutter.py",
+          " M datagen/subject_verb.py",
+          " M harness/run_ledger.py",
+          "?? adversaries/hier_batch.py",
+          "?? analysis/budget_final.py",
+          "?? analysis/llm_cut_prompt_compare.py",
+          "?? harness/test_parser.py",
+          "?? harness/test_truncation.py"
+        ],
+        "change": "D7: topic shift = adjacent units share no content word (was Jaccard < 0.12); token-window counts whitespace words (was spaCy tokens)",
+        "supersedes": {
+          "path": "results/grid_A/_superseded_2026-09-11/coherence-sever__clause",
+          "n_fragments": 5119
+        },
+        "cut_at": "2026-09-11T21:26:49.952110+00:00",
+        "n_docs": 175,
+        "n_fragments": 3926,
+        "fidelity_gate": "pass"
+      }
+    },
+    {
+      "cell": "results\\grid_A\\coherence-sever__token-window",
+      "fragments_sha256": "81a4d7ab4f906a5ddd4ecc33e45c378657ab04bd9b2734f223914eb755f3acf3",
+      "answer_key_sha256": "753180fb6d06e09aff05ae22ebc9cfbfa01c724cfa87d5282de1eac04148e860",
+      "cell_manifest": {
+        "cell": "coherence-sever__token-window",
+        "strategy": "coherence-sever",
+        "granularity": "token-window",
+        "cutter_module": "coherence_sever",
+        "cutter_function": "cut_corpus",
+        "params": {
+          "granularity": "token-window"
+        },
+        "source": "data/grid_corpus_A/prose_raw.jsonl",
+        "source_sha256": "66b646c9c02ca59821f455981c8e1e0669a1ccda7e6be6ea0325d680bf652dcc",
+        "selection": "data/pools/grid_selection_A.json",
+        "git_commit": "e2876dbd48d9aa7dcdaa86aa5862b4fb54db70bf",
+        "code_uncommitted": [
+          "M adversaries/answer_store.py",
+          " M adversaries/batch_game.py",
+          " M adversaries/batch_submit.py",
+          " M adversaries/joint_game.py",
+          " M adversaries/llm_adversary.py",
+          " M analysis/cost_model_v2.py",
+          " M datagen/coherence_sever.py",
+          " M datagen/llm_cutter.py",
+          " M datagen/subject_verb.py",
+          " M harness/run_ledger.py",
+          "?? adversaries/hier_batch.py",
+          "?? analysis/budget_final.py",
+          "?? analysis/llm_cut_prompt_compare.py",
+          "?? harness/test_parser.py",
+          "?? harness/test_truncation.py"
+        ],
+        "change": "D7: topic shift = adjacent units share no content word (was Jaccard < 0.12); token-window counts whitespace words (was spaCy tokens)",
+        "supersedes": {
+          "path": "results/grid_A/_superseded_2026-09-11/coherence-sever__token-window",
+          "n_fragments": 8448
+        },
+        "cut_at": "2026-09-11T21:27:43.491512+00:00",
+        "n_docs": 175,
+        "n_fragments": 6977,
+        "fidelity_gate": "pass"
+      }
+    },
+    {
+      "cell": "results\\grid_A\\subject-verb__sentence",
+      "fragments_sha256": "7b9c64b31861b5eea28007ed23e592c1a950424e24975bf48ca5cad6b891785a",
+      "answer_key_sha256": "99fdff82c020638cd913a6d8b7ed427ac49765869ae8e27d46818fbe9d31b0b9",
+      "cell_manifest": {
+        "cell": "subject-verb__sentence",
+        "strategy": "subject-verb",
+        "granularity": "sentence",
+        "cutter_module": "subject_verb",
+        "cutter_function": "cut_corpus",
+        "params": {
+          "granularity": "sentence"
+        },
+        "source": "data/grid_corpus_A/prose_raw.jsonl",
+        "source_sha256": "66b646c9c02ca59821f455981c8e1e0669a1ccda7e6be6ea0325d680bf652dcc",
+        "selection": "data/pools/grid_selection_A.json",
+        "git_commit": "e2876dbd48d9aa7dcdaa86aa5862b4fb54db70bf",
+        "code_uncommitted": [
+          "M adversaries/answer_store.py",
+          " M adversaries/batch_game.py",
+          " M adversaries/batch_submit.py",
+          " M adversaries/joint_game.py",
+          " M adversaries/llm_adversary.py",
+          " M analysis/cost_model_v2.py",
+          " M datagen/coherence_sever.py",
+          " M datagen/llm_cutter.py",
+          " M datagen/subject_verb.py",
+          " M harness/run_ledger.py",
+          "?? adversaries/hier_batch.py",
+          "?? analysis/budget_final.py",
+          "?? analysis/llm_cut_prompt_compare.py",
+          "?? harness/test_parser.py",
+          "?? harness/test_truncation.py"
+        ],
+        "change": "D7: a cut must fall on whitespace in the source (4 frame-A cut points did not)",
+        "supersedes": {
+          "path": "results/grid_A/_superseded_2026-09-11/subject-verb__sentence",
+          "n_fragments": 7115
+        },
+        "cut_at": "2026-09-11T21:29:02.485553+00:00",
+        "n_docs": 175,
+        "n_fragments": 7115,
+        "fidelity_gate": "pass"
+      }
+    },
+    {
+      "cell": "results\\grid_A\\subject-verb__clause",
+      "fragments_sha256": "76069efa3a3782f29749927bba5a1a2c177cb3f17d87c34c5a142eda23df0c01",
+      "answer_key_sha256": "dacb0d9260b8ae8e82dab293ad81815462b95445b7d6b4f28ccbc82ea0703a4f",
+      "cell_manifest": {
+        "cell": "subject-verb__clause",
+        "strategy": "subject-verb",
+        "granularity": "clause",
+        "cutter_module": "subject_verb",
+        "cutter_function": "cut_corpus",
+        "params": {
+          "granularity": "clause"
+        },
+        "source": "data/grid_corpus_A/prose_raw.jsonl",
+        "source_sha256": "66b646c9c02ca59821f455981c8e1e0669a1ccda7e6be6ea0325d680bf652dcc",
+        "selection": "data/pools/grid_selection_A.json",
+        "git_commit": "e2876dbd48d9aa7dcdaa86aa5862b4fb54db70bf",
+        "code_uncommitted": [
+          "M adversaries/answer_store.py",
+          " M adversaries/batch_game.py",
+          " M adversaries/batch_submit.py",
+          " M adversaries/joint_game.py",
+          " M adversaries/llm_adversary.py",
+          " M analysis/cost_model_v2.py",
+          " M datagen/coherence_sever.py",
+          " M datagen/llm_cutter.py",
+          " M datagen/subject_verb.py",
+          " M harness/run_ledger.py",
+          "?? adversaries/hier_batch.py",
+          "?? analysis/budget_final.py",
+          "?? analysis/llm_cut_prompt_compare.py",
+          "?? harness/test_parser.py",
+          "?? harness/test_truncation.py"
+        ],
+        "change": "D7: a cut must fall on whitespace in the source (4 frame-A cut points did not)",
+        "supersedes": {
+          "path": "results/grid_A/_superseded_2026-09-11/subject-verb__clause",
+          "n_fragments": 8420
+        },
+        "cut_at": "2026-09-11T21:31:04.896369+00:00",
+        "n_docs": 175,
+        "n_fragments": 8418,
+        "fidelity_gate": "pass"
+      }
+    }
+  ]
+}

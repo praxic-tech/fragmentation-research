@@ -1,0 +1,157 @@
+{
+  "amends": "runs/grid_A_pool1_manifest.json",
+  "why": "predeclared check #2: 30 of 88 answers were cut off at max_tokens (29 empty, 1 'succeeded' with its JSON cut mid-label). Re-asked with byte-identical prompts and larger caps. A cap only truncates, so the 58 finished answers are unaffected.",
+  "spec": "runs\\grid_A_pool1_rs1.json",
+  "spec_sha256": "8a0c40b57083c24b80aeaa228b865df984a8b038c293001ed9c8828c13294bf4",
+  "n_requests": 30,
+  "cut_off": 30,
+  "store_entries_dropped": [
+    "subject-verb-clause__O__prose-0383"
+  ],
+  "caps": {
+    "coherence-sever-clause__O__prose-0072": {
+      "was": 7877,
+      "now": 18906
+    },
+    "coherence-sever-sentence__J__pool-000": {
+      "was": 31113,
+      "now": 128000
+    },
+    "coherence-sever-token-window__O__prose-0053": {
+      "was": 2048,
+      "now": 16000
+    },
+    "coherence-sever-token-window__O__prose-0156": {
+      "was": 10093,
+      "now": 24224
+    },
+    "coherence-sever-token-window__O__prose-0164": {
+      "was": 12607,
+      "now": 30257
+    },
+    "coherence-sever-token-window__O__prose-0383": {
+      "was": 35361,
+      "now": 84867
+    },
+    "random-clause__O__prose-0072": {
+      "was": 8948,
+      "now": 21477
+    },
+    "random-clause__O__prose-0156": {
+      "was": 2048,
+      "now": 16000
+    },
+    "random-clause__O__prose-0383": {
+      "was": 10693,
+      "now": 25665
+    },
+    "random-clause__J__pool-000": {
+      "was": 46356,
+      "now": 128000
+    },
+    "random-sentence__O__prose-0072": {
+      "was": 5802,
+      "now": 16000
+    },
+    "random-sentence__O__prose-0156": {
+      "was": 2048,
+      "now": 16000
+    },
+    "random-sentence__O__prose-0315": {
+      "was": 2048,
+      "now": 16000
+    },
+    "random-sentence__O__prose-0383": {
+      "was": 5802,
+      "now": 16000
+    },
+    "random-sentence__J__pool-000": {
+      "was": 35721,
+      "now": 128000
+    },
+    "random-token-window__O__prose-0072": {
+      "was": 13283,
+      "now": 31879
+    },
+    "random-token-window__O__prose-0156": {
+      "was": 7369,
+      "now": 17687
+    },
+    "random-token-window__O__prose-0315": {
+      "was": 2249,
+      "now": 16000
+    },
+    "random-token-window__O__prose-0383": {
+      "was": 24771,
+      "now": 59451
+    },
+    "random-token-window__J__pool-000": {
+      "was": 63727,
+      "now": 128000
+    },
+    "semantic-clause__J__pool-000": {
+      "was": 46356,
+      "now": 128000
+    },
+    "semantic-token-window__O__prose-0053": {
+      "was": 2048,
+      "now": 16000
+    },
+    "semantic-token-window__O__prose-0072": {
+      "was": 13283,
+      "now": 31879
+    },
+    "semantic-token-window__O__prose-0315": {
+      "was": 2249,
+      "now": 16000
+    },
+    "semantic-token-window__O__prose-0383": {
+      "was": 24771,
+      "now": 59451
+    },
+    "semantic-token-window__J__pool-000": {
+      "was": 63727,
+      "now": 128000
+    },
+    "subject-verb-clause__O__prose-0156": {
+      "was": 10093,
+      "now": 24224
+    },
+    "subject-verb-clause__O__prose-0383": {
+      "was": 24771,
+      "now": 59451
+    },
+    "subject-verb-sentence__O__prose-0383": {
+      "was": 15424,
+      "now": 37018
+    },
+    "subject-verb-sentence__J__pool-000": {
+      "was": 69753,
+      "now": 128000
+    }
+  },
+  "code_uncommitted_at_freeze": [
+    "M adversaries/answer_store.py",
+    " M adversaries/batch_game.py",
+    " M adversaries/batch_submit.py",
+    " M analysis/cost_model_v2.py",
+    " M harness/run_ledger.py",
+    "?? analysis/llm_cut_prompt_compare.py",
+    "?? harness/test_truncation.py"
+  ],
+  "code_sha256": {
+    "adversaries/batch_game.py": "9af7b21d0dd371a2fbaf4fedca12d0767e320388006b067135b8fa0aedac9fb1",
+    "adversaries/batch_submit.py": "006314f6107b0fbdc5711d8c4e5ea1fafb681f4f553028e42bb177a3523ae096",
+    "adversaries/answer_store.py": "575e2821792e74b760300fd847029cd2d5416b61fe5bdc35a29eb45166dd233e",
+    "analysis/cost_model_v2.py": "3a150b9891fbfd3ac4b0299560c3e91da581a838b9eaa1a2fa6e1adb44df6f96",
+    "harness/run_ledger.py": "bd7e579891f0234f52ece751be61d77c1c2a9c295025a7c73df5dc819e18498c"
+  },
+  "estimate": {
+    "n_requests": 30,
+    "est_input_tokens": 58610,
+    "est_output_tokens_worst_case": 1566436,
+    "est_cost_worst_case": 7.890789999999999,
+    "est_cost_input_only": 0.05861,
+    "expected_usd": 3.070818
+  }
+}

@@ -1,0 +1,153 @@
+{
+ "tag": "grid-A-pool1-r1-rs1",
+ "model": "claude-sonnet-5",
+ "build": {
+  "docs": 7,
+  "pool_size": 7,
+  "seed": 42,
+  "margin": 2.0,
+  "arm": "masked",
+  "games": [
+   "O",
+   "J"
+  ],
+  "cells": [
+   "results/grid_A/coherence-sever__clause",
+   "results/grid_A/coherence-sever__sentence",
+   "results/grid_A/coherence-sever__token-window",
+   "results/grid_A/random__clause",
+   "results/grid_A/random__sentence",
+   "results/grid_A/random__token-window",
+   "results/grid_A/semantic__clause",
+   "results/grid_A/semantic__sentence",
+   "results/grid_A/semantic__token-window",
+   "results/grid_A/subject-verb__clause",
+   "results/grid_A/subject-verb__sentence"
+  ],
+  "pools": [
+   [
+    "pool_000",
+    [
+     "prose_0045",
+     "prose_0053",
+     "prose_0072",
+     "prose_0156",
+     "prose_0164",
+     "prose_0315",
+     "prose_0383"
+    ]
+   ]
+  ],
+  "o_docs": [
+   "prose_0045",
+   "prose_0053",
+   "prose_0072",
+   "prose_0156",
+   "prose_0164",
+   "prose_0315",
+   "prose_0383"
+  ],
+  "forbidden_docs": 322
+ },
+ "repair_round": 1,
+ "requests": [
+  {
+   "cell": "random__token-window",
+   "game": "O",
+   "unit": "prose_0156-r1",
+   "prompt": "These fragments are pieces of ONE record, shuffled. Put them back in their most likely original order.\n\nFragments:\nm_0000027: the dyskeratotic corps ronds and grains\nm_0000011: adulthood and were treated with ammonium lactate. Over time,\nm_0000016: vulvar lesion\nm_0000020: her father. Cutaneous examination revealed an extensive blaschkoid distribution\nm_0000004: without suprabasal acantholysis or\nm_0000009: was asymptomatic but appeared more hypopigmented and verrucous compared with her other lesions. The patient also expressed\nm_0000021: and prominent epidermolytic\nm_0000022: the eruption slowly\nm_0000018: posterior thigh, and calf to the ankle and dorsal foot (Fig 1, A-E). Additional involvement was present in the left axilla and medial upper extremity. The lesions\nm_0000028: concern about fertility\nm_0000030: of\nm_0000012: out malignancy. The\nm_0000008: supporting EHK over focal acantholytic dyskeratosis as the underlying pattern. A subsequent vulvar biopsy performed by gynecology showed similar findings without dysplasia or\nm_0000024: of epidermolytic hyperkeratosis. Her family history was notable for melanoma in\nm_0000029: EHK. Importantly, the biopsy demonstrated epidermolytic alteration with coarse keratohyalin granules and vacuolar degeneration of keratinocytes\nm_0000002: appeared centered on hair follicles with relative sparing of intervening skin, giving a keratosis pilaris\u2013like appearance rather than\nm_0000000: patient was counseled on\nm_0000005: woman with a congenital birthmark following the lines of Blaschko presented\nm_0000014: and the potential genetic implications\nm_0000013: the right flank and hip over the buttock,\nm_0000010: for evaluation of progressive lesion extension. The lesions were first evaluated in infancy, with a biopsy performed at 3 months of age. At that time, an\nm_0000001: monomorphic, rusty to skin-colored follicular scaly papules extending from\nm_0000017: the confluent plaques seen in epidermal nevi. Given this atypical morphology, a biopsy was obtained. Given the patient\u2019s concern about progression and desire to avoid vulvar biopsy, a punch biopsy was obtained from a lesion on the left axilla. Histopathology demonstrated epidermal acanthosis with compact hyperkeratosis\nm_0000015: evaluation for epidermal nevus\nm_0000023: malignancy, supporting involvement by the same process. The\nm_0000025: syndrome was reportedly negative. The lesions remained stable throughout childhood and early\nm_0000031: characteristic of Darier disease,\nm_0000007: the benign nature of the lesions and the mosaic implications of EHK, and management was continued with topical keratolytics.\nm_0000019: from gynecology for dermatologic evaluation and to rule\nm_0000003: hyperkeratosis (EHK) confined to the follicular epithelium, without involvement of the interfollicular epidermis (Fig 2, A-C), consistent with a follicular epidermal nevus with\nm_0000026: A 36-year-old\nm_0000006: progressed but remained blaschkoid. Over the preceding 2 years, she noted extension involving the trunk, axilla, and extremities. Within the year preceding presentation, a new lesion developed on the left labia minora, prompting referral\n\nReturn ONLY a JSON array of the item labels in your best order.\n\nThese input labels are absent from your answer: m_0000029. Return a corrected answer in the same format that uses every input label exactly once.",
+   "max_tokens": 128000
+  }
+ ],
+ "sidecar": {
+  "random-token-window__O__prose-0156-r1": {
+   "custom_id": "random-token-window__O__prose-0156-r1",
+   "base_cid": "random-token-window__O__prose-0156",
+   "round": 1,
+   "cell": "random__token-window",
+   "cell_dir": "results/grid_A/random__token-window",
+   "game": "O",
+   "unit": "prose_0156",
+   "n_records": 1,
+   "n_fragments": 32,
+   "max_tokens": 128000,
+   "alias_map": {
+    "m_0000026": "prose_0156__random_token-window_000",
+    "m_0000005": "prose_0156__random_token-window_001",
+    "m_0000010": "prose_0156__random_token-window_002",
+    "m_0000015": "prose_0156__random_token-window_003",
+    "m_0000025": "prose_0156__random_token-window_004",
+    "m_0000011": "prose_0156__random_token-window_005",
+    "m_0000022": "prose_0156__random_token-window_006",
+    "m_0000006": "prose_0156__random_token-window_007",
+    "m_0000019": "prose_0156__random_token-window_008",
+    "m_0000012": "prose_0156__random_token-window_009",
+    "m_0000016": "prose_0156__random_token-window_010",
+    "m_0000009": "prose_0156__random_token-window_011",
+    "m_0000028": "prose_0156__random_token-window_012",
+    "m_0000014": "prose_0156__random_token-window_013",
+    "m_0000024": "prose_0156__random_token-window_014",
+    "m_0000020": "prose_0156__random_token-window_015",
+    "m_0000030": "prose_0156__random_token-window_016",
+    "m_0000001": "prose_0156__random_token-window_017",
+    "m_0000013": "prose_0156__random_token-window_018",
+    "m_0000018": "prose_0156__random_token-window_019",
+    "m_0000002": "prose_0156__random_token-window_020",
+    "m_0000017": "prose_0156__random_token-window_021",
+    "m_0000021": "prose_0156__random_token-window_022",
+    "m_0000003": "prose_0156__random_token-window_023",
+    "m_0000029": "prose_0156__random_token-window_024",
+    "m_0000004": "prose_0156__random_token-window_025",
+    "m_0000027": "prose_0156__random_token-window_026",
+    "m_0000031": "prose_0156__random_token-window_027",
+    "m_0000008": "prose_0156__random_token-window_028",
+    "m_0000023": "prose_0156__random_token-window_029",
+    "m_0000000": "prose_0156__random_token-window_030",
+    "m_0000007": "prose_0156__random_token-window_031"
+   },
+   "shown_order": [
+    "m_0000027",
+    "m_0000011",
+    "m_0000016",
+    "m_0000020",
+    "m_0000004",
+    "m_0000009",
+    "m_0000021",
+    "m_0000022",
+    "m_0000018",
+    "m_0000028",
+    "m_0000030",
+    "m_0000012",
+    "m_0000008",
+    "m_0000024",
+    "m_0000029",
+    "m_0000002",
+    "m_0000000",
+    "m_0000005",
+    "m_0000014",
+    "m_0000013",
+    "m_0000010",
+    "m_0000001",
+    "m_0000017",
+    "m_0000015",
+    "m_0000023",
+    "m_0000025",
+    "m_0000031",
+    "m_0000007",
+    "m_0000019",
+    "m_0000003",
+    "m_0000026",
+    "m_0000006"
+   ],
+   "prompt": "These fragments are pieces of ONE record, shuffled. Put them back in their most likely original order.\n\nFragments:\nm_0000027: the dyskeratotic corps ronds and grains\nm_0000011: adulthood and were treated with ammonium lactate. Over time,\nm_0000016: vulvar lesion\nm_0000020: her father. Cutaneous examination revealed an extensive blaschkoid distribution\nm_0000004: without suprabasal acantholysis or\nm_0000009: was asymptomatic but appeared more hypopigmented and verrucous compared with her other lesions. The patient also expressed\nm_0000021: and prominent epidermolytic\nm_0000022: the eruption slowly\nm_0000018: posterior thigh, and calf to the ankle and dorsal foot (Fig 1, A-E). Additional involvement was present in the left axilla and medial upper extremity. The lesions\nm_0000028: concern about fertility\nm_0000030: of\nm_0000012: out malignancy. The\nm_0000008: supporting EHK over focal acantholytic dyskeratosis as the underlying pattern. A subsequent vulvar biopsy performed by gynecology showed similar findings without dysplasia or\nm_0000024: of epidermolytic hyperkeratosis. Her family history was notable for melanoma in\nm_0000029: EHK. Importantly, the biopsy demonstrated epidermolytic alteration with coarse keratohyalin granules and vacuolar degeneration of keratinocytes\nm_0000002: appeared centered on hair follicles with relative sparing of intervening skin, giving a keratosis pilaris\u2013like appearance rather than\nm_0000000: patient was counseled on\nm_0000005: woman with a congenital birthmark following the lines of Blaschko presented\nm_0000014: and the potential genetic implications\nm_0000013: the right flank and hip over the buttock,\nm_0000010: for evaluation of progressive lesion extension. The lesions were first evaluated in infancy, with a biopsy performed at 3 months of age. At that time, an\nm_0000001: monomorphic, rusty to skin-colored follicular scaly papules extending from\nm_0000017: the confluent plaques seen in epidermal nevi. Given this atypical morphology, a biopsy was obtained. Given the patient\u2019s concern about progression and desire to avoid vulvar biopsy, a punch biopsy was obtained from a lesion on the left axilla. Histopathology demonstrated epidermal acanthosis with compact hyperkeratosis\nm_0000015: evaluation for epidermal nevus\nm_0000023: malignancy, supporting involvement by the same process. The\nm_0000025: syndrome was reportedly negative. The lesions remained stable throughout childhood and early\nm_0000031: characteristic of Darier disease,\nm_0000007: the benign nature of the lesions and the mosaic implications of EHK, and management was continued with topical keratolytics.\nm_0000019: from gynecology for dermatologic evaluation and to rule\nm_0000003: hyperkeratosis (EHK) confined to the follicular epithelium, without involvement of the interfollicular epidermis (Fig 2, A-C), consistent with a follicular epidermal nevus with\nm_0000026: A 36-year-old\nm_0000006: progressed but remained blaschkoid. Over the preceding 2 years, she noted extension involving the trunk, axilla, and extremities. Within the year preceding presentation, a new lesion developed on the left labia minora, prompting referral\n\nReturn ONLY a JSON array of the item labels in your best order.",
+   "prompt_sha": "e65411e831e24a66",
+   "unmasked_control": false,
+   "model": "claude-sonnet-5",
+   "prompt_sent": "These fragments are pieces of ONE record, shuffled. Put them back in their most likely original order.\n\nFragments:\nm_0000027: the dyskeratotic corps ronds and grains\nm_0000011: adulthood and were treated with ammonium lactate. Over time,\nm_0000016: vulvar lesion\nm_0000020: her father. Cutaneous examination revealed an extensive blaschkoid distribution\nm_0000004: without suprabasal acantholysis or\nm_0000009: was asymptomatic but appeared more hypopigmented and verrucous compared with her other lesions. The patient also expressed\nm_0000021: and prominent epidermolytic\nm_0000022: the eruption slowly\nm_0000018: posterior thigh, and calf to the ankle and dorsal foot (Fig 1, A-E). Additional involvement was present in the left axilla and medial upper extremity. The lesions\nm_0000028: concern about fertility\nm_0000030: of\nm_0000012: out malignancy. The\nm_0000008: supporting EHK over focal acantholytic dyskeratosis as the underlying pattern. A subsequent vulvar biopsy performed by gynecology showed similar findings without dysplasia or\nm_0000024: of epidermolytic hyperkeratosis. Her family history was notable for melanoma in\nm_0000029: EHK. Importantly, the biopsy demonstrated epidermolytic alteration with coarse keratohyalin granules and vacuolar degeneration of keratinocytes\nm_0000002: appeared centered on hair follicles with relative sparing of intervening skin, giving a keratosis pilaris\u2013like appearance rather than\nm_0000000: patient was counseled on\nm_0000005: woman with a congenital birthmark following the lines of Blaschko presented\nm_0000014: and the potential genetic implications\nm_0000013: the right flank and hip over the buttock,\nm_0000010: for evaluation of progressive lesion extension. The lesions were first evaluated in infancy, with a biopsy performed at 3 months of age. At that time, an\nm_0000001: monomorphic, rusty to skin-colored follicular scaly papules extending from\nm_0000017: the confluent plaques seen in epidermal nevi. Given this atypical morphology, a biopsy was obtained. Given the patient\u2019s concern about progression and desire to avoid vulvar biopsy, a punch biopsy was obtained from a lesion on the left axilla. Histopathology demonstrated epidermal acanthosis with compact hyperkeratosis\nm_0000015: evaluation for epidermal nevus\nm_0000023: malignancy, supporting involvement by the same process. The\nm_0000025: syndrome was reportedly negative. The lesions remained stable throughout childhood and early\nm_0000031: characteristic of Darier disease,\nm_0000007: the benign nature of the lesions and the mosaic implications of EHK, and management was continued with topical keratolytics.\nm_0000019: from gynecology for dermatologic evaluation and to rule\nm_0000003: hyperkeratosis (EHK) confined to the follicular epithelium, without involvement of the interfollicular epidermis (Fig 2, A-C), consistent with a follicular epidermal nevus with\nm_0000026: A 36-year-old\nm_0000006: progressed but remained blaschkoid. Over the preceding 2 years, she noted extension involving the trunk, axilla, and extremities. Within the year preceding presentation, a new lesion developed on the left labia minora, prompting referral\n\nReturn ONLY a JSON array of the item labels in your best order.\n\nThese input labels are absent from your answer: m_0000029. Return a corrected answer in the same format that uses every input label exactly once.",
+   "cut_off_at": 17687
+  }
+ },
+ "expected_usd": 0.089281,
+ "resubmit_of": "grid-A-pool1-r1",
+ "at_ceiling": []
+}

@@ -1,0 +1,57 @@
+{
+  "rule": {
+    "records_connected_min": 0.9,
+    "adjacent_recall_min": 0.8,
+    "fallback_gain_min": 0.05,
+    "ks": [
+      5,
+      10,
+      20
+    ]
+  },
+  "data": "25 development pools, data/prose (semantic x sentence, full length), masked as in the run",
+  "cost_basis": {
+    "in_tok_per_pair": 122.04068522483941,
+    "out_tok_per_pair": 191.8201284796574,
+    "source": "msgbatch_01NUXxhBgUzdLnz6fyYYeuRD"
+  },
+  "results": {
+    "5": {
+      "pairs_per_pool": 718.0,
+      "pairs_per_fragment": 3.323458618774301,
+      "same_record_recall": 0.08779888932582654,
+      "adjacent_recall": 0.21775736701109835,
+      "records_connected": 0.13142857142857142,
+      "candidate_precision": 0.5099721448467966,
+      "pools_needing_bridges": 0,
+      "usd_per_pool": 0.7762594732334047,
+      "batches_per_pool": 35.9
+    },
+    "10": {
+      "pairs_per_pool": 1377.96,
+      "pairs_per_fragment": 6.3782632845769305,
+      "same_record_recall": 0.14179798774230057,
+      "adjacent_recall": 0.3071182548794489,
+      "records_connected": 0.45714285714285713,
+      "candidate_precision": 0.4291561438648437,
+      "pools_needing_bridges": 0,
+      "usd_per_pool": 1.4897695038115633,
+      "batches_per_pool": 68.898
+    },
+    "20": {
+      "pairs_per_pool": 2693.4,
+      "pairs_per_fragment": 12.46713571560822,
+      "same_record_recall": 0.22387086254687755,
+      "adjacent_recall": 0.41427477994642176,
+      "records_connected": 0.8057142857142857,
+      "candidate_precision": 0.3466399346550828,
+      "pools_needing_bridges": 0,
+      "usd_per_pool": 2.911946051820129,
+      "batches_per_pool": 134.67000000000002
+    }
+  },
+  "chosen_k": 20,
+  "adequate": false,
+  "why": "no k meets the thresholds; smallest k past which gains are < 5 points",
+  "not_used": "reconstruction F1 (never computed here)"
+}

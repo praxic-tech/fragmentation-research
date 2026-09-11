@@ -1,0 +1,39 @@
+{
+ "tag": "hier-sample1-w1",
+ "model": "claude-sonnet-5",
+ "attacker": "hierarchical",
+ "wave": 1,
+ "build": {
+  "cells": [
+   "results/grid_A/semantic__sentence"
+  ],
+  "pools": [
+   [
+    "pool_000",
+    [
+     "prose_0045",
+     "prose_0053",
+     "prose_0072",
+     "prose_0156",
+     "prose_0164",
+     "prose_0315",
+     "prose_0383"
+    ]
+   ]
+  ],
+  "seed": 42,
+  "k": 5,
+  "pairs_per_call": 20
+ },
+ "requests": [],
+ "sidecar": {},
+ "done": [
+  "semantic__sentence/pool_000"
+ ],
+ "expected_by_tax": {
+  "x1": 0,
+  "x2.3": 0,
+  "x5": 0
+ },
+ "expected_usd": 0
+}

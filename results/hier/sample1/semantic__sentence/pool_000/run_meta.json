@@ -1,0 +1,9 @@
+{
+  "cell": "results/grid_A/semantic__sentence",
+  "pool": "pool_000",
+  "seed": 42,
+  "k": 5,
+  "pairs_per_call": 20,
+  "model": "claude-sonnet-5",
+  "alias_sha": "11c366e9453e1091"
+}

@@ -9,21 +9,52 @@
         "o_tau_std": 0.020557771954089765,
         "l_precision": 0.0014966666666666668,
         "l_recall": 0.0014966666666666668,
-        "l_f1": 0.0014966666666666668
+        "l_f1": 0.0014966666666666668,
+        "l_baseline": 0.002997002997002997,
+        "quarantined": false,
+        "quarantine_reasons": []
       },
-      "Memon-Greedy": {
-        "o_tau": 0.5160000000000001,
+      "Jaccard-Greedy": {
+        "o_tau": -0.023333333333333334,
         "o_tau_std": NaN,
+        "o_status": "scored",
+        "o_scored": 500,
+        "o_supplied": 500,
+        "o_expected": 500,
         "l_precision": 0.001334230935244389,
         "l_recall": 0.475,
-        "l_f1": 0.0026609874037259425
+        "l_f1": 0.0026609874037259425,
+        "l_baseline": 0.002997002997002997,
+        "l_status": "scored",
+        "l_scored": 2000,
+        "l_supplied": 2000,
+        "l_expected": 2000,
+        "l_valid": true,
+        "l_duplicates": 0,
+        "l_missing": 0,
+        "quarantined": false,
+        "quarantine_reasons": []
       },
-      "Memon-MST": {
-        "o_tau": 0.3540000000000001,
+      "Jaccard-MST": {
+        "o_tau": -0.001999999999999995,
         "o_tau_std": NaN,
+        "o_status": "scored",
+        "o_scored": 500,
+        "o_supplied": 500,
+        "o_expected": 500,
         "l_precision": 0.001334230935244389,
         "l_recall": 0.475,
-        "l_f1": 0.0026609874037259425
+        "l_f1": 0.0026609874037259425,
+        "l_baseline": 0.002997002997002997,
+        "l_status": "scored",
+        "l_scored": 2000,
+        "l_supplied": 2000,
+        "l_expected": 2000,
+        "l_valid": true,
+        "l_duplicates": 0,
+        "l_missing": 0,
+        "quarantined": false,
+        "quarantine_reasons": []
       }
     },
     "prose": {
@@ -32,21 +63,52 @@
         "o_tau_std": 0.006029756453436602,
         "l_precision": 0.002781636152149611,
         "l_recall": 0.0019382159219192827,
-        "l_f1": 0.0022845679883500385
+        "l_f1": 0.0022845679883500385,
+        "l_baseline": 0.005552027943450713,
+        "quarantined": false,
+        "quarantine_reasons": []
       },
-      "Memon-Greedy": {
-        "o_tau": 0.3231837157183344,
+      "Jaccard-Greedy": {
+        "o_tau": -0.021263178371902322,
         "o_tau_std": NaN,
+        "o_status": "scored",
+        "o_scored": 500,
+        "o_supplied": 500,
+        "o_expected": 500,
         "l_precision": 0.036801812224774216,
         "l_recall": 0.10756097753521553,
-        "l_f1": 0.05484015520267044
+        "l_f1": 0.05484015520267044,
+        "l_baseline": 0.005552027943450713,
+        "l_status": "scored",
+        "l_scored": 16524,
+        "l_supplied": 16524,
+        "l_expected": 16524,
+        "l_valid": true,
+        "l_duplicates": 0,
+        "l_missing": 0,
+        "quarantined": false,
+        "quarantine_reasons": []
       },
-      "Memon-MST": {
-        "o_tau": 0.7043204953375118,
+      "Jaccard-MST": {
+        "o_tau": -0.011029614286439872,
         "o_tau_std": NaN,
+        "o_status": "scored",
+        "o_scored": 500,
+        "o_supplied": 500,
+        "o_expected": 500,
         "l_precision": 0.036801812224774216,
         "l_recall": 0.10756097753521553,
-        "l_f1": 0.05484015520267044
+        "l_f1": 0.05484015520267044,
+        "l_baseline": 0.005552027943450713,
+        "l_status": "scored",
+        "l_scored": 16524,
+        "l_supplied": 16524,
+        "l_expected": 16524,
+        "l_valid": true,
+        "l_duplicates": 0,
+        "l_missing": 0,
+        "quarantined": false,
+        "quarantine_reasons": []
       }
     }
   }
