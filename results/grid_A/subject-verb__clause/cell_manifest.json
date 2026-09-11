@@ -1,0 +1,18 @@
+{
+  "cell": "subject-verb__clause",
+  "strategy": "subject-verb",
+  "granularity": "clause",
+  "cutter_module": "subject_verb",
+  "cutter_function": "cut_corpus",
+  "params": {
+    "granularity": "clause"
+  },
+  "source": "data/grid_corpus_A/prose_raw.jsonl",
+  "source_sha256": "66b646c9c02ca59821f455981c8e1e0669a1ccda7e6be6ea0325d680bf652dcc",
+  "selection": "data/pools/grid_selection_A.json",
+  "git_commit": "fe7bdc94c11def23713001ad53b9aa5d15936481",
+  "cut_at": "2026-09-11T00:35:15.227087+00:00",
+  "n_docs": 175,
+  "n_fragments": 8420,
+  "fidelity_gate": "pass"
+}

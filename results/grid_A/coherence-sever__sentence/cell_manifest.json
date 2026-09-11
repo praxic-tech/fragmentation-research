@@ -1,0 +1,18 @@
+{
+  "cell": "coherence-sever__sentence",
+  "strategy": "coherence-sever",
+  "granularity": "sentence",
+  "cutter_module": "coherence_sever",
+  "cutter_function": "cut_corpus",
+  "params": {
+    "granularity": "sentence"
+  },
+  "source": "data/grid_corpus_A/prose_raw.jsonl",
+  "source_sha256": "66b646c9c02ca59821f455981c8e1e0669a1ccda7e6be6ea0325d680bf652dcc",
+  "selection": "data/pools/grid_selection_A.json",
+  "git_commit": "fe7bdc94c11def23713001ad53b9aa5d15936481",
+  "cut_at": "2026-09-11T00:31:32.378232+00:00",
+  "n_docs": 175,
+  "n_fragments": 4065,
+  "fidelity_gate": "pass"
+}

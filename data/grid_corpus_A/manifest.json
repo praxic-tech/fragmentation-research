@@ -1,0 +1,22 @@
+{
+  "source_raw": "data/prose/prose_raw.jsonl",
+  "source_sha256": "3234627b0361458f312597a80bb9e891aefd1feb78d94f366000cb99c9c1c055",
+  "selection": "data/pools/grid_selection_A.json",
+  "selection_seed": 42,
+  "fragment_cap": 30,
+  "cap_adjusted": [
+    {
+      "record_id": "prose_0305",
+      "sentences_kept": 29,
+      "sentences_total": 79
+    }
+  ],
+  "cap_applied_to": "source_text",
+  "n_documents": 175,
+  "documents_truncated": 62,
+  "sentences_kept": 4275,
+  "sentences_in_full_documents": 5401,
+  "reference_fragments": 4267,
+  "reference_max_per_doc": 30,
+  "grid_corpus_sha256": "66b646c9c02ca59821f455981c8e1e0669a1ccda7e6be6ea0325d680bf652dcc"
+}

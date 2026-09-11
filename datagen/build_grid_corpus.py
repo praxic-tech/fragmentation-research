@@ -112,8 +112,20 @@ def build(raw_path, selection_path, out_dir, force):
 
     os.makedirs(out_dir, exist_ok=True)
     rows, truncated, kept_total, full_total = [], 0, 0, 0
+    adjusted = []
     for rid in wanted:
-        text, kept, total = truncate(by_id[rid]["text"], cap)
+        full = by_id[rid]["text"]
+        text, kept, total = truncate(full, cap)
+        # Sentence splitting is context-sensitive: re-splitting the JOINED first
+        # `cap` sentences can give cap + 1 (measured: prose_0305, 30 -> 31), so a
+        # single truncation does not guarantee the cap it promises. Drop one
+        # sentence at a time until the reference cut respects it, and record it.
+        while kept > 1 and len(cut(text, strategy="semantic",
+                                   granularity="sentence")) > cap:
+            text, kept, total = truncate(full, kept - 1)
+        if kept < min(cap, total):
+            adjusted.append({"record_id": rid, "sentences_kept": kept,
+                             "sentences_total": total})
         rows.append({"record_id": rid, "text": text})
         truncated += int(kept < total)
         kept_total += kept
@@ -135,6 +147,7 @@ def build(raw_path, selection_path, out_dir, force):
         "selection": os.path.relpath(selection_path, ROOT).replace("\\", "/"),
         "selection_seed": selection.get("seed"),
         "fragment_cap": cap,
+        "cap_adjusted": adjusted,
         "cap_applied_to": "source_text",
         "n_documents": len(rows),
         "documents_truncated": truncated,

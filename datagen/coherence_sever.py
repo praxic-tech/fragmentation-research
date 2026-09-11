@@ -191,11 +191,25 @@ def _cut_token_window(text, window_size=DEFAULT_WINDOW, snap_radius=3):
     discourse_tokens = _find_discourse_tokens(doc)
     radius = min(snap_radius, max(1, window_size // 4))
 
+    def legal(i):
+        # A cut before token i must fall on WHITESPACE in the source. spaCy
+        # splits "bloating," and "patient's" into separate tokens, so a raw
+        # token edge could land where the text has no gap, and the rejoin
+        # (single spaces) then inserted one: "bloating , heaviness",
+        # "patient 's". 172 of 175 grid documents failed the fidelity gate.
+        # Every other cutter splits on whitespace and never had this problem.
+        return 0 < i < n and doc[i - 1].whitespace_ != ""
+
     edges = [0]
     pos = window_size
     while pos < n:
-        nearby = [t for t in discourse_tokens if abs(t - pos) <= radius and t > edges[-1]]
+        nearby = [t for t in discourse_tokens
+                  if abs(t - pos) <= radius and t > edges[-1] and legal(t)]
         edge = min(nearby, key=lambda t: abs(t - pos)) if nearby else pos
+        while edge < n and not legal(edge):
+            edge += 1
+        if edge >= n:
+            break
         if edge > edges[-1]:
             edges.append(edge)
         pos = edge + window_size
