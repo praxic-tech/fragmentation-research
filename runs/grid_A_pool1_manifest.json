@@ -1,0 +1,297 @@
+{
+  "slice": "grid pool 1 of 25 -- the first staged slice of the final grid (docs/RUN_DECISIONS.md D4 clarification)",
+  "git_commit": "a020e5179fc0bdd3cb6dc954c9ae3b60325165ce",
+  "code_uncommitted_at_freeze": [
+    "M datagen/llm_cutter.py"
+  ],
+  "frame_pool": "pool_000",
+  "o_docs": [
+    "prose_0045",
+    "prose_0053",
+    "prose_0072",
+    "prose_0156",
+    "prose_0164",
+    "prose_0315",
+    "prose_0383"
+  ],
+  "cells": [
+    {
+      "cell": "coherence-sever__clause",
+      "cell_manifest": {
+        "cell": "coherence-sever__clause",
+        "strategy": "coherence-sever",
+        "granularity": "clause",
+        "cutter_module": "coherence_sever",
+        "cutter_function": "cut_corpus",
+        "params": {
+          "granularity": "clause"
+        },
+        "source": "data/grid_corpus_A/prose_raw.jsonl",
+        "source_sha256": "66b646c9c02ca59821f455981c8e1e0669a1ccda7e6be6ea0325d680bf652dcc",
+        "selection": "data/pools/grid_selection_A.json",
+        "git_commit": "fe7bdc94c11def23713001ad53b9aa5d15936481",
+        "cut_at": "2026-09-11T00:32:16.862136+00:00",
+        "n_docs": 175,
+        "n_fragments": 5119,
+        "fidelity_gate": "pass"
+      },
+      "fragments_sha256": "5e1ee0997b99dc057130faa9af40515eafff92492a8f5cc827774f9d3421a8f7",
+      "answer_key_sha256": "ec1cf1572418e2995ec2b1bf9d749cc0f0060e52d59f2bef531b5f5251d6faa4"
+    },
+    {
+      "cell": "coherence-sever__sentence",
+      "cell_manifest": {
+        "cell": "coherence-sever__sentence",
+        "strategy": "coherence-sever",
+        "granularity": "sentence",
+        "cutter_module": "coherence_sever",
+        "cutter_function": "cut_corpus",
+        "params": {
+          "granularity": "sentence"
+        },
+        "source": "data/grid_corpus_A/prose_raw.jsonl",
+        "source_sha256": "66b646c9c02ca59821f455981c8e1e0669a1ccda7e6be6ea0325d680bf652dcc",
+        "selection": "data/pools/grid_selection_A.json",
+        "git_commit": "fe7bdc94c11def23713001ad53b9aa5d15936481",
+        "cut_at": "2026-09-11T00:31:32.378232+00:00",
+        "n_docs": 175,
+        "n_fragments": 4065,
+        "fidelity_gate": "pass"
+      },
+      "fragments_sha256": "c69106b5311a44d73f448711e9426619bff0bc107d22a627440ea6db0e4b50a2",
+      "answer_key_sha256": "b1277e744940c0aaaa5600d4f78fd3d0083d2303c305f351bb4724d1e57da49e"
+    },
+    {
+      "cell": "coherence-sever__token-window",
+      "cell_manifest": {
+        "cell": "coherence-sever__token-window",
+        "strategy": "coherence-sever",
+        "granularity": "token-window",
+        "cutter_module": "coherence_sever",
+        "cutter_function": "cut_corpus",
+        "params": {
+          "granularity": "token-window"
+        },
+        "source": "data/grid_corpus_A/prose_raw.jsonl",
+        "source_sha256": "66b646c9c02ca59821f455981c8e1e0669a1ccda7e6be6ea0325d680bf652dcc",
+        "selection": "data/pools/grid_selection_A.json",
+        "git_commit": "fe7bdc94c11def23713001ad53b9aa5d15936481",
+        "cut_at": "2026-09-11T00:32:30.768515+00:00",
+        "n_docs": 175,
+        "n_fragments": 8448,
+        "fidelity_gate": "pass"
+      },
+      "fragments_sha256": "1cb071ff868b3142571947d98b3fddec50bd584e77a87db0fb7bf865ccc3a239",
+      "answer_key_sha256": "f8ff0191de65e65be2fe3903dd93b60d4f74fa4cda6658628568a874c0e2cc84"
+    },
+    {
+      "cell": "random__clause",
+      "cell_manifest": {
+        "cell": "random__clause",
+        "strategy": "random",
+        "granularity": "clause",
+        "cutter_module": "random_cut",
+        "cutter_function": "cut_corpus",
+        "params": {
+          "granularity": "clause",
+          "seed": 42
+        },
+        "source": "data/grid_corpus_A/prose_raw.jsonl",
+        "source_sha256": "66b646c9c02ca59821f455981c8e1e0669a1ccda7e6be6ea0325d680bf652dcc",
+        "selection": "data/pools/grid_selection_A.json",
+        "git_commit": "fe7bdc94c11def23713001ad53b9aa5d15936481",
+        "cut_at": "2026-09-11T00:30:19.391560+00:00",
+        "n_docs": 175,
+        "n_fragments": 5363,
+        "fidelity_gate": "pass"
+      },
+      "fragments_sha256": "87f5877cba6db37d746d2adc16f43eba4559477f8add2bf677f75524e3e764e0",
+      "answer_key_sha256": "e55b6e9471d5c31ec2dca2c47e56987147f2b8994370622c80020b9d486541b1"
+    },
+    {
+      "cell": "random__sentence",
+      "cell_manifest": {
+        "cell": "random__sentence",
+        "strategy": "random",
+        "granularity": "sentence",
+        "cutter_module": "random_cut",
+        "cutter_function": "cut_corpus",
+        "params": {
+          "granularity": "sentence",
+          "seed": 42
+        },
+        "source": "data/grid_corpus_A/prose_raw.jsonl",
+        "source_sha256": "66b646c9c02ca59821f455981c8e1e0669a1ccda7e6be6ea0325d680bf652dcc",
+        "selection": "data/pools/grid_selection_A.json",
+        "git_commit": "fe7bdc94c11def23713001ad53b9aa5d15936481",
+        "cut_at": "2026-09-11T00:28:45.686308+00:00",
+        "n_docs": 175,
+        "n_fragments": 4267,
+        "fidelity_gate": "pass"
+      },
+      "fragments_sha256": "1a19498bc32160c478767fc1e93a47f239f38a88cdd8436d590258dc2dc19707",
+      "answer_key_sha256": "82ff738ad027906e45f94218bb92d010c310dcba172dba437130041eb53b8557"
+    },
+    {
+      "cell": "random__token-window",
+      "cell_manifest": {
+        "cell": "random__token-window",
+        "strategy": "random",
+        "granularity": "token-window",
+        "cutter_module": "random_cut",
+        "cutter_function": "cut_corpus",
+        "params": {
+          "granularity": "token-window",
+          "seed": 42
+        },
+        "source": "data/grid_corpus_A/prose_raw.jsonl",
+        "source_sha256": "66b646c9c02ca59821f455981c8e1e0669a1ccda7e6be6ea0325d680bf652dcc",
+        "selection": "data/pools/grid_selection_A.json",
+        "git_commit": "fe7bdc94c11def23713001ad53b9aa5d15936481",
+        "cut_at": "2026-09-11T00:30:20.057563+00:00",
+        "n_docs": 175,
+        "n_fragments": 6987,
+        "fidelity_gate": "pass"
+      },
+      "fragments_sha256": "b2a07b25ede76a03bb1f3775f55bcaff02124f2fee9fe2c3894ab9502ca30483",
+      "answer_key_sha256": "63a4538703c030112253f38dae32909d86c104a5619224c31c2ac1ba8f9301cd"
+    },
+    {
+      "cell": "semantic__clause",
+      "cell_manifest": {
+        "cell": "semantic__clause",
+        "strategy": "semantic",
+        "granularity": "clause",
+        "cutter_module": "prose_cutter",
+        "cutter_function": "cut_corpus",
+        "params": {
+          "granularity": "clause",
+          "strategy": "semantic"
+        },
+        "source": "data/grid_corpus_A/prose_raw.jsonl",
+        "source_sha256": "66b646c9c02ca59821f455981c8e1e0669a1ccda7e6be6ea0325d680bf652dcc",
+        "selection": "data/pools/grid_selection_A.json",
+        "git_commit": "fe7bdc94c11def23713001ad53b9aa5d15936481",
+        "cut_at": "2026-09-11T00:31:16.997221+00:00",
+        "n_docs": 175,
+        "n_fragments": 5363,
+        "fidelity_gate": "pass"
+      },
+      "fragments_sha256": "24c534f72240a8ac12de03430db915682afa9596fc8f1245d4fe1de3420afcca",
+      "answer_key_sha256": "c54c8968148ed84929b28a0563354d466d79e43503fb3beb1ad8ef0de3eb1ad3"
+    },
+    {
+      "cell": "semantic__sentence",
+      "cell_manifest": {
+        "cell": "semantic__sentence",
+        "strategy": "semantic",
+        "granularity": "sentence",
+        "cutter_module": "prose_cutter",
+        "cutter_function": "cut_corpus",
+        "params": {
+          "granularity": "sentence",
+          "strategy": "semantic"
+        },
+        "source": "data/grid_corpus_A/prose_raw.jsonl",
+        "source_sha256": "66b646c9c02ca59821f455981c8e1e0669a1ccda7e6be6ea0325d680bf652dcc",
+        "selection": "data/pools/grid_selection_A.json",
+        "git_commit": "fe7bdc94c11def23713001ad53b9aa5d15936481",
+        "cut_at": "2026-09-11T00:30:33.493277+00:00",
+        "n_docs": 175,
+        "n_fragments": 4267,
+        "fidelity_gate": "pass"
+      },
+      "fragments_sha256": "24f0531b624f93cb7b0dc7cb351ef15e53e8086f5aa73f2829ec7f6ce3cf2a4d",
+      "answer_key_sha256": "2f770d9b4182fca99db047f5790a2691ca58f50609860d1d70fbd46ad2378e09"
+    },
+    {
+      "cell": "semantic__token-window",
+      "cell_manifest": {
+        "cell": "semantic__token-window",
+        "strategy": "semantic",
+        "granularity": "token-window",
+        "cutter_module": "prose_cutter",
+        "cutter_function": "cut_corpus",
+        "params": {
+          "granularity": "token-window",
+          "strategy": "semantic"
+        },
+        "source": "data/grid_corpus_A/prose_raw.jsonl",
+        "source_sha256": "66b646c9c02ca59821f455981c8e1e0669a1ccda7e6be6ea0325d680bf652dcc",
+        "selection": "data/pools/grid_selection_A.json",
+        "git_commit": "fe7bdc94c11def23713001ad53b9aa5d15936481",
+        "cut_at": "2026-09-11T00:31:17.757815+00:00",
+        "n_docs": 175,
+        "n_fragments": 6987,
+        "fidelity_gate": "pass"
+      },
+      "fragments_sha256": "ba8ce7ac388baf51b5c1f4d697fb3e7d09b6a49d46739f315715ef57f6ff15dc",
+      "answer_key_sha256": "6bf719725c72ef593a66ffa09f159e81543c32911243806b47b05c68b192c9c7"
+    },
+    {
+      "cell": "subject-verb__clause",
+      "cell_manifest": {
+        "cell": "subject-verb__clause",
+        "strategy": "subject-verb",
+        "granularity": "clause",
+        "cutter_module": "subject_verb",
+        "cutter_function": "cut_corpus",
+        "params": {
+          "granularity": "clause"
+        },
+        "source": "data/grid_corpus_A/prose_raw.jsonl",
+        "source_sha256": "66b646c9c02ca59821f455981c8e1e0669a1ccda7e6be6ea0325d680bf652dcc",
+        "selection": "data/pools/grid_selection_A.json",
+        "git_commit": "fe7bdc94c11def23713001ad53b9aa5d15936481",
+        "cut_at": "2026-09-11T00:35:15.227087+00:00",
+        "n_docs": 175,
+        "n_fragments": 8420,
+        "fidelity_gate": "pass"
+      },
+      "fragments_sha256": "78eee02fea8fa3bebad33176312bf399554bf56f6abd25848f998a8f520cf067",
+      "answer_key_sha256": "635571c6916a401bf4e1fef17bc3b72014e3f282d7954f17c0e331b224b85f37"
+    },
+    {
+      "cell": "subject-verb__sentence",
+      "cell_manifest": {
+        "cell": "subject-verb__sentence",
+        "strategy": "subject-verb",
+        "granularity": "sentence",
+        "cutter_module": "subject_verb",
+        "cutter_function": "cut_corpus",
+        "params": {
+          "granularity": "sentence"
+        },
+        "source": "data/grid_corpus_A/prose_raw.jsonl",
+        "source_sha256": "66b646c9c02ca59821f455981c8e1e0669a1ccda7e6be6ea0325d680bf652dcc",
+        "selection": "data/pools/grid_selection_A.json",
+        "git_commit": "fe7bdc94c11def23713001ad53b9aa5d15936481",
+        "cut_at": "2026-09-11T00:33:36.400215+00:00",
+        "n_docs": 175,
+        "n_fragments": 7115,
+        "fidelity_gate": "pass"
+      },
+      "fragments_sha256": "e95b7efe256d23483838030a9695de7a0f22351fe3d2602edef54ff7ff8ea5f5",
+      "answer_key_sha256": "99fdff82c020638cd913a6d8b7ed427ac49765869ae8e27d46818fbe9d31b0b9"
+    }
+  ],
+  "spec": "runs\\grid_A_pool1.json",
+  "spec_sha256": "e57ff8a99b227fd840b5e8006498ab00a1781bf1cda5c3222cfc9b03cbb85b2c",
+  "model": "claude-sonnet-5",
+  "masking_seed": 42,
+  "prompt_templates_sha256": "7e994a17900f891e239173a8ee0f31b27e199c9ac1dbbf40ff08e738019626d4",
+  "max_tokens_sizing_sha256": "0f46f9ec1621098f72cc5e6dc010ab4d3b8c5f0e55f793ac7b42f203ba6074df",
+  "n_requests": 88,
+  "estimate": {
+    "n_requests": 88,
+    "est_input_tokens": 117671,
+    "est_output_tokens_worst_case": 1097382,
+    "est_cost_worst_case": 5.604581,
+    "est_cost_input_only": 0.117671
+  },
+  "predeclared_check_1": {
+    "preflight_checked": 88,
+    "preflight_blocked": 0,
+    "headline_documents_requested": 0
+  }
+}
