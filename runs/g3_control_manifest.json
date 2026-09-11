@@ -1,7 +1,7 @@
 {
   "spec": "runs/g3_control.json",
   "spec_sha256": "ffe2dc7835547ae70a036d67803b9391962be9cc22a76acc460ee47ef478886f",
-  "git_commit": "e2876dbd48d9aa7dcdaa86aa5862b4fb54db70bf",
+  "git_commit": "5b97708c13778ba874c9b5f6de53953ffaa30281",
   "n_requests": 4,
   "estimate": {
     "n_requests": 4,

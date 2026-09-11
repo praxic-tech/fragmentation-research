@@ -1,0 +1,66 @@
+{
+  "what": "G3 masking side-channel diagnostic (D8)",
+  "actual_usd": 0.552945,
+  "cells": {
+    "ctrl-masked-semantic__sentence": {
+      "scored": true,
+      "joint_f1": 0.6846232526423457,
+      "joint_advantage": 0.6363421720691526,
+      "linkage_f1": 0.8414592567337198,
+      "q": 0.813614262560778,
+      "side_channel": {
+        "pairs": 1234,
+        "answer_agrees_with_truth": 0.813614262560778,
+        "answer_agrees_with_label_numbers": 0.5048622366288493,
+        "expected_from_truth_alone_labels": 0.5111823562015189,
+        "answer_agrees_with_shown_order": 0.5113452188006483,
+        "expected_from_truth_alone_shown": 0.49491711081749146
+      }
+    },
+    "ctrl-unmasked-semantic__sentence": {
+      "scored": true,
+      "joint_f1": 0.9943465247755238,
+      "joint_advantage": 0.9934810332796593,
+      "linkage_f1": 0.995011639507815,
+      "q": 0.9993315508021391,
+      "side_channel": {
+        "pairs": 1496,
+        "answer_agrees_with_truth": 0.9993315508021391,
+        "answer_agrees_with_label_numbers": 0.9993315508021391,
+        "expected_from_truth_alone_labels": 0.9993315508021391,
+        "answer_agrees_with_shown_order": 0.9993315508021391,
+        "expected_from_truth_alone_shown": 0.9993315508021391
+      }
+    },
+    "ctrl-masked-random__sentence": {
+      "scored": true,
+      "joint_f1": 0.7593935398813447,
+      "joint_advantage": 0.7225590554599376,
+      "linkage_f1": 0.8075148319050757,
+      "q": 0.9404081632653061,
+      "side_channel": {
+        "pairs": 1225,
+        "answer_agrees_with_truth": 0.9404081632653061,
+        "answer_agrees_with_label_numbers": 0.5257142857142857,
+        "expected_from_truth_alone_labels": 0.5161782590587255,
+        "answer_agrees_with_shown_order": 0.48489795918367345,
+        "expected_from_truth_alone_shown": 0.4874169096209912
+      }
+    },
+    "ctrl-unmasked-random__sentence": {
+      "scored": true,
+      "joint_f1": 1.0,
+      "joint_advantage": 1.0,
+      "linkage_f1": 1.0,
+      "q": 1.0,
+      "side_channel": {
+        "pairs": 1511,
+        "answer_agrees_with_truth": 1.0,
+        "answer_agrees_with_label_numbers": 1.0,
+        "expected_from_truth_alone_labels": 1.0,
+        "answer_agrees_with_shown_order": 1.0,
+        "expected_from_truth_alone_shown": 1.0
+      }
+    }
+  }
+}

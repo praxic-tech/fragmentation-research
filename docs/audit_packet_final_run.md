@@ -28,7 +28,7 @@ screening answers `results/batches/grid-A-pool1*`, the preserved audit copy
 | grid corpus cap | yes | yes | — |
 | headline cut | yes, drops 0.12% of tokens by design | yes, document it | — |
 | masking / presentation | yes, after D7 — per-unit seeds | yes | **RESOLVED (D7)** |
-| masking side-channel diagnostic (G3) | — | — | run in D8 (development pools), see B |
+| masking side-channel diagnostic (G3) | yes — planted leak exploited (F1 ≈ 1.0), masked shows no side channel | yes | **done (D8)**, see B and H |
 | one-shot Sonnet J / O | yes | yes | — |
 | hierarchical attacker (batch) | yes — equals the offline attacker (G2c); live sample completed | yes, as a decomposed attacker | **RESOLVED (D7)**; k fixed by blocker calibration (D8) |
 | Random / Jaccard-Greedy / Jaccard-MST | yes, at chance after D1 | yes, as floors | — |
@@ -507,7 +507,7 @@ plus sales tax, so the ledger's hard limit is $167 ÷ (1 + tax rate).
 | hierarchical output caps sized for gpt-oss | every pair batch at 128k, one attempt | G2c; live sample on grid pool_000 |
 | hierarchical never completed a live pool | live batch sample: 24/24 pair batches, 467/467 pairs, $0.50, pool scored | msgbatch_01NUXxhBgUzdLnz6fyYYeuRD |
 | hierarchical k unset | pre-declared blocker rule on development data: no k adequate; fallback k = 20 (80.6% of records connected, 41.4% adjacent recall) | results/audit/hier_blocker_calibration.json (D8) |
-| G3 never run | masking side-channel diagnostic on development pool_000 | results/audit/g3_diagnostic.json (D8) |
+| G3 never run | run: raw ids in true order → joint F1 0.994 / 1.000 (leak fully exploited); masked → answer order agrees with label numbers and shown order only as its accuracy implies (gaps ≤ 0.016): no side channel. $0.55 | results/audit/g3_diagnostic.json (D8) |
 
 Live sample result (one development pool, semantic × sentence): hierarchical
 joint F1 0.380 / advantage +0.285 (linkage F1 0.529, q 0.718) against one-shot

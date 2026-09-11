@@ -291,7 +291,21 @@ fidelity checks, never from attack scores.
 - **G3** runs on development pool pool_000 × {semantic, random} × sentence, each
   asked masked and with RAW fragment ids in true order, as a masking
   SIDE-CHANNEL diagnostic -- not a requirement that masked reconstruction be
-  low (results/audit/g3_diagnostic.json).
+  low (results/audit/g3_diagnostic.json). **Run** (msgbatch_018YeW5fT2GMQhHy77saJGEH,
+  4/4 answered, $0.5529):
+
+  | cell | arm | joint F1 | agrees with label numbers (expected from truth alone) | agrees with shown order (expected) |
+  |---|---|---|---|---|
+  | semantic × sentence | raw ids, true order | 0.994 | 0.999 (0.999) | 0.999 (0.999) |
+  | semantic × sentence | masked | 0.685 | 0.505 (0.511) | 0.511 (0.495) |
+  | random × sentence | raw ids, true order | 1.000 | 1.000 (1.000) | 1.000 (1.000) |
+  | random × sentence | masked | 0.759 | 0.526 (0.516) | 0.485 (0.487) |
+
+  The planted leak is exploited completely. Masked, the answer's order agrees
+  with label numbers and with the shown order exactly as often as its accuracy
+  implies (every gap ≤ 0.016, about one standard error at ~1,230 pairs): no
+  measurable id or presentation side channel. Masked reconstruction is high
+  because the model reads the content, which is the finding, not a leak.
 - **The final price** is results/budget_final.txt (analysis/budget_final.py).
   No headline or grid request is submitted until the user approves it.
 

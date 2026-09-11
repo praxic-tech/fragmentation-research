@@ -266,6 +266,38 @@ print("\nDROP ORDER if the forecast worsens: repeats full -> repeats small -> gr
       " hierarchical extension -> grid O 30 -> headline O -> hierarchical 12 -> grid J pools from"
       " the end of the pool order. Headline J is never dropped.")
 
+print("\nALTERNATIVES -- scope only (k is never chosen from F1); totals include already spent")
+HP12, HP6 = HP["pool_ids"], HP["pool_ids"][:6]
+
+
+def hier_det(pools, k):
+    return hier_usd(pools, k=k), hier_usd(pools, k=k, out_mult=2.0)
+
+
+TAX_SHOWN = ARGS.tax if ARGS.tax is not None else 0.08
+SCEN = [
+    ("A  as specified: hier-12 k=20, headline O, grid O 30", ["headJ"] + GRID_J + ["headO", "gridO30"],
+     [DET["g3"], DET["hier12"]]),
+    ("B  drop grid O 30", ["headJ"] + GRID_J + ["headO"], [DET["g3"], DET["hier12"]]),
+    ("C  drop grid O 30 and headline O", ["headJ"] + GRID_J, [DET["g3"], DET["hier12"]]),
+    ("D  hier-12 at k=10 (a cost choice, coverage disclosed), all O",
+     ["headJ"] + GRID_J + ["headO", "gridO30"], [DET["g3"], hier_det(HP12, 10)]),
+    ("E  hier-6 at k=20 (first 6 of the 12), headline O, no grid O",
+     ["headJ"] + GRID_J + ["headO"], [DET["g3"], hier_det(HP6, 20)]),
+    ("F  no hierarchical; headline O + grid O 30", ["headJ"] + GRID_J + ["headO", "gridO30"], [DET["g3"]]),
+    ("G  J only: G3 + headline J + grid J", ["headJ"] + GRID_J, [DET["g3"]]),
+]
+print(f"  {'scenario':<66}{'expected':>10}{'P95':>10}{'0% tax':>12}{f'{TAX_SHOWN:.0%} tax':>12}")
+for label, keys, dets in SCEN:
+    e, p = joint(keys)
+    e = SPENT + e + sum(d[0] for d in dets)
+    p = SPENT + p + sum(d[1] for d in dets)
+
+    def fit_at(t):
+        w = WALL / (1 + t)
+        return "fits" if p <= w else ("exp fits" if e <= w else "OVER")
+    print(f"  {label:<66}{e:>10.2f}{p:>10.2f}{fit_at(0.0):>12}{fit_at(TAX_SHOWN):>12}")
+
 print("\nTAX: the wall is out of pocket, so the ledger's hard limit in credit is $167 / (1 + tax).")
 rates = [ARGS.tax] if ARGS.tax is not None else [0.0, 0.05, 0.08, 0.10]
 for t in rates:
