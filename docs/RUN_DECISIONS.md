@@ -50,3 +50,36 @@ non-deterministic across processes (set iteration under hash randomisation:
 - The second pool is authorised separately.
 - Every paid answer is filed in the answer store, so test answers are reused by
   the real run rather than paid for twice.
+
+## D4 clarification — 2026-09-10: the first pool is a slice, not a pilot
+
+The paid first-pool run is the FIRST STAGED SLICE of the final 25-pool grid, not a
+disposable pilot and not a separate dataset. Staging one pool first exists only to
+limit financial exposure to implementation or provider failures.
+
+Everything that affects the 11 current cells is FROZEN before the API is called
+and recorded in a committed run manifest: git commit, every cell_manifest.json
+(cutter, parameters, source sha256), fragment-file hashes, the spec's sha256, the
+O and J prompt templates, model id, the max_tokens sizing function, masking seed.
+
+The slice's answers are KEPT in the answer store and INCLUDED in the final grid
+results if it passes these predeclared OPERATIONAL / INTEGRITY checks:
+
+1. Masking: every prompt passes preflight (0 blocked), and no request contains a
+   document from the 46 headline pools.
+2. Transport: after at most 2 resubmissions, 0 requests missing, errored, expired,
+   canceled or empty (require_complete passes).
+3. Integrity gate: every expected unit has a real model answer and no unit is over
+   POLICY_CAP (25% of fragments placed by the completion policy).
+4. Repair: at most 1 repair round, as specified; repair rates are reported.
+5. Spend: every wave settled in the ledger, within the $120 tripwire.
+6. Reproducibility: re-scoring the stored answers reproduces the same numbers.
+
+NO PERFORMANCE SCORE (tau, F1, advantage, longest readable stretch, anything
+else) is used to decide whether the slice is valid.
+
+If a failure is traced to TRANSPORT, the affected requests are resubmitted. If it
+is traced to SCORING, the stored answers are re-scored and nothing is re-bought.
+Only an ANSWER-AFFECTING change (prompt, cut, masking, presentation, model)
+invalidates answers, and then only the affected ones: the answer store keys on
+the exact model and prompt, so a changed request can never be served an old answer.
