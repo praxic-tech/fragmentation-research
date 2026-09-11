@@ -123,10 +123,10 @@ def _prim_mst(nodes: list, sim_fn) -> dict:
     if len(in_tree) < len(nodes):
         disconnected = set(nodes) - in_tree
         # Connect each disconnected node to the tree with the strongest edge
-        for node in disconnected:
+        for node in sorted(disconnected):   # sets iterate in per-process hash order
             best_edge = None
             best_weight = -1.0
-            for tree_node in in_tree:
+            for tree_node in sorted(in_tree):
                 w = sim_fn(node, tree_node)
                 if w > best_weight:
                     best_weight = w
@@ -239,7 +239,7 @@ def mst_order(frag_ids: list, text_by_id: dict) -> list:
                 # Find the best connection from any visited node to any unvisited node
                 best_edge = None
                 best_weight = -1.0
-                for visited_node in visited:
+                for visited_node in sorted(visited):   # was per-process hash order (D1)
                     for unvisited_node in remaining:
                         w = sim(visited_node, unvisited_node)
                         if w > best_weight:

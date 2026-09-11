@@ -89,10 +89,10 @@ def main():
           f"   2sigma CI [{o_taus.mean()-2*sd:+.4f}, {o_taus.mean()+2*sd:+.4f}]")
     print(f"  Game L F1: {l_fs.mean():.4f} +- {l_fs.std(ddof=1):.4f}")
 
-    for method, name in [("greedy", "Memon-Greedy"), ("mst", "Memon-MST")]:
+    for method, name in [("greedy", "Jaccard-Greedy"), ("mst", "Jaccard-MST")]:
         print(f"\n{name} ...")
         results[name] = H.eval_memon(fragments, true_order, true_groups, method,
-                                     grouping_variant=args.grouping)
+                                     grouping_variant=args.grouping, seed=args.seed)
         r = results[name]
         print(f"  Game O tau : {r['o_tau']:+.4f}")
         print(f"  Game L   : F1={r['l_f1']:.4f}  P={r['l_precision']:.4f}  "

@@ -7,8 +7,8 @@ Evaluates four strategies on Game O (ordering) and Game L (grouping) for:
 
 Strategies:
     Random      — uniform random, repeated N_RUNS times → distribution stats
-    Memon-G     — greedy nearest-neighbour (text-similarity-guided)
-    Memon-MST   — maximum spanning tree path / MST-cut
+    Jaccard-Greedy — greedy nearest-neighbour over word-bigram Jaccard (Memon-inspired)
+    Jaccard-MST    — maximum spanning tree path, same similarity (Memon-inspired)
     LLM         — loaded from data/llm_{ordering,grouping}_guesses.jsonl
 
 One RNG seed controls everything.  Final output is two comparison tables
@@ -43,6 +43,8 @@ from orderers import (random_order,    random_grouping,
 # degenerate and reachable only through memon_linkage's legacy variants.
 from scoring  import score_ordering, score_linkage
 from memon_linkage import memon_grouping
+from masking import assert_ids_masked
+import hashlib
 
 # ── Constants ────────────────────────────────────────────────────────────────────
 _NAN = "-"
@@ -242,8 +244,37 @@ def eval_random(fragments, true_order, true_groups, n_runs):
 
 # ── Memon (greedy / MST) ──────────────────────────────────────────────────────
 
+def _masked_shuffled_order(order_fn, frag_ids, text_by_id, seed):
+    """Run a classic orderer on MASKED labels in a SEEDED, SHUFFLED presentation.
+
+    Superseded (docs/RUN_DECISIONS.md D1): Game O handed the orderers the raw
+    fragment ids in true order. Word-bigram Jaccard is exactly 0 for 86.7% of
+    within-document pairs, so almost every step was a tie, and ties went to the
+    raw id or the list position -- both of which reproduce the true order.
+    Measured on the prose corpus: Greedy tau +0.3232 and MST +0.7044 as run,
+    -0.0304 and -0.0175 masked and shuffled. Those O numbers were leakage.
+
+    The seed is sha256 of the document's fragment set plus the run seed: the
+    same in every process (never Python's hash()), and carrying no information
+    about the true order. It uses its OWN generator, so the global stream that
+    drives the random baseline and the Game L masking is not consumed.
+    """
+    ids = list(frag_ids)
+    digest = hashlib.sha256(("|".join(sorted(ids)) + f"#{seed}").encode("utf-8"))
+    rng = random.Random(int(digest.hexdigest()[:16], 16))
+    labels = [f"m_{i:07d}" for i in range(len(ids))]
+    rng.shuffle(labels)
+    lab2id = dict(zip(labels, ids))
+    shown = list(labels)
+    rng.shuffle(shown)
+    assert_ids_masked(shown, where=f"classic {order_fn.__name__}")
+    ltext = {lab: text_by_id[lab2id[lab]] for lab in shown}
+    return [lab2id[lab] for lab in order_fn(shown, ltext)]
+
+
 def eval_memon(fragments, true_order, true_groups, method: str,
-               grouping_variant: str = "fixed") -> dict:
+               grouping_variant: str = "fixed", seed: int = DEFAULT_SEED,
+               legacy_unmasked_order: bool = False) -> dict:
     """
     Evaluate one Memon strategy on both games.
 
@@ -265,13 +296,15 @@ def eval_memon(fragments, true_order, true_groups, method: str,
     # Mask fragment IDs for Game L (prevents ID leakage)
     masked_fragments, id_map = mask_fragment_ids(fragments)
 
-    # Game O - uses original fragments and text_by_id
-    if method == "greedy":
-        order_fn = lambda ids: greedy_nn_order(ids, text_by_id)
-    elif method == "mst":
-        order_fn = lambda ids: mst_order(ids, text_by_id)
+    # Game O -- masked labels, seeded shuffled presentation (D1). The legacy
+    # path is kept ONLY to reproduce the superseded numbers for the audit record.
+    base_fn = {"greedy": greedy_nn_order, "mst": mst_order}.get(method)
+    if base_fn is None:
+        raise ValueError(f"unknown ordering method {method!r}")
+    if legacy_unmasked_order:
+        order_fn = lambda ids: base_fn(ids, text_by_id)
     else:
-        raise ValueError(f"unknown Memon ordering method {method!r}")
+        order_fn = lambda ids: _masked_shuffled_order(base_fn, ids, text_by_id, seed)
 
     o_cov = _avg_ordering_tau(fragments, true_order, order_fn=order_fn)
     o_tau = o_cov["tau"]
@@ -572,11 +605,15 @@ def evaluate_dataset(fragments_path, answer_key_path, llm_order_path, llm_group_
 
     # ── Memon strategies ──────────────────────────────────────────────────────
     if not args.skip_memon:
-        for method, label in [("greedy", "Memon-Greedy"), ("mst", "Memon-MST")]:
+        labels = [("greedy", "Jaccard-Greedy"), ("mst", "Jaccard-MST")]
+        if args.legacy_unmasked_order:
+            labels = [(m, f"{l} [LEGACY-LEAKS, audit only]") for m, l in labels]
+        for method, label in labels:
             print(f"\n{label} ...")
             results[label] = eval_memon(
                 fragments, true_order, true_groups, method,
-                grouping_variant=args.grouping
+                grouping_variant=args.grouping, seed=args.seed,
+                legacy_unmasked_order=args.legacy_unmasked_order
             )
             r = results[label]
             print(f"  Game O tau : {r['o_tau']:+.4f}")
@@ -634,7 +671,14 @@ def main() -> None:
                         help="Skip prose corpus evaluation (identifier data only)")
     parser.add_argument("--skip-ids",   action="store_true",
                         help="Skip identifier data evaluation (prose only)")
+    parser.add_argument("--legacy-unmasked-order", action="store_true",
+                        help="AUDIT ONLY: reproduce the superseded, leaking Game O "
+                             "numbers (raw ids, true order). Writes a separate file.")
     args = parser.parse_args()
+    if args.legacy_unmasked_order:
+        print("AUDIT ONLY: Game O on raw fragment ids in true order -- the "
+              "superseded configuration. These numbers are leakage, not ordering "
+              "ability (docs/RUN_DECISIONS.md D1).")
 
     # One seed controls everything
     random.seed(args.seed)
@@ -663,7 +707,8 @@ def main() -> None:
                                seed=args.seed, n_runs=args.runs)
 
     # ── Persist ───────────────────────────────────────────────────────────────
-    out = RESULTS / "harness_results.json"
+    out = RESULTS / ("harness_results_LEGACY_AUDIT.json"
+                     if args.legacy_unmasked_order else "harness_results.json")
     with open(out, "w") as fh:
         json.dump(
             {
