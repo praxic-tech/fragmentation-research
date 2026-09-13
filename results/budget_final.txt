@@ -1,49 +1,50 @@
 FINAL PRICE -- API credit, before sales tax
   already spent (ledger, observed): $10.81
-  hierarchical: k=20 (D8; coverage inadequate at every k), measured 122 in / 192 out tokens per pair; 12 pools ['pool_059', 'pool_061', 'pool_030']...
+  hierarchical: k=20 (D8; coverage inadequate at every k), measured 122 in / 192 out tokens per pair; rescue = 2.5 expected one-shot non-completion headline pools (95th percentile 5), filler from the frozen order
+  identifier J: 28-fragment pools sit BELOW the J token model's fitted range (128-272 fragments), so its cost is an extrapolation; it is small either way
   G3: run -- its actual cost is inside 'already spent'
 
 part                                                        expected       P95  non-compl.
   G3 masking side-channel diagnostic (dev pool)                 0.00      0.00         0.0
-  Headline J, 46 pools                                         18.29     23.97         2.8
-  Grid J, 9 cells x pools 2-25 (216 pools)                     84.95    111.16        14.6
-  Hierarchical, 12 prespecified headline pools, k=20           37.52     70.81         0.0
-  Headline O, 100 docs, length-stratified                       5.83      7.79         1.4
-  Grid O, 30 docs/cell x 9 cells                               14.02     18.68         0.2
+  Headline J, 46 pools                                         18.27     23.68         2.8
+  Grid J, 9 cells x pools 2-25 (216 pools)                     84.90    110.54        14.8
+  Identifier J, 20 frozen pools (D11)                           1.42      3.88         0.0
+  Headline O, 100 docs, length-stratified                       5.85      7.88         1.4
+  Grid O, 30 docs/cell x 9 cells                               14.03     18.66         0.2
+  Hierarchical, 12 headline pools: rescue + filler (D11), k=20     42.10     93.76         0.0
   optional extensions:
-    Hierarchical +8 -> 20 pools                                29.22     55.15         0.0
-    Grid O +30 -> 60 docs/cell                                 11.77     15.61         0.2
-    Repeats, small (reference x1, 12 pools J + 60 docs O)       4.78      6.15         0.0
-    Repeats, full (reference x2, pools 2-25)                   20.78     25.87         0.0
+    Hierarchical +8 filler pools                               25.02     50.03         0.0
+    Grid O +30 -> 60 docs/cell                                 11.80     15.62         0.2
+    Repeats, small (reference x1, 12 pools J + 60 docs O)       4.78      6.11         0.0
+    Repeats, full (reference x2, pools 2-25)                   20.74     25.61         0.0
     (hierarchical 12 pools at k=5: $10.00 expected)
     (hierarchical 12 pools at k=10: $19.20 expected)
     (hierarchical 12 pools at k=20: $37.52 expected)
 
-RUN ORDER, cumulative (already spent included); wall in credit $188.24 = $200 / (1 + 0.0625)
+RUN ORDER, cumulative (already spent included); wall in credit $197.65 = $210 / (1 + 0.0625)
   step                                                        expected       P95   left under wall (exp / P95)
-  0 G3 masking side-channel diagnostic (dev pool)                10.81     10.81         177.42 /  177.42
-  1 Headline J, 46 pools                                         29.10     34.79         159.13 /  153.45
-  2 Grid J, 9 cells x pools 2-25 (216 pools)                    114.05    145.73          74.19 /   42.50
-  3 Hierarchical, 12 prespecified headline pools, k=20          151.57    216.55          36.66 /  -28.31
-  4 Headline O, 100 docs, length-stratified                     157.40    222.80          30.83 /  -34.57
-  5 Grid O, 30 docs/cell x 9 cells                              171.43    237.72          16.81 /  -49.49
-  -- REQUIRED TOTAL (steps 0-5) --                              171.43    237.72          16.81 /  -49.49
-  6 (opt) Hierarchical +8 -> 20 pools                           200.65    292.87         -12.41 / -104.63
-  7 (opt) Grid O +30 -> 60 docs/cell                            212.42    306.54         -24.19 / -118.30
-  8 (opt) Repeats, small (reference x1, 12 pools J + 60 docs O)    217.21    312.03         -28.97 / -123.80
-  9 (opt) Repeats, full (reference x2, pools 2-25)              237.99    336.37         -49.75 / -148.14
+  0 G3 masking side-channel diagnostic (dev pool)                10.81     10.81         186.84 /  186.84
+  1 Headline J, 46 pools                                         29.08     34.49         168.57 /  163.16
+  2 Grid J, 9 cells x pools 2-25 (216 pools)                    113.98    145.03          83.67 /   52.62
+  3 Identifier J, 20 frozen pools (D11)                         115.40    145.59          82.25 /   52.06
+  4 Headline O, 100 docs, length-stratified                     121.25    152.24          76.40 /   45.40
+  5 Grid O, 30 docs/cell x 9 cells                              135.28    167.57          62.37 /   30.08
+  6 Hierarchical, 12 headline pools: rescue + filler (D11), k=20    177.38    261.33          20.26 /  -63.68
+  -- REQUIRED TOTAL --                                          177.38    261.33          20.26 /  -63.68
+  7 (opt) Hierarchical +8 filler pools                          202.40    311.36          -4.75 / -113.72
+  8 (opt) Grid O +30 -> 60 docs/cell                            214.20    324.88         -16.56 / -127.23
+  9 (opt) Repeats, small (reference x1, 12 pools J + 60 docs O)    218.98    330.53         -21.34 / -132.89
+  10 (opt) Repeats, full (reference x2, pools 2-25)             239.72    354.19         -42.07 / -156.54
 
-DROP ORDER if the forecast worsens: repeats full -> repeats small -> grid O extension -> hierarchical extension -> grid O 30 -> headline O -> hierarchical 12 -> grid J pools from the end of the pool order. Headline J is never dropped.
+DROP ORDER if the forecast worsens (D11): optional extensions -> hierarchical filler pools (from the end of the fill order) -> hierarchical rescue pools -> grid O 30 -> headline O -> grid J pools from the end of the pool order. Headline J and identifier J are not dropped.
 
 ALTERNATIVES -- scope only (k is never chosen from F1); totals include already spent
   scenario                                                            expected       P95      0% tax      6% tax
-  A  as specified: hier-12 k=20, headline O, grid O 30                  171.43    237.72    exp fits    exp fits
-  B  drop grid O 30                                                     157.40    222.80    exp fits    exp fits
-  C  drop grid O 30 and headline O                                      151.57    216.55    exp fits    exp fits
-  D  hier-12 at k=10 (a cost choice, coverage disclosed), all O         153.10    203.14    exp fits    exp fits
-  E  hier-6 at k=20 (first 6 of the 12), headline O, no grid O          137.48    185.21        fits        fits
-  F  no hierarchical; headline O + grid O 30                            133.90    166.91        fits        fits
-  G  J only: G3 + headline J + grid J                                   114.05    145.73        fits        fits
+  A  Plan A (D11) + identifier J: everything required                   177.38    261.33    exp fits    exp fits
+  A0 Plan A (D11) without identifier J                                  175.96    260.64    exp fits    exp fits
+  B  A without the hierarchical attacker                                135.28    167.57        fits        fits
+  C  A without grid O                                                   163.36    246.00    exp fits    exp fits
+  D  headline J + grid J + identifier J only                            115.40    145.59        fits        fits
 
-TAX: the wall is out of pocket, so the ledger's hard limit in credit is $200 / (1 + tax).
-  tax  6.2%: hard limit $188.24 credit; required total out of pocket $182.14 expected / $252.58 P95; expected fits, P95 over
+TAX: the wall is out of pocket, so the ledger's hard limit in credit is $210 / (1 + tax).
+  tax  6.2%: hard limit $197.65 credit; required total out of pocket $188.47 expected / $277.66 P95; expected fits, P95 over

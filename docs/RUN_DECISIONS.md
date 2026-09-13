@@ -354,6 +354,63 @@ become (a) every headline pool where one-shot J exhausts 128k, then (b) the
 first pools of the frozen D8 order up to 12. Selection is by completion (a
 resource bound), never by score; it is fixed before any headline result.
 
+## D11 — 2026-09-13: hierarchical retargeted, $210 wall, identifier J added
+
+**Hierarchical: KEEP, retargeted, frozen before any headline result**
+(data/pools/hier_headline_12.json, rule_D11). It runs on (a) every headline pool
+where one-shot J exhausts the 128k ceiling (a non-completion, D6), then (b) the
+first pools of the frozen, score-independent D8 order not already in (a), up to
+12. Two analyses, **never combined**:
+1. **RBNC rescue** — hierarchical completion and reconstruction on (a), the
+   pools where one-shot exhausted its resource budget.
+2. **Paired attacker comparison** — only the filler pools (b), where both
+   attackers have scores.
+The 12 are failure-enriched: they are never averaged into a headline mean and
+never described as representative of the headline pools. The oracle ceiling
+(D10) is described only as evidence that the frozen candidate graph and
+downstream architecture have a high attainable ceiling; no remaining real-model
+error is attributed solely to Sonnet. The attacker is labelled
+decomposed / scalable, not stronger, unless the results support it.
+
+**Spend priority:** headline J → grid J → identifier J → headline O → grid O →
+hierarchical. Grid O is ahead of hierarchical. Dropped from the bottom:
+hierarchical filler pools (from the end of the fill order), then rescue pools,
+then grid O, then headline O, then grid J pools from the end; headline J and
+identifier J are not dropped.
+
+**Budget: $210 out of pocket** → ledger HARD_LIMIT $210 / 1.0625 = **$197.64**
+credit. The user approved Plan A under this wall with the interpretation above,
+**but nothing is submitted until the revised price including identifier J is
+approved.**
+
+**Identifier Game J (a small fixed secondary experiment).**
+- *Existing evidence is exploratory / control only, never merged into the final
+  estimates.* LLM runs (week 2/3; Llama-3.3-70B on Groq, temperature 0,
+  `item_N` masking) on the 50-record set: game O per record (4 fragments), mean
+  τ +0.213 (sd 0.30, n = 50); game L as one 50-way grouping, F1 0.0133 against a
+  random floor of 0.0151 and a one-bucket baseline of 0.0297. Free floors at 500
+  records, 500-way (D1 pipeline): O τ ≈ 0; L F1 0.0015 (random), 0.0027
+  (Jaccard). None is game J, none uses pools of 7, Sonnet, or the current
+  masking and gates.
+- *Design:* N = 7 records per pool, 28 fragments (one per field), one-shot
+  Sonnet, the current J scorer, masking and presentation, the analytic and random
+  baselines, and the free Memon-inspired joint baseline. No hierarchical unless
+  the J result gives a reason.
+- *The ordering half is a template.* The answer key's order is the generator's
+  fixed field order (name, ssn, account, address), and each field's type is
+  obvious from its format, so order can be recovered with no linkage evidence.
+  J is therefore reported against **two** baselines: the analytic T/(P+T) = 0.10
+  and a **schema-order** one bucket sorted by field type, 2T/(P+T) = 0.20.
+  Advantage over the schema-order baseline and the linkage component are the
+  primary identifier quantities; q is reported as a template diagnostic.
+- *Pools, frozen by a score-independent rule* (datagen/build_identifier_j.py,
+  data/pools/identifier_J_pools.json): records r_0050..r_0499 — the 450 no model
+  has seen; the first 50 are excluded for that exposure, not their results —
+  ordered by sha256('identifier-J|' + record_id), pools of 7, primary = first 20.
+- *Claim, narrow:* on the tested identifier corpus, fragmentation substantially
+  limits joint source-linkage and ordering reconstruction under the evaluated
+  attackers. Not generalised to all identifiers or all fragmentation schemes.
+
 ## Development history — 2026-09-10: headline documents used before frame A existed
 
 Development work done before D2 was taken used documents that frame A later

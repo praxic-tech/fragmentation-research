@@ -53,7 +53,7 @@ ARGS = ap.parse_args()
 B_IN, B_OUT = 1.0, 5.0          # sonnet-5 batch $/M
 CAP = 128000
 SIMS = 2000
-WALL, TRIPWIRE = 200.0, 120.0   # the wall is OUT OF POCKET ($167 until D9)
+WALL, TRIPWIRE = 210.0, 120.0   # the wall is OUT OF POCKET (D11; $167 until D9, $200 in D9)
 OVERHEAD_EXP, OVERHEAD_P95 = 0.06, 0.15      # repairs (pool 1: 4 of 88 units)
 SPENT = Ledger().observed
 
@@ -143,6 +143,14 @@ LINES.update({
 })
 GRID_J = [f"gridJ:{cl}" for cl in KEEP]
 
+# identifier Game J (D11): the 20 frozen primary pools, built with the paid builder
+IDP = json.load(open("data/pools/identifier_J_pools.json", encoding="utf-8"))
+_prim = set(IDP["primary"])
+_ident = build_spec(["results/identifier_J/identifier__field"], ["J"], docs=0, pool_size=7, seed=42,
+                    tag="budget-only-ident", o_docs=[],
+                    pools=[(p["pool_id"], p["members"]) for p in IDP["pools"] if p["pool_id"] in _prim])
+LINES["identJ"] = [("J", s["n_fragments"], len(s["prompt"])) for s in _ident["sidecar"].values()]
+
 # ── the hierarchical attacker and G3: priced from measurement, not simulated ─
 CAL = json.load(open("results/audit/hier_blocker_calibration.json", encoding="utf-8"))
 HIER_K = CAL["chosen_k"]
@@ -164,9 +172,30 @@ elif os.path.exists("runs/g3_control.json"):
     G3 = (e, 2 * e, "estimate from its frozen spec")
 else:
     G3 = (2.0, 2.6, "estimate")
-DET = {"g3": G3[:2],
-       "hier12": (hier_usd(HP["pool_ids"]), hier_usd(HP["pool_ids"], out_mult=2.0)),
-       "hier8": (hier_usd(HP["extension_to_20"]), hier_usd(HP["extension_to_20"], out_mult=2.0))}
+# Hierarchical, retargeted (D11): every headline pool where one-shot J exhausts
+# 128k, then filler from the frozen order up to 12. Which pools one-shot fails
+# on is not known yet, so the rescue count is priced from each headline pool's
+# chance of exhausting 128k under the pool-1 J token model.
+aJ, bJ, resJ = fit(pts["J"])
+sdJ = st.stdev(resJ)
+
+
+def p_rbnc(n):
+    return 0.5 * math.erfc((math.log(CAP) - (aJ + bJ * math.log(n))) / (sdJ * math.sqrt(2)))
+
+
+PRB = {p: p_rbnc(pool_n[p]) for p, _ in head_pools}
+ER = sum(PRB.values())
+_dist = [1.0]
+for _q in PRB.values():
+    _dist = [(_dist[i] if i < len(_dist) else 0.0) * (1 - _q) + (_dist[i - 1] if i > 0 else 0.0) * _q
+             for i in range(len(_dist) + 1)]
+R95 = next(r for r in range(len(_dist)) if sum(_dist[:r + 1]) >= 0.95)
+FILL_UNIT = hier_usd(HP["fill_order"][:12]) / 12
+_likely = sorted(PRB, key=lambda p: -PRB[p])[:R95]
+HIER12 = (sum(PRB[p] * hier_usd([p]) for p in PRB) + max(0.0, 12 - ER) * FILL_UNIT,
+          hier_usd(_likely, out_mult=2.0) + max(0, 12 - R95) * FILL_UNIT * 2.0)
+DET = {"g3": G3[:2], "hier12": HIER12, "hier8": (8 * FILL_UNIT, 16 * FILL_UNIT)}
 
 
 # ── one joint simulation over every simulated line ───────────────────────────
@@ -210,12 +239,13 @@ PARTS = [
     ("G3 masking side-channel diagnostic (dev pool)", [], "g3"),
     ("Headline J, 46 pools", ["headJ"], None),
     ("Grid J, 9 cells x pools 2-25 (216 pools)", GRID_J, None),
-    (f"Hierarchical, 12 prespecified headline pools, k={HIER_K}", [], "hier12"),
+    ("Identifier J, 20 frozen pools (D11)", ["identJ"], None),
     (f"Headline O, {HEAD_O_DOCS} docs, length-stratified", ["headO"], None),
     (f"Grid O, {GRID_O_DOCS} docs/cell x 9 cells", ["gridO30"], None),
+    (f"Hierarchical, 12 headline pools: rescue + filler (D11), k={HIER_K}", [], "hier12"),
 ]
 OPTIONAL = [
-    ("Hierarchical +8 -> 20 pools", [], "hier8"),
+    ("Hierarchical +8 filler pools", [], "hier8"),
     (f"Grid O +{GRID_O_EXT - GRID_O_DOCS} -> {GRID_O_EXT} docs/cell", ["gridO_ext"], None),
     ("Repeats, small (reference x1, 12 pools J + 60 docs O)", ["rep_small"], None),
     ("Repeats, full (reference x2, pools 2-25)", ["rep_full"], None),
@@ -224,7 +254,10 @@ W = 58
 print("FINAL PRICE -- API credit, before sales tax")
 print(f"  already spent (ledger, observed): ${SPENT:.2f}")
 print(f"  hierarchical: k={HIER_K} (D8; coverage inadequate at every k), measured "
-      f"{IN_PP:.0f} in / {OUT_PP:.0f} out tokens per pair; 12 pools {HP['pool_ids'][:3]}...")
+      f"{IN_PP:.0f} in / {OUT_PP:.0f} out tokens per pair; rescue = {ER:.1f} expected one-shot "
+      f"non-completion headline pools (95th percentile {R95}), filler from the frozen order")
+print("  identifier J: 28-fragment pools sit BELOW the J token model's fitted range (128-272 "
+      "fragments), so its cost is an extrapolation; it is small either way")
 print(f"  G3: {G3[2]}\n")
 print(f"{'part':<{W}}{'expected':>10}{'P95':>10}{'non-compl.':>12}")
 
@@ -264,33 +297,23 @@ for i, (label, keys, det) in enumerate(PARTS + OPTIONAL):
     print(f"  {tag + ' ' + label:<{W}}{e:>10.2f}{p:>10.2f}{CREDIT_WALL - e:>15.2f} / {CREDIT_WALL - p:>7.2f}")
     if i == len(PARTS) - 1:
         req_e, req_p = e, p
-        print(f"  {'-- REQUIRED TOTAL (steps 0-5) --':<{W}}{e:>10.2f}{p:>10.2f}"
+        print(f"  {'-- REQUIRED TOTAL --':<{W}}{e:>10.2f}{p:>10.2f}"
               f"{CREDIT_WALL - e:>15.2f} / {CREDIT_WALL - p:>7.2f}")
 
-print("\nDROP ORDER if the forecast worsens: repeats full -> repeats small -> grid O extension ->"
-      " hierarchical extension -> grid O 30 -> headline O -> hierarchical 12 -> grid J pools from"
-      " the end of the pool order. Headline J is never dropped.")
+print("\nDROP ORDER if the forecast worsens (D11): optional extensions -> hierarchical filler pools"
+      " (from the end of the fill order) -> hierarchical rescue pools -> grid O 30 -> headline O ->"
+      " grid J pools from the end of the pool order. Headline J and identifier J are not dropped.")
 
 print("\nALTERNATIVES -- scope only (k is never chosen from F1); totals include already spent")
-HP12, HP6 = HP["pool_ids"], HP["pool_ids"][:6]
-
-
-def hier_det(pools, k):
-    return hier_usd(pools, k=k), hier_usd(pools, k=k, out_mult=2.0)
-
-
-TAX_SHOWN = ARGS.tax if ARGS.tax is not None else 0.08
+TAX_SHOWN = ARGS.tax if ARGS.tax is not None else 0.0625
+_O = ["headO", "gridO30"]
 SCEN = [
-    ("A  as specified: hier-12 k=20, headline O, grid O 30", ["headJ"] + GRID_J + ["headO", "gridO30"],
+    ("A  Plan A (D11) + identifier J: everything required", ["headJ"] + GRID_J + ["identJ"] + _O,
      [DET["g3"], DET["hier12"]]),
-    ("B  drop grid O 30", ["headJ"] + GRID_J + ["headO"], [DET["g3"], DET["hier12"]]),
-    ("C  drop grid O 30 and headline O", ["headJ"] + GRID_J, [DET["g3"], DET["hier12"]]),
-    ("D  hier-12 at k=10 (a cost choice, coverage disclosed), all O",
-     ["headJ"] + GRID_J + ["headO", "gridO30"], [DET["g3"], hier_det(HP12, 10)]),
-    ("E  hier-6 at k=20 (first 6 of the 12), headline O, no grid O",
-     ["headJ"] + GRID_J + ["headO"], [DET["g3"], hier_det(HP6, 20)]),
-    ("F  no hierarchical; headline O + grid O 30", ["headJ"] + GRID_J + ["headO", "gridO30"], [DET["g3"]]),
-    ("G  J only: G3 + headline J + grid J", ["headJ"] + GRID_J, [DET["g3"]]),
+    ("A0 Plan A (D11) without identifier J", ["headJ"] + GRID_J + _O, [DET["g3"], DET["hier12"]]),
+    ("B  A without the hierarchical attacker", ["headJ"] + GRID_J + ["identJ"] + _O, [DET["g3"]]),
+    ("C  A without grid O", ["headJ"] + GRID_J + ["identJ", "headO"], [DET["g3"], DET["hier12"]]),
+    ("D  headline J + grid J + identifier J only", ["headJ"] + GRID_J + ["identJ"], [DET["g3"]]),
 ]
 print(f"  {'scenario':<66}{'expected':>10}{'P95':>10}{'0% tax':>12}{f'{TAX_SHOWN:.0%} tax':>12}")
 for label, keys, dets in SCEN:
