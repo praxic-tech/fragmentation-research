@@ -467,6 +467,73 @@ committed after submission but before any identifier-J result was scored; it
 reads only the prompts, so no answer could have shaped it. The hierarchical headline pools are chosen afterwards by the
 frozen D11 rule; nothing about the headline is decided from its results.
 
+### Credit exhaustion and resends first — 2026-09-13
+
+- The prepaid balance ran out while steps 1-3 were processing. 48 requests (6
+  headline, 42 grid) were refused by the provider BEFORE inference ("credit
+  balance is too low"): zero token usage, no answer, not charged. They are
+  listed from the provider's own result records, with provider request IDs and
+  prompt hashes, in runs/resend_manifest_2026-09-13.json (built by
+  runs/build_resend_manifest.py). The driver refuses any resend that differs
+  from the manifest, request for request and hash for hash.
+- Each gets the protocol's one unchanged operational retry (D6: transient).
+- **Order (user, 2026-09-13):** every resend completes before any repair
+  request is sent (runs/final_run_steps123.py, commit 766bfca). Missing
+  experimental units take priority over repairs, so a credit shortfall can only
+  cost repairs.
+- The repair round is the frozen structural rule only (harness/repair.py
+  validate, applied by batch_game.build_repair_spec): an answer is repaired if
+  and only if it is unparseable or its labels are missing, duplicated or not in
+  the input. The decision reads no score, no truth and no reconstruction
+  quality. The 28 answers that qualified before the resends were listed for the
+  user, with reason and projected cost, before anything was submitted.
+
+### Instruction-collision concern — checked and cleared, 2026-09-13
+
+- **Concern.** That a fragment contained instruction-like text ("do not try
+  again") that could have affected an attack.
+- **Source.** The wording ("never retried") is run bookkeeping only: the
+  reason field of the non-retry entry for random × token-window pool_002 in
+  runs/resend_manifest_2026-09-13.json, written by
+  runs/build_resend_manifest.py. It was never present in any prompt and no
+  model saw it. Prompts are built from the frozen specs, never from the manifest.
+- **Checks.** All 62,527 fragment lines in the frozen final specs contain no
+  instruction-like text. Pool_002's 322 fragment lines are medical prose (two
+  matched a naive search for "never" only through "Nevertheless"). The model's
+  stored answer for pool_002 contains no reference to retrying, instructions or
+  ignoring anything. The only "try again" text in the repository is the
+  harness's own rate-limit error message in the 2026-09-10 O-probe failure
+  records and a rehearsal log, which was never part of a prompt.
+- **Decision (user).** There was no instruction collision. The post-hoc
+  diagnostic rerun is NOT run, and no instruction-collision limitation is
+  reported.
+
+### random × token-window, pool_002 — the D6 treatment, kept exactly
+
+- A pool-level, one-shot resource-bounded non-completion (RBNC): grid J, batch
+  msgbatch_01VT6Tb1TfoYtECs8s9134ZA, 322 fragments, 12,057 input tokens,
+  stop_reason max_tokens at 128,000 output tokens. It exhausted the 128k output
+  (inference) budget before producing a complete reconstruction: the stored
+  visible answer is 3,050 characters of JSON cut off mid-list after 250 of the
+  322 labels, and the rest of the budget went to reasoning (D6).
+- No individual fragment is known to have caused the failure.
+- It is not retried. The partial output is not scored. It is not treated as
+  F1 = 0.
+- Pool_002's valid results in the other grid cells stand; the pool is missing
+  only from the cell where it did not complete.
+
+### Reporting rules for non-completions — frozen 2026-09-13, before any step 1-3 result was scored
+
+- Every result shows, separately: (1) reconstruction scores on completed pools,
+  and (2) completion and RBNC rates. The two are never merged into one number.
+- A paired comparison involving a cell uses only the pools where BOTH compared
+  conditions completed. An RBNC in one cell never removes that pool from
+  comparisons between other cells.
+- Paper wording: the 128k cap is a prespecified attacker resource budget, not
+  a fundamental limit of modern AI. Larger inference budgets or future models
+  could reduce RBNCs. The hierarchical attacker (D11) tests whether
+  decomposition can complete pools the one-shot attacker cannot.
+
 ## Development history — 2026-09-10: headline documents used before frame A existed
 
 Development work done before D2 was taken used documents that frame A later
