@@ -1,0 +1,51 @@
+282 pools: Memon-inspired at n = d = 2, 6 workers, $0
+  20/282 pools, 9s
+  40/282 pools, 13s
+  60/282 pools, 20s
+  80/282 pools, 25s
+  100/282 pools, 37s
+  120/282 pools, 43s
+  140/282 pools, 48s
+  160/282 pools, 59s
+  180/282 pools, 67s
+  200/282 pools, 76s
+  220/282 pools, 87s
+  240/282 pools, 95s
+  260/282 pools, 113s
+  280/282 pools, 113s
+  282/282 pools, 113s
+deterministic on re-run (first pool of each game): True
+
+FREE ATTACKERS ON THE FINAL POOLS -- Memon-inspired, n = d = 2 (frozen, RUN_DECISIONS D12); $0
+
+game        cell                            pools    F1_J     med    base     A_J    P_J    R_J   F1_L  q_mic  exact    ctx    w=0
+----------------------------------------------------------------------------------------------------------------------------------
+headlineJ   prose                              46  0.1682  0.1566  0.1493  0.0225  0.129  0.264  0.339  0.493  0/322  14.3%  53.8%
+gridJ       random__sentence                   24  0.1308  0.1307  0.1282  0.0030  0.076  0.464  0.253  0.517  0/168  75.2%   0.6%
+gridJ       random__clause                     24  0.1329  0.1327  0.1302  0.0031  0.077  0.481  0.258  0.515  0/168  75.7%   0.6%
+gridJ       random__token-window               24  0.1336  0.1318  0.1318  0.0020  0.078  0.481  0.262  0.511  0/168  76.4%   0.6%
+gridJ       semantic__sentence                 24  0.1422  0.1401  0.1282  0.0160  0.105  0.238  0.285  0.496  0/168  11.7%  66.7%
+gridJ       semantic__clause                   24  0.1303  0.1310  0.1302  0.0001  0.083  0.319  0.256  0.508  0/168  19.6%  43.5%
+gridJ       coherence-sever__clause            24  0.1261  0.1232  0.1311 -0.0058  0.078  0.339  0.249  0.505  0/168  48.4%  10.7%
+gridJ       coherence-sever__token-window      24  0.1358  0.1379  0.1320  0.0044  0.096  0.251  0.265  0.514  0/168  73.8%   0.7%
+gridJ       subject-verb__sentence             24  0.1262  0.1263  0.1299 -0.0042  0.073  0.453  0.257  0.491  0/168  31.4%  26.4%
+gridJ       subject-verb__clause               24  0.1312  0.1291  0.1309  0.0003  0.076  0.473  0.259  0.505  0/168  37.3%  19.1%
+identifierJ identifier__field                  20  0.0540  0.0506  0.1000 -0.0511  0.048  0.062  0.125  0.426  0/140  48.1%  19.6%
+
+identifier schema-order baseline (D11), mean F1_J over its 20 pools: 0.2000
+
+COLUMNS
+  pools   pools scored (every pool completes: the attacker is local, no budget)
+  F1_J    mean ordered-pair F1 (joint membership + order); med = its median
+  base    mean analytic baseline: one bucket, arbitrary order
+  A_J     mean scorer advantage (F1_J - base) / (1 - base); the paper's advantage
+          definition and all confidence intervals wait for the frozen results plan
+  P_J/R_J mean directed-pair precision / recall
+  F1_L    mean linkage F1 (membership only); F1_J = F1_L x q
+  q_mic   micro order quality, sum C / sum K
+  exact   documents reconstructed exactly / documents
+  ctx     mean share of n-gram boundary contexts seen (the rest score the smoothing prior)
+  w=0     share of ordered pairs with zero directional evidence
+
+wrote 282 rows under results\final_free/ and results\final_free/REPORT.txt
+exit 0
