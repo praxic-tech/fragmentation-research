@@ -48,6 +48,9 @@ from run_ledger import Ledger                                      # noqa: E402
 
 ap = argparse.ArgumentParser()
 ap.add_argument("--tax", type=float, default=None, help="sales tax rate, e.g. 0.08")
+ap.add_argument("--reforecast", action="store_true",
+                help="after steps 1-3: price only what is left, from actual spend and the actual "
+                     "headline non-completions")
 ARGS = ap.parse_args()
 
 B_IN, B_OUT = 1.0, 5.0          # sonnet-5 batch $/M
@@ -250,6 +253,22 @@ OPTIONAL = [
     ("Repeats, small (reference x1, 12 pools J + 60 docs O)", ["rep_small"], None),
     ("Repeats, full (reference x2, pools 2-25)", ["rep_full"], None),
 ]
+
+# ── re-forecast after steps 1-3 (D11): what is left, from what actually happened ─
+# Headline J, grid J and identifier J are paid and inside SPENT (the ledger).
+# The hierarchical rescue set is no longer a probability: it is exactly the
+# headline pools one-shot J recorded as non-completions, filled to 12 from the
+# frozen order.
+if ARGS.reforecast:
+    _rb = "results/final/headlineJ/prose/J.rbnc.jsonl"
+    RESCUE = ([json.loads(l)["unit"] for l in open(_rb, encoding="utf-8") if l.strip()]
+              if os.path.exists(_rb) else [])
+    FILLER = [p for p in HP["fill_order"] if p not in RESCUE][:max(0, 12 - len(RESCUE))]
+    DET["hier12"] = (hier_usd(RESCUE + FILLER), hier_usd(RESCUE + FILLER, out_mult=2.0))
+    PARTS = [("already run: G3, headline J, grid J, identifier J (in 'already spent')", [], "g3")] + \
+            [p for p in PARTS if p[1] in (["headO"], ["gridO30"]) or p[2] == "hier12"]
+    print(f"RE-FORECAST after steps 1-3: {len(RESCUE)} actual headline non-completions -> rescue "
+          f"{RESCUE}; filler {FILLER}")
 W = 58
 print("FINAL PRICE -- API credit, before sales tax")
 print(f"  already spent (ledger, observed): ${SPENT:.2f}")
@@ -315,6 +334,13 @@ SCEN = [
     ("C  A without grid O", ["headJ"] + GRID_J + ["identJ", "headO"], [DET["g3"], DET["hier12"]]),
     ("D  headline J + grid J + identifier J only", ["headJ"] + GRID_J + ["identJ"], [DET["g3"]]),
 ]
+if ARGS.reforecast:
+    SCEN = [
+        ("R1 remaining plan: headline O + grid O + hierarchical 12", _O, [DET["hier12"]]),
+        ("R2 without the hierarchical attacker", _O, []),
+        ("R3 without grid O", ["headO"], [DET["hier12"]]),
+        ("R4 headline O only", ["headO"], []),
+    ]
 print(f"  {'scenario':<66}{'expected':>10}{'P95':>10}{'0% tax':>12}{f'{TAX_SHOWN:.0%} tax':>12}")
 for label, keys, dets in SCEN:
     e, p = joint(keys)

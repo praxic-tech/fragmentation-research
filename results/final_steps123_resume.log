@@ -1,0 +1,330 @@
+  resuming: 46 results already on disk
+  wrote 0 results to C:\Users\aiden\Desktop\projects\fragmentation\results\batches\final-headlineJ.results.jsonl
+  {'succeeded': 0, 'errored': 0, 'zero_answer': 0, 'truncated': 0, 'expired': 0, 'canceled': 0, 'skipped': 46}
+  spend: $0.0000 over 0 results ($0.00000 each)  in 0 tok / out 0 tok
+  [INCOMPLETE] 0 never came back, 6 came back without an answer (errored / expired / canceled / empty), e.g. ['prose__J__pool-007', 'prose__J__pool-019', 'prose__J__pool-026']. Scoring will refuse this set: resubmit these ids.
+  final-headlineJ: {'succeeded': 0, 'errored': 0, 'zero_answer': 0, 'truncated': 0, 'expired': 0, 'canceled': 0, 'skipped': 46}  actual $10.5261
+  resuming: 54 results already on disk
+  wrote 0 results to C:\Users\aiden\Desktop\projects\fragmentation\results\batches\final-gridJ-w1.results.jsonl
+  {'succeeded': 0, 'errored': 0, 'zero_answer': 0, 'truncated': 0, 'expired': 0, 'canceled': 0, 'skipped': 54}
+  spend: $0.0000 over 0 results ($0.00000 each)  in 0 tok / out 0 tok
+  [INCOMPLETE] 0 never came back, 10 came back without an answer (errored / expired / canceled / empty), e.g. ['coherence-sever-clause__J__pool-004', 'coherence-sever-token-window__J__pool-004', 'coherence-sever-token-window__J__pool-016']. Scoring will refuse this set: resubmit these ids.
+  final-gridJ-w1: {'succeeded': 0, 'errored': 0, 'zero_answer': 0, 'truncated': 0, 'expired': 0, 'canceled': 0, 'skipped': 54}  actual $15.5625
+  resuming: 54 results already on disk
+  wrote 0 results to C:\Users\aiden\Desktop\projects\fragmentation\results\batches\final-gridJ-w2.results.jsonl
+  {'succeeded': 0, 'errored': 0, 'zero_answer': 0, 'truncated': 0, 'expired': 0, 'canceled': 0, 'skipped': 54}
+  spend: $0.0000 over 0 results ($0.00000 each)  in 0 tok / out 0 tok
+  [INCOMPLETE] 0 never came back, 13 came back without an answer (errored / expired / canceled / empty), e.g. ['coherence-sever-token-window__J__pool-036', 'random-clause__J__pool-034', 'random-clause__J__pool-040']. Scoring will refuse this set: resubmit these ids.
+  final-gridJ-w2: {'succeeded': 0, 'errored': 0, 'zero_answer': 0, 'truncated': 0, 'expired': 0, 'canceled': 0, 'skipped': 54}  actual $13.6469
+  resuming: 54 results already on disk
+  wrote 0 results to C:\Users\aiden\Desktop\projects\fragmentation\results\batches\final-gridJ-w3.results.jsonl
+  {'succeeded': 0, 'errored': 0, 'zero_answer': 0, 'truncated': 0, 'expired': 0, 'canceled': 0, 'skipped': 54}
+  spend: $0.0000 over 0 results ($0.00000 each)  in 0 tok / out 0 tok
+  [INCOMPLETE] 0 never came back, 7 came back without an answer (errored / expired / canceled / empty), e.g. ['coherence-sever-token-window__J__pool-045', 'coherence-sever-token-window__J__pool-046', 'random-clause__J__pool-049']. Scoring will refuse this set: resubmit these ids.
+  final-gridJ-w3: {'succeeded': 0, 'errored': 0, 'zero_answer': 0, 'truncated': 0, 'expired': 0, 'canceled': 0, 'skipped': 54}  actual $16.5432
+  resuming: 54 results already on disk
+  wrote 0 results to C:\Users\aiden\Desktop\projects\fragmentation\results\batches\final-gridJ-w4.results.jsonl
+  {'succeeded': 0, 'errored': 0, 'zero_answer': 0, 'truncated': 0, 'expired': 0, 'canceled': 0, 'skipped': 54}
+  spend: $0.0000 over 0 results ($0.00000 each)  in 0 tok / out 0 tok
+  [INCOMPLETE] 0 never came back, 13 came back without an answer (errored / expired / canceled / empty), e.g. ['coherence-sever-clause__J__pool-057', 'coherence-sever-token-window__J__pool-068', 'random-clause__J__pool-063']. Scoring will refuse this set: resubmit these ids.
+  final-gridJ-w4: {'succeeded': 0, 'errored': 0, 'zero_answer': 0, 'truncated': 0, 'expired': 0, 'canceled': 0, 'skipped': 54}  actual $15.4199
+  resuming: 20 results already on disk
+  wrote 0 results to C:\Users\aiden\Desktop\projects\fragmentation\results\batches\final-identifierJ.results.jsonl
+  {'succeeded': 0, 'errored': 0, 'zero_answer': 0, 'truncated': 0, 'expired': 0, 'canceled': 0, 'skipped': 20}
+  spend: $0.0000 over 0 results ($0.00000 each)  in 0 tok / out 0 tok
+  final-identifierJ: {'succeeded': 0, 'errored': 0, 'zero_answer': 0, 'truncated': 0, 'expired': 0, 'canceled': 0, 'skipped': 20}  actual $0.9335
+  final-headlineJ: resubmitting 6 transport holes once
+submitting 6 requests, tag 'final-headlineJ-rs1'
+  worst case $3.91, input alone $0.07
+  expected $2.25, reserving $3.91
+  projected $87.35 of $182.00 cap (committed $83.44, observed $83.44)
+  batch msgbatch_01CeEtLk5jvYVTxkUdUxBVZm
+  state C:\Users\aiden\Desktop\projects\fragmentation\results\batches\final-headlineJ-rs1.state.json
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  wrote 6 results to C:\Users\aiden\Desktop\projects\fragmentation\results\batches\final-headlineJ-rs1.results.jsonl
+  {'succeeded': 6, 'errored': 0, 'zero_answer': 0, 'truncated': 0, 'expired': 0, 'canceled': 0, 'skipped': 0}
+  spend: $1.7253 over 6 results ($0.28756 each)  in 97,858 tok / out 325,496 tok
+  final-headlineJ-rs1: {'succeeded': 6, 'errored': 0, 'zero_answer': 0, 'truncated': 0, 'expired': 0, 'canceled': 0, 'skipped': 0}  actual $1.7253
+  final-gridJ-w1: resubmitting 9 transport holes once
+submitting 9 requests, tag 'final-gridJ-w1-rs1'
+  worst case $5.82, input alone $0.06
+  expected $3.26, reserving $5.82
+  projected $90.99 of $182.00 cap (committed $85.17, observed $85.17)
+  batch msgbatch_01MfiSSXtHeg8qgD13Q4xmi3
+  state C:\Users\aiden\Desktop\projects\fragmentation\results\batches\final-gridJ-w1-rs1.state.json
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  wrote 9 results to C:\Users\aiden\Desktop\projects\fragmentation\results\batches\final-gridJ-w1-rs1.results.jsonl
+  {'succeeded': 9, 'errored': 0, 'zero_answer': 0, 'truncated': 0, 'expired': 0, 'canceled': 0, 'skipped': 0}
+  spend: $3.8552 over 9 results ($0.42835 each)  in 98,152 tok / out 751,405 tok
+  final-gridJ-w1-rs1: {'succeeded': 9, 'errored': 0, 'zero_answer': 0, 'truncated': 0, 'expired': 0, 'canceled': 0, 'skipped': 0}  actual $3.8552
+  final-gridJ-w1: 1 non-completions at 128k (D6), not re-asked
+  final-gridJ-w2: resubmitting 13 transport holes once
+submitting 13 requests, tag 'final-gridJ-w2-rs1'
+  worst case $8.41, input alone $0.09
+  expected $4.36, reserving $8.41
+  projected $97.43 of $182.00 cap (committed $89.02, observed $89.02)
+  batch msgbatch_019BRg9cdZ57H1eRhMH8yA61
+  state C:\Users\aiden\Desktop\projects\fragmentation\results\batches\final-gridJ-w2-rs1.state.json
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  wrote 13 results to C:\Users\aiden\Desktop\projects\fragmentation\results\batches\final-gridJ-w2-rs1.results.jsonl
+  {'succeeded': 13, 'errored': 0, 'zero_answer': 0, 'truncated': 0, 'expired': 0, 'canceled': 0, 'skipped': 0}
+  spend: $5.1692 over 13 results ($0.39763 each)  in 135,858 tok / out 1,006,678 tok
+  final-gridJ-w2-rs1: {'succeeded': 13, 'errored': 0, 'zero_answer': 0, 'truncated': 0, 'expired': 0, 'canceled': 0, 'skipped': 0}  actual $5.1692
+  final-gridJ-w3: resubmitting 7 transport holes once
+submitting 7 requests, tag 'final-gridJ-w3-rs1'
+  worst case $4.53, input alone $0.05
+  expected $2.44, reserving $4.53
+  projected $98.72 of $182.00 cap (committed $94.19, observed $94.19)
+  batch msgbatch_01Hkfw5nmakhZmc6hEchFrdK
+  state C:\Users\aiden\Desktop\projects\fragmentation\results\batches\final-gridJ-w3-rs1.state.json
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  wrote 7 results to C:\Users\aiden\Desktop\projects\fragmentation\results\batches\final-gridJ-w3-rs1.results.jsonl
+  {'succeeded': 7, 'errored': 0, 'zero_answer': 0, 'truncated': 0, 'expired': 0, 'canceled': 0, 'skipped': 0}
+  spend: $3.0783 over 7 results ($0.43975 each)  in 73,454 tok / out 600,964 tok
+  final-gridJ-w3-rs1: {'succeeded': 7, 'errored': 0, 'zero_answer': 0, 'truncated': 0, 'expired': 0, 'canceled': 0, 'skipped': 0}  actual $3.0783
+  final-gridJ-w4: resubmitting 13 transport holes once
+submitting 13 requests, tag 'final-gridJ-w4-rs1'
+  worst case $8.41, input alone $0.09
+  expected $3.66, reserving $7.31
+  projected $104.58 of $182.00 cap (committed $97.27, observed $97.27)
+  batch msgbatch_01W2LjthBnjK6R26cwzJV42G
+  state C:\Users\aiden\Desktop\projects\fragmentation\results\batches\final-gridJ-w4-rs1.state.json
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  wrote 13 results to C:\Users\aiden\Desktop\projects\fragmentation\results\batches\final-gridJ-w4-rs1.results.jsonl
+  {'succeeded': 13, 'errored': 0, 'zero_answer': 0, 'truncated': 0, 'expired': 0, 'canceled': 0, 'skipped': 0}
+  spend: $4.8474 over 13 results ($0.37288 each)  in 133,484 tok / out 942,780 tok
+  final-gridJ-w4-rs1: {'succeeded': 13, 'errored': 0, 'zero_answer': 0, 'truncated': 0, 'expired': 0, 'canceled': 0, 'skipped': 0}  actual $4.8474
+  final-headlineJ: repair round, 2 units
+submitting 2 requests, tag 'final-headlineJ-r1'
+  worst case $1.30, input alone $0.02
+  expected $0.77, reserving $1.30
+  projected $103.42 of $182.00 cap (committed $102.12, observed $102.12)
+  batch msgbatch_01CYBV5ndxPaBLtyA54dYxKU
+  state C:\Users\aiden\Desktop\projects\fragmentation\results\batches\final-headlineJ-r1.state.json
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  wrote 2 results to C:\Users\aiden\Desktop\projects\fragmentation\results\batches\final-headlineJ-r1.results.jsonl
+  {'succeeded': 2, 'errored': 0, 'zero_answer': 0, 'truncated': 0, 'expired': 0, 'canceled': 0, 'skipped': 0}
+  spend: $0.4304 over 2 results ($0.21519 each)  in 33,737 tok / out 79,327 tok
+  final-headlineJ-r1: {'succeeded': 2, 'errored': 0, 'zero_answer': 0, 'truncated': 0, 'expired': 0, 'canceled': 0, 'skipped': 0}  actual $0.4304
+  final-gridJ-w1: repair round, 3 units
+submitting 3 requests, tag 'final-gridJ-w1-r1'
+  worst case $1.94, input alone $0.02
+  expected $1.22, reserving $1.94
+  projected $104.49 of $182.00 cap (committed $102.55, observed $102.55)
+  batch msgbatch_01MLjKwRmAv4nfUPKfXVQchV
+  state C:\Users\aiden\Desktop\projects\fragmentation\results\batches\final-gridJ-w1-r1.state.json
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  wrote 3 results to C:\Users\aiden\Desktop\projects\fragmentation\results\batches\final-gridJ-w1-r1.results.jsonl
+  {'succeeded': 3, 'errored': 0, 'zero_answer': 0, 'truncated': 0, 'expired': 0, 'canceled': 0, 'skipped': 0}
+  spend: $1.2904 over 3 results ($0.43012 each)  in 31,797 tok / out 251,715 tok
+  final-gridJ-w1-r1: {'succeeded': 3, 'errored': 0, 'zero_answer': 0, 'truncated': 0, 'expired': 0, 'canceled': 0, 'skipped': 0}  actual $1.2904
+  final-gridJ-w2: repair round, 10 units
+submitting 10 requests, tag 'final-gridJ-w2-r1'
+  worst case $6.47, input alone $0.07
+  expected $3.51, reserving $6.47
+  projected $110.31 of $182.00 cap (committed $103.84, observed $103.84)
+  batch msgbatch_01PnneWhZGSkZvJKRg6Kfjbe
+  state C:\Users\aiden\Desktop\projects\fragmentation\results\batches\final-gridJ-w2-r1.state.json
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  wrote 10 results to C:\Users\aiden\Desktop\projects\fragmentation\results\batches\final-gridJ-w2-r1.results.jsonl
+  {'succeeded': 10, 'errored': 0, 'zero_answer': 0, 'truncated': 0, 'expired': 0, 'canceled': 0, 'skipped': 0}
+  spend: $3.8084 over 10 results ($0.38084 each)  in 111,420 tok / out 739,403 tok
+  final-gridJ-w2-r1: {'succeeded': 10, 'errored': 0, 'zero_answer': 0, 'truncated': 0, 'expired': 0, 'canceled': 0, 'skipped': 0}  actual $3.8084
+  final-gridJ-w3: repair round, 8 units
+submitting 8 requests, tag 'final-gridJ-w3-r1'
+  worst case $5.18, input alone $0.06
+  expected $3.10, reserving $5.18
+  projected $112.82 of $182.00 cap (committed $107.65, observed $107.65)
+  batch msgbatch_01Ppb92oCyTEKucgvwP5TW7f
+  state C:\Users\aiden\Desktop\projects\fragmentation\results\batches\final-gridJ-w3-r1.state.json
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  wrote 8 results to C:\Users\aiden\Desktop\projects\fragmentation\results\batches\final-gridJ-w3-r1.results.jsonl
+  {'succeeded': 8, 'errored': 0, 'zero_answer': 0, 'truncated': 0, 'expired': 0, 'canceled': 0, 'skipped': 0}
+  spend: $3.4810 over 8 results ($0.43512 each)  in 86,209 tok / out 678,952 tok
+  final-gridJ-w3-r1: {'succeeded': 8, 'errored': 0, 'zero_answer': 0, 'truncated': 0, 'expired': 0, 'canceled': 0, 'skipped': 0}  actual $3.4810
+  final-gridJ-w4: repair round, 9 units
+submitting 9 requests, tag 'final-gridJ-w4-r1'
+  worst case $5.83, input alone $0.07
+  expected $3.63, reserving $5.83
+  projected $116.95 of $182.00 cap (committed $111.13, observed $111.13)
+  batch msgbatch_014dKYC7pB1dhCUWD8UCiX5b
+  state C:\Users\aiden\Desktop\projects\fragmentation\results\batches\final-gridJ-w4-r1.state.json
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  wrote 9 results to C:\Users\aiden\Desktop\projects\fragmentation\results\batches\final-gridJ-w4-r1.results.jsonl
+  {'succeeded': 9, 'errored': 0, 'zero_answer': 0, 'truncated': 0, 'expired': 0, 'canceled': 0, 'skipped': 0}
+  spend: $3.4588 over 9 results ($0.38431 each)  in 101,816 tok / out 671,392 tok
+  final-gridJ-w4-r1: {'succeeded': 9, 'errored': 0, 'zero_answer': 0, 'truncated': 0, 'expired': 0, 'canceled': 0, 'skipped': 0}  actual $3.4588
+headlineJ: scored -> results\final\headlineJ/REPORT.txt; refused: none
+gridJ: scored -> results\final\gridJ/REPORT.txt; refused: none
+identifierJ: scored -> results\final\identifierJ/REPORT.txt; refused: none
+steps 1-3 done. ledger: observed $114.59, committed $114.59. STOP -- re-forecast before steps 4-6.
+exit 0

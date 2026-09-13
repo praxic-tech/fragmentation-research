@@ -1,0 +1,253 @@
+
+==========================================================================
+ CELL coherence-sever__clause
+
+INTEGRITY
+  game J: ok   model answered 24/24   non-completions 0   fragments placed by policy 0.0%
+
+==========================================================================
+ THREE ATTACK CONDITIONS, SAME CORPUS, SAME MODEL
+==========================================================================
+
+GAME J  (joint: membership AND order, nothing given)
+  pools scored 24
+  COMPLETION   24/24 (100%)   resource-bounded non-completions 0
+  linkage F1   mean 0.8487   baseline 0.2622   advantage +0.7951
+               precision 0.8481   recall 0.8495   (of guessed / of true same-record pairs)
+  groups       guessed 7.0 vs 7.0 asked   exact count 24/24
+  partition    valid 24/24   (after repairing dropped fragments to singletons)
+  COVERAGE     model placed 100.0% of fragments   dropped 0 total, worst pool 0
+  JOINT ordered-pair F1   mean 0.7258   baseline 0.1311   advantage +0.6845
+  F1 BREAKDOWN  (pairs summed over 24 pools;  F1_J = linkage F1 x q)
+    pairs      guessed 45,725 same-record pairs   true 45,574
+    linkage    38,583 guessed pairs really share a record   precision 0.8438  recall 0.8466  F1 0.8452
+    order      32,841 of those 38,583 point the right way   q = C/K 0.8512
+    joint      precision C/guessed 0.7182  recall C/true 0.7206  F1 0.7194 = 0.8452 x 0.8512
+  direction accuracy      q_micro 0.8512   (K=0 in 0/24 pools)
+  tau in matched groups   mean +0.7455  (n=24 pools)
+  records recovered EXACTLY (membership and order): 2/168  (1.2%)
+
+==========================================================================
+ CELL coherence-sever__token-window
+
+INTEGRITY
+  game J: ok   model answered 24/24   non-completions 0   fragments placed by policy 0.0%
+
+==========================================================================
+ THREE ATTACK CONDITIONS, SAME CORPUS, SAME MODEL
+==========================================================================
+
+GAME J  (joint: membership AND order, nothing given)
+  pools scored 24
+  COMPLETION   24/24 (100%)   resource-bounded non-completions 0
+  linkage F1   mean 0.8604   baseline 0.2640   advantage +0.8105
+               precision 0.8494   recall 0.8743   (of guessed / of true same-record pairs)
+  groups       guessed 7.7 vs 7.0 asked   exact count 23/24
+  partition    valid 24/24   (after repairing dropped fragments to singletons)
+  COVERAGE     model placed 100.0% of fragments   dropped 0 total, worst pool 0
+  JOINT ordered-pair F1   mean 0.7005   baseline 0.1320   advantage +0.6550
+  F1 BREAKDOWN  (pairs summed over 24 pools;  F1_J = linkage F1 x q)
+    pairs      guessed 150,117 same-record pairs   true 144,836
+    linkage    126,462 guessed pairs really share a record   precision 0.8424  recall 0.8731  F1 0.8575
+    order      102,486 of those 126,462 point the right way   q = C/K 0.8104
+    joint      precision C/guessed 0.6827  recall C/true 0.7076  F1 0.6949 = 0.8575 x 0.8104
+  direction accuracy      q_micro 0.8104   (K=0 in 0/24 pools)
+  tau in matched groups   mean +0.6865  (n=24 pools)
+  records recovered EXACTLY (membership and order): 2/168  (1.2%)
+
+==========================================================================
+ CELL random__clause
+
+INTEGRITY
+  game J: ok   model answered 24/24   non-completions 0   fragments placed by policy 0.0%
+
+==========================================================================
+ THREE ATTACK CONDITIONS, SAME CORPUS, SAME MODEL
+==========================================================================
+
+GAME J  (joint: membership AND order, nothing given)
+  pools scored 24
+  COMPLETION   24/24 (100%)   resource-bounded non-completions 0
+  linkage F1   mean 0.8350   baseline 0.2605   advantage +0.7771
+               precision 0.8304   recall 0.8398   (of guessed / of true same-record pairs)
+  groups       guessed 7.0 vs 7.0 asked   exact count 24/24
+  partition    valid 24/24   (after repairing dropped fragments to singletons)
+  COVERAGE     model placed 100.0% of fragments   dropped 0 total, worst pool 0
+  JOINT ordered-pair F1   mean 0.7544   baseline 0.1302   advantage +0.7178
+  F1 BREAKDOWN  (pairs summed over 24 pools;  F1_J = linkage F1 x q)
+    pairs      guessed 85,144 same-record pairs   true 84,043
+    linkage    70,491 guessed pairs really share a record   precision 0.8279  recall 0.8387  F1 0.8333
+    order      63,399 of those 70,491 point the right way   q = C/K 0.8994
+    joint      precision C/guessed 0.7446  recall C/true 0.7544  F1 0.7495 = 0.8333 x 0.8994
+  direction accuracy      q_micro 0.8994   (K=0 in 0/24 pools)
+  tau in matched groups   mean +0.8337  (n=24 pools)
+  records recovered EXACTLY (membership and order): 2/168  (1.2%)
+
+==========================================================================
+ CELL random__sentence
+
+INTEGRITY
+  game J: ok   model answered 24/24   non-completions 0   fragments placed by policy 0.0%
+
+==========================================================================
+ THREE ATTACK CONDITIONS, SAME CORPUS, SAME MODEL
+==========================================================================
+
+GAME J  (joint: membership AND order, nothing given)
+  pools scored 24
+  COMPLETION   24/24 (100%)   resource-bounded non-completions 0
+  linkage F1   mean 0.8620   baseline 0.2564   advantage +0.8147
+               precision 0.8529   recall 0.8725   (of guessed / of true same-record pairs)
+  groups       guessed 7.0 vs 7.0 asked   exact count 24/24
+  partition    valid 24/24   (after repairing dropped fragments to singletons)
+  COVERAGE     model placed 100.0% of fragments   dropped 0 total, worst pool 0
+  JOINT ordered-pair F1   mean 0.8009   baseline 0.1282   advantage +0.7718
+  F1 BREAKDOWN  (pairs summed over 24 pools;  F1_J = linkage F1 x q)
+    pairs      guessed 53,369 same-record pairs   true 51,997
+    linkage    45,250 guessed pairs really share a record   precision 0.8479  recall 0.8702  F1 0.8589
+    order      41,899 of those 45,250 point the right way   q = C/K 0.9259
+    joint      precision C/guessed 0.7851  recall C/true 0.8058  F1 0.7953 = 0.8589 x 0.9259
+  direction accuracy      q_micro 0.9259   (K=0 in 0/24 pools)
+  tau in matched groups   mean +0.8765  (n=24 pools)
+  records recovered EXACTLY (membership and order): 10/168  (6.0%)
+
+==========================================================================
+ CELL random__token-window
+
+INTEGRITY
+  game J: ok   model answered 23/24   non-completions 1   fragments placed by policy 0.0%
+    resource-bounded, 128k exhausted (D6, not scored): pool_002
+
+==========================================================================
+ THREE ATTACK CONDITIONS, SAME CORPUS, SAME MODEL
+==========================================================================
+
+GAME J  (joint: membership AND order, nothing given)
+  pools scored 23
+  COMPLETION   23/24 (96%)   resource-bounded non-completions 1
+  linkage F1   mean 0.7472   baseline 0.2636   advantage +0.6568
+               precision 0.7333   recall 0.7634   (of guessed / of true same-record pairs)
+  groups       guessed 7.0 vs 7.0 asked   exact count 22/23
+  partition    valid 23/23   (after repairing dropped fragments to singletons)
+  COVERAGE     model placed 100.0% of fragments   dropped 0 total, worst pool 0
+  JOINT ordered-pair F1   mean 0.6343   baseline 0.1318   advantage +0.5788
+  F1 BREAKDOWN  (pairs summed over 23 pools;  F1_J = linkage F1 x q)
+    pairs      guessed 144,006 same-record pairs   true 137,136
+    linkage    104,098 guessed pairs really share a record   precision 0.7229  recall 0.7591  F1 0.7405
+    order      87,911 of those 104,098 point the right way   q = C/K 0.8445
+    joint      precision C/guessed 0.6105  recall C/true 0.6410  F1 0.6254 = 0.7405 x 0.8445
+  direction accuracy      q_micro 0.8445   (K=0 in 0/23 pools)
+  tau in matched groups   mean +0.7515  (n=23 pools)
+  records recovered EXACTLY (membership and order): 0/161  (0.0%)
+
+==========================================================================
+ CELL semantic__clause
+
+INTEGRITY
+  game J: ok   model answered 24/24   non-completions 0   fragments placed by policy 0.0%
+
+==========================================================================
+ THREE ATTACK CONDITIONS, SAME CORPUS, SAME MODEL
+==========================================================================
+
+GAME J  (joint: membership AND order, nothing given)
+  pools scored 24
+  COMPLETION   24/24 (100%)   resource-bounded non-completions 0
+  linkage F1   mean 0.8230   baseline 0.2605   advantage +0.7614
+               precision 0.8179   recall 0.8286   (of guessed / of true same-record pairs)
+  groups       guessed 7.0 vs 7.0 asked   exact count 24/24
+  partition    valid 24/24   (after repairing dropped fragments to singletons)
+  COVERAGE     model placed 100.0% of fragments   dropped 0 total, worst pool 0
+  JOINT ordered-pair F1   mean 0.6790   baseline 0.1302   advantage +0.6312
+  F1 BREAKDOWN  (pairs summed over 24 pools;  F1_J = linkage F1 x q)
+    pairs      guessed 85,705 same-record pairs   true 84,043
+    linkage    69,279 guessed pairs really share a record   precision 0.8083  recall 0.8243  F1 0.8163
+    order      57,012 of those 69,279 point the right way   q = C/K 0.8229
+    joint      precision C/guessed 0.6652  recall C/true 0.6784  F1 0.6717 = 0.8163 x 0.8229
+  direction accuracy      q_micro 0.8229   (K=0 in 0/24 pools)
+  tau in matched groups   mean +0.6812  (n=24 pools)
+  records recovered EXACTLY (membership and order): 0/168  (0.0%)
+
+==========================================================================
+ CELL semantic__sentence
+
+INTEGRITY
+  game J: ok   model answered 24/24   non-completions 0   fragments placed by policy 0.0%
+
+==========================================================================
+ THREE ATTACK CONDITIONS, SAME CORPUS, SAME MODEL
+==========================================================================
+
+GAME J  (joint: membership AND order, nothing given)
+  pools scored 24
+  COMPLETION   24/24 (100%)   resource-bounded non-completions 0
+  linkage F1   mean 0.8787   baseline 0.2564   advantage +0.8370
+               precision 0.8760   recall 0.8815   (of guessed / of true same-record pairs)
+  groups       guessed 7.0 vs 7.0 asked   exact count 24/24
+  partition    valid 24/24   (after repairing dropped fragments to singletons)
+  COVERAGE     model placed 100.0% of fragments   dropped 0 total, worst pool 0
+  JOINT ordered-pair F1   mean 0.7387   baseline 0.1282   advantage +0.7004
+  F1 BREAKDOWN  (pairs summed over 24 pools;  F1_J = linkage F1 x q)
+    pairs      guessed 52,405 same-record pairs   true 51,997
+    linkage    45,727 guessed pairs really share a record   precision 0.8726  recall 0.8794  F1 0.8760
+    order      38,338 of those 45,727 point the right way   q = C/K 0.8384
+    joint      precision C/guessed 0.7316  recall C/true 0.7373  F1 0.7344 = 0.8760 x 0.8384
+  direction accuracy      q_micro 0.8384   (K=0 in 0/24 pools)
+  tau in matched groups   mean +0.7107  (n=24 pools)
+  records recovered EXACTLY (membership and order): 0/168  (0.0%)
+
+==========================================================================
+ CELL subject-verb__clause
+
+INTEGRITY
+  game J: ok   model answered 24/24   non-completions 0   fragments placed by policy 0.0%
+
+==========================================================================
+ THREE ATTACK CONDITIONS, SAME CORPUS, SAME MODEL
+==========================================================================
+
+GAME J  (joint: membership AND order, nothing given)
+  pools scored 24
+  COMPLETION   24/24 (100%)   resource-bounded non-completions 0
+  linkage F1   mean 0.6456   baseline 0.2618   advantage +0.5201
+               precision 0.6389   recall 0.6545   (of guessed / of true same-record pairs)
+  groups       guessed 9.5 vs 7.0 asked   exact count 19/24
+  partition    valid 24/24   (after repairing dropped fragments to singletons)
+  COVERAGE     model placed 100.0% of fragments   dropped 0 total, worst pool 0
+  JOINT ordered-pair F1   mean 0.4980   baseline 0.1309   advantage +0.4225
+  F1 BREAKDOWN  (pairs summed over 24 pools;  F1_J = linkage F1 x q)
+    pairs      guessed 214,090 same-record pairs   true 208,381
+    linkage    135,915 guessed pairs really share a record   precision 0.6348  recall 0.6522  F1 0.6434
+    order      104,399 of those 135,915 point the right way   q = C/K 0.7681
+    joint      precision C/guessed 0.4876  recall C/true 0.5010  F1 0.4942 = 0.6434 x 0.7681
+  direction accuracy      q_micro 0.7681   (K=0 in 0/24 pools)
+  tau in matched groups   mean +0.5846  (n=24 pools)
+  records recovered EXACTLY (membership and order): 0/168  (0.0%)
+
+==========================================================================
+ CELL subject-verb__sentence
+
+INTEGRITY
+  game J: ok   model answered 24/24   non-completions 0   fragments placed by policy 0.0%
+
+==========================================================================
+ THREE ATTACK CONDITIONS, SAME CORPUS, SAME MODEL
+==========================================================================
+
+GAME J  (joint: membership AND order, nothing given)
+  pools scored 24
+  COMPLETION   24/24 (100%)   resource-bounded non-completions 0
+  linkage F1   mean 0.6890   baseline 0.2597   advantage +0.5802
+               precision 0.6811   recall 0.6980   (of guessed / of true same-record pairs)
+  groups       guessed 7.0 vs 7.0 asked   exact count 23/24
+  partition    valid 24/24   (after repairing dropped fragments to singletons)
+  COVERAGE     model placed 100.0% of fragments   dropped 0 total, worst pool 0
+  JOINT ordered-pair F1   mean 0.5532   baseline 0.1299   advantage +0.4866
+  F1 BREAKDOWN  (pairs summed over 24 pools;  F1_J = linkage F1 x q)
+    pairs      guessed 151,339 same-record pairs   true 146,985
+    linkage    102,006 guessed pairs really share a record   precision 0.6740  recall 0.6940  F1 0.6839
+    order      81,625 of those 102,006 point the right way   q = C/K 0.8002
+    joint      precision C/guessed 0.5394  recall C/true 0.5553  F1 0.5472 = 0.6839 x 0.8002
+  direction accuracy      q_micro 0.8002   (K=0 in 0/24 pools)
+  tau in matched groups   mean +0.6450  (n=24 pools)
+  records recovered EXACTLY (membership and order): 0/168  (0.0%)
