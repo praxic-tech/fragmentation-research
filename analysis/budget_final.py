@@ -246,7 +246,11 @@ for label, keys, det in OPTIONAL:
 for k in sorted(PPF):
     print(f"    (hierarchical 12 pools at k={k}: ${hier_usd(HP['pool_ids'], k=k):.2f} expected)")
 
-print(f"\nRUN ORDER, cumulative (already spent included)")
+# Every figure here is credit, so headroom is measured against the wall IN
+# CREDIT: $WALL out of pocket / (1 + tax). Without --tax it is shown at 0% tax.
+CREDIT_WALL = WALL / (1 + (ARGS.tax or 0.0))
+print(f"\nRUN ORDER, cumulative (already spent included); wall in credit ${CREDIT_WALL:.2f}"
+      f" = ${WALL:.0f} / (1 + {ARGS.tax or 0.0:.4g})")
 print(f"  {'step':<{W}}{'expected':>10}{'P95':>10}{'left under wall (exp / P95)':>30}")
 acc_keys, acc_det = [], []
 for i, (label, keys, det) in enumerate(PARTS + OPTIONAL):
@@ -257,10 +261,11 @@ for i, (label, keys, det) in enumerate(PARTS + OPTIONAL):
     e = SPENT + e + sum(DET[d][0] for d in acc_det)
     p = SPENT + p + sum(DET[d][1] for d in acc_det)
     tag = f"{i}" if i < len(PARTS) else f"{i} (opt)"
-    print(f"  {tag + ' ' + label:<{W}}{e:>10.2f}{p:>10.2f}{WALL - e:>15.2f} / {WALL - p:>7.2f}")
+    print(f"  {tag + ' ' + label:<{W}}{e:>10.2f}{p:>10.2f}{CREDIT_WALL - e:>15.2f} / {CREDIT_WALL - p:>7.2f}")
     if i == len(PARTS) - 1:
         req_e, req_p = e, p
-        print(f"  {'-- REQUIRED TOTAL (steps 0-5) --':<{W}}{e:>10.2f}{p:>10.2f}{WALL - e:>15.2f} / {WALL - p:>7.2f}")
+        print(f"  {'-- REQUIRED TOTAL (steps 0-5) --':<{W}}{e:>10.2f}{p:>10.2f}"
+              f"{CREDIT_WALL - e:>15.2f} / {CREDIT_WALL - p:>7.2f}")
 
 print("\nDROP ORDER if the forecast worsens: repeats full -> repeats small -> grid O extension ->"
       " hierarchical extension -> grid O 30 -> headline O -> hierarchical 12 -> grid J pools from"

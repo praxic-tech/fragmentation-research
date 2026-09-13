@@ -311,9 +311,9 @@ fidelity checks, never from attack scores.
 
 ## D9 — 2026-09-13: the budget is $200
 
-The user raised the budget from $167 to **$200, out of pocket**. The ledger's
-HARD_LIMIT is $200 until the sales-tax rate is known, then $200 / (1 + rate) in
-API credit. The plan to run is chosen against this wall from
+The user raised the budget from $167 to **$200, out of pocket**. Sales tax is
+**6.25%**, so the ledger's HARD_LIMIT is $200 / 1.0625 = **$188.23 in API
+credit** (rounded down). Every credit figure costs 1.0625x out of pocket. The plan to run is chosen against this wall from
 results/budget_final.txt and approved by the user before any headline or grid
 request is submitted.
 

@@ -60,10 +60,10 @@ DEFAULT_MAX_SPEND = 120.00
 # decision and can be raised deliberately with --max-spend; this cannot. A run
 # configured above it is a configuration error, not a judgement call, so the
 # Ledger refuses to construct itself rather than waiting to refuse a submission.
-# Raised from $167 to $200 on 2026-09-13 by the user's budget decision
-# (RUN_DECISIONS D9). The budget is OUT OF POCKET; once the sales-tax rate is
-# known this becomes $200 / (1 + rate) in API credit.
-HARD_LIMIT = 200.00
+# The budget is $200 OUT OF POCKET (RUN_DECISIONS D9, raised from $167 on
+# 2026-09-13). Credits are bought plus 6.25% sales tax, so the wall in API
+# credit is $200 / 1.0625 = $188.235, rounded DOWN so it can never be crossed.
+HARD_LIMIT = 188.23
 
 # Documented, in the order it should be applied. Not invented at the moment of
 # refusal, when the temptation is to cut whatever is nearest.
