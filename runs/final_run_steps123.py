@@ -7,7 +7,10 @@ Per frozen spec, the protocol already decided (D4, D6):
     submit -> fetch -> resubmit transport holes ONCE -> ONE repair round
     (its own transport holes resubmitted once) -> harvest into the answer store
 A call that exhausts 128k is a non-completion: never resubmitted, never
-repaired. Then each game is scored with the same gate and report, into
+repaired. Across specs the phases run in order (D12): every base batch is
+fetched, then EVERY resend completes, then the repair rounds start. Missing
+experimental units come before repairs, so a credit shortfall can only cost
+repairs. Then each game is scored with the same gate and report, into
 results/final/<game>/REPORT.txt.
 
 Base specs go out in spend order. More than one can be in flight; the ledger
@@ -101,7 +104,9 @@ class Run:
             if hashlib.sha256(r["prompt"].encode("utf-8")).hexdigest() != want[cid]["resend_prompt_sha256"]:
                 raise SystemExit(f"STOP: {cid}'s resent prompt does not match its manifest hash. Nothing was sent.")
 
-    def follow_up(self, path, spec, first_file):
+    def resend_phase(self, path, spec, first_file):
+        """The one unchanged retry of provider-refused / transport-failed units.
+        Missing experimental units come before any repair (D12)."""
         files = [first_file]
         rs = build_resubmit_spec(spec, files, spec["tag"] + "-rs1")
         self._check_manifest(spec["tag"], rs)
@@ -113,6 +118,10 @@ class Run:
             self.log(f"  {spec['tag']}: {len(rs['at_ceiling'])} non-completions at 128k (D6), not re-asked")
         harvest(self.store, spec, files)
         self.files[path] = files
+
+    def repair_phase(self, path, spec):
+        """The one repair round, for malformed / incomplete outputs only."""
+        files = self.files[path]
         try:
             rp = build_repair_spec([(spec, files)], 1, 1, spec["tag"] + "-r1")
         except IncompleteBatchError as e:
@@ -143,15 +152,22 @@ class Run:
                 waiting.pop(0)
 
         submit_what_fits()
+        firsts = {}
         for path in SPEND_ORDER:
             if path not in states:
                 submit_what_fits()
             if path not in states:
                 raise SystemExit(f"STOP: {specs[path]['tag']} cannot be submitted within the ledger's "
                                  "limits even with nothing in flight. Re-forecast before going on.")
-            first = self._complete(specs[path])
-            self.follow_up(path, specs[path], first)
+            firsts[path] = self._complete(specs[path])
             submit_what_fits()
+        # Missing experimental units before repairs (D12): every resend of a
+        # provider-refused or transport-failed unit is completed before any
+        # repair request is sent, so a shortfall can only cost repairs.
+        for path in SPEND_ORDER:
+            self.resend_phase(path, specs[path], firsts[path])
+        for path in SPEND_ORDER:
+            self.repair_phase(path, specs[path])
 
         for game, paths in GAMES:
             base = [specs[p] for p in paths]
@@ -200,7 +216,7 @@ class _FakeBatches:
             prompt = req["params"]["messages"][0]["content"]
             labels = re.findall(r"^(m_\d{7}|[a-z]+_\d+(?:_frag_\d+)?): ", prompt, re.M)
             n = int(re.search(r"from (\d+) different records", prompt).group(1))
-            if self.seen == 3:                      # a transport hole
+            if self.seen in (3, 60):                # transport holes, in headline and grid w1
                 yield _O(custom_id=req["custom_id"], result=_O(type="errored", error="overloaded"))
                 continue
             text = "no list here" if self.seen == 5 else json.dumps([labels[i::n] for i in range(n)])
@@ -226,8 +242,14 @@ def main():
                 os.path.join(tmp, "final"), poll=0).run()
             reports = [os.path.exists(os.path.join(tmp, "final", g, "REPORT.txt")) for g, _ in GAMES]
             steps = led.data["steps"]
+            order = list(steps)                     # the ledger records batches in submission order
+            resends = [i for i, t in enumerate(order) if t.endswith("-rs1") and "-r1" not in t]
+            repairs = [i for i, t in enumerate(order) if "-r1" in t]
+            first = len(resends) >= 2 and bool(repairs) and max(resends) < min(repairs)
             print(f"REHEARSAL: {len(steps)} batches, every one settled: "
                   f"{all(s.get('settled') for s in steps.values())}; reports written: {all(reports)}")
+            print(f"  submission order: {order}")
+            print(f"  all {len(resends)} resend batches before all {len(repairs)} repair batches: {first}")
         finally:
             shutil.rmtree(tmp, ignore_errors=True)
         return
