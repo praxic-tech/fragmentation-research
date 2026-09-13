@@ -309,6 +309,14 @@ fidelity checks, never from attack scores.
 - **The final price** is results/budget_final.txt (analysis/budget_final.py).
   No headline or grid request is submitted until the user approves it.
 
+## D9 — 2026-09-13: the budget is $200
+
+The user raised the budget from $167 to **$200, out of pocket**. The ledger's
+HARD_LIMIT is $200 until the sales-tax rate is known, then $200 / (1 + rate) in
+API credit. The plan to run is chosen against this wall from
+results/budget_final.txt and approved by the user before any headline or grid
+request is submitted.
+
 ## Development history — 2026-09-10: headline documents used before frame A existed
 
 Development work done before D2 was taken used documents that frame A later

@@ -21,32 +21,32 @@ part                                                        expected       P95  
 
 RUN ORDER, cumulative (already spent included)
   step                                                        expected       P95   left under wall (exp / P95)
-  0 G3 masking side-channel diagnostic (dev pool)                10.81     10.81         156.19 /  156.19
-  1 Headline J, 46 pools                                         29.10     34.79         137.90 /  132.21
-  2 Grid J, 9 cells x pools 2-25 (216 pools)                    114.05    145.73          52.95 /   21.27
-  3 Hierarchical, 12 prespecified headline pools, k=20          151.57    216.55          15.43 /  -49.55
-  4 Headline O, 100 docs, length-stratified                     157.40    222.80           9.60 /  -55.80
-  5 Grid O, 30 docs/cell x 9 cells                              171.43    237.72          -4.43 /  -70.72
-  -- REQUIRED TOTAL (steps 0-5) --                              171.43    237.72          -4.43 /  -70.72
-  6 (opt) Hierarchical +8 -> 20 pools                           200.65    292.87         -33.65 / -125.87
-  7 (opt) Grid O +30 -> 60 docs/cell                            212.42    306.54         -45.42 / -139.54
-  8 (opt) Repeats, small (reference x1, 12 pools J + 60 docs O)    217.21    312.03         -50.21 / -145.03
-  9 (opt) Repeats, full (reference x2, pools 2-25)              237.99    336.37         -70.99 / -169.37
+  0 G3 masking side-channel diagnostic (dev pool)                10.81     10.81         189.19 /  189.19
+  1 Headline J, 46 pools                                         29.10     34.79         170.90 /  165.21
+  2 Grid J, 9 cells x pools 2-25 (216 pools)                    114.05    145.73          85.95 /   54.27
+  3 Hierarchical, 12 prespecified headline pools, k=20          151.57    216.55          48.43 /  -16.55
+  4 Headline O, 100 docs, length-stratified                     157.40    222.80          42.60 /  -22.80
+  5 Grid O, 30 docs/cell x 9 cells                              171.43    237.72          28.57 /  -37.72
+  -- REQUIRED TOTAL (steps 0-5) --                              171.43    237.72          28.57 /  -37.72
+  6 (opt) Hierarchical +8 -> 20 pools                           200.65    292.87          -0.65 /  -92.87
+  7 (opt) Grid O +30 -> 60 docs/cell                            212.42    306.54         -12.42 / -106.54
+  8 (opt) Repeats, small (reference x1, 12 pools J + 60 docs O)    217.21    312.03         -17.21 / -112.03
+  9 (opt) Repeats, full (reference x2, pools 2-25)              237.99    336.37         -37.99 / -136.37
 
 DROP ORDER if the forecast worsens: repeats full -> repeats small -> grid O extension -> hierarchical extension -> grid O 30 -> headline O -> hierarchical 12 -> grid J pools from the end of the pool order. Headline J is never dropped.
 
 ALTERNATIVES -- scope only (k is never chosen from F1); totals include already spent
   scenario                                                            expected       P95      0% tax      8% tax
-  A  as specified: hier-12 k=20, headline O, grid O 30                  171.43    237.72        OVER        OVER
-  B  drop grid O 30                                                     157.40    222.80    exp fits        OVER
+  A  as specified: hier-12 k=20, headline O, grid O 30                  171.43    237.72    exp fits    exp fits
+  B  drop grid O 30                                                     157.40    222.80    exp fits    exp fits
   C  drop grid O 30 and headline O                                      151.57    216.55    exp fits    exp fits
   D  hier-12 at k=10 (a cost choice, coverage disclosed), all O         153.10    203.14    exp fits    exp fits
-  E  hier-6 at k=20 (first 6 of the 12), headline O, no grid O          137.48    185.21    exp fits    exp fits
-  F  no hierarchical; headline O + grid O 30                            133.90    166.91        fits    exp fits
+  E  hier-6 at k=20 (first 6 of the 12), headline O, no grid O          137.48    185.21        fits    exp fits
+  F  no hierarchical; headline O + grid O 30                            133.90    166.91        fits        fits
   G  J only: G3 + headline J + grid J                                   114.05    145.73        fits        fits
 
-TAX: the wall is out of pocket, so the ledger's hard limit in credit is $167 / (1 + tax).
-  tax  0.0%: hard limit $167.00 credit; required total out of pocket $171.43 expected / $237.72 P95; OVER
-  tax  5.0%: hard limit $159.05 credit; required total out of pocket $180.00 expected / $249.61 P95; OVER
-  tax  8.0%: hard limit $154.63 credit; required total out of pocket $185.14 expected / $256.74 P95; OVER
-  tax 10.0%: hard limit $151.82 credit; required total out of pocket $188.57 expected / $261.50 P95; OVER
+TAX: the wall is out of pocket, so the ledger's hard limit in credit is $200 / (1 + tax).
+  tax  0.0%: hard limit $200.00 credit; required total out of pocket $171.43 expected / $237.72 P95; expected fits, P95 over
+  tax  5.0%: hard limit $190.48 credit; required total out of pocket $180.00 expected / $249.61 P95; expected fits, P95 over
+  tax  8.0%: hard limit $185.19 credit; required total out of pocket $185.14 expected / $256.74 P95; expected fits, P95 over
+  tax 10.0%: hard limit $181.82 credit; required total out of pocket $188.57 expected / $261.50 P95; expected fits, P95 over

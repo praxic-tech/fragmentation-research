@@ -53,7 +53,7 @@ ARGS = ap.parse_args()
 B_IN, B_OUT = 1.0, 5.0          # sonnet-5 batch $/M
 CAP = 128000
 SIMS = 2000
-WALL, TRIPWIRE = 167.0, 120.0   # the wall is OUT OF POCKET
+WALL, TRIPWIRE = 200.0, 120.0   # the wall is OUT OF POCKET ($167 until D9)
 OVERHEAD_EXP, OVERHEAD_P95 = 0.06, 0.15      # repairs (pool 1: 4 of 88 units)
 SPENT = Ledger().observed
 
@@ -298,7 +298,7 @@ for label, keys, dets in SCEN:
         return "fits" if p <= w else ("exp fits" if e <= w else "OVER")
     print(f"  {label:<66}{e:>10.2f}{p:>10.2f}{fit_at(0.0):>12}{fit_at(TAX_SHOWN):>12}")
 
-print("\nTAX: the wall is out of pocket, so the ledger's hard limit in credit is $167 / (1 + tax).")
+print(f"\nTAX: the wall is out of pocket, so the ledger's hard limit in credit is ${WALL:.0f} / (1 + tax).")
 rates = [ARGS.tax] if ARGS.tax is not None else [0.0, 0.05, 0.08, 0.10]
 for t in rates:
     print(f"  tax {t:>5.1%}: hard limit ${WALL / (1 + t):.2f} credit; required total out of pocket "
