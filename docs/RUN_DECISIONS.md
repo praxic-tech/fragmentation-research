@@ -557,6 +557,30 @@ frozen D11 rule; nothing about the headline is decided from its results.
   Confidence intervals, the advantage definition used in the paper and paired
   tests wait for the frozen results plan.
 
+### Steps 4-5 released: headline O and grid O — 2026-09-13
+
+- The user released headline O and grid O after steps 1-3 were scored.
+  Whether the hierarchical attacker runs is decided after these are scored;
+  nothing about it is released. The headline unlock above extends to headline
+  O's 100 documents.
+- The specs are built by runs/build_final_O_specs.py, which uses the exact
+  sample rules that priced the plan (analysis/budget_final.py). It reads
+  document ids and fragment counts only:
+  - **Headline O:** 100 of the 322 headline documents, proportional to the
+    length bands, largest remainder, seeded within bands. Band split: 1-15
+    fragments 9, 16-30 47, 31-60 37, 61-100 6, 101+ 1. Full-length reference
+    cut (data/prose).
+  - **Grid O:** the first 30 documents of the seeded order of the 168 pool
+    2-25 documents, the same 30 in all 9 cells. Submitted as 3 waves of 10
+    documents × 9 cells (90 requests each), because the ledger holds each
+    submission's worst case (every request at 128k) against the hard limit. A
+    wave that stops leaves every cell equally covered.
+- The protocol is the same as steps 1-3 (runs/final_run_steps45.py): one
+  attempt at 128k, one resend of transport holes, every resend before the one
+  structural repair round, non-completions under D6, and the same scorer.
+- **Forecast:** $15.34 expected from the specs' own pricing. The plan's figure,
+  including repair overhead, is $19.88 expected and $26.54 at P95.
+
 ## Development history — 2026-09-10: headline documents used before frame A existed
 
 Development work done before D2 was taken used documents that frame A later

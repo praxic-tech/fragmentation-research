@@ -1,0 +1,45 @@
+{
+  "spec": "runs/final_gridO_w1.json",
+  "spec_sha256": "d845fcc2d72d5e3f2ab98d37f52a2b4789d96ae522dbdc10f9302e01e3efd8b0",
+  "git_commit": "9aad3748367fb9f7abf99deee5be65c38316fcee",
+  "rule": "The 168 documents of grid pools 2-25 ordered by sha256('grid-O-60|' + record_id); the first 30 (analysis/budget_final.py o_order), the same documents in all 9 retained cells. Wave 1: documents 1-10 of that order.",
+  "o_docs": [
+    "prose_0470",
+    "prose_0207",
+    "prose_0489",
+    "prose_0162",
+    "prose_0126",
+    "prose_0451",
+    "prose_0419",
+    "prose_0431",
+    "prose_0399",
+    "prose_0259"
+  ],
+  "cells": [
+    "results/grid_A/random__sentence",
+    "results/grid_A/random__clause",
+    "results/grid_A/random__token-window",
+    "results/grid_A/semantic__sentence",
+    "results/grid_A/semantic__clause",
+    "results/grid_A/coherence-sever__clause",
+    "results/grid_A/coherence-sever__token-window",
+    "results/grid_A/subject-verb__sentence",
+    "results/grid_A/subject-verb__clause"
+  ],
+  "n_requests": 90,
+  "expected_usd": 3.625942,
+  "max_tokens": [
+    128000
+  ],
+  "estimate": {
+    "n_requests": 90,
+    "est_input_tokens": 90285,
+    "est_output_tokens_worst_case": 11520000,
+    "est_cost_worst_case": 57.690284999999996,
+    "est_cost_input_only": 0.090285
+  },
+  "preflight": {
+    "checked": 90,
+    "blocked": 0
+  }
+}

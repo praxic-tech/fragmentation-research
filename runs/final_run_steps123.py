@@ -60,11 +60,14 @@ class CreditStop(RuntimeError):
 
 
 class Run:
-    def __init__(self, client, state_dir, ledger, store, out_root, poll, log=print, manifest=None):
+    def __init__(self, client, state_dir, ledger, store, out_root, poll, log=print, manifest=None,
+                 spend_order=None, games=None, label="steps 1-3"):
         self.client, self.state_dir, self.ledger = client, state_dir, ledger
         self.store, self.out_root, self.poll, self.log = store, out_root, poll, log
         self.files, self.repairs = {}, {}
         self.manifest = json.load(open(manifest, encoding="utf-8")) if manifest else None
+        self.spend_order, self.games = spend_order or SPEND_ORDER, games or GAMES
+        self.label = label
 
     def _submit(self, spec):
         sp = state_path(self.state_dir, spec["tag"])
@@ -138,8 +141,8 @@ class Run:
             self.repairs[path] = (rp, rfiles)
 
     def run(self):
-        specs = {p: json.load(open(p, encoding="utf-8")) for p in SPEND_ORDER}
-        states, waiting = {}, list(SPEND_ORDER)
+        specs = {p: json.load(open(p, encoding="utf-8")) for p in self.spend_order}
+        states, waiting = {}, list(self.spend_order)
 
         def submit_what_fits():
             while waiting:
@@ -153,7 +156,7 @@ class Run:
 
         submit_what_fits()
         firsts = {}
-        for path in SPEND_ORDER:
+        for path in self.spend_order:
             if path not in states:
                 submit_what_fits()
             if path not in states:
@@ -164,15 +167,17 @@ class Run:
         # Missing experimental units before repairs (D12): every resend of a
         # provider-refused or transport-failed unit is completed before any
         # repair request is sent, so a shortfall can only cost repairs.
-        for path in SPEND_ORDER:
+        for path in self.spend_order:
             self.resend_phase(path, specs[path], firsts[path])
-        for path in SPEND_ORDER:
+        for path in self.spend_order:
             self.repair_phase(path, specs[path])
 
-        for game, paths in GAMES:
+        for game, paths in self.games:
             base = [specs[p] for p in paths]
             combined = {**base[0], "build": {**base[0]["build"],
-                                             "pools": [pl for s in base for pl in s["build"]["pools"]]},
+                                             "pools": [pl for s in base for pl in s["build"]["pools"]],
+                                             "o_docs": [d for s in base
+                                                        for d in (s["build"].get("o_docs") or [])]},
                         "requests": [r for s in base for r in s["requests"]],
                         "sidecar": {c: v for s in base for c, v in s["sidecar"].items()}}
             waves = [(combined, [f for p in paths for f in self.files[p]])]
@@ -188,8 +193,8 @@ class Run:
             os.makedirs(out, exist_ok=True)
             open(os.path.join(out, "REPORT.txt"), "w", encoding="utf-8").write(buf.getvalue())
             self.log(f"{game}: scored -> {out}/REPORT.txt; refused: {refused or 'none'}")
-        self.log(f"steps 1-3 done. ledger: observed ${self.ledger.observed:.2f}, "
-                 f"committed ${self.ledger.committed:.2f}. STOP -- re-forecast before steps 4-6.")
+        self.log(f"{self.label} done. ledger: observed ${self.ledger.observed:.2f}, "
+                 f"committed ${self.ledger.committed:.2f}. STOP -- nothing further is released.")
 
 
 # ── rehearsal: a fake provider, temp directories, no money ─────────────────
@@ -199,8 +204,8 @@ class _O:
 
 
 class _FakeBatches:
-    def __init__(self):
-        self.store, self.n, self.seen = {}, 0, 0
+    def __init__(self, holes=(3, 60)):
+        self.store, self.n, self.seen, self.holes = {}, 0, 0, set(holes)
 
     def create(self, requests):
         self.n += 1
@@ -215,11 +220,13 @@ class _FakeBatches:
             self.seen += 1
             prompt = req["params"]["messages"][0]["content"]
             labels = re.findall(r"^(m_\d{7}|[a-z]+_\d+(?:_frag_\d+)?): ", prompt, re.M)
-            n = int(re.search(r"from (\d+) different records", prompt).group(1))
-            if self.seen in (3, 60):                # transport holes, in headline and grid w1
+            m = re.search(r"from (\d+) different records", prompt)
+            n = int(m.group(1)) if m else 1             # game O: one record, a flat list
+            if self.seen in self.holes:                 # transport holes, in two different batches
                 yield _O(custom_id=req["custom_id"], result=_O(type="errored", error="overloaded"))
                 continue
-            text = "no list here" if self.seen == 5 else json.dumps([labels[i::n] for i in range(n)])
+            answer = [labels[i::n] for i in range(n)] if m else labels
+            text = "no list here" if self.seen == 5 else json.dumps(answer)
             if self.seen == 7:                      # a non-completion at the ceiling
                 msg = _O(content=[_O(type="text", text="")], stop_reason="max_tokens",
                          usage=_O(input_tokens=100, output_tokens=128000))
