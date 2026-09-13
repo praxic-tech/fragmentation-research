@@ -534,6 +534,29 @@ frozen D11 rule; nothing about the headline is decided from its results.
   could reduce RBNCs. The hierarchical attacker (D11) tests whether
   decomposition can complete pools the one-shot attacker cannot.
 
+### Free attackers on the final pools — frozen 2026-09-13, before any final pool is attacked
+
+- They run on exactly the frozen final J pools: the 46 headline pools, grid
+  pools 2-25 in all 9 cells, and the 20 identifier pools. Each comes from the
+  same spec, fragment files and truth that the one-shot model's answers are
+  scored against, and goes through the same scorer (joint_game.score_row).
+  Runner: runs/final_free_attackers.py. No API calls.
+- **Memon-inspired joint attacker (audit packet C4): n = d = 2**, the committed
+  default in adversaries/memon_joint.py, frozen here. Development evidence
+  (commit 8ca7b69, pilot cell only): once the ID leak was fixed, ordering sat at
+  chance for every n from 2 to 8, so the choice cannot favour the attacker. The
+  fragments go in shuffled by the same per-unit seed that orders the model's
+  prompt, with per-unit seeded aliases, never in file order (D1).
+- The analytic baseline is reported per pool by the scorer. The identifier
+  schema-order baseline is as frozen in D11
+  (results/audit/identifier_schema_baseline.json).
+- Random, Jaccard-Greedy and Jaccard-MST are game-O / L floors (audit packet
+  C3), not J attackers. They run on the game-O documents, the same ones the
+  model gets, once the O specs are frozen.
+- Only per-pool rows and descriptive summaries are produced for now.
+  Confidence intervals, the advantage definition used in the paper and paired
+  tests wait for the frozen results plan.
+
 ## Development history — 2026-09-10: headline documents used before frame A existed
 
 Development work done before D2 was taken used documents that frame A later
