@@ -54,7 +54,10 @@ DEFAULT_PATH = os.path.join(ROOT, "results", "run_ledger.json")
 # higher, the correct outcome is a refusal and a cut from CUT_ORDER, not a
 # larger number here. Raising it is a decision to spend more, made once,
 # on purpose -- never a fix for a refused submission.
-DEFAULT_MAX_SPEND = 120.00
+# Raised to $182 credit by the user's approval of the final plan (RUN_DECISIONS
+# D11): just above the plan's $177.38 expected credit, so an overrun pauses the
+# run for review well before the $197.64 hard wall.
+DEFAULT_MAX_SPEND = 182.00
 
 # The wallet's actual floor. The tripwire above is a REFUSAL that forces a
 # decision and can be raised deliberately with --max-spend; this cannot. A run

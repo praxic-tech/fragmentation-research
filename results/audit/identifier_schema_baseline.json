@@ -1,0 +1,191 @@
+{
+ "what": "identifier schema-order baseline and its truth-free check (D11)",
+ "definition": "one bucket, fragments ordered by the published field order, each field type inferred from its format alone; reads only the prompt",
+ "type_rules": [
+  [
+   "ssn",
+   "\\d{3}-\\d{2}-\\d{4}"
+  ],
+  [
+   "account",
+   "\\d{10}"
+  ],
+  [
+   "address",
+   "\\d+\\s+\\S.*"
+  ]
+ ],
+ "schema": [
+  "name",
+  "ssn",
+  "account",
+  "address"
+ ],
+ "source_reads_only_prompt": true,
+ "classifier_correct": 2000,
+ "classifier_total": 2000,
+ "pools": [
+  {
+   "pool": "idpool_000",
+   "schema_joint_f1": 0.19999999999999998,
+   "schema_linkage_f1": 0.19999999999999998,
+   "schema_q": 1.0,
+   "analytic_schema": 0.2,
+   "analytic_joint_baseline": 0.1
+  },
+  {
+   "pool": "idpool_001",
+   "schema_joint_f1": 0.19999999999999998,
+   "schema_linkage_f1": 0.19999999999999998,
+   "schema_q": 1.0,
+   "analytic_schema": 0.2,
+   "analytic_joint_baseline": 0.1
+  },
+  {
+   "pool": "idpool_002",
+   "schema_joint_f1": 0.19999999999999998,
+   "schema_linkage_f1": 0.19999999999999998,
+   "schema_q": 1.0,
+   "analytic_schema": 0.2,
+   "analytic_joint_baseline": 0.1
+  },
+  {
+   "pool": "idpool_003",
+   "schema_joint_f1": 0.19999999999999998,
+   "schema_linkage_f1": 0.19999999999999998,
+   "schema_q": 1.0,
+   "analytic_schema": 0.2,
+   "analytic_joint_baseline": 0.1
+  },
+  {
+   "pool": "idpool_004",
+   "schema_joint_f1": 0.19999999999999998,
+   "schema_linkage_f1": 0.19999999999999998,
+   "schema_q": 1.0,
+   "analytic_schema": 0.2,
+   "analytic_joint_baseline": 0.1
+  },
+  {
+   "pool": "idpool_005",
+   "schema_joint_f1": 0.19999999999999998,
+   "schema_linkage_f1": 0.19999999999999998,
+   "schema_q": 1.0,
+   "analytic_schema": 0.2,
+   "analytic_joint_baseline": 0.1
+  },
+  {
+   "pool": "idpool_006",
+   "schema_joint_f1": 0.19999999999999998,
+   "schema_linkage_f1": 0.19999999999999998,
+   "schema_q": 1.0,
+   "analytic_schema": 0.2,
+   "analytic_joint_baseline": 0.1
+  },
+  {
+   "pool": "idpool_007",
+   "schema_joint_f1": 0.19999999999999998,
+   "schema_linkage_f1": 0.19999999999999998,
+   "schema_q": 1.0,
+   "analytic_schema": 0.2,
+   "analytic_joint_baseline": 0.1
+  },
+  {
+   "pool": "idpool_008",
+   "schema_joint_f1": 0.19999999999999998,
+   "schema_linkage_f1": 0.19999999999999998,
+   "schema_q": 1.0,
+   "analytic_schema": 0.2,
+   "analytic_joint_baseline": 0.1
+  },
+  {
+   "pool": "idpool_009",
+   "schema_joint_f1": 0.19999999999999998,
+   "schema_linkage_f1": 0.19999999999999998,
+   "schema_q": 1.0,
+   "analytic_schema": 0.2,
+   "analytic_joint_baseline": 0.1
+  },
+  {
+   "pool": "idpool_010",
+   "schema_joint_f1": 0.19999999999999998,
+   "schema_linkage_f1": 0.19999999999999998,
+   "schema_q": 1.0,
+   "analytic_schema": 0.2,
+   "analytic_joint_baseline": 0.1
+  },
+  {
+   "pool": "idpool_011",
+   "schema_joint_f1": 0.19999999999999998,
+   "schema_linkage_f1": 0.19999999999999998,
+   "schema_q": 1.0,
+   "analytic_schema": 0.2,
+   "analytic_joint_baseline": 0.1
+  },
+  {
+   "pool": "idpool_012",
+   "schema_joint_f1": 0.19999999999999998,
+   "schema_linkage_f1": 0.19999999999999998,
+   "schema_q": 1.0,
+   "analytic_schema": 0.2,
+   "analytic_joint_baseline": 0.1
+  },
+  {
+   "pool": "idpool_013",
+   "schema_joint_f1": 0.19999999999999998,
+   "schema_linkage_f1": 0.19999999999999998,
+   "schema_q": 1.0,
+   "analytic_schema": 0.2,
+   "analytic_joint_baseline": 0.1
+  },
+  {
+   "pool": "idpool_014",
+   "schema_joint_f1": 0.19999999999999998,
+   "schema_linkage_f1": 0.19999999999999998,
+   "schema_q": 1.0,
+   "analytic_schema": 0.2,
+   "analytic_joint_baseline": 0.1
+  },
+  {
+   "pool": "idpool_015",
+   "schema_joint_f1": 0.19999999999999998,
+   "schema_linkage_f1": 0.19999999999999998,
+   "schema_q": 1.0,
+   "analytic_schema": 0.2,
+   "analytic_joint_baseline": 0.1
+  },
+  {
+   "pool": "idpool_016",
+   "schema_joint_f1": 0.19999999999999998,
+   "schema_linkage_f1": 0.19999999999999998,
+   "schema_q": 1.0,
+   "analytic_schema": 0.2,
+   "analytic_joint_baseline": 0.1
+  },
+  {
+   "pool": "idpool_017",
+   "schema_joint_f1": 0.19999999999999998,
+   "schema_linkage_f1": 0.19999999999999998,
+   "schema_q": 1.0,
+   "analytic_schema": 0.2,
+   "analytic_joint_baseline": 0.1
+  },
+  {
+   "pool": "idpool_018",
+   "schema_joint_f1": 0.19999999999999998,
+   "schema_linkage_f1": 0.19999999999999998,
+   "schema_q": 1.0,
+   "analytic_schema": 0.2,
+   "analytic_joint_baseline": 0.1
+  },
+  {
+   "pool": "idpool_019",
+   "schema_joint_f1": 0.19999999999999998,
+   "schema_linkage_f1": 0.19999999999999998,
+   "schema_q": 1.0,
+   "analytic_schema": 0.2,
+   "analytic_joint_baseline": 0.1
+  }
+ ],
+ "equals_analytic_every_pool": true,
+ "PASS": true
+}

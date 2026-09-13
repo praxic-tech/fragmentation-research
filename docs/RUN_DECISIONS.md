@@ -410,6 +410,40 @@ approved.**
 - *Claim, narrow:* on the tested identifier corpus, fragmentation substantially
   limits joint source-linkage and ordering reconstruction under the evaluated
   attackers. Not generalised to all identifiers or all fragmentation schemes.
+- **The schema-order baseline is attacker-visible and truth-free — verified**
+  (analysis/identifier_schema_baseline.py, results/audit/identifier_schema_baseline.json).
+  It reads only the prompt the model receives (its "label: text" lines),
+  infers each field's type from its FORMAT alone (SSN `###-##-####`, account 10
+  digits, address starting with a street number, otherwise name), and orders
+  one bucket by the published field order. It uses the known fixed schema and
+  observable format, never the answer key's field_type labels, record ids or
+  fragment ids; its source is checked for all of them. The hidden labels are
+  used only to check it: the format classifier is correct on 2,000 / 2,000
+  fragments, and on all 20 frozen pools the baseline scores F1_J exactly 0.2000,
+  equal to the analytic 2T/(P+T), with q = 1.000 — confirming that identifier q
+  measures the template, not reconstruction.
+- **The identifier claim rule, frozen before running.** If and only if the full
+  90% confidence interval for the mean advantage over the schema-order baseline
+  lies within ±0.10, joint reconstruction is described as near the schema-order
+  baseline. Linkage F1 is reported as the main mechanism; q only as a
+  template-order diagnostic. The sample is fixed at the 20 primary pools and is
+  not extended on the basis of the result.
+- **Approved by the user (2026-09-13):** the revised plan at $188.47 out of
+  pocket expected, the 20-pool identifier-J design, the ±0.10 margin, and an
+  **$182 credit tripwire** under the $197.64 hard wall. Steps 1-3 (headline J,
+  grid J, identifier J) are released once the baseline check passes (it did).
+  Headline O, grid O and the hierarchical attacker are released only after a
+  re-forecast once grid J's actual cost is known.
+
+## D12 — 2026-09-13: headline unlock (first request touching the 46 headline pools)
+
+D2 kept the 46 headline pools untouched. With the user's approval (D11), steps
+1-3 are submitted by runs/final_run_steps123.py: headline J
+(runs/final_headlineJ.json, 46 requests, spec hash in
+runs/final_headlineJ_manifest.json), grid J pools 2-25 (runs/final_gridJ_w1..w4.json)
+and identifier J (runs/final_identifierJ.json). The headline guard stays on for
+every other spec. The hierarchical headline pools are chosen afterwards by the
+frozen D11 rule; nothing about the headline is decided from its results.
 
 ## Development history — 2026-09-10: headline documents used before frame A existed
 
