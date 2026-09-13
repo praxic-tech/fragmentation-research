@@ -296,6 +296,13 @@ therefore never sees most true neighbour pairs; it is reported as a decomposed,
 scalable attacker and a one-shot-ceiling check, and is not called stronger
 unless the results support it.
 
+**Go / no-go (D10): not blocker-limited.** With the answer key on the exposed
+pairs only (a diagnostic, never an attacker result), the same pipeline reaches
+median F1_J 0.881 on the development headline analogue (min 0.808): the
+clusterer recovers membership from sparse edges (F1_L 0.97-1.00) and rank
+aggregation most of the order (q 0.83-0.89). A real hierarchical score therefore
+measures its pair classifier, not its blocker.
+
 ### C3. Classic statistical baselines — Random, Jaccard-Greedy, Jaccard-MST
 
 **Claim.** Free, local floors. After D1: masked presentation, independent RNG
@@ -507,6 +514,7 @@ plus sales tax, so the ledger's hard limit is $167 ÷ (1 + tax rate).
 | hierarchical output caps sized for gpt-oss | every pair batch at 128k, one attempt | G2c; live sample on grid pool_000 |
 | hierarchical never completed a live pool | live batch sample: 24/24 pair batches, 467/467 pairs, $0.50, pool scored | msgbatch_01NUXxhBgUzdLnz6fyYYeuRD |
 | hierarchical k unset | pre-declared blocker rule on development data: no k adequate; fallback k = 20 (80.6% of records connected, 41.4% adjacent recall) | results/audit/hier_blocker_calibration.json (D8) |
+| is the hierarchical attacker blocker-limited? | oracle ceiling on development data (answer key on exposed pairs only; a diagnostic, never an attacker result): median F1_J 0.881 on the headline analogue (min 0.808), F1_L 0.97-1.00, q 0.83-0.89 across cells. Not blocker-limited → KEEP | results/audit/hier_oracle_ceiling.json (D10) |
 | G3 never run | run: raw ids in true order → joint F1 0.994 / 1.000 (leak fully exploited); masked → answer order agrees with label numbers and shown order only as its accuracy implies (gaps ≤ 0.016): no side channel. $0.55 | results/audit/g3_diagnostic.json (D8) |
 
 Live sample result (one development pool, semantic × sentence): hierarchical

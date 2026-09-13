@@ -317,6 +317,43 @@ credit** (rounded down). Every credit figure costs 1.0625x out of pocket. The pl
 results/budget_final.txt and approved by the user before any headline or grid
 request is submitted.
 
+## D10 — 2026-09-13: hierarchical go / no-go on development data (oracle ceiling)
+
+A DIAGNOSTIC, never an attacker result (analysis/hier_oracle_ceiling.py,
+results/audit/hier_oracle_ceiling.json). The frozen k = 20 blocker, candidate
+graph, bridges, clustering and ordering, with Sonnet's pair judgements replaced
+by the answer key on the exposed pairs only. Development pools only; the rule
+was fixed before any number was seen (median oracle F1_J on the headline
+analogue: ≥ 0.80 KEEP, < 0.60 blocker-limited, between SECONDARY).
+
+| data (25 dev pools each) | same-record recall | adjacent recall | records connected | oracle F1_L | oracle q | oracle F1_J |
+|---|---|---|---|---|---|---|
+| headline analogue (full length) | 22.4% | 41.4% | 80.6% | 0.990 | 0.893 | **0.881** |
+| semantic × sentence | 28.2% | 44.1% | 88.0% | 1.000 | 0.881 | 0.878 |
+| random × token-window | 16.4% | 24.1% | 65.7% | 0.980 | 0.853 | 0.837 |
+| coherence-sever × token-window | 17.5% | 29.0% | 76.0% | 0.988 | 0.856 | 0.848 |
+| subject-verb × sentence | 15.8% | 19.6% | 62.9% | 0.972 | 0.845 | 0.822 |
+| subject-verb × clause | 13.1% | 16.5% | 56.6% | 0.972 | 0.831 | 0.813 |
+
+**Verdict: HIGH (0.881, minimum 0.808) → KEEP.** Although the blocker exposes
+only 13-28% of same-record pairs, the clusterer recovers membership almost
+perfectly from them (F1_L 0.97-1.00; no evidence-free merges, no bridge rounds
+in 150 pools), and rank aggregation recovers most of the order (q 0.83-0.89).
+The architecture is not blocker-limited, so a real hierarchical score measures
+its PAIR CLASSIFIER against the defence. It is still not called stronger: its
+real accuracy is Sonnet's pair judgement on candidates of which only 35% share a
+record (the k = 5 live sample: linkage precision 0.49).
+
+Unique value against one-shot J: one-shot is projected to exhaust 128k on ~2.5
+headline and ~10.7 grid pools (mostly subject-verb × clause). The hierarchical
+path has no per-call ceiling and completes a 330+-fragment pool for ~$5.0-5.3
+of credit at k = 20.
+
+Recommended, PENDING the user's decision: the 12 hierarchical headline pools
+become (a) every headline pool where one-shot J exhausts 128k, then (b) the
+first pools of the frozen D8 order up to 12. Selection is by completion (a
+resource bound), never by score; it is fixed before any headline result.
+
 ## Development history — 2026-09-10: headline documents used before frame A existed
 
 Development work done before D2 was taken used documents that frame A later
