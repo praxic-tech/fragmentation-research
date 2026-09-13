@@ -422,6 +422,25 @@ approved.**
   fragments, and on all 20 frozen pools the baseline scores F1_J exactly 0.2000,
   equal to the analytic 2T/(P+T), with q = 1.000 — confirming that identifier q
   measures the template, not reconstruction.
+- **The schema-order baseline, fully specified** (refined 2026-09-13 before any
+  identifier-J result was scored; it depends only on the prompts, never on
+  answers):
+  1. *Input:* only the prompt's "label: text" lines.
+  2. *Field type, frozen precedence:* SSN `^\d{3}-\d{2}-\d{4}$` → 10-digit account
+     `^\d{10}$` → street-number address `^\d+\s+\S.*$` → otherwise name. The
+     first full match wins; format only.
+  3. *Order:* one bucket, types in the published order name → ssn → account →
+     address. Within a type, ascending sha256("42|identifier-schema-baseline|" +
+     text): a deterministic seeded tie-break independent of prompt position,
+     alias labels and their order, record ids, fragment ids and ground truth.
+     Same-type fragments never share a record, so within-type order cannot
+     change the score.
+  4. *Hidden truth* is used only to verify the classifier's accuracy (and to
+     score the output with the J scorer); never to construct the output.
+  Checks (results/audit/identifier_schema_baseline.json): the output's text
+  sequence is unchanged after shuffling the prompt lines and relabelling every
+  alias, and deterministic on repeat, on all 20 pools; no pool contains an
+  exact-duplicate text, so the hash is never itself tied.
 - **The identifier claim rule, frozen before running.** If and only if the full
   90% confidence interval for the mean advantage over the schema-order baseline
   lies within ±0.10, joint reconstruction is described as near the schema-order
@@ -442,7 +461,10 @@ D2 kept the 46 headline pools untouched. With the user's approval (D11), steps
 (runs/final_headlineJ.json, 46 requests, spec hash in
 runs/final_headlineJ_manifest.json), grid J pools 2-25 (runs/final_gridJ_w1..w4.json)
 and identifier J (runs/final_identifierJ.json). The headline guard stays on for
-every other spec. The hierarchical headline pools are chosen afterwards by the
+every other spec. The identifier schema-order baseline's full specification
+(D11: frozen precedence, text-hash tie-break, truth used only to verify) was
+committed after submission but before any identifier-J result was scored; it
+reads only the prompts, so no answer could have shaped it. The hierarchical headline pools are chosen afterwards by the
 frozen D11 rule; nothing about the headline is decided from its results.
 
 ## Development history — 2026-09-10: headline documents used before frame A existed

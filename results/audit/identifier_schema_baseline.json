@@ -1,6 +1,16 @@
 {
  "what": "identifier schema-order baseline and its truth-free check (D11)",
- "definition": "one bucket, fragments ordered by the published field order, each field type inferred from its format alone; reads only the prompt",
+ "definition": "one bucket; each field type inferred from format alone with frozen precedence SSN -> 10-digit account -> street-number address -> name; types in the published order name -> ssn -> account -> address; within a type, ascending sha256('42|identifier-schema-baseline|' + text); reads only the prompt",
+ "precedence": [
+  "ssn",
+  "account",
+  "address",
+  "name"
+ ],
+ "tie_seed": 42,
+ "truth_use": "hidden labels only verify the classifier and score the output; never build it",
+ "duplicate_text_pools": 0,
+ "invariant_to_position_and_aliases": true,
  "type_rules": [
   [
    "ssn",
