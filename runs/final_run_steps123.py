@@ -24,6 +24,7 @@ re-forecast after grid J and the user's release.
 
 import argparse
 import contextlib
+import hashlib
 import io
 import json
 import os
@@ -40,8 +41,8 @@ for d in ("adversaries", "harness", "analysis"):
 from answer_store import AnswerStore, harvest                      # noqa: E402
 from batch_game import build_repair_spec, build_resubmit_spec, score  # noqa: E402
 from batch_submit import (DEFAULT_STATE_DIR, IncompleteBatchError,   # noqa: E402
-                          fetch, make_client, read_state, results_path,
-                          state_path, submit)
+                          fetch, make_client, make_custom_id, read_state,
+                          results_path, state_path, submit)
 from run_ledger import DEFAULT_MAX_SPEND, Ledger                   # noqa: E402
 
 GAMES = [("headlineJ", ["runs/final_headlineJ.json"]),
@@ -51,17 +52,32 @@ SPEND_ORDER = ["runs/final_headlineJ.json", "runs/final_gridJ_w1.json", "runs/fi
                "runs/final_gridJ_w3.json", "runs/final_gridJ_w4.json", "runs/final_identifierJ.json"]
 
 
+class CreditStop(RuntimeError):
+    """The provider refused a submission for lack of credit. Stop cleanly."""
+
+
 class Run:
-    def __init__(self, client, state_dir, ledger, store, out_root, poll, log=print):
+    def __init__(self, client, state_dir, ledger, store, out_root, poll, log=print, manifest=None):
         self.client, self.state_dir, self.ledger = client, state_dir, ledger
         self.store, self.out_root, self.poll, self.log = store, out_root, poll, log
         self.files, self.repairs = {}, {}
+        self.manifest = json.load(open(manifest, encoding="utf-8")) if manifest else None
 
     def _submit(self, spec):
         sp = state_path(self.state_dir, spec["tag"])
         if os.path.exists(sp):
             return read_state(sp)                   # resume: never pay twice
-        return submit(spec, state_dir=self.state_dir, client=self.client, ledger=self.ledger)
+        try:
+            return submit(spec, state_dir=self.state_dir, client=self.client, ledger=self.ledger)
+        except Exception as err:                    # noqa: BLE001
+            # The prepaid balance ran out mid-run on 2026-09-13 and this crashed
+            # with a traceback. submit() already released the reservation when
+            # create() failed, so stop cleanly and say how to resume.
+            if "credit balance is too low" in str(err):
+                raise CreditStop(f"{spec['tag']} refused: the account's credit balance is too low. "
+                                 "Nothing was created or charged. Add credit, then re-run this script: "
+                                 "submitted batches are fetched, never paid for twice.") from None
+            raise
 
     def _complete(self, spec):
         """submit (if needed) + fetch; returns the results file."""
@@ -71,9 +87,24 @@ class Run:
         self.log(f"  {spec['tag']}: {res['counts']}  actual ${res['actual_cost']:.4f}")
         return results_path(self.state_dir, spec["tag"])
 
+    def _check_manifest(self, tag, rs):
+        """A resend must be EXACTLY the committed manifest's entries for this
+        batch, prompt hash for prompt hash. Anything else is refused."""
+        if self.manifest is None:
+            return
+        want = {e["custom_id"]: e for e in self.manifest["resend"] if e["base_tag"] == tag}
+        got = {make_custom_id(r["cell"], r["game"], r["unit"]): r for r in rs["requests"]}
+        if set(got) != set(want):
+            raise SystemExit(f"STOP: the resend for {tag} ({len(got)} requests) does not match the committed "
+                             f"manifest ({len(want)} entries). Nothing was sent.")
+        for cid, r in got.items():
+            if hashlib.sha256(r["prompt"].encode("utf-8")).hexdigest() != want[cid]["resend_prompt_sha256"]:
+                raise SystemExit(f"STOP: {cid}'s resent prompt does not match its manifest hash. Nothing was sent.")
+
     def follow_up(self, path, spec, first_file):
         files = [first_file]
         rs = build_resubmit_spec(spec, files, spec["tag"] + "-rs1")
+        self._check_manifest(spec["tag"], rs)
         if rs["requests"]:
             self.log(f"  {spec['tag']}: resubmitting {len(rs['requests'])} transport holes once")
             files.append(self._complete(rs))
@@ -200,8 +231,13 @@ def main():
         finally:
             shutil.rmtree(tmp, ignore_errors=True)
         return
-    Run(make_client(), DEFAULT_STATE_DIR, Ledger(max_spend=DEFAULT_MAX_SPEND), AnswerStore(),
-        os.path.join("results", "final"), poll=60).run()
+    try:
+        Run(make_client(), DEFAULT_STATE_DIR, Ledger(max_spend=DEFAULT_MAX_SPEND), AnswerStore(),
+            os.path.join("results", "final"), poll=60,
+            manifest="runs/resend_manifest_2026-09-13.json").run()
+    except CreditStop as stop:
+        print(f"\nSTOPPED CLEANLY: {stop}")
+        sys.exit(2)
 
 
 if __name__ == "__main__":
