@@ -652,6 +652,64 @@ frozen D11 rule; nothing about the headline is decided from its results.
   moved 0.881 → 0.883, and the D10 verdict (HIGH → KEEP) is unchanged. The
   frozen D10 record stays as results/audit/hier_oracle_ceiling.json.
 
+## D14 — 2026-09-13: post-hoc exploratory embedding adversary, design frozen (not run)
+
+- **Status.** The user approved the design with eight corrections, all applied
+  in docs/embedding_adversary_design.md, which is the frozen design. It is
+  labelled POST-HOC EXPLORATORY EMBEDDING ADVERSARY: it was designed after the
+  final one-shot and Memon-inspired results were visible, and it is never
+  merged into the prespecified attacker comparisons. **Nothing is downloaded
+  or installed until the user explicitly approves the download.**
+- **Model: `sentence-transformers/all-mpnet-base-v2` only**, a widely used
+  general-purpose Sentence Transformers model. The Hugging Face revision is
+  pinned to `e8c3b32edf5434bc2275fc9bab85f82640a19130`. Only the files it
+  needs are downloaded (the ONNX / OpenVINO / `pytorch_model.bin` files are
+  not):
+  - `model.safetensors`: 437,971,872 bytes, SHA-256
+    `78c0197b6159d92658e319bc1d72e4c73a9a03dd03815e70e555c5ef05615658`.
+  - Git blob ids: `tokenizer.json` 7c8e1940…b2b3, `vocab.txt` 1c51ab79…be4d,
+    `config.json` b9fd4298…fc88, `modules.json` 952a9b81…6c5e43,
+    `1_Pooling/config.json` 4e09f293…e2666, `sentence_bert_config.json`
+    4eb670bb…198e, `config_sentence_transformers.json` fd1b2911…acdf,
+    `special_tokens_map.json` 378d4fa3…4d14d, `tokenizer_config.json`
+    20ae1276…2c1d. The full ids are in the design and verified after download.
+  - 438.7 MB in total.
+- **Biomedical embeddings are not in this run.** They are a possible future
+  sensitivity analysis only, not a second model to select between.
+- **Comparison.** The embedding representation is the only architectural
+  change relative to Memon-inspired. **F1_L is the primary comparison.** F1_J
+  differences are not attributed solely to linkage, because changed clusters
+  can change q indirectly; F1_J and q are secondary. q is measured, not
+  assumed: the inherited ordering module was near chance in the existing
+  Memon-inspired results, but it is not presumed to stay there.
+- **Identifiers.** That embeddings cluster by field type is a hypothesis, not
+  an expected success outcome.
+- **Contamination.** Per its model card, the model was trained on more than
+  1 billion sentence pairs from existing datasets (for example S2ORC). Those
+  datasets predate the evaluated corpus of post-cutoff PMC case reports, which
+  reduces the concern about direct document memorization. This is not a claim
+  that contamination is absent.
+- **Parameters.** Every one is fixed by a standard default or inherited from
+  frozen code: mean pooling, 384 word-piece limit, L2 / cosine, average
+  linkage cut to exactly N, jitter 1e-6 with seed 42, ordering n = d = 2, the
+  SHA-256-seeded order_cluster, batch 64, CPU. None is tuned; nothing needs
+  calibration.
+- **The development smoke test is score-blind.** It runs only on grid pool 1
+  (screening) in the nine cells and identifier records r_0000–r_0049. It
+  computes and prints no reconstruction score. It checks pipeline execution,
+  actual word-piece lengths and truncation, embedding reproducibility,
+  batch-size numerical stability (1 / 16 / 64 / 128), clustering and scorer
+  compatibility (validity only), and determinism across processes. It also
+  benchmarks CPU throughput, and the measured projection for the 62,527 final
+  fragments replaces any estimate before the final run. Development results
+  never select a parameter.
+- **Packages to install (pending approval)** into the project `.venv`
+  (Python 3.11.9): `sentence-transformers==6.0.1` and `torch==2.14.0` (the
+  PyPI Windows CPU wheel). pip resolves `transformers`, `tokenizers`,
+  `huggingface-hub`, `safetensors`, `scikit-learn` and their small
+  dependencies; the resolved versions are recorded in a D14 addendum after
+  installation.
+
 ## Development history — 2026-09-10: headline documents used before frame A existed
 
 Development work done before D2 was taken used documents that frame A later
