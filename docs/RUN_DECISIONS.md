@@ -879,6 +879,23 @@ frozen D11 rule; nothing about the headline is decided from its results.
 - **Nothing is submitted until the user gives explicit launch approval.**
 - The freezing commit hash is recorded in a D16 addendum.
 
+### D16 addendum — 2026-09-14: frozen at commit 7d01938
+
+- **The design is frozen at commit 7d01938**, which contains the builder, the
+  pools file, both cells, the spec and its manifest, the scorer, the tests, the
+  benchmark, FROZEN_DESIGN.json, DESIGN_REPORT.md and D16. Nothing may change
+  after this point without a new, dated decision entry.
+- **Verified at freeze:**
+  - Preflight: 40 of 40 prompts clean.
+  - Scorer tests: 29 of 29 pass.
+  - The development-contact recomputation matches the record (21 documents,
+    18 pools); 9 selected documents in 8 selected pools carry it.
+  - Benchmark: 10,000 permutations project to 29.4 minutes for all 20 pools,
+    deterministic within a process and across processes.
+  - Expected credit $14.36 (P95 $14.97; $15.26 cash with tax); absolute worst
+    case $25.72 ($27.33 cash).
+- **Status: NOT SUBMITTED.** It awaits the user's explicit launch approval.
+
 ## Development history — 2026-09-10: headline documents used before frame A existed
 
 Development work done before D2 was taken used documents that frame A later
