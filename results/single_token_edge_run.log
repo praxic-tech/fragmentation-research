@@ -1,0 +1,164 @@
+frozen spec verified: runs/single_token_edge_J.json sha256 46c3d258b7f7, 40 requests, unchanged since 7d01938
+submitting 40 requests, tag 'single-token-edge-J'
+  worst case $25.67, input alone $0.07
+  expected $12.84, reserving $25.67
+  projected $155.85 of $182.00 cap (committed $130.18, observed $130.18)
+  batch msgbatch_01BruWvvH2D7CN8stGLHRZ5m
+  state C:\Users\aiden\Desktop\projects\fragmentation\results\batches\single-token-edge-J.state.json
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  wrote 40 results to C:\Users\aiden\Desktop\projects\fragmentation\results\batches\single-token-edge-J.results.jsonl
+  {'succeeded': 40, 'errored': 0, 'zero_answer': 0, 'truncated': 0, 'expired': 0, 'canceled': 0, 'skipped': 0}
+  spend: $8.6839 over 40 results ($0.21710 each)  in 139,561 tok / out 1,708,869 tok
+  single-token-edge-J: {'succeeded': 40, 'errored': 0, 'zero_answer': 0, 'truncated': 0, 'expired': 0, 'canceled': 0, 'skipped': 0}  actual $8.6839
+  single-token-edge-J: repair round, 11 units
+submitting 11 requests, tag 'single-token-edge-J-r1'
+  worst case $7.07, input alone $0.03
+  expected $7.00, reserving $7.07
+  projected $145.93 of $182.00 cap (committed $138.86, observed $138.86)
+  batch msgbatch_01SDxiLYwofrEtLJ1HRtCyLu
+  state C:\Users\aiden\Desktop\projects\fragmentation\results\batches\single-token-edge-J-r1.state.json
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  wrote 11 results to C:\Users\aiden\Desktop\projects\fragmentation\results\batches\single-token-edge-J-r1.results.jsonl
+  {'succeeded': 8, 'errored': 0, 'zero_answer': 0, 'truncated': 3, 'expired': 0, 'canceled': 0, 'skipped': 0}
+  spend: $5.4612 over 11 results ($0.49647 each)  in 59,699 tok / out 1,080,292 tok
+  [INCOMPLETE] 0 never came back, 3 came back without an answer (errored / expired / canceled / empty), e.g. ['edge-token__J__pool-022-r1', 'edge-token__J__pool-029-r1', 'edge-token__J__pool-052-r1']. Scoring will refuse this set: resubmit these ids.
+  single-token-edge-J-r1: {'succeeded': 8, 'errored': 0, 'zero_answer': 0, 'truncated': 3, 'expired': 0, 'canceled': 0, 'skipped': 0}  actual $5.4612
+singleTokenEdgeJ: scored -> results\final\singleTokenEdgeJ/REPORT.txt; refused: none
+single-token edge-case game J (D16) done. ledger: observed $144.32, committed $144.32. STOP -- nothing further is released.
+exit 0
