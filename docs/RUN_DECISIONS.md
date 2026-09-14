@@ -896,6 +896,33 @@ frozen D11 rule; nothing about the headline is decided from its results.
     case $25.72 ($27.33 cash).
 - **Status: NOT SUBMITTED.** It awaits the user's explicit launch approval.
 
+### D16 addendum 2 — 2026-09-14: launched, completed, analysed; no deviation from the frozen protocol
+
+- **Launch.** The user approved the launch of the frozen 20-pool / 40-request
+  game J run at a $19.84 balance with auto-reload on. The driver
+  (runs/final_run_single_token_edge.py, ddc7c24) verified the spec hash and the
+  freeze before submitting batch msgbatch_01BruWvvH2D7CN8stGLHRZ5m.
+- **What happened.**
+  - All 40 base requests were answered within 128k: no RBNC in either
+    condition, and no transport holes or credit refusals.
+  - The structural repair round covered 11 malformed answers, all in the token
+    arm: 8 were repaired, and 3 repair calls exhausted 128k, so those units keep
+    their earlier real answers under D6.
+  - Cost $14.15 (sentence arm $0.57, token arm $13.58); ledger $144.32.
+  - No game O.
+- **The pre-run RBNC projection was wrong in the pessimistic direction.** About
+  7 of 20 token pools were projected to complete and 20 of 20 did. As recorded
+  before launch, that projection was a model-based extrapolation, not an
+  observed probability.
+- **Post-run code.** The local attackers and the analysis (4538567) were
+  committed before any result was read and ran unchanged.
+- **Primary (exploratory).** Paired Sonnet A_VJ(sentence) − A_VJ(token):
+  mean 0.572, 95% bootstrap CI [0.539, 0.607], over n_effective = 20 pools
+  (n_nonzero = 20). The exact sign test is 20 of 20 positive, two-sided
+  p ≈ 1.9e-6. There is no raw-vs-normalised sign disagreement for Sonnet;
+  Memon-inspired shows disagreement in 3 pools, and all three are reported.
+  Full results: results/single_token_edge/analysis/RESULTS.md.
+
 ## D17 — 2026-09-14: hierarchical status corrected (user)
 
 - **The full hierarchical run (the 12 headline pools, D11) is dropped, not
