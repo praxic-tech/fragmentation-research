@@ -1,0 +1,25 @@
+{
+  "what": "score-free benchmark of the visible-score permutation nulls (D16)",
+  "implementation": "integer-coded tokens; bit-parallel LCS on Python ints (Crochemore et al. 2001 / Hyyro); multiset overlap by bincount + minimum; scipy linear_sum_assignment; numpy PCG64 seeded by SHA-256",
+  "largest_token_pool": "pool_030",
+  "token_fragments": 669,
+  "reconstruction": "synthetic random partition into 7 groups + 20 dropped fragments (not an attacker output)",
+  "seconds": {
+    "token_oracle_200": 0.43351490001077764,
+    "token_oracle_500": 1.1094666999997571,
+    "token_oracle_1000": 2.21182029999909,
+    "token_oracle_10000": 23.805220800015377,
+    "token_predicted_1000": 2.956753899983596,
+    "sentence_oracle_1000": 1.73398140000063
+  },
+  "ms_per_permutation": {
+    "token_oracle": 2.380522080001538,
+    "token_predicted": 2.956753899983596,
+    "sentence": 1.73398140000063
+  },
+  "frozen_permutations": 10000,
+  "projected_seconds_per_pool_both_nulls_both_conditions": 88.05238779986394,
+  "projected_minutes_20_pools": 29.35079593328798,
+  "deterministic_in_process": true,
+  "deterministic_across_processes_PYTHONHASHSEED_0_1": true
+}

@@ -827,6 +827,58 @@ frozen D11 rule; nothing about the headline is decided from its results.
   results/excerpt_granularity/DESIGN_REPORT.md. **Nothing is submitted until
   the user approves that report.**
 
+## D16 — 2026-09-14: POST-HOC EXPLORATORY — CONTROLLED SINGLE-TOKEN EDGE-CASE EXPERIMENT (frozen; not submitted)
+
+- **Supersedes D15.** The D15 excerpt design was never submitted and is
+  retired unrun; its files stay in the repository as history.
+- **Frozen design:** docs/single_token_edge_design.md. Sample, provenance,
+  per-document metadata and price: results/single_token_edge/DESIGN_REPORT.md.
+  Parameters: results/single_token_edge/FROZEN_DESIGN.json. Builder:
+  datagen/build_single_token_edge.py. Spec: runs/single_token_edge_J.json
+  (40 requests), marked NOT_SUBMITTED.
+- **User decisions (2026-09-14):**
+  - 20 pools / 140 documents.
+  - Binary conditions: sentence vs single whitespace-token.
+  - Primary outcome: the paired A_VJ(sentence) − A_VJ(token), using the
+    oracle-size null.
+  - **10,000** deterministic permutation draws per pool × condition × null type.
+  - The predicted-structure null is a robustness analysis.
+  - Exact two-sided sign test plus the paired 10,000-resample bootstrap
+    (seed 42, 95%).
+  - All specified scorer tests and invariants, the complete-case / RBNC
+    treatment and its limitation, and the claim restrictions (see the design
+    document).
+- **Hash rule, confirmed unchanged:** SHA-256 over UTF-8("single-token-edge-v1"
+  + id), with no separator. It is the rule that generated and priced the
+  candidate ordering, and it is used for both the pool order and each
+  document's excerpt start.
+- **Pool provenance, verified.** data/pools/pools.json was built 2026-08-28
+  (c7a1b43) by a seed-42 shuffle of the sorted document IDs. Its membership is
+  byte-identical at HEAD; the 2026-09-08 commit only renamed a per-pool field,
+  and the key fingerprint matches. The first pool-level attack was on grid pool
+  1 on 2026-09-10; headline pools were first attacked on 2026-09-13. The
+  membership does not depend on any attacker outcome.
+- **Contiguity (resolved before freezing).** The corpus reference cut applies a
+  ≥15-character filter (it is split_sentences(prose_raw, min_chars=15),
+  reproduced on 500/500 documents; the filter removed 218 sentences from 111
+  documents). The experiment therefore segments the original source text with
+  the same function and the filter disabled (min_chars=1), and selects the four
+  consecutive sentences before any length filtering. Compared with the earlier
+  candidate excerpts, this changed 27 of 140 excerpts; the hash-determined pool
+  sample did not change. Seven excerpts now contain a genuine sub-15-character
+  source segment (figure-citation stubs), kept as sentence fragments. The same
+  resulting text feeds both conditions (asserted per document).
+- **Development contact: provenance only.** The 21 headline documents with
+  documented prior scored development contact are recomputed from the four
+  recorded sources and match the record (21 documents in 18 pools). The
+  selected ones are listed in the design report. Nothing is excluded, replaced,
+  reordered or resampled on that basis. **"Untouched" is not used literally for
+  these pools.** D2's "untouched" was a forward-looking rule, the development
+  history qualifies it, and the headline pools have since been attacked in
+  steps 1–5.
+- **Nothing is submitted until the user gives explicit launch approval.**
+- The freezing commit hash is recorded in a D16 addendum.
+
 ## Development history — 2026-09-10: headline documents used before frame A existed
 
 Development work done before D2 was taken used documents that frame A later

@@ -1,0 +1,22 @@
+{
+  "spec": "runs/single_token_edge_J.json",
+  "spec_sha256": "46c3d258b7f798f3a61329ccdc1447937ce67d1b2368977e6c5ed265ba6a2d88",
+  "git_commit_at_build": "8f914a1ba720b6ce0b5b607b53e5c69e019b18d8",
+  "pools": "data/pools/single_token_edge_pools.json",
+  "cells": [
+    "results/single_token_edge\\edge__sentence",
+    "results/single_token_edge\\edge__token"
+  ],
+  "n_requests": 40,
+  "estimate": {
+    "n_requests": 40,
+    "est_input_tokens": 74461,
+    "est_output_tokens_worst_case": 5120000,
+    "est_cost_worst_case": 25.674461,
+    "est_cost_input_only": 0.074461
+  },
+  "preflight": {
+    "checked": 40,
+    "blocked": 0
+  }
+}

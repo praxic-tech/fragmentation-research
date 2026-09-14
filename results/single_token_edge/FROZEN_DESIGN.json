@@ -1,0 +1,32 @@
+{
+  "what": "frozen design parameters (D16)",
+  "hash_rule": "SHA-256 of UTF-8(\"single-token-edge-v1\" + id), no separator",
+  "n_pools": 20,
+  "n_documents": 140,
+  "sentences_per_excerpt": 4,
+  "segmentation": "pull_prose_v4.split_sentences(prose_raw, min_chars=1)",
+  "conditions": [
+    "sentence",
+    "token"
+  ],
+  "permutations_per_pool_condition_null": 10000,
+  "null_seed": "numpy PCG64 seeded by SHA-256(\"single-token-edge-v1|\" + pool + \"|\" + condition + \"|\" + kind)[:16]",
+  "null_kinds": {
+    "oracle-size": "PRIMARY",
+    "predicted-structure": "ROBUSTNESS"
+  },
+  "primary_outcome": "paired A_VJ(sentence) - A_VJ(token), oracle-size null",
+  "bootstrap": {
+    "resamples": 10000,
+    "seed": 42,
+    "level": 0.95,
+    "unit": "pool, paired"
+  },
+  "sign_test": "exact two-sided; zero differences are ties, omitted from the denominator",
+  "spec": "runs/single_token_edge_J.json",
+  "pools_file": "data/pools/single_token_edge_pools.json",
+  "cells": [
+    "results/single_token_edge\\edge__sentence",
+    "results/single_token_edge\\edge__token"
+  ]
+}
