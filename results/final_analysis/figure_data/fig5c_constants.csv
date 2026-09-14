@@ -1,0 +1,4 @@
+name,value
+analytic_baseline,0.10000000000000002
+schema_baseline,0.2
+near_baseline_margin,0.1

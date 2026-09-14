@@ -1,0 +1,9 @@
+### Identifier: membership beyond the schema (EXPLORATORY / post hoc)
+
+| attacker | linkage_precision_mean | lo | hi | template_chance | reading |
+|---|---|---|---|---|---|
+| One-shot Sonnet | 0.1321 | 0.1131 | 0.1536 | 0.1429 | consistent with template chance |
+| Memon-inspired | 0.1112 | 0.0955 | 0.1279 | 0.1429 | below template chance |
+| Random | 0.1111 | 0.1109 | 0.1113 | 0.1429 | below template chance |
+
+Share of an attacker's within-group pairs that truly share a record. If groups respect the one-field-per-type template but assign records at random, the expected share is 1/7. 95% CIs over pools. Post hoc: defined after the answers were seen.

@@ -1,0 +1,22 @@
+### Game O: paired condition comparisons (same 30 documents)
+
+| family | group | metric | a | b | n_pairs | mean_diff | mean_lo | mean_hi | median_diff | median_lo | median_hi | t_lo | t_hi | frac_a_higher |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| within granularity | sentence | tau | random / sentence | semantic / sentence | 30 | 0.0932 | 0.0313 | 0.1523 | 0.0678 | 0.0342 | 0.1476 | 0.0292 | 0.1573 | 0.7333 |
+| within granularity | sentence | tau | random / sentence | subject-verb / sentence | 30 | 0.2017 | 0.1372 | 0.2691 | 0.1917 | 0.1301 | 0.2421 | 0.1313 | 0.2721 | 0.8667 |
+| within granularity | sentence | tau | semantic / sentence | subject-verb / sentence | 30 | 0.1084 | 0.0615 | 0.1589 | 0.0919 | 0.0074 | 0.1586 | 0.0571 | 0.1597 | 0.7000 |
+| within granularity | clause | tau | random / clause | semantic / clause | 30 | 0.1147 | 0.0670 | 0.1676 | 0.1061 | 0.0373 | 0.1654 | 0.0615 | 0.1680 | 0.7333 |
+| within granularity | clause | tau | random / clause | coherence-sever / clause | 30 | 0.0896 | 0.0298 | 0.1566 | 0.0728 | 0.0268 | 0.1129 | 0.0219 | 0.1573 | 0.8000 |
+| within granularity | clause | tau | random / clause | subject-verb / clause | 30 | 0.1809 | 0.1229 | 0.2457 | 0.1464 | 0.0937 | 0.2318 | 0.1165 | 0.2453 | 0.8667 |
+| within granularity | clause | tau | semantic / clause | coherence-sever / clause | 30 | -0.0251 | -0.0615 | 0.0102 | -0.0275 | -0.0549 | 0.0041 | -0.0633 | 0.0131 | 0.4000 |
+| within granularity | clause | tau | semantic / clause | subject-verb / clause | 30 | 0.0662 | 0.0294 | 0.1053 | 0.0423 | -0.0077 | 0.1049 | 0.0259 | 0.1064 | 0.6667 |
+| within granularity | clause | tau | coherence-sever / clause | subject-verb / clause | 30 | 0.0913 | 0.0439 | 0.1403 | 0.0549 | -0.0016 | 0.1658 | 0.0395 | 0.1431 | 0.6667 |
+| within granularity | token-window | tau | random / token-window | coherence-sever / token-window | 30 | -0.0340 | -0.0676 | -0.0024 | 0.0000 | -0.0660 | 0.0063 | -0.0682 | 0.0002 | 0.4000 |
+| within strategy | random | tau | random / sentence | random / clause | 30 | 0.0293 | -0.0294 | 0.0847 | 0.0133 | 0.0000 | 0.0564 | -0.0301 | 0.0887 | 0.5333 |
+| within strategy | random | tau | random / sentence | random / token-window | 30 | 0.0253 | -0.0254 | 0.0735 | 0.0193 | -0.0000 | 0.0520 | -0.0270 | 0.0776 | 0.5667 |
+| within strategy | random | tau | random / clause | random / token-window | 30 | -0.0040 | -0.0651 | 0.0416 | 0.0048 | -0.0046 | 0.0514 | -0.0612 | 0.0531 | 0.5333 |
+| within strategy | semantic | tau | semantic / sentence | semantic / clause | 30 | 0.0508 | 0.0153 | 0.0879 | 0.0301 | -0.0000 | 0.0639 | 0.0123 | 0.0894 | 0.6000 |
+| within strategy | coherence-sever | tau | coherence-sever / clause | coherence-sever / token-window | 30 | -0.1276 | -0.2012 | -0.0652 | -0.0718 | -0.1372 | -0.0528 | -0.2004 | -0.0549 | 0.2333 |
+| within strategy | subject-verb | tau | subject-verb / sentence | subject-verb / clause | 30 | 0.0085 | -0.0273 | 0.0458 | -0.0039 | -0.0370 | 0.0248 | -0.0306 | 0.0477 | 0.5000 |
+
+a - b per document; 95% percentile bootstrap carrying both; unadjusted for multiplicity.

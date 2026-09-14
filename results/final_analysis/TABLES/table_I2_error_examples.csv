@@ -1,0 +1,16 @@
+rule,family,cell,pool,F1_J,b_J,records,exact_records,correct_membership_wrong_order,merged_clusters,split_records,singleton_clusters,frac_fragments_off_by_one,frac_fragments_displaced_gt5,catastrophic_F1_le_baseline
+headline: nearest-rank 0th percentile of one-shot F1_J,headline,prose,pool_067,0.5474372955288985,0.14323847246738708,7,0,1,1,1,0,0.2597402597402597,0.12337662337662338,False
+headline: nearest-rank 25th percentile of one-shot F1_J,headline,prose,pool_025,0.6654810817440363,0.1669568822553897,7,0,0,0,0,0,0.11851851851851852,0.45925925925925926,False
+headline: nearest-rank 50th percentile of one-shot F1_J,headline,prose,pool_010,0.7119636230596351,0.19392451039065564,7,0,0,0,0,0,0.12878787878787878,0.49242424242424243,False
+headline: nearest-rank 75th percentile of one-shot F1_J,headline,prose,pool_039,0.7756126958617918,0.14413594740549424,7,0,0,0,0,0,0.18666666666666668,0.13777777777777778,False
+headline: nearest-rank 100th percentile of one-shot F1_J,headline,prose,pool_029,0.9019967026928009,0.1445412064570943,7,0,4,0,0,0,0.2247191011235955,0.06741573033707865,False
+grid: nearest-rank 0th percentile of one-shot F1_J,grid,subject-verb__clause,pool_057,0.41464810223154686,0.12798653410673416,7,0,0,2,2,8,0.1576923076923077,0.3038461538461538,False
+grid: nearest-rank 25th percentile of one-shot F1_J,grid,random__token-window,pool_051,0.5965257292690922,0.12915097273575452,7,0,0,1,1,0,0.1510791366906475,0.34532374100719426,False
+grid: nearest-rank 50th percentile of one-shot F1_J,grid,semantic__sentence,pool_051,0.6923925027563395,0.12406223951097527,7,0,1,0,0,0,0.14835164835164835,0.2692307692307692,False
+grid: nearest-rank 75th percentile of one-shot F1_J,grid,random__clause,pool_033,0.7650222836944829,0.12355791416705122,7,0,0,0,0,0,0.2653061224489796,0.07653061224489796,False
+grid: nearest-rank 100th percentile of one-shot F1_J,grid,random__sentence,pool_055,0.9648414985590777,0.13405656722200698,7,3,2,0,0,0,0.0738255033557047,0.020134228187919462,False
+identifier: nearest-rank 0th percentile of one-shot F1_J,identifier,identifier__field,idpool_000,0.023809523809523808,0.1,7,0,0,7,7,0,0.2222222222222222,0.0,True
+identifier: nearest-rank 25th percentile of one-shot F1_J,identifier,identifier__field,idpool_017,0.047619047619047616,0.1,7,0,0,7,7,0,0.5,0.0,True
+identifier: nearest-rank 50th percentile of one-shot F1_J,identifier,identifier__field,idpool_001,0.09523809523809523,0.1,7,0,0,7,7,0,0.16666666666666666,0.0,True
+identifier: nearest-rank 75th percentile of one-shot F1_J,identifier,identifier__field,idpool_018,0.09523809523809523,0.1,7,0,0,7,7,0,0.3333333333333333,0.0,True
+identifier: nearest-rank 100th percentile of one-shot F1_J,identifier,identifier__field,idpool_015,0.14285714285714285,0.1,7,0,0,7,7,0,0.0,0.0,False

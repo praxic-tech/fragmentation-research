@@ -1,0 +1,13 @@
+tables: 69 files in TABLES/; figure data: 16 CSVs; KEY_NUMBERS.json
+fig1: pdf, png, svg
+fig2: pdf, png, svg
+fig3: pdf, png, svg
+fig4: pdf, png, svg
+fig5: pdf, png, svg
+fig6: pdf, png, svg
+fig7: pdf, png, svg
+fig8: pdf, png, svg
+fig10: pdf, png, svg
+9/9 figures compiled into C:\Users\aiden\Desktop\projects\fragmentation\results\final_analysis\FIGURES
+wrote RESULTS_SUMMARY.md and CLAIM_EVIDENCE.md
+exit 0

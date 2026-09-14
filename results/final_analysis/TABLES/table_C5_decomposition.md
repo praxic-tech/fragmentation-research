@@ -1,0 +1,28 @@
+### Linkage vs ordering decomposition (§14)
+
+| condition | attacker | F1_L | q_micro | F1_J |
+|---|---|---|---|---|
+| headline (full length) | One-shot Sonnet | 0.8817 | 0.7918 | 0.7225 |
+| headline (full length) | Memon-inspired | 0.3390 | 0.4934 | 0.1685 |
+| random / sentence | One-shot Sonnet | 0.8620 | 0.9259 | 0.8009 |
+| random / sentence | Memon-inspired | 0.2534 | 0.5167 | 0.1308 |
+| semantic / sentence | One-shot Sonnet | 0.8787 | 0.8384 | 0.7387 |
+| semantic / sentence | Memon-inspired | 0.2847 | 0.4963 | 0.1422 |
+| subject-verb / sentence | One-shot Sonnet | 0.6890 | 0.8002 | 0.5532 |
+| subject-verb / sentence | Memon-inspired | 0.2569 | 0.4908 | 0.1262 |
+| random / clause | One-shot Sonnet | 0.8350 | 0.8994 | 0.7544 |
+| random / clause | Memon-inspired | 0.2579 | 0.5151 | 0.1329 |
+| semantic / clause | One-shot Sonnet | 0.8230 | 0.8229 | 0.6790 |
+| semantic / clause | Memon-inspired | 0.2562 | 0.5083 | 0.1304 |
+| coherence-sever / clause | One-shot Sonnet | 0.8487 | 0.8512 | 0.7258 |
+| coherence-sever / clause | Memon-inspired | 0.2495 | 0.5048 | 0.1261 |
+| subject-verb / clause | One-shot Sonnet | 0.6456 | 0.7681 | 0.4980 |
+| subject-verb / clause | Memon-inspired | 0.2594 | 0.5049 | 0.1312 |
+| random / token-window | One-shot Sonnet | 0.7472 | 0.8445 | 0.6343 |
+| random / token-window | Memon-inspired | 0.2616 | 0.5107 | 0.1336 |
+| coherence-sever / token-window | One-shot Sonnet | 0.8604 | 0.8104 | 0.7005 |
+| coherence-sever / token-window | Memon-inspired | 0.2650 | 0.5140 | 0.1360 |
+| identifier | One-shot Sonnet | 0.1321 | 0.6306 | 0.0833 |
+| identifier | Memon-inspired | 0.1254 | 0.4262 | 0.0540 |
+
+F1_L mean over pools; q_micro = sum C / sum K; F1_J = F1_L x q holds per pool (max residual 2.2e-16). Diagnostic.

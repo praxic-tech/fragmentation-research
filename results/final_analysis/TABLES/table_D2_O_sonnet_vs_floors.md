@@ -1,0 +1,24 @@
+### Game O: one-shot Sonnet minus the classical floors (paired)
+
+| condition | a | b | metric | n_pairs | mean_diff | mean_lo | mean_hi | median_diff | median_lo | median_hi | t_lo | t_hi | frac_a_higher |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| headline (full length) | One-shot Sonnet | Jaccard-Greedy | tau | 100 | 0.7744 | 0.7311 | 0.8174 | 0.8328 | 0.7376 | 0.8571 | 0.7302 | 0.8186 | 1.0000 |
+| headline (full length) | One-shot Sonnet | Jaccard-MST | tau | 100 | 0.7569 | 0.7105 | 0.8025 | 0.7726 | 0.6855 | 0.8388 | 0.7104 | 0.8034 | 1.0000 |
+| random / sentence | One-shot Sonnet | Jaccard-Greedy | tau | 30 | 0.9961 | 0.9278 | 1.0571 | 1.0218 | 0.9517 | 1.1003 | 0.9286 | 1.0636 | 1.0000 |
+| random / sentence | One-shot Sonnet | Jaccard-MST | tau | 30 | 0.9841 | 0.9258 | 1.0383 | 1.0033 | 0.9579 | 1.0414 | 0.9244 | 1.0439 | 1.0000 |
+| semantic / sentence | One-shot Sonnet | Jaccard-Greedy | tau | 30 | 0.8536 | 0.7797 | 0.9257 | 0.8795 | 0.7777 | 0.9420 | 0.7763 | 0.9309 | 1.0000 |
+| semantic / sentence | One-shot Sonnet | Jaccard-MST | tau | 30 | 0.8572 | 0.7716 | 0.9482 | 0.8498 | 0.7441 | 0.9943 | 0.7639 | 0.9505 | 1.0000 |
+| subject-verb / sentence | One-shot Sonnet | Jaccard-Greedy | tau | 30 | 0.7509 | 0.6772 | 0.8242 | 0.7741 | 0.6483 | 0.8576 | 0.6743 | 0.8275 | 1.0000 |
+| subject-verb / sentence | One-shot Sonnet | Jaccard-MST | tau | 30 | 0.7831 | 0.6948 | 0.8776 | 0.7970 | 0.6999 | 0.8382 | 0.6870 | 0.8791 | 1.0000 |
+| random / clause | One-shot Sonnet | Jaccard-Greedy | tau | 30 | 0.9413 | 0.8808 | 1.0031 | 0.9053 | 0.8715 | 1.0046 | 0.8752 | 1.0075 | 1.0000 |
+| random / clause | One-shot Sonnet | Jaccard-MST | tau | 30 | 0.9122 | 0.8462 | 0.9791 | 0.9184 | 0.8335 | 0.9805 | 0.8418 | 0.9826 | 1.0000 |
+| semantic / clause | One-shot Sonnet | Jaccard-Greedy | tau | 30 | 0.7819 | 0.7139 | 0.8496 | 0.7855 | 0.7114 | 0.8790 | 0.7106 | 0.8531 | 1.0000 |
+| semantic / clause | One-shot Sonnet | Jaccard-MST | tau | 30 | 0.7812 | 0.7180 | 0.8460 | 0.8192 | 0.7258 | 0.8693 | 0.7132 | 0.8492 | 1.0000 |
+| coherence-sever / clause | One-shot Sonnet | Jaccard-Greedy | tau | 30 | 0.8702 | 0.7851 | 0.9449 | 0.9244 | 0.8711 | 0.9902 | 0.7851 | 0.9554 | 1.0000 |
+| coherence-sever / clause | One-shot Sonnet | Jaccard-MST | tau | 30 | 0.8052 | 0.7181 | 0.8912 | 0.8241 | 0.7097 | 0.9051 | 0.7137 | 0.8967 | 1.0000 |
+| subject-verb / clause | One-shot Sonnet | Jaccard-Greedy | tau | 30 | 0.7654 | 0.6949 | 0.8335 | 0.7848 | 0.7111 | 0.8680 | 0.6923 | 0.8385 | 1.0000 |
+| subject-verb / clause | One-shot Sonnet | Jaccard-MST | tau | 30 | 0.7334 | 0.6570 | 0.8075 | 0.7443 | 0.6468 | 0.8522 | 0.6540 | 0.8129 | 1.0000 |
+| random / token-window | One-shot Sonnet | Jaccard-Greedy | tau | 30 | 0.9350 | 0.8853 | 0.9833 | 0.9495 | 0.8876 | 0.9968 | 0.8823 | 0.9877 | 1.0000 |
+| random / token-window | One-shot Sonnet | Jaccard-MST | tau | 30 | 0.8853 | 0.8377 | 0.9335 | 0.8648 | 0.8367 | 0.9220 | 0.8342 | 0.9363 | 1.0000 |
+| coherence-sever / token-window | One-shot Sonnet | Jaccard-Greedy | tau | 30 | 0.9361 | 0.8838 | 0.9866 | 0.9517 | 0.8530 | 1.0136 | 0.8817 | 0.9904 | 1.0000 |
+| coherence-sever / token-window | One-shot Sonnet | Jaccard-MST | tau | 30 | 0.9490 | 0.8984 | 0.9954 | 0.9570 | 0.9236 | 1.0314 | 0.8971 | 1.0009 | 1.0000 |

@@ -1,0 +1,358 @@
+game,family,attacker,x,y,n,rho,lo,hi,clusters
+J,headline,One-shot Sonnet,doc_words_mean,F1_J,46,-0.12944804193647858,-0.4035319380506159,0.16153479805255583,46
+J,headline,One-shot Sonnet,doc_words_mean,F1_L,46,0.19148936170212763,-0.11769953878611449,0.46606378442804053,46
+J,headline,One-shot Sonnet,doc_words_mean,q,46,-0.45112550107924765,-0.6954868772453219,-0.15454263213959024,46
+J,headline,One-shot Sonnet,doc_words_mean,A_J,46,-0.15337650323774282,-0.4304260685113391,0.13848259865295964,46
+J,headline,One-shot Sonnet,doc_words_median,F1_J,46,-0.10565595590165215,-0.39023445287729414,0.19894643509442025,46
+J,headline,One-shot Sonnet,doc_words_median,F1_L,46,-0.09424535937987417,-0.3847518526688533,0.21359428423282115,46
+J,headline,One-shot Sonnet,doc_words_median,q,46,-0.13507679125780397,-0.4326399939561245,0.185236561700131,46
+J,headline,One-shot Sonnet,doc_words_median,A_J,46,-0.04403873468405116,-0.3536562734232552,0.273292325582919,46
+J,headline,One-shot Sonnet,pool_words_total,F1_J,46,-0.12944804193647858,-0.4035319380506159,0.16153479805255583,46
+J,headline,One-shot Sonnet,pool_words_total,F1_L,46,0.19148936170212763,-0.11769953878611449,0.46606378442804053,46
+J,headline,One-shot Sonnet,pool_words_total,q,46,-0.45112550107924765,-0.6954868772453219,-0.15454263213959024,46
+J,headline,One-shot Sonnet,pool_words_total,A_J,46,-0.15337650323774282,-0.4304260685113391,0.13848259865295964,46
+J,headline,One-shot Sonnet,n_fragments,F1_J,46,-0.19261500145236335,-0.4508616101844359,0.0877433113703048,46
+J,headline,One-shot Sonnet,n_fragments,F1_L,46,0.1253663302213973,-0.1833494520618868,0.4154535524306836,46
+J,headline,One-shot Sonnet,n_fragments,q,46,-0.460992726089705,-0.7213063125979642,-0.13922890241919947,46
+J,headline,One-shot Sonnet,n_fragments,A_J,46,-0.2101983696182581,-0.48145185573988253,0.08227894906254349,46
+J,headline,One-shot Sonnet,frags_per_doc,F1_J,46,-0.19261500145236335,-0.4508616101844359,0.0877433113703048,46
+J,headline,One-shot Sonnet,frags_per_doc,F1_L,46,0.1253663302213973,-0.1833494520618868,0.4154535524306836,46
+J,headline,One-shot Sonnet,frags_per_doc,q,46,-0.460992726089705,-0.7213063125979642,-0.13922890241919947,46
+J,headline,One-shot Sonnet,frags_per_doc,A_J,46,-0.2101983696182581,-0.48145185573988253,0.08227894906254349,46
+J,headline,One-shot Sonnet,frag_words_mean,F1_J,46,0.04125809435707678,-0.2565329488094284,0.33824711147500575,46
+J,headline,One-shot Sonnet,frag_words_mean,F1_L,46,0.23219241443108235,-0.09326408217975796,0.5142410793772426,46
+J,headline,One-shot Sonnet,frag_words_mean,q,46,-0.17668825161887142,-0.474470219699253,0.15286859230688776,46
+J,headline,One-shot Sonnet,frag_words_mean,A_J,46,0.038914585260561206,-0.2652807944267787,0.35130306763021957,46
+J,headline,One-shot Sonnet,frag_words_median,F1_J,46,0.0051802291759744535,-0.298024521121787,0.3071879097674499,46
+J,headline,One-shot Sonnet,frag_words_median,F1_L,46,0.22047560761159568,-0.0931037382180373,0.49149222555713584,46
+J,headline,One-shot Sonnet,frag_words_median,q,46,-0.1929319500417803,-0.4614293690793723,0.11552951764902253,46
+J,headline,One-shot Sonnet,frag_words_median,A_J,46,0.0029059822206685963,-0.300002641390704,0.3085615855667921,46
+J,headline,Memon-inspired,doc_words_mean,F1_J,46,0.39821153253160657,0.12720478745499728,0.6178999219541048,46
+J,headline,Memon-inspired,doc_words_mean,F1_L,46,0.40709219858156026,0.13780514899936716,0.6262469475660739,46
+J,headline,Memon-inspired,doc_words_mean,q,46,0.012765957446808512,-0.304048646887676,0.32839306601927276,46
+J,headline,Memon-inspired,doc_words_mean,A_J,46,0.28917668825161885,0.006403571200978645,0.5434216269704599,46
+J,headline,Memon-inspired,doc_words_median,F1_J,46,-0.02436316554649889,-0.2827836452431508,0.2335596950833064,46
+J,headline,Memon-inspired,doc_words_median,F1_L,46,-0.011348917621660242,-0.27781510726877695,0.24408291492694761,46
+J,headline,Memon-inspired,doc_words_median,q,46,-0.021279220540612955,-0.3345411609147063,0.3027319460655045,46
+J,headline,Memon-inspired,doc_words_median,A_J,46,0.1210140020309641,-0.14274506118939695,0.3724154865929748,46
+J,headline,Memon-inspired,pool_words_total,F1_J,46,0.39821153253160657,0.12720478745499728,0.6178999219541048,46
+J,headline,Memon-inspired,pool_words_total,F1_L,46,0.40709219858156026,0.13780514899936716,0.6262469475660739,46
+J,headline,Memon-inspired,pool_words_total,q,46,0.012765957446808512,-0.304048646887676,0.32839306601927276,46
+J,headline,Memon-inspired,pool_words_total,A_J,46,0.28917668825161885,0.006403571200978645,0.5434216269704599,46
+J,headline,Memon-inspired,n_fragments,F1_J,46,0.3562945654668156,0.0677881152723642,0.5975407748895077,46
+J,headline,Memon-inspired,n_fragments,F1_L,46,0.34716355322628073,0.05846192362019493,0.5920806348905865,46
+J,headline,Memon-inspired,n_fragments,q,46,0.03689422513405294,-0.2767548285209659,0.35622774283490766,46
+J,headline,Memon-inspired,n_fragments,A_J,46,0.23136010744598415,-0.05069844492362137,0.4924005920868065,46
+J,headline,Memon-inspired,frags_per_doc,F1_J,46,0.3562945654668156,0.0677881152723642,0.5975407748895077,46
+J,headline,Memon-inspired,frags_per_doc,F1_L,46,0.34716355322628073,0.05846192362019493,0.5920806348905865,46
+J,headline,Memon-inspired,frags_per_doc,q,46,0.03689422513405294,-0.2767548285209659,0.35622774283490766,46
+J,headline,Memon-inspired,frags_per_doc,A_J,46,0.23136010744598415,-0.05069844492362137,0.4924005920868065,46
+J,headline,Memon-inspired,frag_words_mean,F1_J,46,0.20333024976873262,-0.09804229713285771,0.4734068596645664,46
+J,headline,Memon-inspired,frag_words_mean,F1_L,46,0.213691026827012,-0.06904262047013231,0.46820016889690236,46
+J,headline,Memon-inspired,frag_words_mean,q,46,-0.020783225408572307,-0.34173313942476197,0.3030717697234774,46
+J,headline,Memon-inspired,frag_words_mean,A_J,46,0.25772432932469935,-0.02921069409896421,0.505751125643339,46
+J,headline,Memon-inspired,frag_words_median,F1_J,46,0.27240424642441274,-0.015608464731258063,0.5281064180303465,46
+J,headline,Memon-inspired,frag_words_median,F1_L,46,0.2823224900906078,0.004833136571358165,0.5293505630691974,46
+J,headline,Memon-inspired,frag_words_median,q,46,0.09728723086586169,-0.24023986881045992,0.4171563874157987,46
+J,headline,Memon-inspired,frag_words_median,A_J,46,0.40841684905701037,0.1218099583333606,0.6442194038828856,46
+J,grid (pooled; pool-clustered),One-shot Sonnet,doc_words_mean,F1_J,215,-0.1515483314689675,-0.3517390729458495,0.07798865399739303,24
+J,grid (pooled; pool-clustered),One-shot Sonnet,doc_words_mean,F1_L,215,-0.06346463660397067,-0.2709620273484313,0.17009341774166925,24
+J,grid (pooled; pool-clustered),One-shot Sonnet,doc_words_mean,q,215,-0.1683435287878989,-0.4098065963395431,0.0912700750960134,24
+J,grid (pooled; pool-clustered),One-shot Sonnet,doc_words_mean,A_J,215,-0.14648348729097566,-0.3451392457899585,0.07965544102763376,24
+J,grid (pooled; pool-clustered),One-shot Sonnet,doc_words_median,F1_J,215,-0.029494167164395055,-0.25168345066309644,0.18973808646883747,24
+J,grid (pooled; pool-clustered),One-shot Sonnet,doc_words_median,F1_L,215,0.024964086419655758,-0.18284591346703596,0.23081450061902117,24
+J,grid (pooled; pool-clustered),One-shot Sonnet,doc_words_median,q,215,-0.09100404703777594,-0.35261736405266997,0.1910934448712674,24
+J,grid (pooled; pool-clustered),One-shot Sonnet,doc_words_median,A_J,215,-0.025213642688506944,-0.24518935753288043,0.19030699475503002,24
+J,grid (pooled; pool-clustered),One-shot Sonnet,pool_words_total,F1_J,215,-0.1515483314689675,-0.3517390729458495,0.07798865399739303,24
+J,grid (pooled; pool-clustered),One-shot Sonnet,pool_words_total,F1_L,215,-0.06346463660397067,-0.2709620273484313,0.17009341774166925,24
+J,grid (pooled; pool-clustered),One-shot Sonnet,pool_words_total,q,215,-0.1683435287878989,-0.4098065963395431,0.0912700750960134,24
+J,grid (pooled; pool-clustered),One-shot Sonnet,pool_words_total,A_J,215,-0.14648348729097566,-0.3451392457899585,0.07965544102763376,24
+J,grid (pooled; pool-clustered),One-shot Sonnet,n_fragments,F1_J,215,-0.6948350146526739,-0.7446804426061897,-0.641318578315169,24
+J,grid (pooled; pool-clustered),One-shot Sonnet,n_fragments,F1_L,215,-0.6061082895770649,-0.6747534530838822,-0.5328963368610249,24
+J,grid (pooled; pool-clustered),One-shot Sonnet,n_fragments,q,215,-0.5128338292631468,-0.5852114739897594,-0.4454982165160152,24
+J,grid (pooled; pool-clustered),One-shot Sonnet,n_fragments,A_J,215,-0.6942426981007913,-0.7446895430347531,-0.6403080573244628,24
+J,grid (pooled; pool-clustered),One-shot Sonnet,frags_per_doc,F1_J,215,-0.6948350146526739,-0.7446804426061897,-0.641318578315169,24
+J,grid (pooled; pool-clustered),One-shot Sonnet,frags_per_doc,F1_L,215,-0.6061082895770649,-0.6747534530838822,-0.5328963368610249,24
+J,grid (pooled; pool-clustered),One-shot Sonnet,frags_per_doc,q,215,-0.5128338292631468,-0.5852114739897594,-0.4454982165160152,24
+J,grid (pooled; pool-clustered),One-shot Sonnet,frags_per_doc,A_J,215,-0.6942426981007913,-0.7446895430347531,-0.6403080573244628,24
+J,grid (pooled; pool-clustered),One-shot Sonnet,frag_words_mean,F1_J,215,0.6540055653929032,0.5900328349782784,0.7155118959643448,24
+J,grid (pooled; pool-clustered),One-shot Sonnet,frag_words_mean,F1_L,215,0.5943521019811813,0.5235060547841487,0.6613552500352905,24
+J,grid (pooled; pool-clustered),One-shot Sonnet,frag_words_mean,q,215,0.46246497540154796,0.37619303380217756,0.5511318507137812,24
+J,grid (pooled; pool-clustered),One-shot Sonnet,frag_words_mean,A_J,215,0.6551659600721467,0.5916297530773171,0.716021802848568,24
+J,grid (pooled; pool-clustered),One-shot Sonnet,frag_words_median,F1_J,215,0.5872687727473386,0.5228629738181428,0.654402202006692,24
+J,grid (pooled; pool-clustered),One-shot Sonnet,frag_words_median,F1_L,215,0.6474061479117237,0.5843730484100801,0.7086907016196815,24
+J,grid (pooled; pool-clustered),One-shot Sonnet,frag_words_median,q,215,0.28684595553360676,0.21076656171422803,0.36350500367452176,24
+J,grid (pooled; pool-clustered),One-shot Sonnet,frag_words_median,A_J,215,0.588535647035384,0.5253883176219803,0.6550283405464822,24
+J,grid (pooled; pool-clustered),Memon-inspired,doc_words_mean,F1_J,216,-0.16261938841255663,-0.3897951663623927,0.11106586263005856,24
+J,grid (pooled; pool-clustered),Memon-inspired,doc_words_mean,F1_L,216,-0.21452330111807483,-0.4707668844704936,0.09006757618975873,24
+J,grid (pooled; pool-clustered),Memon-inspired,doc_words_mean,q,216,-0.03815296910384961,-0.22819880145972457,0.14655955939694987,24
+J,grid (pooled; pool-clustered),Memon-inspired,doc_words_mean,A_J,216,0.02052987991699976,-0.14391632829942655,0.18718064011816657,24
+J,grid (pooled; pool-clustered),Memon-inspired,doc_words_median,F1_J,216,-0.08987453700341747,-0.3580401636312322,0.2167906992143695,24
+J,grid (pooled; pool-clustered),Memon-inspired,doc_words_median,F1_L,216,-0.20420473033429545,-0.49796832422910176,0.14084941022169772,24
+J,grid (pooled; pool-clustered),Memon-inspired,doc_words_median,q,216,0.03246810162422063,-0.17071038168877056,0.22109874931566473,24
+J,grid (pooled; pool-clustered),Memon-inspired,doc_words_median,A_J,216,0.13377673057723147,-0.06016076762679534,0.3052807011371329,24
+J,grid (pooled; pool-clustered),Memon-inspired,pool_words_total,F1_J,216,-0.16261938841255663,-0.3897951663623927,0.11106586263005856,24
+J,grid (pooled; pool-clustered),Memon-inspired,pool_words_total,F1_L,216,-0.21452330111807483,-0.4707668844704936,0.09006757618975873,24
+J,grid (pooled; pool-clustered),Memon-inspired,pool_words_total,q,216,-0.03815296910384961,-0.22819880145972457,0.14655955939694987,24
+J,grid (pooled; pool-clustered),Memon-inspired,pool_words_total,A_J,216,0.02052987991699976,-0.14391632829942655,0.18718064011816657,24
+J,grid (pooled; pool-clustered),Memon-inspired,n_fragments,F1_J,216,-0.08762921469940592,-0.186153694918954,0.02294051296573306,24
+J,grid (pooled; pool-clustered),Memon-inspired,n_fragments,F1_L,216,-0.02917421027412458,-0.14617055742256838,0.11488523711333044,24
+J,grid (pooled; pool-clustered),Memon-inspired,n_fragments,q,216,-0.09145611178144931,-0.18490526999856544,0.001969900328161126,24
+J,grid (pooled; pool-clustered),Memon-inspired,n_fragments,A_J,216,-0.0662796900570119,-0.16656440021829957,0.037225526841484106,24
+J,grid (pooled; pool-clustered),Memon-inspired,frags_per_doc,F1_J,216,-0.08762921469940592,-0.186153694918954,0.02294051296573306,24
+J,grid (pooled; pool-clustered),Memon-inspired,frags_per_doc,F1_L,216,-0.02917421027412458,-0.14617055742256838,0.11488523711333044,24
+J,grid (pooled; pool-clustered),Memon-inspired,frags_per_doc,q,216,-0.09145611178144931,-0.18490526999856544,0.001969900328161126,24
+J,grid (pooled; pool-clustered),Memon-inspired,frags_per_doc,A_J,216,-0.0662796900570119,-0.16656440021829957,0.037225526841484106,24
+J,grid (pooled; pool-clustered),Memon-inspired,frag_words_mean,F1_J,216,0.04772162593878052,-0.05845641043944738,0.1420001228766886,24
+J,grid (pooled; pool-clustered),Memon-inspired,frag_words_mean,F1_L,216,-0.042155859332303744,-0.14867540299418597,0.04705394786934427,24
+J,grid (pooled; pool-clustered),Memon-inspired,frag_words_mean,q,216,0.0976289524779436,-0.013324623098855043,0.2097419805281021,24
+J,grid (pooled; pool-clustered),Memon-inspired,frag_words_mean,A_J,216,0.09435189006865306,-0.0067221765479449054,0.18407029541585337,24
+J,grid (pooled; pool-clustered),Memon-inspired,frag_words_median,F1_J,216,0.12425179722538895,0.007506215184331752,0.22921408132492144,24
+J,grid (pooled; pool-clustered),Memon-inspired,frag_words_median,F1_L,216,0.05118486568203051,-0.0565603198155653,0.137737050959518,24
+J,grid (pooled; pool-clustered),Memon-inspired,frag_words_median,q,216,0.07589550269195841,-0.05841950033268134,0.213563237758909,24
+J,grid (pooled; pool-clustered),Memon-inspired,frag_words_median,A_J,216,0.1661799019188901,0.04519989370281056,0.27796900863527607,24
+J,identifier,One-shot Sonnet,doc_words_mean,F1_J,20,-0.46026994577640323,-0.762066501930991,-0.022745728904162984,20
+J,identifier,One-shot Sonnet,doc_words_mean,F1_L,20,-0.4923625309719846,-0.7972871791593469,-0.008057505965053623,20
+J,identifier,One-shot Sonnet,doc_words_mean,q,20,-0.06529856592578001,-0.5047914989122696,0.4016540463121917,20
+J,identifier,One-shot Sonnet,doc_words_mean,A_J,20,-0.46026994577640323,-0.762066501930991,-0.022745728904162984,20
+J,identifier,One-shot Sonnet,doc_words_median,F1_J,20,-0.44289968471308966,-0.8333369399584278,0.10314217334942855,20
+J,identifier,One-shot Sonnet,doc_words_median,F1_L,20,-0.44100141120677383,-0.8415290881637312,0.11195430435434721,20
+J,identifier,One-shot Sonnet,doc_words_median,q,20,-0.035750784738337614,-0.5292932936472755,0.4894047340652803,20
+J,identifier,One-shot Sonnet,doc_words_median,A_J,20,-0.44289968471308966,-0.8333369399584278,0.10314217334942855,20
+J,identifier,One-shot Sonnet,pool_words_total,F1_J,20,-0.46026994577640323,-0.762066501930991,-0.022745728904162984,20
+J,identifier,One-shot Sonnet,pool_words_total,F1_L,20,-0.4923625309719846,-0.7972871791593469,-0.008057505965053623,20
+J,identifier,One-shot Sonnet,pool_words_total,q,20,-0.06529856592578001,-0.5047914989122696,0.4016540463121917,20
+J,identifier,One-shot Sonnet,pool_words_total,A_J,20,-0.46026994577640323,-0.762066501930991,-0.022745728904162984,20
+J,identifier,One-shot Sonnet,n_fragments,F1_J,20,nan,nan,nan,
+J,identifier,One-shot Sonnet,n_fragments,F1_L,20,nan,nan,nan,
+J,identifier,One-shot Sonnet,n_fragments,q,20,nan,nan,nan,
+J,identifier,One-shot Sonnet,n_fragments,A_J,20,nan,nan,nan,
+J,identifier,One-shot Sonnet,frags_per_doc,F1_J,20,nan,nan,nan,
+J,identifier,One-shot Sonnet,frags_per_doc,F1_L,20,nan,nan,nan,
+J,identifier,One-shot Sonnet,frags_per_doc,q,20,nan,nan,nan,
+J,identifier,One-shot Sonnet,frags_per_doc,A_J,20,nan,nan,nan,
+J,identifier,One-shot Sonnet,frag_words_mean,F1_J,20,-0.46026994577640323,-0.762066501930991,-0.022745728904162984,20
+J,identifier,One-shot Sonnet,frag_words_mean,F1_L,20,-0.4923625309719846,-0.7972871791593469,-0.008057505965053623,20
+J,identifier,One-shot Sonnet,frag_words_mean,q,20,-0.06529856592578001,-0.5047914989122696,0.4016540463121917,20
+J,identifier,One-shot Sonnet,frag_words_mean,A_J,20,-0.46026994577640323,-0.762066501930991,-0.022745728904162984,20
+J,identifier,One-shot Sonnet,frag_words_median,F1_J,20,nan,nan,nan,
+J,identifier,One-shot Sonnet,frag_words_median,F1_L,20,nan,nan,nan,
+J,identifier,One-shot Sonnet,frag_words_median,q,20,nan,nan,nan,
+J,identifier,One-shot Sonnet,frag_words_median,A_J,20,nan,nan,nan,
+J,identifier,Memon-inspired,doc_words_mean,F1_J,20,0.39077289837582185,-0.0865300176598438,0.7695992182322026,20
+J,identifier,Memon-inspired,doc_words_mean,F1_L,20,-0.11299776629674439,-0.6017632107012026,0.398889203063655,20
+J,identifier,Memon-inspired,doc_words_mean,q,20,0.37817601473191154,-0.0756682844161313,0.7388681355831093,20
+J,identifier,Memon-inspired,doc_words_mean,A_J,20,0.39077289837582185,-0.0865300176598438,0.7695992182322026,20
+J,identifier,Memon-inspired,doc_words_median,F1_J,20,0.18626861512034704,-0.3295634617625952,0.656498705914536,20
+J,identifier,Memon-inspired,doc_words_median,F1_L,20,-0.08853232976486149,-0.6059133463437113,0.47092932762159495,20
+J,identifier,Memon-inspired,doc_words_median,q,20,0.20416274297175496,-0.25035150525444627,0.6186275872775913,20
+J,identifier,Memon-inspired,doc_words_median,A_J,20,0.18626861512034704,-0.3295634617625952,0.656498705914536,20
+J,identifier,Memon-inspired,pool_words_total,F1_J,20,0.39077289837582185,-0.0865300176598438,0.7695992182322026,20
+J,identifier,Memon-inspired,pool_words_total,F1_L,20,-0.11299776629674439,-0.6017632107012026,0.398889203063655,20
+J,identifier,Memon-inspired,pool_words_total,q,20,0.37817601473191154,-0.0756682844161313,0.7388681355831093,20
+J,identifier,Memon-inspired,pool_words_total,A_J,20,0.39077289837582185,-0.0865300176598438,0.7695992182322026,20
+J,identifier,Memon-inspired,n_fragments,F1_J,20,nan,nan,nan,
+J,identifier,Memon-inspired,n_fragments,F1_L,20,nan,nan,nan,
+J,identifier,Memon-inspired,n_fragments,q,20,nan,nan,nan,
+J,identifier,Memon-inspired,n_fragments,A_J,20,nan,nan,nan,
+J,identifier,Memon-inspired,frags_per_doc,F1_J,20,nan,nan,nan,
+J,identifier,Memon-inspired,frags_per_doc,F1_L,20,nan,nan,nan,
+J,identifier,Memon-inspired,frags_per_doc,q,20,nan,nan,nan,
+J,identifier,Memon-inspired,frags_per_doc,A_J,20,nan,nan,nan,
+J,identifier,Memon-inspired,frag_words_mean,F1_J,20,0.39077289837582185,-0.0865300176598438,0.7695992182322026,20
+J,identifier,Memon-inspired,frag_words_mean,F1_L,20,-0.11299776629674439,-0.6017632107012026,0.398889203063655,20
+J,identifier,Memon-inspired,frag_words_mean,q,20,0.37817601473191154,-0.0756682844161313,0.7388681355831093,20
+J,identifier,Memon-inspired,frag_words_mean,A_J,20,0.39077289837582185,-0.0865300176598438,0.7695992182322026,20
+J,identifier,Memon-inspired,frag_words_median,F1_J,20,nan,nan,nan,
+J,identifier,Memon-inspired,frag_words_median,F1_L,20,nan,nan,nan,
+J,identifier,Memon-inspired,frag_words_median,q,20,nan,nan,nan,
+J,identifier,Memon-inspired,frag_words_median,A_J,20,nan,nan,nan,
+J,grid cell random / sentence,One-shot Sonnet,doc_words_mean,F1_J,24,-0.2982608695652174,-0.6849540171003303,0.17045454545454544,24
+J,grid cell random / sentence,One-shot Sonnet,doc_words_mean,F1_L,24,-0.09652173913043478,-0.5468214982301524,0.41444575091795693,24
+J,grid cell random / sentence,One-shot Sonnet,doc_words_mean,q,24,-0.41913043478260864,-0.7583498921290759,0.034553610452500626,24
+J,grid cell random / sentence,One-shot Sonnet,n_fragments,F1_J,24,-0.4114962323113902,-0.7073816779826964,-0.011382035662716996,24
+J,grid cell random / sentence,One-shot Sonnet,n_fragments,F1_L,24,-0.223819114717518,-0.6043026721459042,0.21955233684834902,24
+J,grid cell random / sentence,One-shot Sonnet,n_fragments,q,24,-0.5564996665544515,-0.748344749267675,-0.24512801975257908,24
+J,grid cell random / sentence,One-shot Sonnet,frag_words_mean,F1_J,24,0.025217391304347827,-0.3528461385775795,0.3908870824150235,24
+J,grid cell random / sentence,One-shot Sonnet,frag_words_mean,F1_L,24,0.09652173913043478,-0.33420839756141596,0.4943231441048035,24
+J,grid cell random / sentence,One-shot Sonnet,frag_words_mean,q,24,0.006956521739130434,-0.40646853146853146,0.394840402273721,24
+J,grid cell semantic / sentence,One-shot Sonnet,doc_words_mean,F1_J,24,0.04434782608695652,-0.3654437940302348,0.4450477452416487,24
+J,grid cell semantic / sentence,One-shot Sonnet,doc_words_mean,F1_L,24,0.05739130434782608,-0.38679920596378464,0.48025637989109543,24
+J,grid cell semantic / sentence,One-shot Sonnet,doc_words_mean,q,24,-0.025217391304347827,-0.4540679496019557,0.40849070654116504,24
+J,grid cell semantic / sentence,One-shot Sonnet,n_fragments,F1_J,24,-0.38754671614511876,-0.6778005371814642,-0.0035156834920891263,24
+J,grid cell semantic / sentence,One-shot Sonnet,n_fragments,F1_L,24,-0.23905971591423616,-0.6052303888124135,0.19754739980965424,24
+J,grid cell semantic / sentence,One-shot Sonnet,n_fragments,q,24,-0.46462061362566487,-0.6996567702064524,-0.11967379761203549,24
+J,grid cell semantic / sentence,One-shot Sonnet,frag_words_mean,F1_J,24,0.46347826086956523,0.05735873850197129,0.7454769878473113,24
+J,grid cell semantic / sentence,One-shot Sonnet,frag_words_mean,F1_L,24,0.3460869565217391,-0.07100289073009296,0.6756868828671533,24
+J,grid cell semantic / sentence,One-shot Sonnet,frag_words_mean,q,24,0.4591304347826086,0.03596412426772454,0.7627022131209079,24
+J,grid cell subject-verb / sentence,One-shot Sonnet,doc_words_mean,F1_J,24,-0.24434782608695652,-0.6374145583640549,0.2610406646261478,24
+J,grid cell subject-verb / sentence,One-shot Sonnet,doc_words_mean,F1_L,24,-0.1434782608695652,-0.550603836597444,0.32229123455417463,24
+J,grid cell subject-verb / sentence,One-shot Sonnet,doc_words_mean,q,24,-0.18173913043478263,-0.5820511389379543,0.28640781073195853,24
+J,grid cell subject-verb / sentence,One-shot Sonnet,n_fragments,F1_J,24,-0.5878260869565216,-0.7993867717915024,-0.23830345430695235,24
+J,grid cell subject-verb / sentence,One-shot Sonnet,n_fragments,F1_L,24,-0.37739130434782603,-0.7172866520787746,0.08169684942128307,24
+J,grid cell subject-verb / sentence,One-shot Sonnet,n_fragments,q,24,-0.47913043478260864,-0.7546178217867897,-0.07940378256798661,24
+J,grid cell subject-verb / sentence,One-shot Sonnet,frag_words_mean,F1_J,24,0.2860869565217391,-0.1533428748321527,0.6646431531607583,24
+J,grid cell subject-verb / sentence,One-shot Sonnet,frag_words_mean,F1_L,24,0.23739130434782607,-0.23634973936874673,0.6382762979075098,24
+J,grid cell subject-verb / sentence,One-shot Sonnet,frag_words_mean,q,24,0.21391304347826084,-0.2651893239167386,0.6166969763365465,24
+J,grid cell random / clause,One-shot Sonnet,doc_words_mean,F1_J,24,-0.17739130434782607,-0.5737557669354715,0.2518674742481862,24
+J,grid cell random / clause,One-shot Sonnet,doc_words_mean,F1_L,24,-0.05565217391304347,-0.5024050025846444,0.416454323019417,24
+J,grid cell random / clause,One-shot Sonnet,doc_words_mean,q,24,-0.2756521739130435,-0.6405169619205809,0.17498714633779638,24
+J,grid cell random / clause,One-shot Sonnet,n_fragments,F1_J,24,-0.37786118579553896,-0.7220703801065054,0.05470478461082108,24
+J,grid cell random / clause,One-shot Sonnet,n_fragments,F1_L,24,-0.1516674655788323,-0.5940518328544104,0.3119324115395028,24
+J,grid cell random / clause,One-shot Sonnet,n_fragments,q,24,-0.4820236118683578,-0.7775716871518085,-0.05854190586864646,24
+J,grid cell random / clause,One-shot Sonnet,frag_words_mean,F1_J,24,0.23652173913043475,-0.21577847413944687,0.6277436347673397,24
+J,grid cell random / clause,One-shot Sonnet,frag_words_mean,F1_L,24,-0.002608695652173913,-0.48777030008826117,0.45408017179670707,24
+J,grid cell random / clause,One-shot Sonnet,frag_words_mean,q,24,0.32347826086956516,-0.08543717112308731,0.6440893012450735,24
+J,grid cell semantic / clause,One-shot Sonnet,doc_words_mean,F1_J,24,-0.21565217391304345,-0.6405366783747736,0.27034120734908135,24
+J,grid cell semantic / clause,One-shot Sonnet,doc_words_mean,F1_L,24,-0.24434782608695652,-0.6084138044661981,0.20544400565986226,24
+J,grid cell semantic / clause,One-shot Sonnet,doc_words_mean,q,24,-0.02434782608695652,-0.4535137494543867,0.3980056640607097,24
+J,grid cell semantic / clause,One-shot Sonnet,n_fragments,F1_J,24,-0.36914466478526126,-0.6748716755042898,0.041198822873812366,24
+J,grid cell semantic / clause,One-shot Sonnet,n_fragments,F1_L,24,-0.3355860588956921,-0.6641913200990839,0.06719805549439982,24
+J,grid cell semantic / clause,One-shot Sonnet,n_fragments,q,24,-0.21529806895385958,-0.622515802469504,0.2466337760669341,24
+J,grid cell semantic / clause,One-shot Sonnet,frag_words_mean,F1_J,24,0.1652173913043478,-0.2503276539973788,0.5547891650161824,24
+J,grid cell semantic / clause,One-shot Sonnet,frag_words_mean,F1_L,24,0.05391304347826086,-0.4174982250282466,0.502638388482992,24
+J,grid cell semantic / clause,One-shot Sonnet,frag_words_mean,q,24,0.2278260869565217,-0.21557656111018755,0.6121183966199046,24
+J,grid cell coherence-sever / clause,One-shot Sonnet,doc_words_mean,F1_J,24,-0.04347826086956521,-0.4960681746725494,0.44930228966561714,24
+J,grid cell coherence-sever / clause,One-shot Sonnet,doc_words_mean,F1_L,24,0.0,-0.42756811898801783,0.4469418960244645,24
+J,grid cell coherence-sever / clause,One-shot Sonnet,doc_words_mean,q,24,-0.08956521739130434,-0.5093911625965831,0.3702420253421445,24
+J,grid cell coherence-sever / clause,One-shot Sonnet,n_fragments,F1_J,24,-0.4736617013235383,-0.7267619787730748,-0.09360400436032199,24
+J,grid cell coherence-sever / clause,One-shot Sonnet,n_fragments,F1_L,24,-0.26643470699449034,-0.6205432890850697,0.1665982322958926,24
+J,grid cell coherence-sever / clause,One-shot Sonnet,n_fragments,q,24,-0.3369615411989142,-0.6986329440558472,0.12281932576244321,24
+J,grid cell coherence-sever / clause,One-shot Sonnet,frag_words_mean,F1_J,24,0.47478260869565214,0.13806548212022562,0.6703272553957034,24
+J,grid cell coherence-sever / clause,One-shot Sonnet,frag_words_mean,F1_L,24,0.23043478260869563,-0.22535642174726678,0.6234717203110209,24
+J,grid cell coherence-sever / clause,One-shot Sonnet,frag_words_mean,q,24,0.33826086956521734,-0.0907874445021866,0.672530521824177,24
+J,grid cell subject-verb / clause,One-shot Sonnet,doc_words_mean,F1_J,24,-0.09391304347826085,-0.5283306717289112,0.39168874213516425,24
+J,grid cell subject-verb / clause,One-shot Sonnet,doc_words_mean,F1_L,24,0.014782608695652172,-0.41966922015648966,0.4711762422360245,24
+J,grid cell subject-verb / clause,One-shot Sonnet,doc_words_mean,q,24,-0.1973913043478261,-0.6048994201517137,0.25164966888055584,24
+J,grid cell subject-verb / clause,One-shot Sonnet,n_fragments,F1_J,24,-0.3872091318335396,-0.7477641733698988,0.05723148274966888,24
+J,grid cell subject-verb / clause,One-shot Sonnet,n_fragments,F1_L,24,-0.21709815369093963,-0.5828671067962118,0.1986143793810905,24
+J,grid cell subject-verb / clause,One-shot Sonnet,n_fragments,q,24,-0.3658908762606818,-0.7408275948947685,0.09798775153105861,24
+J,grid cell subject-verb / clause,One-shot Sonnet,frag_words_mean,F1_J,24,0.30347826086956514,-0.13460904541372148,0.6389037648255232,24
+J,grid cell subject-verb / clause,One-shot Sonnet,frag_words_mean,F1_L,24,0.2539130434782608,-0.19002167653347368,0.6192643415977854,24
+J,grid cell subject-verb / clause,One-shot Sonnet,frag_words_mean,q,24,0.1417391304347826,-0.3423927585509268,0.6113791796230181,24
+J,grid cell random / token-window,One-shot Sonnet,doc_words_mean,F1_J,23,-0.46739130434782605,-0.7706249099247611,-0.029768066321817273,23
+J,grid cell random / token-window,One-shot Sonnet,doc_words_mean,F1_L,23,-0.25691699604743085,-0.6465332026773735,0.2313822901214643,23
+J,grid cell random / token-window,One-shot Sonnet,doc_words_mean,q,23,-0.358695652173913,-0.679963103734004,0.07616109055385423,23
+J,grid cell random / token-window,One-shot Sonnet,n_fragments,F1_J,23,-0.45956008430661816,-0.769773111298181,-0.01997115645564645,23
+J,grid cell random / token-window,One-shot Sonnet,n_fragments,F1_L,23,-0.2626764313959249,-0.6486423003884818,0.2254554162200046,23
+J,grid cell random / token-window,One-shot Sonnet,n_fragments,q,23,-0.3507299244062349,-0.6748502113370614,0.08083030415839246,23
+J,grid cell random / token-window,One-shot Sonnet,frag_words_mean,F1_J,23,-0.008893280632411068,-0.4364300280176052,0.415051558728934,23
+J,grid cell random / token-window,One-shot Sonnet,frag_words_mean,F1_L,23,0.11758893280632411,-0.3177529422338015,0.5459526852003935,23
+J,grid cell random / token-window,One-shot Sonnet,frag_words_mean,q,23,-0.004940711462450594,-0.42913780944153046,0.44389822638734444,23
+J,grid cell coherence-sever / token-window,One-shot Sonnet,doc_words_mean,F1_J,24,-0.3817391304347826,-0.7219094662442935,0.08425311944132576,24
+J,grid cell coherence-sever / token-window,One-shot Sonnet,doc_words_mean,F1_L,24,-0.09391304347826085,-0.49451537846651433,0.3511596325687638,24
+J,grid cell coherence-sever / token-window,One-shot Sonnet,doc_words_mean,q,24,-0.48956521739130426,-0.7586384046648585,-0.0925545652172241,24
+J,grid cell coherence-sever / token-window,One-shot Sonnet,n_fragments,F1_J,24,-0.3558069062126906,-0.6997377404042305,0.11064962818570738,24
+J,grid cell coherence-sever / token-window,One-shot Sonnet,n_fragments,F1_L,24,-0.06220096282202294,-0.4675922961030727,0.38253455628844524,24
+J,grid cell coherence-sever / token-window,One-shot Sonnet,n_fragments,q,24,-0.49760770257618353,-0.7645556098035671,-0.11120536656120367,24
+J,grid cell coherence-sever / token-window,One-shot Sonnet,frag_words_mean,F1_J,24,0.010434782608695651,-0.4299631192404376,0.4487367901002573,24
+J,grid cell coherence-sever / token-window,One-shot Sonnet,frag_words_mean,F1_L,24,-0.08956521739130434,-0.4844966719511008,0.3321721096212666,24
+J,grid cell coherence-sever / token-window,One-shot Sonnet,frag_words_mean,q,24,0.1826086956521739,-0.2805280208013494,0.613674682339545,24
+O,headline,One-shot Sonnet,doc_words_mean,tau,100,-0.3511370217297901,-0.5030849395221841,-0.17325793036115036,100
+O,headline,One-shot Sonnet,doc_words_mean,pairs_correct,100,-0.3515101325857309,-0.5031364842525112,-0.17336398335845898,100
+O,headline,One-shot Sonnet,doc_words_mean,exact_order,100,0.001740921062002225,-0.040047204972950286,0.04570425190366444,100
+O,headline,One-shot Sonnet,doc_words_mean,mean_abs_disp,100,0.6716013971155886,0.5401203395148817,0.7672721651488295,100
+O,headline,One-shot Sonnet,n_fragments,tau,100,-0.3656562397099505,-0.5273748286826632,-0.17395194540997655,100
+O,headline,One-shot Sonnet,n_fragments,pairs_correct,100,-0.36595750375136016,-0.5275911507056655,-0.17426877692166268,100
+O,headline,One-shot Sonnet,n_fragments,exact_order,100,-0.024382700312551308,-0.07923948043674553,0.010453877992834442,100
+O,headline,One-shot Sonnet,n_fragments,mean_abs_disp,100,0.7021012176291037,0.5659535390223046,0.8000386663719516,100
+O,headline,One-shot Sonnet,frag_words_mean,tau,100,-0.03964103441297612,-0.22776072442834447,0.15068257244092123,100
+O,headline,One-shot Sonnet,frag_words_mean,pairs_correct,100,-0.04001320171910481,-0.22795466100427622,0.15041251306979958,100
+O,headline,One-shot Sonnet,frag_words_mean,exact_order,100,0.040040223312680076,0.0087059872892936,0.10609271346459449,100
+O,headline,One-shot Sonnet,frag_words_mean,mean_abs_disp,100,-0.0023312890798878744,-0.2073519368838961,0.20012418541614233,100
+O,headline,One-shot Sonnet,frag_words_median,tau,100,-0.015026295529893742,-0.20618511586278446,0.17524744994737215,100
+O,headline,One-shot Sonnet,frag_words_median,pairs_correct,100,-0.015483965093876067,-0.20655014916390305,0.17510471844173983,100
+O,headline,One-shot Sonnet,frag_words_median,exact_order,100,-0.07860842798087063,-0.16815539091016848,-0.0523683669870046,100
+O,headline,One-shot Sonnet,frag_words_median,mean_abs_disp,100,-0.019421827613945383,-0.22149564952510145,0.18128707662938406,100
+O,headline,Jaccard-Greedy,doc_words_mean,tau,100,0.04523769518621715,-0.1518585383031498,0.24046589991736123,100
+O,headline,Jaccard-Greedy,doc_words_mean,pairs_correct,100,0.04523769518621715,-0.1518585383031498,0.24046589991736123,100
+O,headline,Jaccard-Greedy,doc_words_mean,exact_order,100,nan,nan,nan,
+O,headline,Jaccard-Greedy,doc_words_mean,mean_abs_disp,100,0.9185531904151807,0.8659043773688888,0.9473729512852586,100
+O,headline,Jaccard-Greedy,n_fragments,tau,100,0.07744260026434184,-0.12239229039339121,0.2698063563111168,100
+O,headline,Jaccard-Greedy,n_fragments,pairs_correct,100,0.07744260026434184,-0.12239229039339121,0.2698063563111168,100
+O,headline,Jaccard-Greedy,n_fragments,exact_order,100,nan,nan,nan,
+O,headline,Jaccard-Greedy,n_fragments,mean_abs_disp,100,0.953309545655517,0.9172122649228664,0.9720270912480561,100
+O,headline,Jaccard-Greedy,frag_words_mean,tau,100,0.003534438270409158,-0.19212483820758589,0.19805022748081205,100
+O,headline,Jaccard-Greedy,frag_words_mean,pairs_correct,100,0.003534438270409158,-0.19212483820758589,0.19805022748081205,100
+O,headline,Jaccard-Greedy,frag_words_mean,exact_order,100,nan,nan,nan,
+O,headline,Jaccard-Greedy,frag_words_mean,mean_abs_disp,100,-0.017120071528732024,-0.22826081520559502,0.19240873661937266,100
+O,headline,Jaccard-Greedy,frag_words_median,tau,100,0.08451249774470017,-0.12359664210086972,0.2959183138550715,100
+O,headline,Jaccard-Greedy,frag_words_median,pairs_correct,100,0.08451249774470017,-0.12359664210086972,0.2959183138550715,100
+O,headline,Jaccard-Greedy,frag_words_median,exact_order,100,nan,nan,nan,
+O,headline,Jaccard-Greedy,frag_words_median,mean_abs_disp,100,0.014249455013433523,-0.20094175685036322,0.2281622910369751,100
+O,headline,Jaccard-MST,doc_words_mean,tau,100,-0.08116128144770864,-0.2739457199041426,0.11672384372159161,100
+O,headline,Jaccard-MST,doc_words_mean,pairs_correct,100,-0.08073546445920833,-0.27287003884415323,0.11760078656786996,100
+O,headline,Jaccard-MST,doc_words_mean,exact_order,100,nan,nan,nan,
+O,headline,Jaccard-MST,doc_words_mean,mean_abs_disp,100,0.9185834391129437,0.8673346267467931,0.9479781711282456,100
+O,headline,Jaccard-MST,n_fragments,tau,100,-0.06783970752779572,-0.2655341220824014,0.13243654834464375,100
+O,headline,Jaccard-MST,n_fragments,pairs_correct,100,-0.06731762690062575,-0.2650474887953487,0.13277772509834154,100
+O,headline,Jaccard-MST,n_fragments,exact_order,100,nan,nan,nan,
+O,headline,Jaccard-MST,n_fragments,mean_abs_disp,100,0.9528264240793255,0.9165568757347679,0.9713991972862625,100
+O,headline,Jaccard-MST,frag_words_mean,tau,100,0.027645179195731926,-0.1701041274923593,0.22255590706214712,100
+O,headline,Jaccard-MST,frag_words_mean,pairs_correct,100,0.02709319699724567,-0.1704050264746802,0.2222805318505725,100
+O,headline,Jaccard-MST,frag_words_mean,exact_order,100,nan,nan,nan,
+O,headline,Jaccard-MST,frag_words_mean,mean_abs_disp,100,-0.010531242686637023,-0.2206470207276274,0.19254540734092038,100
+O,headline,Jaccard-MST,frag_words_median,tau,100,0.07599764091737252,-0.12630233220000348,0.2692722499686022,100
+O,headline,Jaccard-MST,frag_words_median,pairs_correct,100,0.07551315408922517,-0.12655585123340754,0.26862779907077305,100
+O,headline,Jaccard-MST,frag_words_median,exact_order,100,nan,nan,nan,
+O,headline,Jaccard-MST,frag_words_median,mean_abs_disp,100,0.008312408039245303,-0.20143874804583892,0.21627947576978496,100
+O,grid (pooled; document-clustered),One-shot Sonnet,doc_words_mean,tau,270,-0.25163739052087347,-0.4492704197744144,-0.025572018397255026,30
+O,grid (pooled; document-clustered),One-shot Sonnet,doc_words_mean,pairs_correct,270,-0.2546411932211345,-0.45747518480926913,-0.025661108422065194,30
+O,grid (pooled; document-clustered),One-shot Sonnet,doc_words_mean,exact_order,270,-0.34413986392809115,-0.5251905615212814,-0.12088296618286498,30
+O,grid (pooled; document-clustered),One-shot Sonnet,doc_words_mean,mean_abs_disp,270,0.3532469374567443,0.1425207258100156,0.5306829951131775,30
+O,grid (pooled; document-clustered),One-shot Sonnet,n_fragments,tau,270,-0.29045755706265874,-0.45644239155486643,-0.1294838922209253,30
+O,grid (pooled; document-clustered),One-shot Sonnet,n_fragments,pairs_correct,270,-0.2926826447276855,-0.46477502528008235,-0.12903299474569915,30
+O,grid (pooled; document-clustered),One-shot Sonnet,n_fragments,exact_order,270,-0.3583721986648632,-0.5343256732191433,-0.1659422428775671,30
+O,grid (pooled; document-clustered),One-shot Sonnet,n_fragments,mean_abs_disp,270,0.49158810619142473,0.3613778061725547,0.6216775357693921,30
+O,grid (pooled; document-clustered),One-shot Sonnet,frag_words_mean,tau,270,0.1077984660025252,-0.01860578596833572,0.23543245965683554,30
+O,grid (pooled; document-clustered),One-shot Sonnet,frag_words_mean,pairs_correct,270,0.10965313455617667,-0.01704596630092117,0.23897431390629775,30
+O,grid (pooled; document-clustered),One-shot Sonnet,frag_words_mean,exact_order,270,0.09566191194465537,-0.018162029862986623,0.21479045838817265,30
+O,grid (pooled; document-clustered),One-shot Sonnet,frag_words_mean,mean_abs_disp,270,-0.23534576480432995,-0.35933090378017674,-0.11588544538918073,30
+O,grid (pooled; document-clustered),One-shot Sonnet,frag_words_median,tau,270,0.14588759351009337,0.004561920970775954,0.28085476182138247,30
+O,grid (pooled; document-clustered),One-shot Sonnet,frag_words_median,pairs_correct,270,0.1494104948278622,0.006226100519151885,0.288004266551409,30
+O,grid (pooled; document-clustered),One-shot Sonnet,frag_words_median,exact_order,270,0.11266782717326834,-0.013875685461148668,0.23536762986887677,30
+O,grid (pooled; document-clustered),One-shot Sonnet,frag_words_median,mean_abs_disp,270,-0.25162977920365004,-0.37742931806124147,-0.12156916953766778,30
+O,grid (pooled; document-clustered),Jaccard-Greedy,doc_words_mean,tau,270,-0.043578183464599685,-0.2328709061503732,0.14983568586354656,30
+O,grid (pooled; document-clustered),Jaccard-Greedy,doc_words_mean,pairs_correct,270,-0.043855563255235146,-0.23301064265777666,0.1496961900307912,30
+O,grid (pooled; document-clustered),Jaccard-Greedy,doc_words_mean,exact_order,270,nan,nan,nan,
+O,grid (pooled; document-clustered),Jaccard-Greedy,doc_words_mean,mean_abs_disp,270,0.5222862431347539,0.31615398338695005,0.6860888497071098,30
+O,grid (pooled; document-clustered),Jaccard-Greedy,n_fragments,tau,270,0.025409139016024426,-0.09752103937856862,0.15786065363540416,30
+O,grid (pooled; document-clustered),Jaccard-Greedy,n_fragments,pairs_correct,270,0.025173771362941404,-0.09782217167825448,0.15758654859780283,30
+O,grid (pooled; document-clustered),Jaccard-Greedy,n_fragments,exact_order,270,nan,nan,nan,
+O,grid (pooled; document-clustered),Jaccard-Greedy,n_fragments,mean_abs_disp,270,0.9552455113931169,0.9342915265985732,0.9701715936450511,30
+O,grid (pooled; document-clustered),Jaccard-Greedy,frag_words_mean,tau,270,-0.09258991111876162,-0.21314089918642112,0.029124802862272398,30
+O,grid (pooled; document-clustered),Jaccard-Greedy,frag_words_mean,pairs_correct,270,-0.09262822824628066,-0.213253706341006,0.029240414264187133,30
+O,grid (pooled; document-clustered),Jaccard-Greedy,frag_words_mean,exact_order,270,nan,nan,nan,
+O,grid (pooled; document-clustered),Jaccard-Greedy,frag_words_mean,mean_abs_disp,270,-0.5789619769121532,-0.7226302068198659,-0.46133114314647883,30
+O,grid (pooled; document-clustered),Jaccard-Greedy,frag_words_median,tau,270,-0.016722590338530803,-0.14957333585077848,0.11728995087947595,30
+O,grid (pooled; document-clustered),Jaccard-Greedy,frag_words_median,pairs_correct,270,-0.016621263555002926,-0.14955609189872424,0.11733798353230672,30
+O,grid (pooled; document-clustered),Jaccard-Greedy,frag_words_median,exact_order,270,nan,nan,nan,
+O,grid (pooled; document-clustered),Jaccard-Greedy,frag_words_median,mean_abs_disp,270,-0.49743520809220193,-0.6175592608112425,-0.40005111278013683,30
+O,grid (pooled; document-clustered),Jaccard-MST,doc_words_mean,tau,270,0.02794893115321611,-0.1453880889649944,0.2028128625972205,30
+O,grid (pooled; document-clustered),Jaccard-MST,doc_words_mean,pairs_correct,270,0.027830898512475066,-0.14547919200900225,0.20279832165503608,30
+O,grid (pooled; document-clustered),Jaccard-MST,doc_words_mean,exact_order,270,nan,nan,nan,
+O,grid (pooled; document-clustered),Jaccard-MST,doc_words_mean,mean_abs_disp,270,0.5225635234198437,0.3362024429985918,0.6752054435490121,30
+O,grid (pooled; document-clustered),Jaccard-MST,n_fragments,tau,270,0.06835076683090723,-0.1021229007231118,0.23653828467676768,30
+O,grid (pooled; document-clustered),Jaccard-MST,n_fragments,pairs_correct,270,0.06828840481165996,-0.10222693157051128,0.23643089292708644,30
+O,grid (pooled; document-clustered),Jaccard-MST,n_fragments,exact_order,270,nan,nan,nan,
+O,grid (pooled; document-clustered),Jaccard-MST,n_fragments,mean_abs_disp,270,0.9515185202586917,0.9303641108653556,0.966463379497128,30
+O,grid (pooled; document-clustered),Jaccard-MST,frag_words_mean,tau,270,-0.03868696370250712,-0.16290998429635958,0.08325534402664629,30
+O,grid (pooled; document-clustered),Jaccard-MST,frag_words_mean,pairs_correct,270,-0.03866244744532872,-0.16277313669639015,0.08323570759821369,30
+O,grid (pooled; document-clustered),Jaccard-MST,frag_words_mean,exact_order,270,nan,nan,nan,
+O,grid (pooled; document-clustered),Jaccard-MST,frag_words_mean,mean_abs_disp,270,-0.5861497331721252,-0.719027172217083,-0.475777165524363,30
+O,grid (pooled; document-clustered),Jaccard-MST,frag_words_median,tau,270,-0.01705342710627728,-0.15966528461145582,0.12462159223607562,30
+O,grid (pooled; document-clustered),Jaccard-MST,frag_words_median,pairs_correct,270,-0.01702805808905861,-0.15955990822788024,0.12461031506114284,30
+O,grid (pooled; document-clustered),Jaccard-MST,frag_words_median,exact_order,270,nan,nan,nan,
+O,grid (pooled; document-clustered),Jaccard-MST,frag_words_median,mean_abs_disp,270,-0.4906547568714609,-0.5971994264635755,-0.40606992837706296,30
+J,resource (all one-shot units),One-shot Sonnet,n_fragments,answer_call_output_tokens,282,0.7392159686526636,0.6825917118200304,0.7867774866412213,282
+J,resource (all one-shot units),One-shot Sonnet,n_fragments,output_tokens,282,0.7460957955912718,0.6849841961616375,0.7979963248498263,282
+J,resource (all one-shot units),One-shot Sonnet,n_fragments,cost_usd,282,0.7504689133352429,0.6901024281453515,0.8018858729534971,282
+J,resource (all one-shot units),One-shot Sonnet,prompt_chars,answer_call_output_tokens,281,0.2959120869491632,0.1711697190582204,0.4105806968995479,281
+J,resource (all one-shot units),One-shot Sonnet,prompt_chars,output_tokens,281,0.3140828129189841,0.19121743456125528,0.427983193826517,281
+J,resource (all one-shot units),One-shot Sonnet,prompt_chars,cost_usd,281,0.32368815336084056,0.2016914774799484,0.4370555751850036,281
+O,resource (all one-shot units),One-shot Sonnet,n_fragments,answer_call_output_tokens,370,0.7863320066521376,0.7374188035850069,0.8272276211181274,370
+O,resource (all one-shot units),One-shot Sonnet,n_fragments,output_tokens,370,0.7885395032957409,0.7412657697333201,0.8291196103734803,370
+O,resource (all one-shot units),One-shot Sonnet,n_fragments,cost_usd,370,0.7947795935739836,0.7482583318725162,0.8344852398702243,370
+O,resource (all one-shot units),One-shot Sonnet,prompt_chars,answer_call_output_tokens,370,0.5711835982792935,0.4886155086931459,0.6428012346854906,370
+O,resource (all one-shot units),One-shot Sonnet,prompt_chars,output_tokens,370,0.5641592235209956,0.48146037651150847,0.6374957795097053,370
+O,resource (all one-shot units),One-shot Sonnet,prompt_chars,cost_usd,370,0.578814044403331,0.49643435313422285,0.6504629740708247,370

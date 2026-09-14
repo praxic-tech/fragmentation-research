@@ -1,0 +1,7 @@
+% Manuscript: needs \usepackage{pgfplots}, \usepgfplotslibrary{groupplots}, \usetikzlibrary{calc}
+% and the pgfplotsset block from figures.py PREAMBLE; set \figdatadir to the figure_data directory.
+\begin{figure}[t]\centering
+\input{fig10_body.tex}
+\caption{Resource scaling for one-shot Sonnet in game J: fragments per pool vs billed output tokens of the answering call (mostly reasoning; repair calls excluded). Dashed line: the 128k per-call budget; cross: the one resource-bounded non-completion.}
+\label{fig:10}
+\end{figure}

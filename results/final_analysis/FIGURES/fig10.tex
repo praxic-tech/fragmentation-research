@@ -1,0 +1,19 @@
+\documentclass[border=4pt]{standalone}
+\usepackage{pgfplots}
+\usepackage{pgfplotstable}
+\usepgfplotslibrary{groupplots}
+\pgfplotsset{compat=1.16,
+  every axis/.append style={font=\footnotesize, label style={font=\footnotesize},
+    tick label style={font=\scriptsize}, legend style={font=\scriptsize, draw=none, fill=none}},
+  discard if not/.style 2 args={x filter/.append code={%
+    \edef\tempa{\thisrow{#1}}\edef\tempb{#2}\ifx\tempa\tempb\else\def\pgfmathresult{inf}\fi}},
+  cls/.style={scatter, only marks, scatter src=explicit symbolic, mark size=1.1pt,
+    scatter/classes={headline={mark=*,black,fill opacity=0.5,draw opacity=0.5},
+      sentence={mark=o,blue!70!black}, clause={mark=square,red!70!black},
+      token-window={mark=triangle,green!45!black}, grid={mark=o,gray},
+      identifier={mark=diamond,orange!80!black}, rbnc={mark=x,red,mark size=3pt,thick}}}}
+\usetikzlibrary{calc}
+\providecommand{\figdatadir}{../figure_data}
+\begin{document}
+\input{fig10_body.tex}
+\end{document}

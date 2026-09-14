@@ -1,0 +1,33 @@
+game,condition,attacker,attempted,completed,rbnc,completion_rate
+J,headline (full length),One-shot Sonnet,46,46,0,1.0
+J,headline (full length),Memon-inspired,46,46,0,1.0
+J,random / sentence,One-shot Sonnet,24,24,0,1.0
+J,random / sentence,Memon-inspired,24,24,0,1.0
+J,semantic / sentence,One-shot Sonnet,24,24,0,1.0
+J,semantic / sentence,Memon-inspired,24,24,0,1.0
+J,subject-verb / sentence,One-shot Sonnet,24,24,0,1.0
+J,subject-verb / sentence,Memon-inspired,24,24,0,1.0
+J,random / clause,One-shot Sonnet,24,24,0,1.0
+J,random / clause,Memon-inspired,24,24,0,1.0
+J,semantic / clause,One-shot Sonnet,24,24,0,1.0
+J,semantic / clause,Memon-inspired,24,24,0,1.0
+J,coherence-sever / clause,One-shot Sonnet,24,24,0,1.0
+J,coherence-sever / clause,Memon-inspired,24,24,0,1.0
+J,subject-verb / clause,One-shot Sonnet,24,24,0,1.0
+J,subject-verb / clause,Memon-inspired,24,24,0,1.0
+J,random / token-window,One-shot Sonnet,24,23,1,0.9583333333333334
+J,random / token-window,Memon-inspired,24,24,0,1.0
+J,coherence-sever / token-window,One-shot Sonnet,24,24,0,1.0
+J,coherence-sever / token-window,Memon-inspired,24,24,0,1.0
+J,identifier,One-shot Sonnet,20,20,0,1.0
+J,identifier,Memon-inspired,20,20,0,1.0
+O,headline (full length),One-shot Sonnet,100,100,0,1.0
+O,random / sentence,One-shot Sonnet,30,30,0,1.0
+O,semantic / sentence,One-shot Sonnet,30,30,0,1.0
+O,subject-verb / sentence,One-shot Sonnet,30,30,0,1.0
+O,random / clause,One-shot Sonnet,30,30,0,1.0
+O,semantic / clause,One-shot Sonnet,30,30,0,1.0
+O,coherence-sever / clause,One-shot Sonnet,30,30,0,1.0
+O,subject-verb / clause,One-shot Sonnet,30,30,0,1.0
+O,random / token-window,One-shot Sonnet,30,30,0,1.0
+O,coherence-sever / token-window,One-shot Sonnet,30,30,0,1.0

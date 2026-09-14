@@ -1,0 +1,14 @@
+### Table F — Hierarchical (pending) and the oracle diagnostic
+
+| analysis | status |
+|---|---|
+| A. RBNC rescue (headline) | PENDING -- no headline one-shot RBNC occurred (0 of 46), so the frozen rescue set is empty |
+| B. random filler paired comparison (12 pools) | PENDING -- not run (D13) |
+| DIAGNOSTIC CEILING -- NOT AN ATTACKER RESULT | frozen D10 diagnostic (development data) |
+| DIAGNOSTIC CEILING -- NOT AN ATTACKER RESULT | frozen D10 diagnostic (development data) |
+| DIAGNOSTIC CEILING -- NOT AN ATTACKER RESULT | frozen D10 diagnostic (development data) |
+| DIAGNOSTIC CEILING -- NOT AN ATTACKER RESULT | frozen D10 diagnostic (development data) |
+| DIAGNOSTIC CEILING -- NOT AN ATTACKER RESULT | frozen D10 diagnostic (development data) |
+| DIAGNOSTIC CEILING -- NOT AN ATTACKER RESULT | frozen D10 diagnostic (development data) |
+
+The oracle replaces Sonnet's pair judgements with the answer key on the pairs the frozen blocker exposes; it shows the candidate graph does not impose a low ceiling. It is not an attacker result.
