@@ -747,6 +747,27 @@ frozen D11 rule; nothing about the headline is decided from its results.
   earlier 5–15 minute estimate. No development score was computed, so none
   could select a parameter.
 
+### D14 addendum 2 — 2026-09-13: final run released; how it is reported (user)
+
+- **The user released the frozen all-mpnet-base-v2 run on all 282 final J
+  pools** (runs/final_embedding_attacker.py, committed before it runs; the
+  model is loaded offline from the pinned snapshot).
+- **It appears in the main results.** The embedding attacker is a real
+  evaluated attacker. It is shown in the relevant attacker tables and figures
+  (the headline, grid and identifier J tables; Figures 1, 2, 3 and 5; the
+  paired attacker comparisons) alongside the statistical and LLM attackers,
+  each time marked **POST-HOC EXPLORATORY**. It is never presented as a
+  prespecified or confirmatory attacker.
+- **Required disclosure wording.** It was motivated by the observed gap between
+  Memon-inspired and one-shot Sonnet. It was then fully designed and frozen
+  before its own evaluation, with no final-data tuning and no model selection
+  from its scores.
+- **Its first complete result is kept, whatever it shows.** No additional
+  embedding model and no pipeline tuning is run on the basis of the result
+  unless it is separately labelled as a further analysis.
+- **Metrics.** F1_L is its primary comparison; F1_J and q are secondary
+  components.
+
 ## Development history — 2026-09-10: headline documents used before frame A existed
 
 Development work done before D2 was taken used documents that frame A later
