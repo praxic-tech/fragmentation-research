@@ -896,6 +896,19 @@ frozen D11 rule; nothing about the headline is decided from its results.
     case $25.72 ($27.33 cash).
 - **Status: NOT SUBMITTED.** It awaits the user's explicit launch approval.
 
+## D17 — 2026-09-14: hierarchical status corrected (user)
+
+- **The full hierarchical run (the 12 headline pools, D11) is dropped, not
+  pending.** Its projected $37.52 is not reserved and is not part of any
+  budget or headroom calculation. This corrects the "pending" wording in D13
+  and in the analysis package (Table F, HIERARCHICAL.csv and the report), which
+  should read "not run (dropped)".
+- **The only hierarchical work still conceptually possible** is an optional
+  one-pool diagnostic on the actual non-completion unit (grid random ×
+  token-window pool_002). It is not authorized and not budgeted.
+- **The single-token edge-case experiment (D16) is budgeted on its own:**
+  $14.36 expected credit and $25.72 worst case, on top of the $130.18 ledger.
+
 ## Development history — 2026-09-10: headline documents used before frame A existed
 
 Development work done before D2 was taken used documents that frame A later
