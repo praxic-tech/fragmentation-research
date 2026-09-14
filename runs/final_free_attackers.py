@@ -87,7 +87,8 @@ def run_pool(job):
             "score_pair_calls": tel["score_pair_calls"],
             "arbitrary_pairs": tel["arbitrary_pairs"],
             "exact_n_groups": g["exact_n"], "largest_group": g["largest"],
-            "singletons": g["singletons"], "seconds": round(secs, 2)}
+            "singletons": g["singletons"], "seconds": round(secs, 2),
+            "reconstruction": groups}
 
 
 def _mean(rows, k):

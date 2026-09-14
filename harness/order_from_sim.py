@@ -51,6 +51,7 @@ optimises the real objective either way. Adding an estimator with its own
 failure mode to the highest-risk component is a bad trade.
 """
 
+import hashlib
 import random
 from collections import defaultdict
 
@@ -286,7 +287,11 @@ def order_cluster(ids, edges, max_passes=64):
         # entirely attacker-computable, no ground truth, no model calls.
         by_score = sorted(comp, key=lambda f: (-scores[f], f))
         shuffled = list(comp)
-        random.Random(hash(tuple(sorted(comp))) & 0xFFFFFFFF).shuffle(shuffled)
+        # Seeded from SHA-256 of the component, never Python's hash(): string
+        # hashes change per process (PYTHONHASHSEED), which made this third
+        # start irreproducible across processes (RUN_DECISIONS D13).
+        digest = hashlib.sha256("\x00".join(str(x) for x in sorted(comp)).encode("utf-8"))
+        random.Random(int(digest.hexdigest()[:16], 16)).shuffle(shuffled)
         best_order, best_val, best_conv, best_swaps = None, None, True, 0
         for seed_order in (by_score, list(reversed(by_score)), shuffled):
             cand, n, conv = _local_search(seed_order, canon, max_passes)
