@@ -1,0 +1,14 @@
+x,label,group,sonnet_A_J_mean,ci95_lo,ci95_hi,n_units,post_hoc
+0.0,random / sentence,prose grid (prespecified),0.7717645644930763,0.7393023514420005,0.8041491705614564,24,False
+1.0,random / clause,prose grid (prespecified),0.7178170965367577,0.6829841762442364,0.7515567405739482,24,False
+2.0,random / token-window,prose grid (prespecified),0.5788054759302842,0.5383948951827032,0.6193116510754677,23,False
+3.0,semantic / sentence,prose grid (prespecified),0.7003907534205366,0.6647202066112469,0.7354830482474839,24,False
+4.0,semantic / clause,prose grid (prespecified),0.6311745205137863,0.5906146744781671,0.6712438599555157,24,False
+5.0,coherence-sever / clause,prose grid (prespecified),0.6844891494873332,0.6569996363642177,0.7105094957741781,24,False
+6.0,coherence-sever / token-window,prose grid (prespecified),0.6550071065756499,0.6202484381854801,0.6892875507735491,24,False
+7.0,subject-verb / sentence,prose grid (prespecified),0.4866302757108194,0.4569177125447058,0.5155518742751678,24,False
+8.0,subject-verb / clause,prose grid (prespecified),0.4224591086541667,0.3970432651812718,0.44891855043737,24,False
+9.8,"headline, full length",prose headline (prespecified),0.6731287912652644,0.6489894331711761,0.6977487083187591,46,False
+11.600000000000001,synthetic identifiers,identifiers (prespecified),-0.01851851851851856,-0.03571428571428579,-0.0013227513227513335,20,False
+13.400000000000002,"four-sentence excerpt, sentence cut",excerpt edge case (post hoc),0.5386634196285652,,,20,True
+14.800000000000002,"four-sentence excerpt, token cut",excerpt edge case (post hoc),-0.016492671422252463,,,20,True

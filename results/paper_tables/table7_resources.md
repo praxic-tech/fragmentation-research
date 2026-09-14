@@ -1,0 +1,14 @@
+**Table 7. Completion, non-completion, repairs and cost of every paid experiment.**
+
+| Experiment | Units | Completed | RBNC | Refused → resent | Repairs | Input tokens | Output tokens | Cost | Cost / unit |
+|---|---|---|---|---|---|---|---|---|---|
+| headline J | 46 | 46 | 0 | 6 | 2 | 656,644 | 2,405,026 | $12.68 | $0.276 |
+| grid J | 216 | 215 | 1 | 42 | 30 | 2,560,751 | 17,520,069 | $90.16 | $0.419 |
+| identifier J | 20 | 20 | 0 | 0 | 0 | 12,398 | 184,213 | $0.93 | $0.047 |
+| headline O | 100 | 100 | 0 | 0 | 3 | 205,223 | 346,092 | $1.94 | $0.019 |
+| grid O | 270 | 270 | 0 | 0 | 16 | 450,947 | 2,640,493 | $13.65 | $0.051 |
+| TOTAL (final run, one-shot) | 652 | 651 | 1 | 48 | 51 | 3,885,963 | 23,095,893 | $119.37 | $0.183 |
+| single-token edge J (post hoc) | 40 | 40 | 0 | 0 | 11 | 199,260 | 2,789,161 | $14.15 | $0.354 |
+
+One-shot Sonnet (claude-sonnet-5, Message Batches API), 128,000 output tokens per call (D6), one attempt per unit; a call that exhausts the budget without an answer is a resource-bounded non-completion (RBNC), never re-asked and never scored 0. Repairs = units that received the one structural repair round (unparseable or missing / duplicated / unknown labels; the repair reads no score). Provider refusals = requests declined before inference for insufficient prepaid credit and resent unchanged once (0 token usage).
+Output tokens are almost entirely the model's internal reasoning (visible answers are ≤ ~2k tokens). Ledger total for every paid call in the project, including the pool-1 screening slice, the hierarchical live sample and the G3 masking control: $144.32 in API credit ($130.18 before the post-hoc single-token run).
