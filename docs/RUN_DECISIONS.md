@@ -581,6 +581,48 @@ frozen D11 rule; nothing about the headline is decided from its results.
 - **Forecast:** $15.34 expected from the specs' own pricing. The plan's figure,
   including repair overhead, is $19.88 expected and $26.54 at P95.
 
+## D13 — 2026-09-13: results plan committed; uncertainty method; schema advantage
+
+- **docs/results_plan.md is committed unchanged** as the authority for the
+  analysis. Disclosure: it was committed after the descriptive point results
+  of steps 1-5 had been seen (the per-cell REPORT.txt means and the
+  Memon-inspired descriptive table). No confidence interval, bootstrap, paired
+  test or correlation had yet been computed.
+- **Uncertainty (user, 2026-09-13), fixed before any interval or test was
+  computed:**
+  - A percentile bootstrap over the independent units (results plan §2):
+    pools for game J, documents for game O. 10,000 resamples, seed 42.
+  - Paired comparisons resample a unit ID once and carry both conditions'
+    scores together, bootstrapping the per-unit difference. Conditions are
+    never resampled independently and then subtracted.
+  - Spearman ρ is bootstrapped over the unit rows. When the same pool (or
+    document) appears in several grid cells, a correlation pooled across
+    cells resamples the pool (or document) ID and carries all of its rows,
+    because §2 makes the pool the independent unit.
+  - 95% CIs in general; 90% for the frozen identifier near-baseline rule.
+    The t-interval is a sensitivity check, never a replacement.
+  - The plan specifies no multiplicity adjustment. Intervals are reported
+    unadjusted and labelled as such.
+- **Schema-aware advantage, clarified:** A_schema = (F1_J − 0.20) / (1 − 0.20),
+  the plan's normalized advantage with b = 0.20. The raw difference
+  F1_J − 0.20 is reported alongside it for interpretability. This was
+  clarified after the descriptive means were visible and before any interval
+  or test was computed. In the current data the near-baseline verdict does
+  not depend on the choice: one-shot Sonnet's normalized (−0.146) and raw
+  (−0.117) point estimates both already lie outside ±0.10. The primary
+  criterion is unchanged: the entire 90% CI on the normalized A_schema must
+  lie inside [−0.10, +0.10]. Nonsignificance is never read as equivalence.
+- **The identifier random baseline (D11) is included:** a local random
+  attacker that shuffles the pool's fragments, deals them round-robin into
+  the known 7 groups (the week-1 random_linkage_guess convention) and keeps
+  the shuffled order within each group. Its per-pool value is the mean over
+  10,000 seeded draws.
+- **Figure 9 becomes a completion / RBNC table.** The whole study has one
+  one-shot non-completion, and the plan draws the figure only if RBNCs are
+  numerous enough to matter.
+- **The hierarchical 12-pool run stays pending.** It is not launched as part
+  of the analysis.
+
 ## Development history — 2026-09-10: headline documents used before frame A existed
 
 Development work done before D2 was taken used documents that frame A later
