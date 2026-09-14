@@ -1,0 +1,16 @@
+
+==========================================================================
+ CELL prose
+
+INTEGRITY
+  game O: ok   model answered 100/100   non-completions 0   fragments placed by policy 0.0%
+
+==========================================================================
+ THREE ATTACK CONDITIONS, SAME CORPUS, SAME MODEL
+==========================================================================
+
+GAME O  (oracle linkage: membership given, order only)
+  scored 100/100 documents   malformed 0
+  COMPLETION   100/100 (100%)   resource-bounded non-completions 0
+  recovered: 868/3349 fragments exactly placed   mean shift 3.3   longest intact run 6.3 of 33.5 (24%)
+  tau  mean +0.7690   median +0.8095   min +0.173  max +1.000

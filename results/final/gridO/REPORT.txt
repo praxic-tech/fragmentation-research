@@ -1,0 +1,144 @@
+
+==========================================================================
+ CELL coherence-sever__clause
+
+INTEGRITY
+  game O: ok   model answered 30/30   non-completions 0   fragments placed by policy 0.0%
+
+==========================================================================
+ THREE ATTACK CONDITIONS, SAME CORPUS, SAME MODEL
+==========================================================================
+
+GAME O  (oracle linkage: membership given, order only)
+  scored 30/30 documents   malformed 0
+  COMPLETION   30/30 (100%)   resource-bounded non-completions 0
+  recovered: 261/676 fragments exactly placed   mean shift 1.9   longest intact run 6.3 of 22.5 (33%)
+  tau  mean +0.8157   median +0.8737   min +0.134  max +1.000
+
+==========================================================================
+ CELL coherence-sever__token-window
+
+INTEGRITY
+  game O: ok   model answered 30/30   non-completions 0   fragments placed by policy 0.0%
+
+==========================================================================
+ THREE ATTACK CONDITIONS, SAME CORPUS, SAME MODEL
+==========================================================================
+
+GAME O  (oracle linkage: membership given, order only)
+  scored 30/30 documents   malformed 0
+  COMPLETION   30/30 (100%)   resource-bounded non-completions 0
+  recovered: 854/1283 fragments exactly placed   mean shift 1.2   longest intact run 23.4 of 42.8 (59%)
+  tau  mean +0.9433   median +0.9795   min +0.765  max +1.000
+
+==========================================================================
+ CELL random__clause
+
+INTEGRITY
+  game O: ok   model answered 30/30   non-completions 0   fragments placed by policy 0.0%
+
+==========================================================================
+ THREE ATTACK CONDITIONS, SAME CORPUS, SAME MODEL
+==========================================================================
+
+GAME O  (oracle linkage: membership given, order only)
+  scored 30/30 documents   malformed 0
+  COMPLETION   30/30 (100%)   resource-bounded non-completions 0
+  recovered: 517/952 fragments exactly placed   mean shift 1.4   longest intact run 19.4 of 31.7 (64%)
+  tau  mean +0.9053   median +0.9232   min +0.303  max +1.000
+
+==========================================================================
+ CELL random__sentence
+
+INTEGRITY
+  game O: ok   model answered 30/30   non-completions 0   fragments placed by policy 0.0%
+
+==========================================================================
+ THREE ATTACK CONDITIONS, SAME CORPUS, SAME MODEL
+==========================================================================
+
+GAME O  (oracle linkage: membership given, order only)
+  scored 30/30 documents   malformed 0
+  COMPLETION   30/30 (100%)   resource-bounded non-completions 0
+  recovered: 559/756 fragments exactly placed   mean shift 0.7   longest intact run 17.5 of 25.2 (72%)
+  tau  mean +0.9346   median +0.9836   min +0.467  max +1.000
+
+==========================================================================
+ CELL random__token-window
+
+INTEGRITY
+  game O: ok   model answered 30/30   non-completions 0   fragments placed by policy 0.0%
+
+==========================================================================
+ THREE ATTACK CONDITIONS, SAME CORPUS, SAME MODEL
+==========================================================================
+
+GAME O  (oracle linkage: membership given, order only)
+  scored 30/30 documents   malformed 0
+  COMPLETION   30/30 (100%)   resource-bounded non-completions 0
+  recovered: 701/1287 fragments exactly placed   mean shift 1.7   longest intact run 21.5 of 42.9 (54%)
+  tau  mean +0.9093   median +0.9270   min +0.678  max +1.000
+
+==========================================================================
+ CELL semantic__clause
+
+INTEGRITY
+  game O: ok   model answered 30/30   non-completions 0   fragments placed by policy 0.0%
+
+==========================================================================
+ THREE ATTACK CONDITIONS, SAME CORPUS, SAME MODEL
+==========================================================================
+
+GAME O  (oracle linkage: membership given, order only)
+  scored 30/30 documents   malformed 0
+  COMPLETION   30/30 (100%)   resource-bounded non-completions 0
+  recovered: 325/952 fragments exactly placed   mean shift 2.7   longest intact run 7.3 of 31.7 (27%)
+  tau  mean +0.7906   median +0.8259   min +0.320  max +1.000
+
+==========================================================================
+ CELL semantic__sentence
+
+INTEGRITY
+  game O: ok   model answered 30/30   non-completions 0   fragments placed by policy 0.0%
+
+==========================================================================
+ THREE ATTACK CONDITIONS, SAME CORPUS, SAME MODEL
+==========================================================================
+
+GAME O  (oracle linkage: membership given, order only)
+  scored 30/30 documents   malformed 0
+  COMPLETION   30/30 (100%)   resource-bounded non-completions 0
+  recovered: 324/756 fragments exactly placed   mean shift 1.7   longest intact run 7.0 of 25.2 (31%)
+  tau  mean +0.8414   median +0.8783   min +0.490  max +1.000
+
+==========================================================================
+ CELL subject-verb__clause
+
+INTEGRITY
+  game O: ok   model answered 30/30   non-completions 0   fragments placed by policy 0.2%
+
+==========================================================================
+ THREE ATTACK CONDITIONS, SAME CORPUS, SAME MODEL
+==========================================================================
+
+GAME O  (oracle linkage: membership given, order only)
+  scored 30/30 documents   malformed 0
+  COMPLETION   30/30 (100%)   resource-bounded non-completions 0
+  recovered: 365/1483 fragments exactly placed   mean shift 5.4   longest intact run 10.3 of 49.4 (24%)
+  tau  mean +0.7244   median +0.7340   min +0.257  max +1.000
+
+==========================================================================
+ CELL subject-verb__sentence
+
+INTEGRITY
+  game O: ok   model answered 30/30   non-completions 0   fragments placed by policy 0.0%
+
+==========================================================================
+ THREE ATTACK CONDITIONS, SAME CORPUS, SAME MODEL
+==========================================================================
+
+GAME O  (oracle linkage: membership given, order only)
+  scored 30/30 documents   malformed 0
+  COMPLETION   30/30 (100%)   resource-bounded non-completions 0
+  recovered: 342/1251 fragments exactly placed   mean shift 4.5   longest intact run 9.1 of 41.7 (25%)
+  tau  mean +0.7329   median +0.7773   min +0.249  max +1.000

@@ -1,0 +1,136 @@
+submitting 100 requests, tag 'final-headlineO'
+  worst case $64.13, input alone $0.13
+  expected $4.34, reserving $8.69
+  projected $123.27 of $182.00 cap (committed $114.59, observed $114.59)
+  batch msgbatch_01H2FBG4DLeZUvEVwqEr21uA
+  state C:\Users\aiden\Desktop\projects\fragmentation\results\batches\final-headlineO.state.json
+submitting 90 requests, tag 'final-gridO-w1'
+  worst case $57.69, input alone $0.09
+  expected $3.63, reserving $7.25
+  projected $130.52 of $182.00 cap (committed $123.27, observed $114.59)
+  batch msgbatch_016z6pthjdHAaLVGKSsXJ4Sn
+  state C:\Users\aiden\Desktop\projects\fragmentation\results\batches\final-gridO-w1.state.json
+submitting 90 requests, tag 'final-gridO-w2'
+  worst case $57.70, input alone $0.10
+  expected $4.01, reserving $8.02
+  projected $138.54 of $182.00 cap (committed $130.52, observed $114.59)
+  batch msgbatch_017vAzmDNJQv8CgzT8Tty1E4
+  state C:\Users\aiden\Desktop\projects\fragmentation\results\batches\final-gridO-w2.state.json
+submitting 90 requests, tag 'final-gridO-w3'
+  worst case $57.69, input alone $0.09
+  expected $3.36, reserving $6.73
+  projected $145.27 of $182.00 cap (committed $138.54, observed $114.59)
+  batch msgbatch_01TQ1C4aP35BUX1JzM3xzBTQ
+  state C:\Users\aiden\Desktop\projects\fragmentation\results\batches\final-gridO-w3.state.json
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  wrote 100 results to C:\Users\aiden\Desktop\projects\fragmentation\results\batches\final-headlineO.results.jsonl
+  {'succeeded': 100, 'errored': 0, 'zero_answer': 0, 'truncated': 0, 'expired': 0, 'canceled': 0, 'skipped': 0}
+  spend: $1.8542 over 100 results ($0.01854 each)  in 195,086 tok / out 331,817 tok
+  final-headlineO: {'succeeded': 100, 'errored': 0, 'zero_answer': 0, 'truncated': 0, 'expired': 0, 'canceled': 0, 'skipped': 0}  actual $1.8542
+  in_progress ... waiting 60s
+  wrote 90 results to C:\Users\aiden\Desktop\projects\fragmentation\results\batches\final-gridO-w1.results.jsonl
+  {'succeeded': 90, 'errored': 0, 'zero_answer': 0, 'truncated': 0, 'expired': 0, 'canceled': 0, 'skipped': 0}
+  spend: $4.0414 over 90 results ($0.04490 each)  in 138,832 tok / out 780,506 tok
+  final-gridO-w1: {'succeeded': 90, 'errored': 0, 'zero_answer': 0, 'truncated': 0, 'expired': 0, 'canceled': 0, 'skipped': 0}  actual $4.0414
+  wrote 90 results to C:\Users\aiden\Desktop\projects\fragmentation\results\batches\final-gridO-w2.results.jsonl
+  {'succeeded': 90, 'errored': 0, 'zero_answer': 0, 'truncated': 0, 'expired': 0, 'canceled': 0, 'skipped': 0}
+  spend: $4.5483 over 90 results ($0.05054 each)  in 152,894 tok / out 879,084 tok
+  final-gridO-w2: {'succeeded': 90, 'errored': 0, 'zero_answer': 0, 'truncated': 0, 'expired': 0, 'canceled': 0, 'skipped': 0}  actual $4.5483
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  wrote 90 results to C:\Users\aiden\Desktop\projects\fragmentation\results\batches\final-gridO-w3.results.jsonl
+  {'succeeded': 90, 'errored': 0, 'zero_answer': 0, 'truncated': 0, 'expired': 0, 'canceled': 0, 'skipped': 0}
+  spend: $3.9956 over 90 results ($0.04440 each)  in 131,038 tok / out 772,914 tok
+  final-gridO-w3: {'succeeded': 90, 'errored': 0, 'zero_answer': 0, 'truncated': 0, 'expired': 0, 'canceled': 0, 'skipped': 0}  actual $3.9956
+  final-headlineO: repair round, 3 units
+submitting 3 requests, tag 'final-headlineO-r1'
+  worst case $1.93, input alone $0.01
+  expected $0.54, reserving $1.08
+  projected $130.11 of $182.00 cap (committed $129.03, observed $129.03)
+  batch msgbatch_01XwtJDvYtxsKSwFtcLMXUc6
+  state C:\Users\aiden\Desktop\projects\fragmentation\results\batches\final-headlineO-r1.state.json
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  wrote 3 results to C:\Users\aiden\Desktop\projects\fragmentation\results\batches\final-headlineO-r1.results.jsonl
+  {'succeeded': 3, 'errored': 0, 'zero_answer': 0, 'truncated': 0, 'expired': 0, 'canceled': 0, 'skipped': 0}
+  spend: $0.0815 over 3 results ($0.02717 each)  in 10,137 tok / out 14,275 tok
+  final-headlineO-r1: {'succeeded': 3, 'errored': 0, 'zero_answer': 0, 'truncated': 0, 'expired': 0, 'canceled': 0, 'skipped': 0}  actual $0.0815
+  final-gridO-w1: repair round, 4 units
+submitting 4 requests, tag 'final-gridO-w1-r1'
+  worst case $2.57, input alone $0.01
+  expected $0.32, reserving $0.64
+  projected $129.75 of $182.00 cap (committed $129.11, observed $129.11)
+  batch msgbatch_0134gLd5n4VcPSzDh4B4U4zz
+  state C:\Users\aiden\Desktop\projects\fragmentation\results\batches\final-gridO-w1-r1.state.json
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  wrote 4 results to C:\Users\aiden\Desktop\projects\fragmentation\results\batches\final-gridO-w1-r1.results.jsonl
+  {'succeeded': 4, 'errored': 0, 'zero_answer': 0, 'truncated': 0, 'expired': 0, 'canceled': 0, 'skipped': 0}
+  spend: $0.3604 over 4 results ($0.09010 each)  in 7,906 tok / out 70,499 tok
+  final-gridO-w1-r1: {'succeeded': 4, 'errored': 0, 'zero_answer': 0, 'truncated': 0, 'expired': 0, 'canceled': 0, 'skipped': 0}  actual $0.3604
+  final-gridO-w2: repair round, 6 units
+submitting 6 requests, tag 'final-gridO-w2-r1'
+  worst case $3.85, input alone $0.01
+  expected $0.42, reserving $0.84
+  projected $130.31 of $182.00 cap (committed $129.47, observed $129.47)
+  batch msgbatch_01NLqq8rLuLT37RBvvzu9Wtn
+  state C:\Users\aiden\Desktop\projects\fragmentation\results\batches\final-gridO-w2-r1.state.json
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  wrote 6 results to C:\Users\aiden\Desktop\projects\fragmentation\results\batches\final-gridO-w2-r1.results.jsonl
+  {'succeeded': 6, 'errored': 0, 'zero_answer': 0, 'truncated': 0, 'expired': 0, 'canceled': 0, 'skipped': 0}
+  spend: $0.4762 over 6 results ($0.07937 each)  in 10,546 tok / out 93,138 tok
+  final-gridO-w2-r1: {'succeeded': 6, 'errored': 0, 'zero_answer': 0, 'truncated': 0, 'expired': 0, 'canceled': 0, 'skipped': 0}  actual $0.4762
+  final-gridO-w3: repair round, 6 units
+submitting 6 requests, tag 'final-gridO-w3-r1'
+  worst case $3.85, input alone $0.01
+  expected $0.37, reserving $0.75
+  projected $130.69 of $182.00 cap (committed $129.94, observed $129.94)
+  batch msgbatch_01HfXtkawkZTTiZzrzLaa3Fc
+  state C:\Users\aiden\Desktop\projects\fragmentation\results\batches\final-gridO-w3-r1.state.json
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  in_progress ... waiting 60s
+  wrote 6 results to C:\Users\aiden\Desktop\projects\fragmentation\results\batches\final-gridO-w3-r1.results.jsonl
+  {'succeeded': 6, 'errored': 0, 'zero_answer': 0, 'truncated': 0, 'expired': 0, 'canceled': 0, 'skipped': 0}
+  spend: $0.2315 over 6 results ($0.03858 each)  in 9,731 tok / out 44,352 tok
+  final-gridO-w3-r1: {'succeeded': 6, 'errored': 0, 'zero_answer': 0, 'truncated': 0, 'expired': 0, 'canceled': 0, 'skipped': 0}  actual $0.2315
+headlineO: scored -> results\final\headlineO/REPORT.txt; refused: none
+gridO: scored -> results\final\gridO/REPORT.txt; refused: none
+steps 4-5 done. ledger: observed $130.18, committed $130.18. STOP -- nothing further is released.
+exit 0
