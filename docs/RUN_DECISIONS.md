@@ -633,6 +633,24 @@ frozen D11 rule; nothing about the headline is decided from its results.
   numerous enough to matter.
 - **The hierarchical 12-pool run stays pending.** It is not launched as part
   of the analysis.
+- **SHA-256 seed fix (commit 0621396), made before any analysis used the
+  Memon-inspired results.** `order_from_sim.order_cluster` seeded its third
+  search start with Python's `hash()` of the component ids, and that changes
+  per process. It now uses SHA-256. The effect on the Memon-inspired attacker
+  (results/audit/memon_sha256_reproducibility.md): 9 of 282 final pools
+  changed in F1_J and q. F1_L is unchanged in all 282, because only ordering
+  uses the search. The maximum absolute score difference is 0.023, and no
+  condition's mean F1_J moved by more than 0.0003. The post-fix run is
+  canonical (results/final_free); the pre-fix run is kept in
+  results/audit/memon_joint_pre_sha256. Two post-fix runs under PYTHONHASHSEED
+  0 and 987 are identical in all 282 pools, reconstructions included.
+- The hierarchical attacker shares `order_cluster`, so it inherits only the
+  SHA-256 behaviour. G2c, G5a, G5b and the hierarchical tests pass after the
+  fix. The oracle-ceiling diagnostic was rerun after the fix
+  (results/audit/hier_oracle_ceiling_post_sha256.json): 244 of 2,178 stored
+  values moved, by at most 0.021. The headline-analogue median oracle F1_J
+  moved 0.881 → 0.883, and the D10 verdict (HIGH → KEEP) is unchanged. The
+  frozen D10 record stays as results/audit/hier_oracle_ceiling.json.
 
 ## Development history — 2026-09-10: headline documents used before frame A existed
 

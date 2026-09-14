@@ -1,0 +1,175 @@
+{
+  "what": "before/after the SHA-256 seed fix in order_from_sim (RUN_DECISIONS D13)",
+  "before": "results/audit/memon_joint_pre_sha256",
+  "after": "results/final_free",
+  "pools": 282,
+  "pools_with_any_changed_count_or_score": 9,
+  "pools_F1_J_changed": 9,
+  "pools_F1_L_changed": 0,
+  "pools_q_changed": 9,
+  "max_abs_score_difference": 0.023340248962655574,
+  "reconstruction_changed": "not directly observable for the pre-fix run (it stored no reconstructions); judged from every stored count and score: 9 of 282 pools differ in any of them",
+  "cross_process_after_fix": {
+    "pools": 282,
+    "differ": 0
+  },
+  "aggregates_before": {
+    "gridJ/coherence-sever__clause": {
+      "pools": 24,
+      "F1_J_mean": 0.12609650081117751,
+      "F1_L_mean": 0.24946415859513615,
+      "q_micro": 0.5048719691819624,
+      "A_J_mean": -0.005777821523671991
+    },
+    "gridJ/coherence-sever__token-window": {
+      "pools": 24,
+      "F1_J_mean": 0.1358183481589467,
+      "F1_L_mean": 0.2649969183122493,
+      "q_micro": 0.5136114347418373,
+      "A_J_mean": 0.0043941676016677035
+    },
+    "gridJ/random__clause": {
+      "pools": 24,
+      "F1_J_mean": 0.13288806347745843,
+      "F1_L_mean": 0.2578807614746574,
+      "q_micro": 0.5151082984223193,
+      "A_J_mean": 0.0030526566093882278
+    },
+    "gridJ/random__sentence": {
+      "pools": 24,
+      "F1_J_mean": 0.13077520744412044,
+      "F1_L_mean": 0.25336947800762855,
+      "q_micro": 0.5167084109348575,
+      "A_J_mean": 0.002957703964523856
+    },
+    "gridJ/random__token-window": {
+      "pools": 24,
+      "F1_J_mean": 0.13355705452544456,
+      "F1_L_mean": 0.26161378298626337,
+      "q_micro": 0.5106558936752588,
+      "A_J_mean": 0.001978399818500197
+    },
+    "gridJ/semantic__clause": {
+      "pools": 24,
+      "F1_J_mean": 0.1303288311981751,
+      "F1_L_mean": 0.25617103280984904,
+      "q_micro": 0.5080178986383975,
+      "A_J_mean": 0.0001323019713722089
+    },
+    "gridJ/semantic__sentence": {
+      "pools": 24,
+      "F1_J_mean": 0.14215639062233834,
+      "F1_L_mean": 0.2847411283972003,
+      "q_micro": 0.49630310539147116,
+      "A_J_mean": 0.016041868135308144
+    },
+    "gridJ/subject-verb__clause": {
+      "pools": 24,
+      "F1_J_mean": 0.1311722228437295,
+      "F1_L_mean": 0.2594005709475133,
+      "q_micro": 0.5048720978409318,
+      "A_J_mean": 0.00034744177402925755
+    },
+    "gridJ/subject-verb__sentence": {
+      "pools": 24,
+      "F1_J_mean": 0.1262055972116765,
+      "F1_L_mean": 0.2568657924903492,
+      "q_micro": 0.49077447322131695,
+      "A_J_mean": -0.00420013013272095
+    },
+    "headlineJ/prose": {
+      "pools": 46,
+      "F1_J_mean": 0.16820481704954598,
+      "F1_L_mean": 0.33901586391290445,
+      "q_micro": 0.49312774630413925,
+      "A_J_mean": 0.022537580014316036
+    },
+    "identifierJ/identifier__field": {
+      "pools": 20,
+      "F1_J_mean": 0.05401650384748914,
+      "F1_L_mean": 0.125437663373134,
+      "q_micro": 0.4262295081967213,
+      "A_J_mean": -0.05109277350278986
+    }
+  },
+  "aggregates_after": {
+    "gridJ/coherence-sever__clause": {
+      "pools": 24,
+      "F1_J_mean": 0.12608224239158075,
+      "F1_L_mean": 0.24946415859513615,
+      "q_micro": 0.5048072254054579,
+      "A_J_mean": -0.0057940929342742324
+    },
+    "gridJ/coherence-sever__token-window": {
+      "pools": 24,
+      "F1_J_mean": 0.135950083017459,
+      "F1_L_mean": 0.2649969183122493,
+      "q_micro": 0.5140234719104316,
+      "A_J_mean": 0.004546565228334396
+    },
+    "gridJ/random__clause": {
+      "pools": 24,
+      "F1_J_mean": 0.13288806347745843,
+      "F1_L_mean": 0.2578807614746574,
+      "q_micro": 0.5151082984223193,
+      "A_J_mean": 0.0030526566093882278
+    },
+    "gridJ/random__sentence": {
+      "pools": 24,
+      "F1_J_mean": 0.13077520744412044,
+      "F1_L_mean": 0.25336947800762855,
+      "q_micro": 0.5167084109348575,
+      "A_J_mean": 0.002957703964523856
+    },
+    "gridJ/random__token-window": {
+      "pools": 24,
+      "F1_J_mean": 0.13355705452544456,
+      "F1_L_mean": 0.26161378298626337,
+      "q_micro": 0.5106558936752588,
+      "A_J_mean": 0.001978399818500197
+    },
+    "gridJ/semantic__clause": {
+      "pools": 24,
+      "F1_J_mean": 0.13043010124368706,
+      "F1_L_mean": 0.25617103280984904,
+      "q_micro": 0.5083443759482246,
+      "A_J_mean": 0.00024841165573523155
+    },
+    "gridJ/semantic__sentence": {
+      "pools": 24,
+      "F1_J_mean": 0.14215639062233834,
+      "F1_L_mean": 0.2847411283972003,
+      "q_micro": 0.49630310539147116,
+      "A_J_mean": 0.016041868135308144
+    },
+    "gridJ/subject-verb__clause": {
+      "pools": 24,
+      "F1_J_mean": 0.1311722228437295,
+      "F1_L_mean": 0.2594005709475133,
+      "q_micro": 0.5048720978409318,
+      "A_J_mean": 0.00034744177402925755
+    },
+    "gridJ/subject-verb__sentence": {
+      "pools": 24,
+      "F1_J_mean": 0.1262055972116765,
+      "F1_L_mean": 0.2568657924903492,
+      "q_micro": 0.49077447322131695,
+      "A_J_mean": -0.00420013013272095
+    },
+    "headlineJ/prose": {
+      "pools": 46,
+      "F1_J_mean": 0.16846395900174868,
+      "F1_L_mean": 0.33901586391290445,
+      "q_micro": 0.49340275867969613,
+      "A_J_mean": 0.022866774985413736
+    },
+    "identifierJ/identifier__field": {
+      "pools": 20,
+      "F1_J_mean": 0.05401650384748914,
+      "F1_L_mean": 0.125437663373134,
+      "q_micro": 0.4262295081967213,
+      "A_J_mean": -0.05109277350278986
+    }
+  },
+  "canonical": "post-fix run; the pre-fix run is kept only in the audit trail and the numerical effect is reported"
+}
