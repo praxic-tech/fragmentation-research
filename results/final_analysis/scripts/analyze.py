@@ -269,7 +269,12 @@ def by_unit(rows, key):
     return {r["unit_id"]: r.get(key) for r in rows if r["completion"] == "completed"}
 
 
-J_ATT = ["Analytic one-bucket", "Memon-inspired", "One-shot Sonnet"]
+EMB = "Embedding (post-hoc exploratory)"   # D14: in the main tables, always marked; never prespecified
+J_ATT = ["Analytic one-bucket", "Memon-inspired", EMB, "One-shot Sonnet"]
+
+
+def label_of(*attackers):
+    return "post-hoc exploratory" if EMB in attackers else "prespecified"
 J_COLS = ["condition", "attacker", "attempted", "completed", "rbnc", "F1_J_mean", "F1_J_lo", "F1_J_hi",
           "F1_J_median", "precision_J_mean", "recall_J_mean", "b_J_mean", "A_J_mean", "A_J_lo", "A_J_hi",
           "F1_L_mean", "F1_L_lo", "F1_L_hi", "q_mean", "q_micro", "q_micro_lo", "q_micro_hi", "K0_pools",
@@ -296,11 +301,13 @@ def headline():
     pairs = []
     for m in ("F1_J", "F1_L", "q", "A_J"):
         for a, b in (("One-shot Sonnet", "Memon-inspired"), ("One-shot Sonnet", "Analytic one-bucket"),
-                     ("Memon-inspired", "Analytic one-bucket")):
+                     ("Memon-inspired", "Analytic one-bucket"), (EMB, "Memon-inspired"),
+                     ("One-shot Sonnet", EMB), (EMB, "Analytic one-bucket")):
             if m in ("q", "A_J", "F1_L") and "Analytic" in b:
                 continue
             pa = paired(by_unit(sel("J", "headline", a), m), by_unit(sel("J", "headline", b), m))
-            pairs.append({"family": "headline", "metric": m, "a": a, "b": b, **pa})
+            pairs.append({"family": "headline", "metric": m, "a": a, "b": b,
+                          "analysis_label": label_of(a, b), **pa})
     write_table("table_B2_headline_paired", pairs, None, "Headline J: paired attacker comparisons (pools)",
                 note="a - b per pool; percentile bootstrap resamples each pool once with both attackers' "
                      "scores; 95% CIs; t-interval as sensitivity.")
@@ -366,19 +373,25 @@ def grid():
     KEY["grid_pairs"] = comps
     vs = []
     for c in GRID:
-        for m in ("F1_J", "F1_L", "q"):
-            vs.append({"cell": LABEL[c], "metric": m,
-                       **paired(by_unit(sel("J", "grid", "One-shot Sonnet", c), m),
-                                by_unit(sel("J", "grid", "Memon-inspired", c), m))})
-    write_table("table_C4_grid_sonnet_vs_memon", vs, None, "Grid J: one-shot Sonnet minus Memon-inspired (paired)")
-    KEY["grid_vs_memon"] = vs
+        for a, b in (("One-shot Sonnet", "Memon-inspired"), (EMB, "Memon-inspired"), ("One-shot Sonnet", EMB)):
+            for m in ("F1_L", "F1_J", "q"):
+                vs.append({"cell": LABEL[c], "metric": m, "a": a, "b": b, "analysis_label": label_of(a, b),
+                           **paired(by_unit(sel("J", "grid", a, c), m), by_unit(sel("J", "grid", b, c), m))})
+    write_table("table_C4_grid_attacker_paired", vs, None, "Grid J: paired attacker comparisons per cell",
+                note="a - b per pool over pools both completed; 95% percentile bootstrap carrying both attackers. "
+                     "Rows involving the embedding attacker are POST-HOC EXPLORATORY (D14); for it, F1_L is the "
+                     "primary comparison.")
+    KEY["grid_vs_memon"] = [v for v in vs if v["a"] == "One-shot Sonnet" and v["b"] == "Memon-inspired"]
+    KEY["grid_attacker_pairs"] = vs
     f2 = []
     for i, c in enumerate(GRID):
-        s, m, b = (KEY["grid"][(c, a)] for a in ("One-shot Sonnet", "Memon-inspired", "Analytic one-bucket"))
+        s, m, e, b = (KEY["grid"][(c, a)] for a in ("One-shot Sonnet", "Memon-inspired", EMB, "Analytic one-bucket"))
         f2.append({"idx": i, "cell": LABEL[c], "granularity": c.split("__")[1],
                    "sonnet": s["F1_J_mean"], "sonnet_errlo": s["F1_J_mean"] - s["F1_J_lo"],
                    "sonnet_errhi": s["F1_J_hi"] - s["F1_J_mean"], "memon": m["F1_J_mean"],
                    "memon_errlo": m["F1_J_mean"] - m["F1_J_lo"], "memon_errhi": m["F1_J_hi"] - m["F1_J_mean"],
+                   "emb": e["F1_J_mean"], "emb_errlo": e["F1_J_mean"] - e["F1_J_lo"],
+                   "emb_errhi": e["F1_J_hi"] - e["F1_J_mean"],
                    "baseline": b["F1_J_mean"], "sonnet_completed": s["completed"]})
     write_fd("fig2_grid_J", f2)
 
@@ -388,14 +401,15 @@ def decomposition():
     conds = [("headline", "semantic__sentence (full length)")] + [("grid", c) for c in GRID] + \
             [("identifier", "identifier__field")]
     for fam, c in conds:
-        for a in ("One-shot Sonnet", "Memon-inspired"):
+        for a in ("One-shot Sonnet", "Memon-inspired", EMB):
             rs = sel("J", fam, a, c)
             fl = ci_mean([r["F1_L"] for r in rs])
             qm = ci_ratio([r["C"] for r in rs], [r["K"] for r in rs])
             f1 = st.fmean(r["F1_J"] for r in rs)
             pts.append({"condition": LABEL.get(c, c), "family": fam, "attacker": a,
-                        "series": "sonnet" if a == "One-shot Sonnet" else "memon",
-                        "sid": 0 if a == "One-shot Sonnet" else 1,
+                        "analysis_label": label_of(a),
+                        "series": {"One-shot Sonnet": "sonnet", "Memon-inspired": "memon", EMB: "embedding"}[a],
+                        "sid": {"One-shot Sonnet": 0, "Memon-inspired": 1, EMB: 2}[a],
                         "short": {"semantic__sentence (full length)": "headline", "identifier__field": "identifier"}.get(
                             c, c.replace("random", "rnd").replace("semantic", "sem").replace("coherence-sever", "coh")
                             .replace("subject-verb", "sv").replace("__sentence", "-sent").replace("__clause", "-cl")
@@ -479,7 +493,7 @@ def game_o():
 
 
 def identifier():
-    atts = ["Random", "Memon-inspired", "One-shot Sonnet", "Analytic one-bucket", "Schema-order"]
+    atts = ["Random", "Memon-inspired", EMB, "One-shot Sonnet", "Analytic one-bucket", "Schema-order"]
     rows, rule = [], []
     for a in atts:
         rs = sel("J", "identifier", a)
@@ -490,7 +504,7 @@ def identifier():
         s["A_schema_t_lo90"], s["A_schema_t_hi90"] = t_ci(a_sch, 0.90)
         s["raw_schema_diff_mean"], s["raw_lo90"], s["raw_hi90"] = ci_mean(raw, 0.90)
         rows.append({"attacker": a, **s})
-        if a in ("One-shot Sonnet", "Memon-inspired", "Random"):
+        if a in ("One-shot Sonnet", "Memon-inspired", "Random", EMB):
             inside = -0.10 <= s["A_schema_lo90"] and s["A_schema_hi90"] <= 0.10
             below = s["A_schema_hi90"] < -0.10
             rule.append({"attacker": a, "A_schema_mean": s["A_schema_mean"], "ci90_lo": s["A_schema_lo90"],
@@ -515,7 +529,7 @@ def identifier():
     KEY["identifier_rule"] = rule
     # post-hoc membership diagnostic: same-record rate among within-group pairs vs template chance
     diag = []
-    for a in ("One-shot Sonnet", "Memon-inspired", "Random"):
+    for a in ("One-shot Sonnet", "Memon-inspired", EMB, "Random"):
         rs = sel("J", "identifier", a)
         lp = ci_mean([r["L_precision"] for r in rs if r.get("L_precision") is not None])
         reading = ("n/a" if math.isnan(lp[0]) else "above template chance" if lp[1] > 1 / 7 else
@@ -529,7 +543,7 @@ def identifier():
                      "over pools. Post hoc: defined after the answers were seen.")
     KEY["identifier_membership"] = diag
     f5a = []
-    for i, a in enumerate(("Random", "Memon-inspired", "One-shot Sonnet")):
+    for i, a in enumerate(("Random", "Memon-inspired", EMB, "One-shot Sonnet")):
         s = KEY["identifier"][a]
         f5a.append({"idx": i, "attacker": a, "mean": s["F1_J_mean"], "errlo": s["F1_J_mean"] - s["F1_J_lo"],
                     "errhi": s["F1_J_hi"] - s["F1_J_mean"]})
@@ -544,7 +558,7 @@ def relationships():
     jcov = ["doc_words_mean", "doc_words_median", "pool_words_total", "n_fragments", "frags_per_doc",
             "frag_words_mean", "frag_words_median"]
     for fam in ("headline", "grid", "identifier"):
-        for a in ("One-shot Sonnet", "Memon-inspired"):
+        for a in ("One-shot Sonnet", "Memon-inspired", EMB):
             rs = sel("J", fam, a)
             for x in jcov:
                 for y in ("F1_J", "F1_L", "q", "A_J"):

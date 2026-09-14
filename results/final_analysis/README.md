@@ -32,7 +32,7 @@ python results/final_analysis/scripts/write_reports.py   # RESULTS_SUMMARY.md, C
 |---|---|
 | `table_A_design` | Table A: corpus and design summary |
 | `table_B_headline_J`, `_B2_headline_paired`, `_B3_headline_distribution` | Table B: headline J, paired attacker comparisons, pool-level distribution |
-| `table_C_grid_J`, `_C2_grid_mechanics`, `_C3_grid_paired`, `_C4_grid_sonnet_vs_memon`, `_C5_decomposition` | Table C: grid J, mechanics (§13), strategy / granularity paired comparisons (§7–9), attacker comparison, linkage-vs-order (§14) |
+| `table_C_grid_J`, `_C2_grid_mechanics`, `_C3_grid_paired`, `_C4_grid_attacker_paired`, `_C5_decomposition` | Table C: grid J, mechanics (§13), strategy / granularity paired comparisons (§7–9), attacker comparison, linkage-vs-order (§14) |
 | `table_D_game_O`, `_D2_O_sonnet_vs_floors`, `_D3_O_grid_paired` | Table D: game O |
 | `table_E_identifier_J`, `_E2_identifier_rule`, `_E3_identifier_membership` | Table E: identifier J, the frozen ±0.10 decision, and the exploratory membership-beyond-schema diagnostic |
 | `table_F_hierarchical` | Table F: pending, plus the frozen oracle ceiling (DIAGNOSTIC CEILING — NOT AN ATTACKER RESULT) |
@@ -51,11 +51,11 @@ the same CSV; no plotted value is typed anywhere.
 
 | figure | content |
 |---|---|
-| 1 | headline J attacker comparison with pool-level points (hierarchical pending) |
-| 2 | grid J, all 9 cells, Sonnet vs Memon-inspired vs analytic baseline |
-| 3 | linkage F1_L vs direction accuracy q by condition and attacker |
+| 1 | headline J attacker comparison with pool-level points, including the post-hoc exploratory embedding attacker (†); hierarchical pending |
+| 2 | grid J, all 9 cells: Sonnet, Memon-inspired, embedding (†, post hoc) and the analytic baseline |
+| 3 | linkage F1_L vs direction accuracy q by condition and attacker (embedding †: read along F1_L, its primary comparison) |
 | 4 | game O Kendall τ by condition; Sonnet vs Jaccard floors |
-| 5 | identifier J: attackers against the analytic and schema-aware baselines; the ±0.10 rule |
+| 5 | identifier J: attackers (embedding † post hoc) against the analytic and schema-aware baselines; the ±0.10 rule |
 | 6 | document length vs reconstruction (J and O) |
 | 7 | fragment count vs reconstruction (J and O) |
 | 8 | fragment size vs reconstruction (J and O) |
@@ -66,12 +66,21 @@ the same CSV; no plotted value is typed anywhere.
 `build_master.py`, `analyze.py`, `figures.py`, `write_reports.py`.
 Upstream runners: `runs/final_run_steps123.py`, `runs/final_run_steps45.py`,
 `runs/final_free_attackers.py`, `runs/final_o_floors.py`,
-`runs/memon_sha256_repro.py`.
+`runs/memon_sha256_repro.py`, `runs/final_embedding_attacker.py` (post-hoc exploratory, D14).
+
+† **Post-hoc exploratory.** The embedding attacker appears in the attacker
+tables and figures alongside the statistical and LLM attackers, always marked,
+and never as a prespecified or confirmatory attacker. It was motivated by the
+observed Memon-inspired / Sonnet gap, then fully designed and frozen before
+its own evaluation, with no final-data tuning and no model selection from its
+scores. This is its first complete result. F1_L is its primary comparison.
 
 ## Related records
 - Uncertainty method, the schema-advantage clarification and the SHA-256 fix:
   `docs/RUN_DECISIONS.md` D13.
 - The SHA-256 reproducibility report:
   `results/audit/memon_sha256_reproducibility.md`.
-- The embedding adversary (design only, not run):
-  `docs/embedding_adversary_design.md`.
+- The embedding adversary: its design (`docs/embedding_adversary_design.md`),
+  RUN_DECISIONS D14 and addenda, the smoke test
+  (`results/audit/embedding_smoke.json`) and the final run
+  (`results/final_embedding/`).

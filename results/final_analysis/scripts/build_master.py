@@ -47,6 +47,7 @@ O_SPECS = {"headline": ["runs/final_headlineO.json"],
 RESULT_DIR = {("headline", "J"): "headlineJ", ("grid", "J"): "gridJ", ("identifier", "J"): "identifierJ",
               ("headline", "O"): "headlineO", ("grid", "O"): "gridO"}
 IN_PRICE, OUT_PRICE = 1.0, 5.0            # $/M tokens, the batch rate the ledger settles at
+EMB = "Embedding (post-hoc exploratory)"  # D14: shown with the other attackers, always marked
 RANDOM_DRAWS, SEED = 10_000, 42
 
 
@@ -181,6 +182,11 @@ def main():
                 memon = {r["pool"]: r for r in (json.loads(l) for l in open(
                     os.path.join("results", "final_free", RESULT_DIR[(fam, "J")],
                                  f"{base}.memon_joint.jsonl"), encoding="utf-8") if l.strip())}
+                # POST-HOC EXPLORATORY embedding attacker (D14): its first complete result
+                ep = os.path.join("results", "final_embedding", RESULT_DIR[(fam, "J")],
+                                  f"{base}.embedding_joint.jsonl")
+                emb = ({r["pool"]: r for r in (json.loads(l) for l in open(ep, encoding="utf-8") if l.strip())}
+                       if os.path.exists(ep) else {})
                 for pid, members in b["pools"]:
                     _o, units, key, truth = build_units(cell_dir, 0, len(members), SEED,
                                                         pools=[(pid, members)], o_docs=[])
@@ -221,6 +227,15 @@ def main():
                                      (len(g) for g in m["reconstruction"]), reverse=True)),
                                  "context_coverage": m["context_coverage"],
                                  "cost_usd": 0.0, "input_tokens": 0, "output_tokens": 0})
+                    if pid in emb:
+                        e_ = emb[pid]
+                        rows.append({**common, "attacker": EMB, "analysis_label": "post-hoc exploratory",
+                                     "completion": "completed", **j_metrics(e_),
+                                     "cluster_sizes": json.dumps(sorted((len(g) for g in e_["reconstruction"]),
+                                                                        reverse=True)),
+                                     "max_wordpieces": e_["max_wordpieces"],
+                                     "n_over_wordpiece_limit": e_["n_over_wordpiece_limit"],
+                                     "cost_usd": 0.0, "input_tokens": 0, "output_tokens": 0})
                     # one-shot Sonnet
                     cid = make_custom_id(base, "J", pid)
                     u = use.get(cid, {"in": 0, "out": 0, "retry": False, "refused": False,
@@ -306,6 +321,8 @@ def main():
                                                               "max_abs_disp", "longest_run", "run_fraction")},
                                      "cost_usd": 0.0, "note": f.get("expectation", "")})
 
+    for r in rows:
+        r.setdefault("analysis_label", "prespecified")
     cols = []
     for r in rows:
         for k in r:

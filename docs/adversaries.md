@@ -23,6 +23,7 @@ state of the art".
 | Memon-inspired | Aiden (`adversaries/memon_joint.py`, `harness/order_from_sim.py`, the TF-IDF grouper in `adversaries/memon_linkage.py`); Michael (`adversaries/memon.py` boundary statistic) | TF-IDF cosine + average-linkage clustering, cut to exactly N | character-bigram boundary likelihood → antisymmetric weight → deterministic local ordering search | ordering: directional; grouping: symmetric | game J (all 282 final J pools) | **inspired**, not faithful | statistical attacker |
 | One-shot Sonnet | Arafat (original LLM adversary); Aiden (game J prompt, masking, paid batch path) | the model | the model | yes | O and J | n/a (LLM) | strong semantic attacker |
 | Hierarchical / decomposed Sonnet | Aiden (`adversaries/hierarchical.py`, `adversaries/hier_batch.py`) | TF-IDF blocker (k = 20, D8) → Sonnet pair judgements → exactly-N clustering | Sonnet pairwise directions → rank aggregation (`order_from_sim`) | yes | J (headline; **pending**) | custom | strong semantic attacker (decomposed / scalable) |
+| Embedding (**post-hoc exploratory**) | Aiden (`adversaries/embedding_joint.py`, D14) | all-mpnet-base-v2 embeddings (pinned revision), cosine, average linkage cut to exactly N | the frozen Memon-inspired ordering module (character-bigram boundary likelihood → order_cluster) | ordering: directional; grouping: symmetric | game J (all 282 final J pools) | custom; **post hoc, exploratory** | semantic (non-LLM) attacker |
 
 Michael's week-2 compression-distance (NCD) baseline is in no final table.
 
@@ -127,5 +128,11 @@ attacker whose results sit at the floor, not as a competitive one.
   for the context-model idea only, and verify the reference against the source.
 - The linkage number reported for game J is "the linkage component of game J"
   (results plan §29), never a separate game L experiment.
-- A post-hoc exploratory embedding adversary is designed in
-  `docs/embedding_adversary_design.md` and has not been run.
+- **Embedding (post-hoc exploratory)** (RUN_DECISIONS D14, design in
+  `docs/embedding_adversary_design.md`). It appears in the main attacker
+  tables and figures, always marked post-hoc exploratory and never as a
+  prespecified or confirmatory attacker. Disclosure wording: it was motivated
+  by the observed gap between Memon-inspired and one-shot Sonnet, then fully
+  designed and frozen before its own evaluation, with no final-data tuning and
+  no model selection from its scores. Its first complete result is kept. F1_L
+  is its primary comparison; F1_J and q are secondary.

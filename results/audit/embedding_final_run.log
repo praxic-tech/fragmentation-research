@@ -1,0 +1,53 @@
+6f18408 Embedding adversary: final runner, committed before it runs (D14 addendum 2)
+Fetching 10 files:   0%|          | 0/10 [00:00<?, ?it/s]Fetching 10 files: 100%|██████████| 10/10 [00:00<00:00, 1027.18it/s]
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights:  24%|██▍       | 48/199 [00:00<00:00, 469.31it/s]Loading weights:  48%|████▊     | 95/199 [00:00<00:00, 383.37it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 809.19it/s]
+282 pools; 0 already written; model sentence-transformers/all-mpnet-base-v2 @ e8c3b32e
+  10 pools this run, 3.4 min, ~93 min left
+  20 pools this run, 7.5 min, ~98 min left
+  30 pools this run, 11.7 min, ~98 min left
+  40 pools this run, 15.5 min, ~94 min left
+  50 pools this run, 19.8 min, ~92 min left
+  60 pools this run, 24.1 min, ~89 min left
+  70 pools this run, 27.1 min, ~82 min left
+  80 pools this run, 30.5 min, ~77 min left
+  90 pools this run, 33.1 min, ~71 min left
+  100 pools this run, 36.4 min, ~66 min left
+  110 pools this run, 40.0 min, ~63 min left
+  120 pools this run, 43.1 min, ~58 min left
+  130 pools this run, 46.4 min, ~54 min left
+[transformers] Token indices sequence length is longer than the specified maximum sequence length for this model (386 > 384). Running this sequence through the model will result in indexing errors
+  140 pools this run, 50.5 min, ~51 min left
+  150 pools this run, 53.8 min, ~47 min left
+  160 pools this run, 57.8 min, ~44 min left
+  170 pools this run, 61.5 min, ~41 min left
+  180 pools this run, 64.0 min, ~36 min left
+  190 pools this run, 66.9 min, ~32 min left
+  200 pools this run, 69.3 min, ~28 min left
+  210 pools this run, 72.0 min, ~25 min left
+  220 pools this run, 75.1 min, ~21 min left
+  230 pools this run, 77.8 min, ~18 min left
+  240 pools this run, 81.8 min, ~14 min left
+  250 pools this run, 85.5 min, ~11 min left
+  260 pools this run, 89.9 min, ~8 min left
+  270 pools this run, 90.9 min, ~4 min left
+  280 pools this run, 91.0 min, ~1 min left
+POST-HOC EXPLORATORY EMBEDDING ADVERSARY (RUN_DECISIONS D14) -- first complete result, kept as is
+model sentence-transformers/all-mpnet-base-v2 @ e8c3b32edf5434bc2275fc9bab85f82640a19130; F1_L is the primary comparison
+
+game        cell                            pools    F1_L    F1_J    base   q_mic  trunc
+gridJ       subject-verb__sentence             24  0.2510  0.1247  0.1299  0.4960      0
+headlineJ   prose                              46  0.3635  0.1816  0.1493  0.4996      0
+gridJ       random__clause                     24  0.2464  0.1273  0.1302  0.5170      0
+gridJ       subject-verb__clause               24  0.2503  0.1271  0.1309  0.5071      0
+gridJ       random__sentence                   24  0.2477  0.1285  0.1282  0.5183      0
+gridJ       coherence-sever__clause            24  0.2735  0.1376  0.1311  0.4997      1
+gridJ       random__token-window               24  0.2461  0.1263  0.1318  0.5133      0
+gridJ       semantic__clause                   24  0.2598  0.1322  0.1302  0.5072      0
+gridJ       semantic__sentence                 24  0.3147  0.1575  0.1282  0.4980      0
+identifierJ identifier__field                  20  0.1095  0.0537  0.1000  0.4920      0
+gridJ       coherence-sever__token-window      24  0.2675  0.1390  0.1320  0.5190      0
+
+deterministic on re-run (first pool of each game): True
+fragments over the word-piece limit: 1; max word pieces 386
+total attack seconds 5419
+exit 0

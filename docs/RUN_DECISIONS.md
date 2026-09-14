@@ -768,6 +768,22 @@ frozen D11 rule; nothing about the headline is decided from its results.
 - **Metrics.** F1_L is its primary comparison; F1_J and q are secondary
   components.
 
+### D14 addendum 3 — 2026-09-14: the first complete result (kept as is)
+
+- All 282 final J pools completed (results/final_embedding/, REPORT.txt),
+  offline from the pinned snapshot, deterministic on re-run. It took 5,419
+  attack-seconds, about 90 minutes in one process.
+- One fragment of 62,527 (in coherence-sever / clause) reached 386 word
+  pieces against the model's 384 limit, so its last 2 word pieces were
+  truncated by the model default, as the design anticipated. It is kept as run
+  and not rerun or altered.
+- Descriptive means (pool-level CIs and paired comparisons are in the
+  analysis package):
+  - F1_L: headline 0.364; grid 0.246–0.315; identifier 0.110.
+  - F1_J: headline 0.182; grid 0.124–0.158; identifier 0.054.
+  - q_micro: 0.49–0.52 in every condition.
+- No further embedding model or tuning is run on the basis of this result.
+
 ## D15 — 2026-09-14: POST-HOC EXPLORATORY — CONTROLLED EXCERPT GRANULARITY EXPERIMENT (design only)
 
 - **Why fixed excerpts.** The naturally-short-document search was stopped by

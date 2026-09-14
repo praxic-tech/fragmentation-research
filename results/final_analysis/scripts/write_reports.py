@@ -35,6 +35,20 @@ def ci(r, m, lo, hi, d=3):
     return f"{f(r[m], d)} [{f(r[lo], d)}, {f(r[hi], d)}]"
 
 
+EMB = "Embedding (post-hoc exploratory)"
+DISCLOSURE = ("The embedding attacker is POST-HOC EXPLORATORY (RUN_DECISIONS D14): it was motivated by the observed "
+              "gap between Memon-inspired and one-shot Sonnet, then fully designed and frozen before its own "
+              "evaluation, with no final-data tuning and no model selection from its scores; this is its first "
+              "complete result, kept as is. F1_L is its primary comparison; F1_J and q are secondary components. "
+              "It is not a prespecified or confirmatory attacker.")
+
+
+def read_vs(d_row):
+    """Neutral wording from a paired CI."""
+    lo, hi = float(d_row["mean_lo"]), float(d_row["mean_hi"])
+    return "higher" if lo > 0 else "lower" if hi < 0 else "not distinguishable"
+
+
 def LAB(c):
     return "headline (full length)" if c.startswith("semantic__sentence (full") else c.replace("__", " / ")
 
@@ -46,7 +60,9 @@ def n(v):
 def main():
     K = json.load(open(os.path.join(PKG, "KEY_NUMBERS.json"), encoding="utf-8"))
     HB, HP = T("table_B_headline_J"), T("table_B2_headline_paired")
-    GC, GP, GM = T("table_C_grid_J"), T("table_C3_grid_paired"), T("table_C4_grid_sonnet_vs_memon")
+    GC, GP = T("table_C_grid_J"), T("table_C3_grid_paired")
+    GA = T("table_C4_grid_attacker_paired")
+    GM = [r for r in GA if r["a"] == "One-shot Sonnet" and r["b"] == "Memon-inspired"]
     MECH, DO, DOP, DOF = T("table_C2_grid_mechanics"), T("table_D_game_O"), T("table_D3_O_grid_paired"), \
         T("table_D2_O_sonnet_vs_floors")
     IE, IR, IM = T("table_E_identifier_J"), T("table_E2_identifier_rule"), T("table_E3_identifier_membership")
@@ -87,13 +103,15 @@ def main():
     def cellrow(c):
         s = one(GC, cell=c, attacker="One-shot Sonnet")
         m = one(GC, cell=c, attacker="Memon-inspired")
+        e = one(GC, cell=c, attacker=EMB)
         b = one(GC, cell=c, attacker="Analytic one-bucket")
         o = one(DO, condition=LAB(c), attacker="One-shot Sonnet")
         mech = one(MECH, cell=s["condition"])
         return (f"| {s['condition']} | {s['completed']}/{s['attempted']} | {ci(s, 'F1_J_mean', 'F1_J_lo', 'F1_J_hi')} | "
                 f"{f(b['F1_J_mean'])} | {ci(s, 'A_J_mean', 'A_J_lo', 'A_J_hi')} | {ci(s, 'F1_L_mean', 'F1_L_lo', 'F1_L_hi')} | "
                 f"{ci(s, 'q_micro', 'q_micro_lo', 'q_micro_hi')} | {f(s['precision_J_mean'])} / {f(s['recall_J_mean'])} | "
-                f"{n(s['exact_records'])}/{n(s['records'])} | {f(m['F1_J_mean'])} | {ci(o, 'tau_mean', 'tau_lo', 'tau_hi')} | "
+                f"{n(s['exact_records'])}/{n(s['records'])} | {f(m['F1_L_mean'])} / {f(e['F1_L_mean'])} | "
+                f"{ci(o, 'tau_mean', 'tau_lo', 'tau_hi')} | "
                 f"{f(mech['frags_per_doc'], 1)} | {f(mech['frag_words_mean'], 1)} |")
 
     grid_order = ["random__sentence", "semantic__sentence", "subject-verb__sentence", "random__clause",
@@ -139,6 +157,22 @@ def main():
       f"(advantage {f(hm['A_J_mean'])}) and {f(min(memon_grid))}–{f(max(memon_grid))} on the grid; its ordering is at "
       f"chance (q ≈ 0.5). Sonnet beat it on every one of the {sum(int(r['n_pairs']) for r in GM if r['metric'] == 'F1_J')} "
       f"paired grid pools and all 46 headline pools, by {f(min(gm_diff))}–{f(max(gm_diff))} per cell.")
+    he = one(HB, attacker=EMB)
+    em_l = one(HP, metric="F1_L", a=EMB, b="Memon-inspired")
+    se_l = one(HP, metric="F1_L", a="One-shot Sonnet", b=EMB)
+    ge = [r for r in GA if r["a"] == EMB and r["b"] == "Memon-inspired" and r["metric"] == "F1_L"]
+    gs = [r for r in GA if r["a"] == "One-shot Sonnet" and r["b"] == EMB and r["metric"] == "F1_L"]
+    ie = one(IE, attacker=EMB)
+    w(f"- **The post-hoc exploratory embedding attacker** (all-mpnet-base-v2 grouping + the Memon-inspired ordering; "
+      f"F1_L is its primary comparison). Headline F1_L {ci(he, 'F1_L_mean', 'F1_L_lo', 'F1_L_hi')}, against Memon-inspired "
+      f"{f(hm['F1_L_mean'])} and Sonnet {f(hs['F1_L_mean'])}. Paired: embedding − Memon-inspired "
+      f"{ci(em_l, 'mean_diff', 'mean_lo', 'mean_hi')} ({read_vs(em_l)}); Sonnet − embedding "
+      f"{ci(se_l, 'mean_diff', 'mean_lo', 'mean_hi')} ({read_vs(se_l)}). On the grid, embedding − Memon-inspired F1_L "
+      f"ranged {f(min(float(r['mean_diff']) for r in ge))} to {f(max(float(r['mean_diff']) for r in ge))} across cells "
+      f"(higher in {sum(read_vs(r) == 'higher' for r in ge)} of 9), and Sonnet − embedding "
+      f"{f(min(float(r['mean_diff']) for r in gs))} to {f(max(float(r['mean_diff']) for r in gs))}. Secondary: headline "
+      f"F1_J {f(he['F1_J_mean'])}, q_micro {f(he['q_micro'])}. Identifiers: F1_J {f(ie['F1_J_mean'])}, F1_L "
+      f"{f(ie['F1_L_mean'])}. {DISCLOSURE}")
     w(f"- **Resource limits rarely bound the one-shot attacker.** One of {n(tot['units_submitted'])} one-shot units "
       f"hit the 128k output budget: {rb['cell']} {rb['pool']} ({int(rb['n_fragments'])} fragments). Output tokens "
       f"grow with fragment count (ρ {f(rel('J', 'resource (all one-shot units)', 'One-shot Sonnet', 'n_fragments', 'answer_call_output_tokens')['rho'])}), "
@@ -168,6 +202,9 @@ def main():
       "strong signal in all prose.")
     w("- **Statistical attackers:** floors. Memon-inspired was at most 0.023 above the analytic baseline (headline "
       "advantage), and the Jaccard orderers were at chance in game O.")
+    w(f"- **Did modern sentence embeddings close the gap?** (post-hoc exploratory; F1_L primary) Headline F1_L: "
+      f"embedding {f(he['F1_L_mean'])} vs Memon-inspired {f(hm['F1_L_mean'])} ({read_vs(em_l)}) vs Sonnet "
+      f"{f(hs['F1_L_mean'])} (Sonnet − embedding {ci(se_l, 'mean_diff', 'mean_lo', 'mean_hi')}).")
     w(f"- **How much stronger Sonnet is:** +{f(one(HP, metric='F1_J', a='One-shot Sonnet', b='Memon-inspired')['mean_diff'])} "
       f"F1_J over Memon-inspired on the headline, +{f(min(gm_diff))} to +{f(max(gm_diff))} per grid cell, and "
       f"+{f(min(of))} to +{f(max(of))} Kendall τ over the Jaccard floors in game O (all paired).")
@@ -195,13 +232,16 @@ def main():
     w("")
     for r in HP:
         if r["metric"] in ("F1_J", "F1_L", "q"):
+            tag = " — *post-hoc exploratory*" if r.get("analysis_label") == "post-hoc exploratory" else ""
             w(f"- {r['metric']}: {r['a']} − {r['b']} = {ci(r, 'mean_diff', 'mean_lo', 'mean_hi')} (median "
-              f"{ci(r, 'median_diff', 'median_lo', 'median_hi')}; a higher on {float(r['frac_a_higher']) * 100:.0f}% of pools)")
+              f"{ci(r, 'median_diff', 'median_lo', 'median_hi')}; a higher on {float(r['frac_a_higher']) * 100:.0f}% of pools){tag}")
+    w("")
+    w(f"*{DISCLOSURE}*")
     w("")
     w("## 2. Prose — grid J, all nine cells (pools 2–25)")
     w("")
     w("| cell | done | Sonnet F1_J [95% CI] | b_J | A_J [95% CI] | F1_L [95% CI] | q_micro [95% CI] | P_J / R_J | "
-      "exact | Memon F1_J | game O τ [95% CI] | frags/doc | words/frag |")
+      "exact | F1_L: Memon / Embedding† | game O τ [95% CI] | frags/doc | words/frag |")
     w("|---|---|---|---|---|---|---|---|---|---|---|---|---|")
     for c in grid_order:
         w(cellrow(c))
@@ -279,7 +319,7 @@ def main():
     w("| attacker / baseline | F1_J [95% CI] | P_J / R_J | F1_L [95% CI] | q (template diagnostic) | A_J (analytic) | "
       "A_schema [90% CI] | raw F1_J − 0.20 [90% CI] |")
     w("|---|---|---|---|---|---|---|---|")
-    for a in ("One-shot Sonnet", "Memon-inspired", "Random", "Analytic one-bucket", "Schema-order"):
+    for a in ("One-shot Sonnet", "Memon-inspired", EMB, "Random", "Analytic one-bucket", "Schema-order"):
         r = one(IE, attacker=a)
         raw = next((x for x in IR if x["attacker"] == a), None)
         w(f"| {a} | {ci(r, 'F1_J_mean', 'F1_J_lo', 'F1_J_hi')} | {f(r['precision_J_mean'])} / {f(r['recall_J_mean'])} | "
@@ -378,7 +418,8 @@ def main():
         ("Did identifiers behave differently from prose?", "Yes, qualitatively: linkage at template chance and F1_J "
          "below trivial baselines, versus strong reconstruction everywhere in prose."),
         ("Which attacker was strongest?", "One-shot Sonnet, by the explicit rule 'highest mean headline F1_J among "
-         "attackers completing at least 90% of pools', and on every grid cell. Hierarchical pending."),
+         "prespecified attackers completing at least 90% of pools', and on every grid cell. The post-hoc exploratory "
+         "embedding attacker is reported alongside but is outside that rule. Hierarchical pending."),
         ("Where did resource limits bite?", f"Once: {rb['cell']} {rb['pool']} exhausted 128k. Nowhere else."),
         ("What can we claim?", "See CLAIM_EVIDENCE.md: the prose-leakage, strategy, attacker and narrow identifier claims."),
         ("What can we NOT claim?", "That fragmentation protects prose; any causal effect of fragment count, size or "
@@ -450,6 +491,16 @@ def main():
          "Supported (hierarchical pending)",
          "Among the tested attackers, one-shot Sonnet was strongest in every prose condition; the statistical attackers "
          "performed at their floors. The hierarchical comparison is pending."),
+        ("EXPLORATORY (post hoc): modern sentence embeddings recover linkage beyond lexical TF-IDF grouping",
+         "Headline + grid + identifier J, embedding attacker (D14)", "F1_L (primary); F1_J, q secondary",
+         f"headline embedding − Memon-inspired F1_L {f(em_l['mean_diff'])}; Sonnet − embedding {f(se_l['mean_diff'])}; "
+         f"grid: higher than Memon-inspired in {sum(read_vs(r) == 'higher' for r in ge)}/9 cells",
+         f"[{f(em_l['mean_lo'])}, {f(em_l['mean_hi'])}]; [{f(se_l['mean_lo'])}, {f(se_l['mean_hi'])}]",
+         "Exploratory (post hoc), not confirmatory",
+         f"Exploratory: on the headline pools, embedding-based grouping's linkage was {read_vs(em_l)} than lexical "
+         f"TF-IDF grouping and {'below' if read_vs(se_l) == 'higher' else 'not distinguishable from' if read_vs(se_l) != 'lower' else 'above'} "
+         "the one-shot LLM attacker; designed after the Memon-inspired / Sonnet gap was observed and frozen before "
+         "its own evaluation."),
         ("Resource: hierarchical decomposition reduces the whole-pool resource-completion problem", "Hierarchical",
          "completion, cost", "not run; one-shot RBNC in 1 of 282 J units", "—", "Unsupported / untested",
          "No claim. One-shot resource non-completion was rare (one pool) in this study."),
