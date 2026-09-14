@@ -7,8 +7,12 @@ Evaluates four strategies on Game O (ordering) and Game L (grouping) for:
 
 Strategies:
     Random      — uniform random, repeated N_RUNS times → distribution stats
-    Jaccard-Greedy — greedy nearest-neighbour over word-bigram Jaccard (Memon-inspired)
-    Jaccard-MST    — maximum spanning tree path, same similarity (Memon-inspired)
+    Jaccard-Greedy — greedy nearest-neighbour over word-bigram Jaccard (classical game-O floor)
+    Jaccard-MST    — maximum spanning tree path, same similarity (classical game-O floor)
+                     Michael's orderers, formerly mislabelled "Memon-Greedy / Memon-MST".
+                     NOT Memon-inspired: symmetric word overlap, no PPM, no Hamiltonian-path
+                     search. Their game L column is the shared TF-IDF grouper, not a Jaccard
+                     linkage attack. Names and definitions: docs/adversaries.md (2026-09-13).
     LLM         — loaded from data/llm_{ordering,grouping}_guesses.jsonl
 
 One RNG seed controls everything.  Final output is two comparison tables
@@ -242,7 +246,8 @@ def eval_random(fragments, true_order, true_groups, n_runs):
             np.array(l_ps), np.array(l_rs), np.array(l_fs))
 
 
-# ── Memon (greedy / MST) ──────────────────────────────────────────────────────
+# ── Jaccard-Greedy / Jaccard-MST (classical orderers; the function names below keep
+#    the historical "memon" spelling, see docs/adversaries.md) ──────────────────────────────────────────────────────
 
 def _masked_shuffled_order(order_fn, frag_ids, text_by_id, seed):
     """Run a classic orderer on MASKED labels in a SEEDED, SHUFFLED presentation.
@@ -276,7 +281,8 @@ def eval_memon(fragments, true_order, true_groups, method: str,
                grouping_variant: str = "fixed", seed: int = DEFAULT_SEED,
                legacy_unmasked_order: bool = False) -> dict:
     """
-    Evaluate one Memon strategy on both games.
+    Evaluate one classical Jaccard orderer (Jaccard-Greedy / Jaccard-MST) on both games.
+    Historical name; not a Memon implementation (docs/adversaries.md).
 
     method selects the Game O ORDERING heuristic only:
         'greedy' — greedy nearest-neighbour ordering

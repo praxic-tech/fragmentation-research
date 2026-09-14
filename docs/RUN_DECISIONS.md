@@ -22,6 +22,14 @@ non-deterministic across processes (set iteration under hash randomisation:
   as an audit record.
 - Renamed Jaccard-Greedy / Jaccard-MST ("Memon-inspired") unless the actual PPM
   plus tree-pruning method is implemented.
+- *Clarification, 2026-09-13 (docs/adversaries.md):* the parenthetical
+  "Memon-inspired" above is superseded. Jaccard-Greedy and Jaccard-MST are
+  Michael's classical game-O orderers, formerly labelled Memon-Greedy /
+  Memon-MST. They use symmetric word-bigram Jaccard and are **not**
+  Memon-inspired in any sense. "Memon-inspired" names only
+  adversaries/memon_joint.py. They remain game-O classical floors, and their
+  historical game L column is the shared TF-IDF grouper, not a Jaccard linkage
+  attack. This entry is kept as written, as the record of the decision.
 
 ## D2 — frame A
 
@@ -553,6 +561,9 @@ frozen D11 rule; nothing about the headline is decided from its results.
 - Random, Jaccard-Greedy and Jaccard-MST are game-O / L floors (audit packet
   C3), not J attackers. They run on the game-O documents, the same ones the
   model gets, once the O specs are frozen.
+  *Clarification, 2026-09-13 (docs/adversaries.md):* in the final analysis
+  they are game-O floors only. "L" here referred to the shared TF-IDF grouper,
+  which is not a Jaccard attack. No game J version of them is built.
 - Only per-pool rows and descriptive summaries are produced for now.
   Confidence intervals, the advantage definition used in the paper and paired
   tests wait for the frozen results plan.

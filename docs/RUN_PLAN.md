@@ -243,9 +243,11 @@ No API cost. Report all of these alongside every linkage cell:
 - **Random floor** — random partition. ~1/7 at seven documents per pool.
 - **Trivial** — everything in one group. **Compute per pool** from actual group
   sizes; it is not a constant.
-- **`B_stat` — fixed Memon** (TF-IDF cosine + average linkage + deterministic
+- **`B_stat` — the TF-IDF grouper** (TF-IDF cosine + average linkage + deterministic
   tie-break jitter), from [`memon_linkage.py`](../adversaries/memon_linkage.py) with
-  `variant="fixed"`.
+  `variant="fixed"`. *Clarification, 2026-09-13:* this was called "fixed Memon"; it
+  is not a Memon method, and it is the grouping stage of the Memon-inspired joint
+  attacker (docs/adversaries.md).
 - **Embedding clustering** — recommended addition. Embed fragments, cluster.
   Non-LLM, free, and it closes the obvious reviewer question: *did you need a
   language model, or would sentence embeddings have done it?*

@@ -76,7 +76,8 @@ ReassembleL(A, Frag, σ, g, D):
 
 For each game we define a **baseline adversary** `B`:
 - **Random** `B_rand`: random permutation / random linkage.
-- **Statistical** `B_stat`: the classical content-based reassembly approach (n-gram / compression-distance adjacency, after Shanmugasundaram & Memon 2003) — the pre-LLM state of the art.
+- **Statistical**: the classical floors (Jaccard-Greedy and Jaccard-MST, game O only) and the Memon-inspired joint attacker (TF-IDF cosine + average-linkage grouping to exactly N; ordering by a directional character-bigram boundary likelihood, an idea inspired by Shanmugasundaram & Memon's context models, without their PPM model or Hamiltonian-path search). None is a faithful Memon implementation. Definitions: `docs/adversaries.md`.
+  *Corrected 2026-09-13:* this line previously called `B_stat` "the classical content-based reassembly approach … after Shanmugasundaram & Memon 2003 — the pre-LLM state of the art". In the code `B_stat` is only the TF-IDF grouper, and "state of the art" was an overclaim.
 
 The reported quantity is the **adversary advantage**:
 

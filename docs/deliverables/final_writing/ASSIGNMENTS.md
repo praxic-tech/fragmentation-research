@@ -110,11 +110,15 @@ Write the lineage and the current definitions:
    leaked through raw ids and list order (τ +0.32 / +0.70 on prose); masked and
    shuffled per unit with truth-independent tie-breaking they sit at chance
    (τ −0.02 / −0.01, `results/harness_results.json`). Floors, not competitive
-   attackers.
-3. **The Memon-inspired joint attacker** (`adversaries/memon_joint.py`): B_stat
-   grouping to exactly N, ordering by your directional character n-gram
-   statistic as W = tanh(Δ/2), no free parameter. Free and deterministic; its
-   results are `[TBD]`.
+   attackers, and **game O only**: their historical game L column is the shared
+   TF-IDF grouper, not a Jaccard linkage attack (docs/adversaries.md, 2026-09-13).
+3. **The Memon-inspired joint attacker** (`adversaries/memon_joint.py`): TF-IDF
+   cosine + average-linkage grouping to exactly N (the grouper the repo calls
+   "B_stat"), ordering by your directional character-bigram boundary statistic
+   as W = tanh(Δ/2), then a deterministic local ordering search. It borrows only
+   the context-model idea from Shanmugasundaram & Memon: no PPM, no
+   Hamiltonian-path / tree-pruning search. Not a faithful Memon implementation.
+   Results: `results/final_analysis/` (the SHA-256-seeded canonical run).
 
 **Source of truth:** `datagen/random_cut.py`, `datagen/subject_verb.py`,
 `harness/run_grid.py`, `harness/scoring.py`, `harness/joint_metrics.py`,
