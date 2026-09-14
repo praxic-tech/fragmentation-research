@@ -1,0 +1,22 @@
+{
+  "spec": "runs/xgran_J.json",
+  "spec_sha256": "fb7bcead0756e11cbe9af4d30017d76da51eb557f2a510111ca5e34b1f54e510",
+  "git_commit": "6f184085c7f43c4db23825d1cd60a717e844ba65",
+  "pools": "data/pools/excerpt_granularity_pools.json",
+  "cells": [
+    "results/excerpt_granularity\\excerpt__sentence",
+    "results/excerpt_granularity\\excerpt__token"
+  ],
+  "n_requests": 20,
+  "estimate": {
+    "n_requests": 20,
+    "est_input_tokens": 25631,
+    "est_output_tokens_worst_case": 2560000,
+    "est_cost_worst_case": 12.825631000000001,
+    "est_cost_input_only": 0.025631
+  },
+  "preflight": {
+    "checked": 20,
+    "blocked": 0
+  }
+}

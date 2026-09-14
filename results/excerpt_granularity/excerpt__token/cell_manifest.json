@@ -1,0 +1,10 @@
+{
+  "cell": "excerpt__token",
+  "experiment": "POST-HOC EXPLORATORY \u2014 CONTROLLED EXCERPT GRANULARITY EXPERIMENT (D15)",
+  "condition": "token",
+  "unit": "one whitespace-delimited token, verbatim",
+  "source": "data/prose (reference sentence cut)",
+  "target_words": 40,
+  "selection_salt": "xgran-select-v1",
+  "start_salt": "xgran-start-v1"
+}

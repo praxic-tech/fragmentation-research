@@ -768,6 +768,49 @@ frozen D11 rule; nothing about the headline is decided from its results.
 - **Metrics.** F1_L is its primary comparison; F1_J and q are secondary
   components.
 
+## D15 — 2026-09-14: POST-HOC EXPLORATORY — CONTROLLED EXCERPT GRANULARITY EXPERIMENT (design only)
+
+- **Why fixed excerpts.** The naturally-short-document search was stopped by
+  the user. No corpus document is short enough (minimum 99 words; 0 of 500 at
+  71 words or fewer), and the same PMC pipeline structurally does not produce
+  narratives that short. The user chose the controlled fixed-excerpt design.
+- **Goal.** Measure the effect of fragmentation granularity with the source
+  text held constant: the same clinical excerpt under the sentence cut and the
+  single-token cut. It stays separate from the prespecified grid, and it is
+  exploratory throughout.
+- **Selection (frozen once built).** 70 documents, 10 pools × 7: the 500
+  corpus documents ordered by sha256('xgran-select-v1|' + record_id), taking
+  the first 70 and dealing them into pools of 7 in that order. Nothing about
+  difficulty, attacker score, prior outcome, topic or length enters. The only
+  requirement, a whole-sentence run of 40 or more words, is met by every
+  document.
+- **Excerpt.** Each document's reference sentence cut (data/prose) supplies
+  the sentences. The start sentence is sha256('xgran-start-v1|' + record_id)
+  modulo the valid starts, meaning those from which the document still reaches
+  40 words. Whole sentences are taken until the running count reaches 40 words;
+  the sentence that crosses 40 is kept whole, and no sentence is ever cut.
+  Actual word and sentence counts are recorded. No excerpt is chosen or
+  inspected for content.
+- **Conditions, from the identical excerpt text.** (1) Sentence: one fragment
+  per sentence. (2) Single-token: one fragment per whitespace-delimited token,
+  verbatim, with case and punctuation untouched. The builder asserts that both
+  cuts reproduce the same excerpt.
+- **Attackers.** Frozen one-shot Sonnet game J, Memon-inspired J and the
+  frozen MPNet embedding J, on both conditions, with every existing Sonnet
+  setting, masking, per-unit shuffle, scorer, repair policy and the 128k RBNC
+  rule unchanged, and no prompt adaptation. **The primary comparison is the
+  paired within-pool Sonnet difference, sentence vs single-token.** Reported:
+  F1_J, F1_L, q, completion / RBNC, fragment count, tokens and cost. The same
+  10 pools appear in both conditions; no pool is kept or dropped on its
+  scores; an RBNC stays an RBNC.
+- **Game O is not included.** It is priced separately only if the user asks,
+  after seeing the J price.
+- **Status.** Built by datagen/build_excerpt_granularity.py
+  (data/pools/excerpt_granularity_pools.json, results/excerpt_granularity/,
+  runs/xgran_J.json marked NOT_SUBMITTED). The price / resource report is in
+  results/excerpt_granularity/DESIGN_REPORT.md. **Nothing is submitted until
+  the user approves that report.**
+
 ## Development history — 2026-09-10: headline documents used before frame A existed
 
 Development work done before D2 was taken used documents that frame A later
