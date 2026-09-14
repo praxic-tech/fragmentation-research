@@ -16,6 +16,11 @@
   table[x=F1_L, y=q_micro, x error plus=F1_L_errhi, x error minus=F1_L_errlo,
         y error plus=q_errhi, y error minus=q_errlo] {\dt};
 \addlegendentry{Memon-inspired}
+\addplot[only marks, mark=diamond*, mark size=2pt, green!45!black, restrict expr to domain={\thisrow{sid}}{2:2},
+  error bars/.cd, x dir=both, x explicit, y dir=both, y explicit]
+  table[x=F1_L, y=q_micro, x error plus=F1_L_errhi, x error minus=F1_L_errlo,
+        y error plus=q_errhi, y error minus=q_errlo] {\dt};
+\addlegendentry{Embedding$^{\dagger}$ (post hoc)}
 \draw[dotted, gray] (axis cs:0,0.5) -- (axis cs:1,0.5);
 \end{axis}
 \end{tikzpicture}

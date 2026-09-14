@@ -12,6 +12,9 @@
 \addplot[only marks, mark=triangle*, mark size=2pt, orange!80!black, error bars/.cd, y dir=both, y explicit]
   table[x expr=\thisrow{idx}+0.22, y=memon, y error plus=memon_errhi, y error minus=memon_errlo] {\gt};
 \addlegendentry{Memon-inspired}
+\addplot[only marks, mark=diamond*, mark size=2.2pt, green!45!black, error bars/.cd, y dir=both, y explicit]
+  table[x expr=\thisrow{idx}-0.22, y=emb, y error plus=emb_errhi, y error minus=emb_errlo] {\gt};
+\addlegendentry{Embedding$^{\dagger}$ (post hoc)}
 \addplot[only marks, mark=-, mark size=5pt, thick, gray] table[x=idx, y=baseline] {\gt};
 \addlegendentry{analytic baseline}
 \draw[gray!50, dashed] (axis cs:2.5,0) -- (axis cs:2.5,1);

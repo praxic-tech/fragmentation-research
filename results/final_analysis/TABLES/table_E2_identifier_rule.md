@@ -4,6 +4,7 @@
 |---|---|---|---|---|---|---|---|---|---|---|
 | Random | -0.1806 | -0.1808 | -0.1804 | -0.1445 | -0.1446 | -0.1444 | -0.1808 | -0.1804 | no | NOT near: entire 90% CI below -0.10 (below the schema-aware baseline) |
 | Memon-inspired | -0.1825 | -0.1953 | -0.1693 | -0.1460 | -0.1563 | -0.1355 | -0.1964 | -0.1686 | no | NOT near: entire 90% CI below -0.10 (below the schema-aware baseline) |
+| Embedding (post-hoc exploratory) | -0.1829 | -0.1946 | -0.1713 | -0.1463 | -0.1557 | -0.1370 | -0.1954 | -0.1703 | no | NOT near: entire 90% CI below -0.10 (below the schema-aware baseline) |
 | One-shot Sonnet | -0.1458 | -0.1622 | -0.1295 | -0.1167 | -0.1298 | -0.1036 | -0.1631 | -0.1285 | no | NOT near: entire 90% CI below -0.10 (below the schema-aware baseline) |
 
 Primary criterion: the entire 90% percentile-bootstrap CI on the normalized schema advantage inside [-0.10, +0.10]. Nonsignificance is never read as equivalence.

@@ -1,3 +1,27 @@
+  ('J', 'grid', 'Analytic one-bucket', 'completed'): 216
+  ('J', 'grid', 'Embedding (post-hoc exploratory)', 'completed'): 216
+  ('J', 'grid', 'Memon-inspired', 'completed'): 216
+  ('J', 'grid', 'One-shot Sonnet', 'completed'): 215
+  ('J', 'grid', 'One-shot Sonnet', 'rbnc'): 1
+  ('J', 'headline', 'Analytic one-bucket', 'completed'): 46
+  ('J', 'headline', 'Embedding (post-hoc exploratory)', 'completed'): 46
+  ('J', 'headline', 'Memon-inspired', 'completed'): 46
+  ('J', 'headline', 'One-shot Sonnet', 'completed'): 46
+  ('J', 'identifier', 'Analytic one-bucket', 'completed'): 20
+  ('J', 'identifier', 'Embedding (post-hoc exploratory)', 'completed'): 20
+  ('J', 'identifier', 'Memon-inspired', 'completed'): 20
+  ('J', 'identifier', 'One-shot Sonnet', 'completed'): 20
+  ('J', 'identifier', 'Random', 'completed'): 20
+  ('J', 'identifier', 'Schema-order', 'completed'): 20
+  ('O', 'grid', 'Jaccard-Greedy', 'completed'): 270
+  ('O', 'grid', 'Jaccard-MST', 'completed'): 270
+  ('O', 'grid', 'One-shot Sonnet', 'completed'): 270
+  ('O', 'grid', 'Random', 'completed'): 270
+  ('O', 'headline', 'Jaccard-Greedy', 'completed'): 100
+  ('O', 'headline', 'Jaccard-MST', 'completed'): 100
+  ('O', 'headline', 'One-shot Sonnet', 'completed'): 100
+  ('O', 'headline', 'Random', 'completed'): 100
+MASTER_RESULTS.csv: 2648 rows; F1_J = F1_L x q identity max residual 2.22e-16
 tables: 69 files in TABLES/; figure data: 16 CSVs; KEY_NUMBERS.json
 fig1: pdf, png, svg
 fig2: pdf, png, svg

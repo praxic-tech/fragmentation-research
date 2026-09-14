@@ -57,23 +57,26 @@ def tbl(name, macro):
 
 
 @fig(1, "Headline game J: raw ordered-pair F1\\textsubscript{J} by attacker (points: pools; bars: mean with 95\\% "
-        "percentile-bootstrap CI over pools). The hierarchical attacker is pending.")
+        "percentile-bootstrap CI over pools). $\\dagger$\\,Post-hoc exploratory attacker (RUN\\_DECISIONS D14): "
+        "motivated by the observed Memon-inspired\\,/\\,Sonnet gap, frozen before its own evaluation. The "
+        "hierarchical attacker is pending.")
 def f1():
     return tbl("fig1_summary", r"\sumt") + tbl("fig1_pools", r"\poolt") + r"""
 \begin{tikzpicture}
-\begin{axis}[width=8.4cm, height=6cm, ymin=0, ymax=1, xmin=-0.6, xmax=3.6,
-  xtick={0,1,2,3}, xticklabels={Analytic one-bucket, Memon-inspired, One-shot Sonnet, Hierarchical},
+\begin{axis}[width=10cm, height=6cm, ymin=0, ymax=1, xmin=-0.6, xmax=4.6,
+  xtick={0,1,2,3,4}, xticklabels={Analytic one-bucket, Memon-inspired, Embedding$^{\dagger}$ (post hoc), One-shot Sonnet, Hierarchical},
   x tick label style={align=center, text width=1.9cm}, ylabel={F1$_J$}, ymajorgrids, grid style={gray!20}]
 \addplot[only marks, mark=*, mark size=0.8pt, gray!60] table[x=x, y=F1_J] {\poolt};
 \addplot[only marks, mark=square*, mark size=2.2pt, black, error bars/.cd, y dir=both, y explicit,
   error bar style={thick}] table[x=idx, y=mean, y error plus=errhi, y error minus=errlo] {\sumt};
-\node[font=\scriptsize, gray, align=center] at (axis cs:3,0.5) {pending\\(not run)};
+\node[font=\scriptsize, gray, align=center] at (axis cs:4,0.5) {pending\\(not run)};
 \end{axis}
 \end{tikzpicture}"""
 
 
 @fig(2, "Grid game J across all nine retained cells (24 pools each; one-shot random\\,/\\,token-window: 23 "
-        "completed). Mean F1\\textsubscript{J} with 95\\% bootstrap CIs; dashes: analytic baseline.")
+        "completed). Mean F1\\textsubscript{J} with 95\\% bootstrap CIs; dashes: analytic baseline. "
+        "$\\dagger$\\,Post-hoc exploratory attacker (D14); its primary comparison is F1\\textsubscript{L} (Figure 3).")
 def f2():
     return tbl("fig2_grid_J", r"\gt") + r"""
 \begin{tikzpicture}
@@ -87,6 +90,9 @@ def f2():
 \addplot[only marks, mark=triangle*, mark size=2pt, orange!80!black, error bars/.cd, y dir=both, y explicit]
   table[x expr=\thisrow{idx}+0.22, y=memon, y error plus=memon_errhi, y error minus=memon_errlo] {\gt};
 \addlegendentry{Memon-inspired}
+\addplot[only marks, mark=diamond*, mark size=2.2pt, green!45!black, error bars/.cd, y dir=both, y explicit]
+  table[x expr=\thisrow{idx}-0.22, y=emb, y error plus=emb_errhi, y error minus=emb_errlo] {\gt};
+\addlegendentry{Embedding$^{\dagger}$ (post hoc)}
 \addplot[only marks, mark=-, mark size=5pt, thick, gray] table[x=idx, y=baseline] {\gt};
 \addlegendentry{analytic baseline}
 \draw[gray!50, dashed] (axis cs:2.5,0) -- (axis cs:2.5,1);
@@ -98,7 +104,9 @@ def f2():
 @fig(3, "Linkage vs ordering decomposition: linkage component F1\\textsubscript{L} (mean, 95\\% CI) against "
         "micro-averaged direction accuracy q (95\\% CI), by condition. F1\\textsubscript{J} = F1\\textsubscript{L} "
         "$\\times$ q. Dotted line: q = 0.5 (chance direction). Labels: rnd = random, sem = semantic, coh = "
-        "coherence-sever, sv = subject-verb; sent = sentence, cl = clause, tw = token-window.")
+        "coherence-sever, sv = subject-verb; sent = sentence, cl = clause, tw = token-window. $\\dagger$\\,Post-hoc "
+        "exploratory embedding attacker (D14): read it along the x-axis, F1\\textsubscript{L} being its primary "
+        "comparison.")
 def f3():
     return tbl("fig3_decomposition", r"\dt") + r"""
 \begin{tikzpicture}
@@ -116,6 +124,11 @@ def f3():
   table[x=F1_L, y=q_micro, x error plus=F1_L_errhi, x error minus=F1_L_errlo,
         y error plus=q_errhi, y error minus=q_errlo] {\dt};
 \addlegendentry{Memon-inspired}
+\addplot[only marks, mark=diamond*, mark size=2pt, green!45!black, restrict expr to domain={\thisrow{sid}}{2:2},
+  error bars/.cd, x dir=both, x explicit, y dir=both, y explicit]
+  table[x=F1_L, y=q_micro, x error plus=F1_L_errhi, x error minus=F1_L_errlo,
+        y error plus=q_errhi, y error minus=q_errlo] {\dt};
+\addlegendentry{Embedding$^{\dagger}$ (post hoc)}
 \draw[dotted, gray] (axis cs:0,0.5) -- (axis cs:1,0.5);
 \end{axis}
 \end{tikzpicture}"""
@@ -155,20 +168,20 @@ def f5():
 \pgfplotstablegetelem{1}{value}\of\ic \let\schemab\pgfplotsretval
 \pgfplotstablegetelem{2}{value}\of\ic \let\margin\pgfplotsretval
 \begin{tikzpicture}
-\begin{groupplot}[group style={group size=2 by 1, horizontal sep=1.6cm}, width=6.2cm, height=5.6cm,
-  xmin=-0.6, xmax=2.6, xtick={0,1,2}, x tick label style={align=center, text width=1.5cm}, ymajorgrids,
+\begin{groupplot}[group style={group size=2 by 1, horizontal sep=1.6cm}, width=7cm, height=5.6cm,
+  xmin=-0.6, xmax=3.6, xtick={0,1,2,3}, x tick label style={align=center, text width=1.5cm}, ymajorgrids,
   grid style={gray!20}]
 \nextgroupplot[ymin=0, ymax=0.35, ylabel={F1$_J$}, xticklabels from table={\ia}{attacker}, title={(a)}]
 \addplot[only marks, mark=square*, mark size=2pt, black, error bars/.cd, y dir=both, y explicit]
   table[x=idx, y=mean, y error plus=errhi, y error minus=errlo] {\ia};
-\addplot[dashed, gray, domain=-0.6:2.6] {\analyticb};
-\addplot[dotted, thick, gray!70!black, domain=-0.6:2.6] {\schemab};
+\addplot[dashed, gray, domain=-0.6:3.6] {\analyticb};
+\addplot[dotted, thick, gray!70!black, domain=-0.6:3.6] {\schemab};
 \nextgroupplot[ymin=-0.4, ymax=0.2, ylabel={$A_{\mathrm{schema}}$}, xticklabels from table={\ib}{attacker},
   title={(b)}]
-\fill[green!15] (axis cs:-0.6,-\margin) rectangle (axis cs:2.6,\margin);
+\fill[green!15] (axis cs:-0.6,-\margin) rectangle (axis cs:3.6,\margin);
 \addplot[only marks, mark=square*, mark size=2pt, black, error bars/.cd, y dir=both, y explicit]
   table[x=idx, y=mean, y error plus=errhi, y error minus=errlo] {\ib};
-\draw[gray] (axis cs:-0.6,0) -- (axis cs:2.6,0);
+\draw[gray] (axis cs:-0.6,0) -- (axis cs:3.6,0);
 \end{groupplot}
 \end{tikzpicture}"""
 
