@@ -710,6 +710,43 @@ frozen D11 rule; nothing about the headline is decided from its results.
   dependencies; the resolved versions are recorded in a D14 addendum after
   installation.
 
+### D14 addendum — 2026-09-13: install, one correctness fix, score-blind smoke test
+
+- **Download approved by the user and done.** Resolved versions
+  (results/audit/embedding_env_freeze.txt): sentence-transformers 6.0.1,
+  torch 2.14.0+cpu, transformers 5.17.0, tokenizers 0.23.2, huggingface-hub
+  1.31.0, safetensors 0.8.0, scikit-learn 1.9.1, plus small dependencies. The
+  model snapshot at revision e8c3b32e… matches every D14 pin (SHA-256 for
+  model.safetensors, git blob ids for the rest). Only the 10 needed files were
+  fetched.
+- **Correctness fix (not tuning).** Cosine similarity of normalised float
+  embeddings can exceed 1 by rounding, which made 1 − sim slightly negative,
+  and scipy refused the linkage on the first development pool. The distance
+  is now clamped at 0 (`embedding_joint.cut_exact_n`). Cosine distance is
+  non-negative by definition, and the clamp is a no-op for TF-IDF similarity
+  (check 7 below).
+- **Score-blind smoke test PASSED** (results/audit/embedding_smoke.json). It
+  ran on 16 development units (grid pool 1 in 9 cells; identifier records
+  r_0000–r_0048 in 7 pools of 7), 1,890 fragments. No reconstruction score was
+  computed.
+  - The model files match the pins.
+  - The pipeline runs, and every output is a valid partition with exactly N
+    groups.
+  - Word pieces: max 203, 99th percentile 99, 0 of 1,890 over the 384 limit.
+  - Embeddings are bit-identical on repeat.
+  - Batch sizes 1 / 16 / 128 differ from 64 by at most 5.3e-7 and give
+    identical reconstructions.
+  - Reconstructions are identical across processes (PYTHONHASHSEED 0 vs 1).
+  - The grouper reproduces `memon_joint.group_known_n` exactly when given
+    TF-IDF similarity (0 mismatches).
+- **Measured throughput** (CPU, 4 torch threads): 22.5 fragments/s to embed;
+  0.068 s per fragment for the whole attack. **Projection for the 62,527
+  final fragments: about 46 min of embedding and about 71 min for the full
+  attack in one process.** That is a lower bound for the largest pools,
+  because the ordering cost grows faster than linearly. This replaces the
+  earlier 5–15 minute estimate. No development score was computed, so none
+  could select a parameter.
+
 ## Development history — 2026-09-10: headline documents used before frame A existed
 
 Development work done before D2 was taken used documents that frame A later

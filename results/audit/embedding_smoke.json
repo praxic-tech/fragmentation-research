@@ -1,0 +1,74 @@
+{
+  "what": "score-blind development smoke test, embedding adversary (D14)",
+  "checks": {
+    "0_model_files_match_pins": {
+      "ok": true,
+      "mismatched": [],
+      "snapshot": "C:\\Users\\aiden\\.cache\\huggingface\\hub\\models--sentence-transformers--all-mpnet-base-v2\\snapshots\\e8c3b32edf5434bc2275fc9bab85f82640a19130"
+    },
+    "1_pipeline_runs": {
+      "ok": true,
+      "units": 16
+    },
+    "5_valid_partition_exactly_N": {
+      "ok": true,
+      "invalid_units": []
+    },
+    "2_wordpiece_lengths": {
+      "ok": true,
+      "limit": 384,
+      "max": 203,
+      "p99": 99.0,
+      "over_limit": 0
+    },
+    "3_embedding_reproducible": {
+      "ok": true,
+      "max_abs_diff": 0.0
+    },
+    "4_batch_size_stability": {
+      "ok": true,
+      "by_batch_size": {
+        "1": {
+          "max_abs_diff_vs_64": 5.252659320831299e-07,
+          "same_reconstructions_as_64": true
+        },
+        "16": {
+          "max_abs_diff_vs_64": 3.0919909477233887e-07,
+          "same_reconstructions_as_64": true
+        },
+        "128": {
+          "max_abs_diff_vs_64": 2.421438694000244e-07,
+          "same_reconstructions_as_64": true
+        }
+      }
+    },
+    "6_deterministic_across_processes": {
+      "ok": true
+    },
+    "7_grouper_equals_memon_given_tfidf": {
+      "ok": true,
+      "mismatches": 0
+    },
+    "8_throughput": {
+      "ok": true,
+      "embed_fragments_per_sec": 22.522102628465174,
+      "attack_seconds_dev": 127.92480499998783,
+      "attack_seconds_per_fragment": 0.06768508201057558,
+      "projected_embedding_minutes_final": 46.2708426410223,
+      "projected_full_attack_minutes_final_single_process": 70.535752047921,
+      "note": "projection = measured dev rate x 62,527 final fragments; ordering cost grows faster than linearly with pool size, so the full-attack projection is a lower bound for the largest pools"
+    }
+  },
+  "versions": {
+    "sentence-transformers": "6.0.1",
+    "torch": "2.14.0+cpu",
+    "transformers": "5.17.0",
+    "numpy": "2.4.6",
+    "torch_threads": 4
+  },
+  "dev_material": {
+    "units": 16,
+    "fragments": 1890
+  },
+  "PASS": true
+}
