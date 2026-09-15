@@ -1,0 +1,64 @@
+"layer","pool","arm","value","lo","hi","post_hoc"
+"pool","pool_008","sentence",0.55839567747298,NA,NA,TRUE
+"pool","pool_015","sentence",0.601036241867786,NA,NA,TRUE
+"pool","pool_017","sentence",0.500984610289751,NA,NA,TRUE
+"pool","pool_018","sentence",0.558324471900752,NA,NA,TRUE
+"pool","pool_022","sentence",0.713911121063935,NA,NA,TRUE
+"pool","pool_023","sentence",0.638232574603005,NA,NA,TRUE
+"pool","pool_025","sentence",0.541864428521689,NA,NA,TRUE
+"pool","pool_028","sentence",0.71647865066518,NA,NA,TRUE
+"pool","pool_029","sentence",0.577214740873839,NA,NA,TRUE
+"pool","pool_030","sentence",0.413858048943856,NA,NA,TRUE
+"pool","pool_031","sentence",0.53236945604796,NA,NA,TRUE
+"pool","pool_032","sentence",0.580611962576104,NA,NA,TRUE
+"pool","pool_039","sentence",0.574757463616483,NA,NA,TRUE
+"pool","pool_041","sentence",0.673678388977399,NA,NA,TRUE
+"pool","pool_048","sentence",0.631776019873578,NA,NA,TRUE
+"pool","pool_052","sentence",0.486203049550155,NA,NA,TRUE
+"pool","pool_054","sentence",0.647924408156378,NA,NA,TRUE
+"pool","pool_058","sentence",0.505771527132808,NA,NA,TRUE
+"pool","pool_064","sentence",0.585208315828769,NA,NA,TRUE
+"pool","pool_067","sentence",0.729983167972494,NA,NA,TRUE
+"pool","pool_008","token",0.0292810558939293,NA,NA,TRUE
+"pool","pool_015","token",0.028375911854689,NA,NA,TRUE
+"pool","pool_017","token",-0.118963023219903,NA,NA,TRUE
+"pool","pool_018","token",-0.00275980439337177,NA,NA,TRUE
+"pool","pool_022","token",0.00548320482379679,NA,NA,TRUE
+"pool","pool_023","token",0.0442654946921111,NA,NA,TRUE
+"pool","pool_025","token",0.0279881000248062,NA,NA,TRUE
+"pool","pool_028","token",0.0417584012436696,NA,NA,TRUE
+"pool","pool_029","token",0.0453891683327452,NA,NA,TRUE
+"pool","pool_030","token",0.00113216443523739,NA,NA,TRUE
+"pool","pool_031","token",0.0303417474952875,NA,NA,TRUE
+"pool","pool_032","token",0.0152741253308326,NA,NA,TRUE
+"pool","pool_039","token",0.0151210353382946,NA,NA,TRUE
+"pool","pool_041","token",0.0326917293826752,NA,NA,TRUE
+"pool","pool_048","token",0.0205691340289193,NA,NA,TRUE
+"pool","pool_052","token",0.0250438008863382,NA,NA,TRUE
+"pool","pool_054","token",0.00151262784563086,NA,NA,TRUE
+"pool","pool_058","token",0.018491928679177,NA,NA,TRUE
+"pool","pool_064","token",0.0528741112609648,NA,NA,TRUE
+"pool","pool_067","token",0.00804184937494152,NA,NA,TRUE
+"arm_mean",NA,"sentence",0.588429216296745,NA,NA,TRUE
+"arm_mean",NA,"token",0.0160956381655386,NA,NA,TRUE
+"pool_difference","pool_008","sentence - token",0.529114621579051,NA,NA,TRUE
+"pool_difference","pool_015","sentence - token",0.572660330013097,NA,NA,TRUE
+"pool_difference","pool_017","sentence - token",0.619947633509654,NA,NA,TRUE
+"pool_difference","pool_018","sentence - token",0.561084276294124,NA,NA,TRUE
+"pool_difference","pool_022","sentence - token",0.708427916240138,NA,NA,TRUE
+"pool_difference","pool_023","sentence - token",0.593967079910894,NA,NA,TRUE
+"pool_difference","pool_025","sentence - token",0.513876328496883,NA,NA,TRUE
+"pool_difference","pool_028","sentence - token",0.67472024942151,NA,NA,TRUE
+"pool_difference","pool_029","sentence - token",0.531825572541094,NA,NA,TRUE
+"pool_difference","pool_030","sentence - token",0.412725884508618,NA,NA,TRUE
+"pool_difference","pool_031","sentence - token",0.502027708552673,NA,NA,TRUE
+"pool_difference","pool_032","sentence - token",0.565337837245271,NA,NA,TRUE
+"pool_difference","pool_039","sentence - token",0.559636428278188,NA,NA,TRUE
+"pool_difference","pool_041","sentence - token",0.640986659594724,NA,NA,TRUE
+"pool_difference","pool_048","sentence - token",0.611206885844659,NA,NA,TRUE
+"pool_difference","pool_052","sentence - token",0.461159248663817,NA,NA,TRUE
+"pool_difference","pool_054","sentence - token",0.646411780310748,NA,NA,TRUE
+"pool_difference","pool_058","sentence - token",0.487279598453631,NA,NA,TRUE
+"pool_difference","pool_064","sentence - token",0.532334204567804,NA,NA,TRUE
+"pool_difference","pool_067","sentence - token",0.721941318597552,NA,NA,TRUE
+"mean_difference",NA,"sentence - token",0.572333578131207,0.538644973626776,0.607051619936717,TRUE

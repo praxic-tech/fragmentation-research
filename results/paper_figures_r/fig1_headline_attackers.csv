@@ -1,0 +1,9 @@
+"layer","attacker","metric","value","lo","hi","n_pools","post_hoc"
+"estimate","Memon-inspired","F1_L",0.339015863912905,0.314475091437913,0.368019849078352,46,FALSE
+"estimate","Embedding (post-hoc exploratory)","F1_L",0.363512211857688,0.334881468817917,0.396718173936992,46,TRUE
+"estimate","One-shot Sonnet","F1_L",0.88169738943761,0.861229079582902,0.900524146051494,46,FALSE
+"estimate","Memon-inspired","F1_J",0.168463959001749,0.155688732098491,0.183052616845027,46,FALSE
+"estimate","Embedding (post-hoc exploratory)","F1_J",0.181574493274159,0.167370583251491,0.198100769317828,46,TRUE
+"estimate","One-shot Sonnet","F1_J",0.722507073822915,0.702386945200507,0.742999040492029,46,FALSE
+"baseline","Analytic one-bucket","F1_L",0.29865224853868,NA,NA,46,FALSE
+"baseline","Analytic one-bucket","F1_J",0.14932612426934,NA,NA,46,FALSE

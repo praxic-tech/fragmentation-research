@@ -1,8 +1,10 @@
-\begin{table}[t]
+\begin{table*}[t]
 \centering
-\small
-\caption{Table 4. Game O (ordering with membership given): One-shot Sonnet against the classical floors.}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\caption{Game O (ordering with membership given): One-shot Sonnet against the classical floors.}
 \label{tab:gameO}
+\sbox0{%
 \begin{tabular}{lrrrrrrrr}
 \toprule
 Condition & Docs & Frags/doc & Sonnet $\tau$ [95\% CI] & Median $\tau$ & Pairs correct & Exact & Jaccard-Greedy $\tau$ & Jaccard-MST $\tau$ \\
@@ -18,9 +20,10 @@ coherence-sever / token-window & 30 & 42.8 & 0.943 [0.917, 0.967] & 0.979 & 0.97
 subject-verb / sentence & 30 & 41.7 & 0.733 [0.666, 0.794] & 0.777 & 0.866 & 0.03 & -0.018 [-0.055, 0.020] & -0.050 [-0.108, -0.001] \\
 subject-verb / clause & 30 & 49.4 & 0.724 [0.652, 0.792] & 0.734 & 0.862 & 0.03 & -0.041 [-0.072, -0.009] & -0.009 [-0.045, 0.027] \\
 \bottomrule
-\end{tabular}
+\end{tabular}}
+\ifdim\wd0>\textwidth\resizebox{\textwidth}{!}{\usebox0}\else\usebox0\fi
 \begin{flushleft}\footnotesize
 Kendall $\tau$ between the returned order and the true order, one $\tau$ per document; 95\% percentile-bootstrap CIs over documents. Random ordering has expectation $\tau$ = 0. Pairs correct = (1 + $\tau$)/2. Exact = fraction of documents ordered perfectly.\\
 Jaccard-Greedy / Jaccard-MST are the classical word-bigram Jaccard orderers with masked labels and shuffled, truth-independent tie-breaking (D1); they are not Memon implementations. Their pre-correction values ($\tau$ +0.32 / +0.70) were an id-order leak and are superseded. Every unit completed (0 RBNC).\\
 \end{flushleft}
-\end{table}
+\end{table*}

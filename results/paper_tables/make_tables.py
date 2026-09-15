@@ -9,6 +9,7 @@ summary.json and results/run_ledger.json. Formatting only.
 
 import json
 import os
+import re
 
 import pandas as pd
 
@@ -60,15 +61,23 @@ def write(name, caption, label, header, rows, notes, align=None, tex_header=None
     # latex
     align = align or ("l" + "r" * (len(header) - 1))
     th = tex_header or header
-    L = [r"\begin{table}[t]", r"\centering", r"\small", f"\\caption{{{tex_escape(caption)}}}", f"\\label{{{label}}}",
-         f"\\begin{{tabular}}{{{align}}}", r"\toprule", " & ".join(th) + r" \\", r"\midrule"]
+    # table* spans both columns (every table is too wide for one); the class
+    # numbers tables itself, so the "Table N. " prefix stays in the .md only.
+    tex_caption = re.sub(r"^Table \d+\. ", "", caption)
+    # The tabular is typeset into a box first and shrunk to \textwidth only if
+    # it is wider than the page; a table that fits is never enlarged.
+    L = [r"\begin{table*}[t]", r"\centering", r"\footnotesize", r"\setlength{\tabcolsep}{3pt}",
+         f"\\caption{{{tex_escape(tex_caption)}}}", f"\\label{{{label}}}",
+         r"\sbox0{%", f"\\begin{{tabular}}{{{align}}}", r"\toprule", " & ".join(th) + r" \\", r"\midrule"]
     for r in rows:
         if r == "MIDRULE":
             L.append(r"\midrule"); continue
         L.append(" & ".join(c if (c.startswith("$") and c.endswith("$")) else tex_escape(c) for c in r) + r" \\")
-    L += [r"\bottomrule", r"\end{tabular}", r"\begin{flushleft}\footnotesize"]
+    L += [r"\bottomrule", r"\end{tabular}}",
+          r"\ifdim\wd0>\textwidth\resizebox{\textwidth}{!}{\usebox0}\else\usebox0\fi",
+          r"\begin{flushleft}\footnotesize"]
     L += [tex_escape(n) + r"\\" for n in notes]
-    L += [r"\end{flushleft}", r"\end{table}"]
+    L += [r"\end{flushleft}", r"\end{table*}"]
     open(f"{OUT}/{name}.tex", "w", encoding="utf-8").write("\n".join(L) + "\n")
     print(f"  wrote {name}.md / .tex")
 
@@ -83,14 +92,14 @@ def table1_design():
         ["Headline O", "prose", "100 documents (length-stratified)", "sentence cut, full length", "One-shot Sonnet; Jaccard-Greedy; Jaccard-MST; Random", "Kendall τ", "prespecified"],
         ["Grid O", "prose", "30 documents × 9 cells", "the 9 retained cells", "One-shot Sonnet; Jaccard-Greedy; Jaccard-MST; Random", "Kendall τ", "prespecified"],
         ["Identifier J", "synthetic records (Faker)", "20 pools × 7 records (28 fields)", "one fragment per field", "One-shot Sonnet; Memon-inspired; embedding†; Random; analytic and schema-order baselines", "F1_J vs schema baseline (90% CI rule); F1_L", "prespecified (D11)"],
-        ["Single-token edge J†", "prose, 4-sentence excerpts", "20 headline pools × 7 docs (140 docs)", "sentence cut vs single whitespace token, identical text", "One-shot Sonnet; Memon-inspired; embedding", "paired A_VJ (visible-text, null-adjusted)", "POST-HOC EXPLORATORY (D16)"],
+        ["Single-token edge J†", "prose, 4-sentence excerpts", "20 headline pools × 7 docs (140 docs)", "sentence cut vs single whitespace token, identical text", "One-shot Sonnet; Memon-inspired; embedding", "paired A_VJ (visible-text, null-adjusted)", "post-hoc exploratory (D16)"],
     ]
     notes = ["† Post-hoc exploratory: the embedding attacker (D14) and the single-token edge experiment (D16) were designed after the prespecified results were seen, "
              "then frozen before their own evaluation. Every pool holds N = 7 sources; the attacker is told N, sees masked aliases in a per-unit shuffled order, and never sees raw ids.",
              f"One-shot Sonnet units in the final run: {int(tg.loc['TOTAL (final run, one-shot)', 'units_submitted'])} (651 completed, 1 RBNC) plus {st['sentence']['requests_rows'] + 20} post-hoc excerpt units (40 completed)."]
     write("table1_design", "Table 1. Datasets, games and design summary.", "tab:design",
           ["Experiment", "Corpus", "Sample", "Conditions", "Attackers", "Primary metric", "Status"], rows, notes,
-          align="lllllll")
+          align=r"@{}p{0.10\textwidth}p{0.11\textwidth}p{0.13\textwidth}p{0.14\textwidth}p{0.20\textwidth}p{0.12\textwidth}p{0.10\textwidth}@{}")
 
 
 def table2_headline():
@@ -120,28 +129,23 @@ def table2_headline():
 def table3_grid():
     tc = pd.read_csv(f"{T}/table_C_grid_J.csv")
     tm = pd.read_csv(f"{T}/table_C2_grid_mechanics.csv").set_index("cell")
-    td = pd.read_csv(f"{T}/table_D_game_O.csv")
-    td = td[td.attacker == ATT["sonnet"]].set_index("condition")
     rows = []
     for c in CELL_ORDER:
-        g = tc[tc.condition == c].set_index("attacker")
-        s, m, e = g.loc[ATT["sonnet"]], g.loc[ATT["memon"]], g.loc[ATT["embed"]]
+        s = tc[tc.condition == c].set_index("attacker").loc[ATT["sonnet"]]
         rows.append([c, f"{tm.loc[c, 'frags_per_doc']:.1f}", f"{tm.loc[c, 'frag_words_mean']:.1f}",
                      ci(s.F1_J_mean, s.F1_J_lo, s.F1_J_hi), f3(s.b_J_mean), ci(s.A_J_mean, s.A_J_lo, s.A_J_hi),
                      ci(s.F1_L_mean, s.F1_L_lo, s.F1_L_hi), ci(s.q_micro, s.q_micro_lo, s.q_micro_hi),
-                     f"{m.F1_L_mean:.3f} / {e.F1_L_mean:.3f}",
-                     ci(td.loc[c, 'tau_mean'], td.loc[c, 'tau_lo'], td.loc[c, 'tau_hi']),
                      f"{int(s.completed)}/{int(s.attempted)}"])
-    notes = ["Grid pools 2–25 (24 pools of 7 documents per cell; documents capped at 30 reference sentences). One-shot Sonnet unless stated; 95% percentile-bootstrap CIs over pools. "
-             "b_J is the pool-mean analytic one-bucket baseline. F1_L for Memon-inspired / embedding (post hoc) shown for reference; both sit at q ≈ 0.5.",
-             "Game O τ: the same attacker ordering single documents with membership given (30 documents per cell; CI over documents). "
+    notes = ["Grid pools 2–25 (24 pools of 7 documents per cell; documents capped at 30 reference sentences). One-shot Sonnet; 95% percentile-bootstrap CIs over pools. "
+             "b_J is the pool-mean analytic one-bucket baseline. The Memon-inspired and embedding (post hoc) attackers sit near b_J in every cell, with q ≈ 0.5; "
+             "Game O τ per cell is reported with the other Game O results.",
              "random / token-window: one pool (pool_002, 322 fragments) exhausted the 128k output budget and is excluded as a resource-bounded non-completion, never scored 0.",
-             "Semantic / sentence is standard sentence splitting and the reference cut; the headline (Table 2) is the same cut at full length."]
-    write("table3_grid", "Table 3. Full retained prose grid, Game J (and Game O τ), One-shot Sonnet.", "tab:grid",
+             "Semantic / sentence is standard sentence splitting and the reference cut; the headline is the same cut at full length."]
+    write("table3_grid", "Table 3. Full retained prose grid, Game J, One-shot Sonnet.", "tab:grid",
           ["Cell (strategy / granularity)", "Frags/doc", "Words/frag", "F1_J [95% CI]", "b_J", "A_J [95% CI]", "F1_L [95% CI]", "q [95% CI]",
-           "F1_L Memon / Embed†", "Game O τ [95% CI]", "Completed"], rows, notes,
+           "Completed"], rows, notes,
           tex_header=["Cell", "Frags/doc", "Words/frag", "$F1_J$ [95\\% CI]", "$b_J$", "$A_J$ [95\\% CI]", "$F1_L$ [95\\% CI]", "$q$ [95\\% CI]",
-                      "$F1_L$ Memon / Embed$^\\dagger$", "Game O $\\tau$ [95\\% CI]", "Completed"])
+                      "Completed"])
 
 
 def table4_gameO():
@@ -176,7 +180,7 @@ def table5_identifiers():
             q = t2.loc[a]
             asch = f"{q.A_schema_mean:.3f} [{q.ci90_lo:.3f}, {q.ci90_hi:.3f}]"
             raw = f"{q.raw_diff_mean:.3f} [{q.raw_ci90_lo:.3f}, {q.raw_ci90_hi:.3f}]"
-            verdict = "no: entire 90% CI below −0.10"
+            verdict = "no (below)"
             lp = ci(t3.loc[a].linkage_precision_mean, t3.loc[a].lo, t3.loc[a].hi) if a in t3.index else "—"
         else:
             asch = f3(r.A_schema_mean); raw = f3(r.raw_schema_diff_mean); verdict = "(baseline)"; lp = "—"

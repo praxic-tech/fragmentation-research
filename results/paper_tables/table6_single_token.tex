@@ -1,8 +1,10 @@
-\begin{table}[t]
+\begin{table*}[t]
 \centering
-\small
-\caption{Table 6. POST-HOC EXPLORATORY single-token edge case: sentence cut versus single-token cut on identical excerpts (paired, 20 pools).}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\caption{POST-HOC EXPLORATORY single-token edge case: sentence cut versus single-token cut on identical excerpts (paired, 20 pools).}
 \label{tab:singletoken}
+\sbox0{%
 \begin{tabular}{lrrrrrr}
 \toprule
 Metric & Sentence & Token & Paired diff (s $-$ t) [95\% CI] & Median diff & Pools s $>$ t & Sign test $p$ \\
@@ -19,11 +21,12 @@ A\_J (id-level) & 0.539 & -0.016 & 0.555 [0.520, 0.590] & 0.560 & 20/20 & 1.9e-0
 Memon-inspired A\_VJ (not designed for tokens) & 0.043 & -0.067 & 0.110 [0.047, 0.178] & 0.065 & 17/20 & 2.6e-03 \\
 Embedding A\_VJ (not designed for tokens) & 0.104 & -0.090 & 0.194 [0.155, 0.233] & 0.201 & 20/20 & 1.9e-06 \\
 \bottomrule
-\end{tabular}
+\end{tabular}}
+\ifdim\wd0>\textwidth\resizebox{\textwidth}{!}{\usebox0}\else\usebox0\fi
 \begin{flushleft}\footnotesize
 POST-HOC EXPLORATORY (D16). 20 headline pools $\times$ 7 documents, four consecutive source sentences per document, identical text in both arms; sentence arm 28 fragments per pool, token arm median 523 (range 438--669). Completion 20/20 in both arms for every attacker; no RBNC.\\
 Oracle-size null means (10,000 permutations per pool): V\_J 0.423 (sentence) vs 0.141 (token); V\_L 0.503 vs 0.317. A\_V = (V $-$ null mean)/(1 $-$ null mean). Paired differences: percentile bootstrap over pools (10,000 resamples, seed 42, 95\%); exact two-sided sign test. q\_V (diagnostic only): Sonnet 0.860 vs 0.376. No raw-vs-normalized sign disagreement for Sonnet; Memon-inspired disagrees in 3 pools (pool\_017, pool\_032, pool\_041).\\
 Resources (Sonnet, all provider rows): sentence arm 20 rows, 106,375 output tokens, \$0.57; token arm 31 rows (20 base + 11 repairs; 8 repaired, 3 repair calls hit 128k and kept the earlier answer), 2,682,786 output tokens, \$13.58.\\
 Descriptive only: excerpt sentence-arm F1\_J 0.585 vs full-document headline F1\_J 0.723 (different tasks). A binary edge case, not a dose-response experiment: it locates no threshold.\\
 \end{flushleft}
-\end{table}
+\end{table*}
