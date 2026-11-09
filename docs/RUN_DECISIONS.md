@@ -1023,6 +1023,51 @@ frozen D11 rule; nothing about the headline is decided from its results.
   not before the builder, the cells, the spec and this entry are committed and
   the freeze commit hash is recorded in a D18 addendum.
 
+### D18 addendum 1 — 2026-11-09: built and frozen; freeze commit recorded
+
+**Freeze commit: `97e7f669418f73c73f05ffcd248e99a7bbb081ba`.** Built by
+`datagen/build_gradient_arms.py`, which derives the arms from the frozen
+`results/single_token_edge/edge__token` cell by regrouping consecutive tokens,
+so all five arms share their text **by construction** rather than by assertion.
+A document whose token count is not a multiple of *k* ends in a shorter
+fragment; it is never padded or merged, because either would change the text.
+
+Sizes reproduce the priced table exactly:
+
+| arm | fragments | per pool | words/fragment |
+|---|---|---|---|
+| `edge__w4` | 2,714 | 135.7 | 3.92 |
+| `edge__w3` | 3,596 | 179.8 | 2.96 |
+| `edge__w2` | 5,360 | 268.0 | 1.99 |
+
+**Fidelity gates — all passed; the builder writes nothing unless they do:**
+
+- **G1** byte-identical text across all five arms, 140/140 documents.
+- **G2** every arm is an exact partition of the token arm: no token lost,
+  duplicated or reordered.
+- **G3** fragment counts equal the priced table.
+- **G4** fragment ids unique within every arm.
+- **G5** 60 requests; preflight 60 checked / **0 blocked**.
+
+Spec `runs/gradient_J.json`, sha256 `3ddcc0ba33f2`, 60 requests. Worst case if
+every base call hit 128k: **$38.50** (`estimate_cost`), against the $38.57 the
+pricing memo projected. Central estimate $10.19.
+
+Runner `runs/final_run_gradient.py`, modelled on the D16 runner: it verifies
+the spec hash against the manifest, that no frozen artifact differs from
+`97e7f66`, and that the spec still holds exactly 60 requests, before anything
+is sent. Game J only — it stops after J whatever the completion. `--rehearse`
+was run against the fake provider: 3 batches (initial, resend, repair), every
+one settled, all three cells scored, report written, **$0 spent**.
+
+Nulls are not pre-generated artifacts; `visible_metrics.oracle_size_null` and
+`predicted_structure_null` are computed at analysis time under the inherited
+`single-token-edge-v1` namespace, so the new conditions get their own seeded
+draws with no change to the frozen null code.
+
+Still outstanding before submission: the user's explicit launch approval and a
+confirmed credit balance.
+
 ## Development history — 2026-09-10: headline documents used before frame A existed
 
 Development work done before D2 was taken used documents that frame A later
