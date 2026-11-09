@@ -1,0 +1,35 @@
+{
+ "what": "POST-HOC EXPLORATORY \u2014 INTERMEDIATE GRANULARITY GRADIENT (RUN_DECISIONS D18)",
+ "derived_from": "results/single_token_edge/edge__token",
+ "inherited_pools_file": "data/pools/single_token_edge_pools.json",
+ "widths": [
+  4,
+  3,
+  2
+ ],
+ "arms": {
+  "w4": {
+   "fragments": 2714,
+   "per_pool": 135.7,
+   "cell": "edge__w4"
+  },
+  "w3": {
+   "fragments": 3596,
+   "per_pool": 179.8,
+   "cell": "edge__w3"
+  },
+  "w2": {
+   "fragments": 5360,
+   "per_pool": 268.0,
+   "cell": "edge__w2"
+  }
+ },
+ "gates": {
+  "G1_identical_text_across_five_arms": "pass",
+  "G2_exact_partition_of_token_arm": "pass",
+  "G3_counts_match_priced_table": "pass",
+  "G4_unique_ids": "pass",
+  "G5_preflight_clean": "60/60"
+ },
+ "built_at_commit": "ce324841600861507f237f6ab433d6a0aceab7b8"
+}
