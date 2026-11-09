@@ -7,9 +7,17 @@ documents that disagree carry dated clarification notes that point here
 
 **No attacker in this study is a faithful implementation of Shanmugasundaram &
 Memon.** A faithful implementation needs their PPM-derived directional
-adjacency model and their maximum-weight Hamiltonian-path / tree-pruning
-reassembly. Neither exists here. Never write "Memon" alone, and never "pre-LLM
-state of the art".
+adjacency model, their maximum-weight Hamiltonian-path / tree-pruning
+reassembly, and **a known first fragment to root the search** — the original
+assumes one, justified by file headers, and game J provides none. None of the
+three exists here. Never write "Memon" alone, and never "pre-LLM state of the
+art".
+
+Their accuracy metric is **the number of adjacent fragment pairs in the
+reassembly that are truly adjacent**, a local adjacent-pair rate with no
+membership term. **No number from that paper is comparable to F1_J, F1_L or q,
+and none may be tabulated beside ours** (verified against the source
+2026-10-30; see `docs/RELATED_WORK_NOTES.md` §1).
 
 ## Definition table
 
@@ -110,7 +118,16 @@ candidate boundary.
 - the tanh weighting;
 - a pairwise local ordering search in place of their maximum-weight
   Hamiltonian-path / tree-pruning procedure;
+- **no anchor**: their search is rooted at a known first fragment, ours has
+  none to root at, and we do not enumerate candidate starts;
 - the masking and presentation controls.
+
+State it as **one tested statistical baseline** — not a faithful
+implementation, and not an estimate of the strongest attainable classical
+performance. A smoothed fixed-order character model is simpler than PPMC
+escape-blended multi-order prediction, but simpler is not the same as weaker on
+this corpus, and PPMC was never run here, so no bound in either direction may
+be claimed.
 
 **How it differs from the Jaccard pair:** its ordering signal is directional
 where Jaccard's is symmetric; it is character-level where theirs is word
