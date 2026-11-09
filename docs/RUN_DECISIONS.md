@@ -1068,6 +1068,46 @@ draws with no change to the frozen null code.
 Still outstanding before submission: the user's explicit launch approval and a
 confirmed credit balance.
 
+### D18 addendum 2 — 2026-11-09: LAUNCH APPROVED; the wall rule relaxed deliberately
+
+The user gave explicit launch approval on 2026-11-09 and confirmed
+**$16.00 available** (their figure, not derived from the cash-plus-tax
+arithmetic this entry projected earlier).
+
+**The submission-order rule in this entry is therefore NOT met, and that is a
+conscious decision rather than an oversight.** The rule says to confirm the
+balance covers the $38.50 all-at-128k wall before the base calls are
+submitted. $16.00 does not. Against the priced sensitivity table it covers:
+
+| scenario | cost | covered by $16.00 |
+|---|---|---|
+| central (observed repair rates) | $10.19 | yes, $5.81 spare |
+| 2x the observed repair rate | $11.20 | yes |
+| output 1.5x the fit | $15.19 | yes, $0.81 spare |
+| repairs at the 1-word 55% ceiling | $15.35 | yes, $0.65 spare |
+| output 2x the fit | $20.19 | **no, short $4.19** |
+| every base call at 128k | $38.50 | **no, short $22.50** |
+
+The two uncovered rows are the ones resting on the weakest assumption — output
+linearity extrapolated from only two paid anchors — so the margin is real but
+thin.
+
+Why the relaxation is defensible, in the terms the rule was written for: the
+rule exists to avoid the mid-batch credit refusals the final run hit 48 times.
+Those refusals happen **before inference**, cost nothing, and resend after a
+top-up, so a shortfall is recoverable rather than destructive. The all-at-128k
+wall also never occurred in any prior arm — all 20 pools of the 1-word arm
+completed at up to 669 fragments, and the largest predicted output here is
+about 51k tokens at 336 fragments, well under the 128k budget. The ledger's
+`CreditStop` exits cleanly if credit runs out, and `AnswerStore` keys every
+answered request by model+prompt hash so nothing already paid for is paid for
+twice on a resume.
+
+What this does NOT change: the arms, the spec, the scorer, the nulls, the
+repair policy, the analysis, or the pre-commitment that all three widths
+execute regardless of intermediate outcomes. Only the credit precondition was
+relaxed, with the user's approval, and it is recorded here.
+
 ## Development history — 2026-09-10: headline documents used before frame A existed
 
 Development work done before D2 was taken used documents that frame A later
