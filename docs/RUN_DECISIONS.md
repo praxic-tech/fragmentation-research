@@ -936,6 +936,93 @@ frozen D11 rule; nothing about the headline is decided from its results.
 - **The single-token edge-case experiment (D16) is budgeted on its own:**
   $14.36 expected credit and $25.72 worst case, on top of the $130.18 ledger.
 
+## D18 — 2026-10-30: POST-HOC EXPLORATORY — INTERMEDIATE GRANULARITY GRADIENT (4 / 3 / 2 words), design frozen; not submitted
+
+- **Extends D16; does not supersede it.** The two paid D16 arms (sentence and
+  single whitespace token) stand unchanged and are not re-run. D18 adds three
+  intermediate widths on the **same 20 pools, the same 140 four-sentence
+  excerpts and the same text**, so the five arms form one granularity series
+  (≈19 / 4 / 3 / 2 / 1 words per fragment) in which only the cut varies.
+- **Motivation.** D16 is a binary comparison and the paper's own wording rule
+  says it "locates no threshold". A five-point series on identical text lets
+  the collapse be located between widths instead of merely bracketed.
+- **Pre-commitment (user, 2026-10-30, recorded verbatim):** *The decision to
+  execute all three intermediate widths is fixed before observing any attack
+  result from the new arms; no arm will be dropped or added based on
+  intermediate outcomes.* This is the whole of the arm-selection rule: the
+  three widths are not a sequential design, and no interim result may change
+  the set. If any arm is abandoned for a resource reason, that is a resource
+  event, recorded as such in a dated addendum, and never a selection on
+  outcome.
+- **Conditions.** Consecutive non-overlapping groups of k whitespace tokens,
+  k ∈ {4, 3, 2}, taken from each document's frozen D16 token sequence in order;
+  the final group of a document carries the remainder (1 to k tokens). Tokens
+  are verbatim, with no normalisation, exactly as in D16. Cell names
+  `edge__w4`, `edge__w3`, `edge__w2`; fragment ids `<doc>_w<k>_<nnn>`.
+- **Exact sizes, computed from the frozen excerpts (not estimates):**
+  | arm | fragments/pool | min–max | fragments total | words/fragment |
+  |---|---|---|---|---|
+  | 4 word | 135.7 | 111–170 | 2,714 | 3.92 |
+  | 3 word | 179.8 | 149–225 | 3,596 | 2.96 |
+  | 2 word | 268.0 | 221–336 | 5,360 | 1.99 |
+- **Inherited from D16 unchanged, and not restated here:** the J prompt and
+  prompt-template hash, N = 7 given, 9-character masked aliases with the
+  raw-id preflight, per-unit alias and presentation seeding (D7), the 128,000
+  token output budget with one attempt, RBNC excluded rather than scored 0
+  (D6), the one structural repair round with bookkeeping-only feedback, the
+  single unchanged transport resend with every resend before any repair, and
+  the model settings (`claude-sonnet-5`, Message Batches API, no temperature,
+  default adaptive reasoning). No new prompt is written; there is no word-level
+  prompt and no Game O.
+- **Scoring.** The frozen visible-text scorer (`harness/visible_metrics.py`)
+  stays primary at every width, for comparability with the existing arms, even
+  though duplicate fragment text falls away above 2 words (measured share of
+  fragments sharing their text: 44.4% at 1 word, 5.4% at 2, 0.4% at 3, 0.5% at
+  4). Id-level F1_J / F1_L are reported alongside, as in D16.
+- **Nulls.** 10,000 deterministic permutation draws per pool × condition × null
+  kind, oracle-size primary and predicted-structure as robustness, under the
+  unchanged seed rule SHA-256("single-token-edge-v1|" + pool + "|" + condition
+  + "|" + kind). The namespace string is deliberately unchanged so the existing
+  arms' nulls stay bit-identical; the new conditions draw fresh streams because
+  their condition strings differ.
+- **Primary outcome (exploratory).** The per-pool A_VJ profile across the five
+  widths, summarised by the paired adjacent-width differences
+  A_VJ(4) − A_VJ(3), A_VJ(3) − A_VJ(2) and A_VJ(2) − A_VJ(1), each with a
+  paired percentile bootstrap (10,000 resamples, seed 42, 95%, pools as the
+  unit, carrying both widths' scores per resampled pool) and an exact
+  two-sided sign test, ties omitted from the denominator. The already-measured
+  sentence → 1 word difference is the reference. **Secondary:** a single
+  monotone-trend statistic, the within-pool Spearman correlation between
+  words per fragment and A_VJ across the five widths, averaged over pools with
+  a paired bootstrap CI. No multiplicity adjustment; intervals are unadjusted
+  and labelled so, and nonsignificance is never read as equivalence.
+- **Local attackers.** Memon-inspired and the post-hoc embedding attacker run
+  on all three arms, as in D16, and remain not designed for sub-sentence
+  fragments; their results are not security evidence.
+- **Fidelity gates before submission.** Each arm must partition its source
+  excerpt exactly, with zero invented or altered tokens; the per-document text
+  must be asserted identical across all five arms; the preflight must pass on
+  60 of 60 prompts.
+- **Status: exploratory throughout.** Designed after the prespecified results
+  and after D16's results were seen. Every D16 claim restriction carries over:
+  it is four-sentence excerpts and not full documents, one attacker, and
+  semantic context and combinatorial search complexity still move together, so
+  no mechanism is isolated.
+- **Budget (priced in `price_gradient.py`; no API calls).** Central $10.19
+  (4 word $2.35, 3 word $2.98, 2 word $4.86) on measured in-range repair rates
+  of 6.4 / 4.0 / 13.8%; $15.35 if repairs ran at the 1-word arm's 55%, which is
+  a ceiling rather than a scenario since malformed answers fall with fragment
+  count; $20.19 if output ran at twice the fitted rate; absolute worst case
+  $38.57 with all 60 base calls at 128k. The output model is
+  `output = 1,165 + 148.3 × fragments`, fitted on the two paid arms, and it
+  reproduces the D16 bill at $14.15 against the recorded $14.15. Account
+  balance at the time of this entry: **$5.32**; the user elected to load $15
+  cash, which is $14.12 of credit after the 6.25% tax the ledger records, for
+  $19.44 available.
+- **Nothing is submitted until the user gives explicit launch approval**, and
+  not before the builder, the cells, the spec and this entry are committed and
+  the freeze commit hash is recorded in a D18 addendum.
+
 ## Development history — 2026-09-10: headline documents used before frame A existed
 
 Development work done before D2 was taken used documents that frame A later
