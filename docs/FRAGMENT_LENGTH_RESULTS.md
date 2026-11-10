@@ -46,6 +46,31 @@ The same 20 pools, the same 140 four-sentence excerpts, byte-identical text,
 | 2-word | 5,360 | 1.99 | 2.0 | 0.12 | 1 | 2 | 38.29 | +0.0812 |
 | 1-word | 10,646 | 1.00 | 1.0 | 0.00 | 1 | 1 | 76.04 | −0.0165 |
 
+### How much contiguous text actually comes back
+
+`A_J` is a normalised abstraction. This is the same five arms in words of the
+original document, which is what a reader can act on. Every excerpt is the same
+text averaging 76.0 words, so the percentage is comparable across all five arms
+even though fragments per document runs 4.00 → 76.04.
+
+**Floor** is the longest single fragment: contiguous original text leaked by the
+cut alone, before the attacker does anything. **Recovered** is the longest run
+of fragments the attacker placed consecutively *and* in true order, in words —
+a run of one fragment is just that fragment, i.e. the floor. **Join recall** is
+the fraction of a document's (fragments − 1) true adjacent joins recovered.
+
+| arm | words/frag | floor | recovered | lift | recovered % | floor % | join recall |
+|---|---|---|---|---|---|---|---|
+| sentence | 19.01 | 28.69 w | **48.83 w** | +20.14 | **64.2%** | 37.7% | 0.4643 |
+| 4-word | 3.92 | 4.00 w | **21.91 w** | +17.91 | **28.8%** | 5.3% | 0.4756 |
+| 3-word | 2.96 | 3.00 w | **12.71 w** | +9.71 | **16.7%** | 3.9% | 0.3151 |
+| 2-word | 1.99 | 2.00 w | **6.38 w** | +4.38 | **8.4%** | 2.6% | 0.1525 |
+| 1-word | 1.00 | 1.00 w | **1.79 w** | +0.79 | **2.3%** | 1.3% | 0.0218 |
+
+Computed by `analysis/gradient_recovery.py` → `results/gradient/recovery.json`.
+A fragment from another document interrupting a sequence breaks the run, which
+is the honest reading: a reader of the reconstruction would hit the interloper.
+
 ## Interpretation
 
 **The whole main grid sits in the flat top of the curve.** Every grid cell has
@@ -84,6 +109,23 @@ length variance collapses across its arms — sd 9.64 words at sentence, then
 0.42, 0.25, 0.12, 0.00 — because the cut is defined by word count rather than
 by linguistic boundaries. Text, pools, documents and prompt are all held fixed,
 so length is the only thing moving, and advantage falls monotonically with it.
+
+**Between sentences and four words, what protects you is not that the attacker
+gets worse — it is that you stop handing over whole sentences.** Join recall is
+essentially identical at sentence (0.4643) and 4-word (0.4756): the attacker
+rejoins fragments at the same rate in both. Yet recovered text falls from 64.2%
+to 28.8% of the document. Almost all of that drop is the floor collapsing, from
+37.7% to 5.3% — at sentence granularity a single fragment is already 28.7
+consecutive words the attacker never had to work for. Only below four words
+does the attacker's own ability start to fail: join recall then falls 0.4756 →
+0.3151 → 0.1525 → 0.0218.
+
+That gives the granularity dial two distinct regimes, which is more useful to a
+practitioner than a single curve. In the coarse regime, finer cutting works by
+reducing what is leaked for free. In the fine regime, below roughly four words,
+it works by defeating the adversary. **And it avoids claiming a threshold** —
+there is no need to interpolate a safe width when each tested width carries its
+own "this much of the document came back" number.
 
 **The two families are not on a common footing.** Grid documents average 478
 words against 76 for the excerpt arms, so a grid point and a gradient point at

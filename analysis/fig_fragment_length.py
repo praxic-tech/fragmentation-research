@@ -106,11 +106,13 @@ def grid_cells():
 
 
 # ── geometry ────────────────────────────────────────────────────────────────
-W, H = 900, 520
+W, H = 900, 790
 L, R, T, B = 74, 26, 92, 88
-PW, PH = W - L - R, H - T - B
+PW, PH = W - L - R, 300          # panel 1
+T2, PH2 = T + PH + 92, 196                        # panel 2
 XLO, XHI = math.log10(0.88), math.log10(25.0)
 YLO, YHI = -0.12, 0.86
+R2LO, R2HI = 0.0, 70.0                            # panel 2, percent of document
 
 
 def px(w):
@@ -119,6 +121,10 @@ def px(w):
 
 def py(a):
     return T + (YHI - a) / (YHI - YLO) * PH
+
+
+def py2(v):
+    return T2 + (R2HI - v) / (R2HI - R2LO) * PH2
 
 
 def esc(s):
@@ -157,8 +163,6 @@ def main():
         s.append(f'<line x1="{x:.1f}" y1="{T}" x2="{x:.1f}" y2="{T+PH}" stroke="{GRID}" stroke-width="1"/>')
         s.append(f'<text x="{x:.1f}" y="{T+PH+20}" font-size="11.5" text-anchor="middle" '
                  f'fill="{INK3}">{w}</text>')
-    s.append(f'<text x="{L+PW/2:.1f}" y="{T+PH+42}" font-size="12.5" text-anchor="middle" '
-             f'fill="{INK2}">mean fragment length (words, log scale)</text>')
     s.append(f'<text x="18" y="{T+PH/2:.1f}" font-size="12.5" text-anchor="middle" fill="{INK2}" '
              f'transform="rotate(-90 18 {T+PH/2:.1f})">advantage over reference  A_J</text>')
     s.append(f'<line x1="{L}" y1="{T}" x2="{L}" y2="{T+PH}" stroke="{INK3}" stroke-width="1"/>')
@@ -229,6 +233,61 @@ def main():
         boxes.append(box)
         s.append(f'<text x="{x+dx:.1f}" y="{y+dy+4:.1f}" font-size="11" text-anchor="{anchor}" '
                  f'fill="{INK2}">{esc(lbl)}</text>')
+
+    # ── panel 2: how much contiguous original text the attacker ends up holding ──
+    rec = json.load(open(os.path.join("results", "gradient", "recovery.json"),
+                         encoding="utf-8"))
+    order = [g["label"] for g in grad]
+    xs = [px(g["mean"]) for g in grad]
+    rv = [rec[k]["recovered_pct"] for k in order]
+    fl = [rec[k]["floor_pct"] for k in order]
+
+    s.append(f'<text x="{L}" y="{T2-44}" font-size="14" font-weight="600" fill="{INK}">'
+             'How much of the 76-word document comes back as one contiguous stretch</text>')
+    s.append(f'<text x="{L}" y="{T2-26}" font-size="12" fill="{INK2}">'
+             'Controlled gradient only — the grid is not plotted here, because its documents are a '
+             'different length. Longest run of fragments the</text>')
+    s.append(f'<text x="{L}" y="{T2-11}" font-size="12" fill="{INK2}">'
+             'attacker placed consecutively AND in true order, measured in words.</text>')
+
+    for v in (0, 10, 20, 30, 40, 50, 60, 70):
+        y = py2(v)
+        s.append(f'<line x1="{L}" y1="{y:.1f}" x2="{L+PW}" y2="{y:.1f}" stroke="{GRID}" stroke-width="1"/>')
+        s.append(f'<text x="{L-9}" y="{y+4:.1f}" font-size="11.5" text-anchor="end" '
+                 f'fill="{INK3}">{v}%</text>')
+    for w in (1, 2, 3, 4, 6, 10, 15, 20):
+        x = px(w)
+        s.append(f'<line x1="{x:.1f}" y1="{T2}" x2="{x:.1f}" y2="{T2+PH2}" stroke="{GRID}" stroke-width="1"/>')
+        s.append(f'<text x="{x:.1f}" y="{T2+PH2+20}" font-size="11.5" text-anchor="middle" '
+                 f'fill="{INK3}">{w}</text>')
+    s.append(f'<line x1="{L}" y1="{T2}" x2="{L}" y2="{T2+PH2}" stroke="{INK3}" stroke-width="1"/>')
+    s.append(f'<text x="{L+PW/2:.1f}" y="{T2+PH2+42}" font-size="12.5" text-anchor="middle" '
+             f'fill="{INK2}">mean fragment length (words, log scale)</text>')
+    s.append(f'<text x="18" y="{T2+PH2/2:.1f}" font-size="12.5" text-anchor="middle" fill="{INK2}" '
+             f'transform="rotate(-90 18 {T2+PH2/2:.1f})">% of document recovered</text>')
+
+    # the band between floor and recovered IS the attacker's contribution
+    band = (" ".join(f"{x:.1f},{py2(v):.1f}" for x, v in zip(xs, rv)) + " " +
+            " ".join(f"{x:.1f},{py2(v):.1f}" for x, v in reversed(list(zip(xs, fl)))))
+    s.append(f'<polygon points="{band}" fill="{S1}" fill-opacity="0.13"/>')
+    s.append(f'<polyline points="{" ".join(f"{x:.1f},{py2(v):.1f}" for x, v in zip(xs, fl))}" '
+             f'fill="none" stroke="{INK3}" stroke-width="1.8" stroke-dasharray="5 4"/>')
+    s.append(f'<polyline points="{" ".join(f"{x:.1f},{py2(v):.1f}" for x, v in zip(xs, rv))}" '
+             f'fill="none" stroke="{S1}" stroke-width="2" stroke-linejoin="round"/>')
+    for x, v, f_, lab in zip(xs, rv, fl, order):
+        s.append(f'<circle cx="{x:.1f}" cy="{py2(v):.1f}" r="5" fill="{S1}" '
+                 f'stroke="{SURFACE}" stroke-width="2"/>')
+        s.append(f'<circle cx="{x:.1f}" cy="{py2(f_):.1f}" r="3.5" fill="{INK3}" '
+                 f'stroke="{SURFACE}" stroke-width="2"/>')
+        s.append(f'<text x="{x:.1f}" y="{py2(v)-13:.1f}" font-size="11.5" font-weight="600" '
+                 f'text-anchor="middle" fill="{INK}">{v:.0f}%</text>')
+    # Both annotations go in the empty gaps between plotted widths: the band's
+    # interior at ~5.5 words, and the clear space under the dashed floor at ~13.
+    s.append(f'<text x="{px(5.5):.1f}" y="{py2(24):.1f}" font-size="11" '
+             f'text-anchor="middle" fill="{S1}">attacker’s contribution</text>')
+    s.append(f'<text x="{px(13):.1f}" y="{py2(15):.1f}" font-size="11" '
+             f'text-anchor="middle" fill="{INK2}">leaked by the cut alone '
+             f'(longest single fragment)</text>')
 
     s.append(f'<text x="{L}" y="{H-20}" font-size="10.5" fill="{INK3}">'
              'Grid documents average 478 words (659 headline) against 76 for the excerpt arms, so the '
