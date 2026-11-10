@@ -178,3 +178,56 @@ pools, not a rounded mean.
 - **Section numbering follows the template**, which differs slightly from the
   earlier draft. That was the instruction's intent (move into the template),
   and no argument was reordered beyond the Results changes listed above.
+
+---
+
+# Revision 2 — float sizing, author order, and a header bug
+
+## Figure sizing (the visible problem)
+
+**Six figures were being magnified 2.1x.** Eight of the nine package figures
+are natively **239pt wide — exactly one acmart column**; only
+`fig3_linkage_vs_ordering` is 504pt (genuine full width). They had been wrapped
+in `figure*` with `width=\textwidth`, scaling a 239pt figure to ~504pt and
+blowing the designed 7–8pt type up to roughly 16pt.
+
+Fixed by `paper/fix_floats.py`, which reads each figure's own page width with
+`pdfinfo` and sets the float type from it, then drops the `width=` override so
+every figure renders at its designed size:
+
+| figure | native width | float |
+|---|---|---|
+| fig3_linkage_vs_ordering | 504pt | `figure*` |
+| all eight others | 239pt | `figure` |
+
+Consequences: **17 pages → 13**, and the main body moved from pages 1–12 to
+**pages 1–9**, giving roughly three pages of slack against the 12-page cap
+instead of sitting on the boundary. Figure type now matches the body text.
+
+## A bug that corrupted every running head
+
+`\acmConference` takes three mandatory arguments, `[short]{name}{date}{venue}`.
+The template called it with one, so it silently swallowed the following
+`\settopmatter{...}` group and typeset the literal string
+`printacmref=false,printccs=false,printfolios=true` into the running head of
+every page. `\settopmatter` now comes first and `\acmConference` is given its
+arguments. The running head reads `Shards of Meaning` / `PoPETs` as intended.
+
+This was inherited from the supplied template, not introduced here, and will
+recur in any build where `popets.sty` is absent.
+
+## Author order
+
+**Aiden J. Tejada is now first author**, followed by Michael Anyaegbunam and
+Mohammed Arafat Nadaf. `\shortauthors` updated to `Tejada et al.`
+
+## Checked and deliberately left alone
+
+- **Bold figure and table captions are acmart's own default** for this format
+  (`\captionsetup[figure]{labelfont={bf,small}, textfont={bf,small}}` in
+  `acmart.cls`), not something introduced here. Unchanged.
+- The two sub-4pt overfull boxes (3.5pt, 1.4pt) remain; both are below the
+  threshold worth rewording around.
+
+Build after revision 2: **0 errors, 0 undefined citations or references, 2
+overfull boxes, 13 pages, main body pages 1–9.**
