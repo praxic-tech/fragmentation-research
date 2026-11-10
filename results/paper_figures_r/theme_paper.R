@@ -6,16 +6,60 @@
 suppressPackageStartupMessages({
   library(ggplot2)
   library(patchwork)
+  library(sysfonts)
+  library(showtext)
 })
 
 fig_dir <- "results/paper_figures_r"
 
 # ---- Paper geometry (ACM sigconf) -------------------------------------------
+# acmart sigconf sets \columnwidth to 241.14749pt = 3.337in; 3.33 is that width.
 col_width  <- 3.33   # inches, one column
 page_width <- 7.0    # inches, full text width (figure*)
 
 # ---- Typography --------------------------------------------------------------
-font_family <- "Arial"
+# The paper is acmart, which sets its text in Linux Libertine with Linux
+# Biolinum as the matching sans; Biolinum is what the template uses for headings
+# and captions, so figure text is set in it too.
+#
+# WHY showtext AND NOT cairo_pdf's own font lookup. On Windows, grDevices'
+# cairo_pdf resolves families through GDI, which cannot use these CFF-flavoured
+# OTFs: every family string ("Linux Biolinum O", "LinBiolinumO", ...) silently
+# falls back to ArialMT, confirmed with pdffonts. systemfonts::register_font
+# does not help either -- that registry feeds svglite and ragg, not cairo.
+# showtext draws the real glyph outlines on any device, so the shapes are
+# genuinely Biolinum. The consequence, stated plainly: text in the PDF is
+# OUTLINES, not selectable text. pdffonts on the output therefore lists no
+# fonts at all, which passes any embedding requirement trivially.
+# Verified: at 8pt the cap height is identical whether showtext_opts(dpi=) is
+# 72, 96 or 300, so there is no silent scaling.
+font_dirs <- c(file.path(Sys.getenv("LOCALAPPDATA"), "Microsoft/Windows/Fonts"),
+               file.path(Sys.getenv("LOCALAPPDATA"),
+                         "Programs/MiKTeXp/fonts/opentype/public/libertine"),
+               "/usr/share/fonts/opentype/linux-libertine",
+               "/usr/share/texmf/fonts/opentype/public/libertine")
+find_font <- function(file) {
+  hit <- file.path(font_dirs, file)
+  hit <- hit[file.exists(hit)]
+  if (!length(hit)) stop("font not found: ", file,
+                         "\nLooked in:\n  ", paste(font_dirs, collapse = "\n  "),
+                         "\nInstall the libertine package (TeX Live / MiKTeX) or the ",
+                         "Linux Libertine O and Linux Biolinum O fonts.")
+  hit[1]
+}
+font_add("Biolinum",
+         regular    = find_font("LinBiolinum_R.otf"),
+         bold       = find_font("LinBiolinum_RB.otf"),
+         italic     = find_font("LinBiolinum_RI.otf"),
+         bolditalic = find_font("LinBiolinum_RBO.otf"))
+font_add("Libertine",
+         regular = find_font("LinLibertine_R.otf"),
+         bold    = find_font("LinLibertine_RB.otf"),
+         italic  = find_font("LinLibertine_RI.otf"))
+showtext_auto()
+
+font_family <- "Biolinum"        # matching sans of the paper's Libertine text
+math_family <- "Libertine"       # italic serif for F1_J, tau, q
 base_size   <- 8     # axis titles, panel tags (pt)
 tick_size   <- 7     # tick labels, strips, legends (pt)
 label_size  <- 6 / .pt   # direct labels drawn with annotate(): 6 pt, in ggplot's mm units
