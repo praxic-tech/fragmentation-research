@@ -29,6 +29,8 @@ paper/*.bbl
 paper/*.blg
 paper/*.log
 paper/*.out
+paper/*.pdf
+paper/comment.cut
 results/batches/
 results/blocker/
 results/grid/
