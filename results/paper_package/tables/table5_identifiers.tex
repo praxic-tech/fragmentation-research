@@ -1,4 +1,4 @@
-\begin{table*}[t]
+\begin{table*}[tb]
 \centering
 \footnotesize
 \setlength{\tabcolsep}{3pt}
@@ -7,7 +7,7 @@
 \sbox0{%
 \begin{tabular}{lrrrrrrr}
 \toprule
-Attacker / baseline & $F1_J$ [95\% CI] & $F1_L$ [95\% CI] & $q$ & Link. precision [95\% CI] & $A_{schema}$ [90\% CI] & $F1_J - 0.20$ [90\% CI] & Near baseline? \\
+Attacker / baseline & $\mathrm{F1}_{J}$ [95\% CI] & $\mathrm{F1}_{L}$ [95\% CI] & $q$ & Link. precision [95\% CI] & $A_{\mathrm{schema}}$ [90\% CI] & $\mathrm{F1}_{J} - 0.20$ [90\% CI] & Near baseline? \\
 \midrule
 Schema-order baseline & 0.200 [0.200, 0.200] & 0.200 [0.200, 0.200] & 1.00 & -- & 0.000 & 0.000 & (baseline) \\
 Analytic one-bucket baseline & 0.100 [0.100, 0.100] & 0.200 [0.200, 0.200] & 0.50 & -- & -0.125 & -0.100 & (baseline) \\
@@ -19,7 +19,7 @@ One-shot Sonnet & 0.083 [0.068, 0.099] & 0.132 [0.113, 0.154] & 0.63 & 0.132 [0.
 \end{tabular}}
 \ifdim\wd0>\textwidth\resizebox{\textwidth}{!}{\usebox0}\else\usebox0\fi
 \begin{flushleft}\footnotesize
-20 pools of 7 synthetic records (name, SSN, account, address; 28 fragments). F1 CIs are 95\%; the schema advantage A\_schema = (F1\_J $-$ 0.20)/(1 $-$ 0.20) carries the frozen 90\% CI. Frozen rule (D11): joint reconstruction is 'near the schema-order baseline' only if the whole 90\% CI lies within $\pm$0.10. No attacker met it; every attacker fell below the baseline.\\
+20 pools of 7 synthetic records (name, SSN, account, address; 28 fragments). F1 CIs are 95\%; the schema advantage $A_{\mathrm{schema}}$ = ($\mathrm{F1}_{J}$ $-$ 0.20)/(1 $-$ 0.20) carries the frozen 90\% CI. Frozen rule (D11): joint reconstruction is 'near the schema-order baseline' only if the whole 90\% CI lies within $\pm$0.10. No attacker met it; every attacker fell below the baseline.\\
 q is a template diagnostic only: the field order is visible from field format, so the schema-order baseline reaches q = 1 with no record knowledge. Linkage precision (exploratory): the share of an attacker's claimed same-record pairs that are real, against 1/7 = 0.143 for template-respecting random assignment. All 140 Sonnet groups held exactly one field of each type.\\
 $^\dagger$ Post-hoc exploratory attacker (D14).\\
 \end{flushleft}

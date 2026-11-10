@@ -1,6 +1,9 @@
 % refs.bib — the paper's bibliography, under version control.
 %
-% STATUS MARKERS. Every entry carries one, from docs/BIBLIOGRAPHY_SOURCE_AUDIT.md.
+% STATUS MARKERS. Every entry carries one in `annote`, from
+% docs/BIBLIOGRAPHY_SOURCE_AUDIT.md. The field is `annote` and not `note`
+% because ACM-Reference-Format PRINTS `note`: the audit text was appearing
+% in the typeset bibliography. Do not rename it back.
 %   PRIMARY VERIFIED  full text read; fields taken from the source
 %   METADATA ONLY     publisher/author page read; full text not obtained
 %   SECONDARY ONLY    the primary was NOT read; do not cite specifics
@@ -20,7 +23,7 @@
   booktitle = {Proceedings of the 19th Annual Computer Security Applications
                Conference (ACSAC)},
   year      = {2003},
-  note      = {PRIMARY VERIFIED (full text read). FIXME: page numbers are not in
+  annote      = {PRIMARY VERIFIED (full text read). FIXME: page numbers are not in
                the PDF and the PDF names no venue; confirm both against the
                ACSAC/IEEE record. Served from acsac.org/2003/papers/97.pdf}
 }
@@ -38,7 +41,7 @@
   pages     = {22:1--22:33},
   year      = {2010},
   month     = jul,
-  note      = {PRIMARY VERIFIED (full text read)}
+  annote      = {PRIMARY VERIFIED (full text read)}
 }
 
 @article{decapitani2014,
@@ -49,7 +52,7 @@
   journal = {IEEE Transactions on Dependable and Secure Computing},
   year    = {2014},
   doi     = {10.1109/TDSC.2013.2295798},
-  note    = {PRIMARY VERIFIED from the author preprint. FIXME: volume, number
+  annote    = {PRIMARY VERIFIED from the author preprint. FIXME: volume, number
              and pages are not on the preprint; take them from IEEE Xplore.
              Copyright line reads 2013; commonly cited as 2014}
 }
@@ -64,7 +67,7 @@
   journal = {Pattern Recognition},
   year    = {2020},
   doi     = {10.1016/j.patcog.2020.107535},
-  note    = {PRIMARY VERIFIED (full text read). FIXME: volume and article/page
+  annote    = {PRIMARY VERIFIED (full text read). FIXME: volume and article/page
              numbers. Preprint arXiv:2007.00779}
 }
 
@@ -78,7 +81,7 @@
                2026},
   pages     = {22603--22615},
   year      = {2026},
-  note      = {PRIMARY VERIFIED (full text read). Nine authors; do not truncate}
+  annote      = {PRIMARY VERIFIED (full text read). Nine authors; do not truncate}
 }
 
 @inproceedings{lermen2026,
@@ -88,7 +91,7 @@
   booktitle = {35th USENIX Security Symposium (USENIX Security 26)},
   pages     = {1947--1966},
   year      = {2026},
-  note      = {PRIMARY VERIFIED (full text read). Title is "deanonymization",
+  annote      = {PRIMARY VERIFIED (full text read). Title is "deanonymization",
                not "semantic linkage"}
 }
 
@@ -101,7 +104,7 @@
   pages     = {329--338},
   year      = {2015},
   doi       = {10.1145/2783258.2783361},
-  note      = {METADATA ONLY -- full text NOT obtained. Cite only the de Bruijn
+  annote      = {METADATA ONLY -- full text NOT obtained. Cite only the de Bruijn
                formulation and the overlap property, both of which follow from
                the abstract. The CiteSeerX link in circulation is dead (404)}
 }
@@ -116,7 +119,7 @@
   number  = {2},
   pages   = {385--393},
   year    = {2006},
-  note    = {SECONDARY ONLY -- THE PRIMARY HAS NOT BEEN READ. IEEE-paywalled;
+  annote    = {SECONDARY ONLY -- THE PRIMARY HAS NOT BEEN READ. IEEE-paywalled;
              two CiteSeerX links both returned 404. Cite ONLY at the level of
              "multiple files are reassembled at once from a mixed pool".
              Do NOT cite the PUP mechanism, what the headers supply, the

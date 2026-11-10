@@ -4,9 +4,11 @@
 revised as instructed and moved into the PoPETs 2027 template.
 `reference_draft.tex` is kept as the superseded earlier version.
 
-Build state: **0 errors, 0 undefined citations or references, 2 overfull boxes
-(3.5pt and 1.4pt), 17 pages total, main body pages 1–12.** `pdffonts` reports
-`LinLibertineT` and `LinBiolinumTB`.
+Build state after revision 5: **0 errors, 0 undefined citations or
+references, 0 overfull or underfull horizontal boxes, 14 pages total, main body
+pages 1–12** (§7 ends about two fifths down page 12; the mandatory sections,
+acknowledgments, bibliography and appendices follow and do not count).
+`pdffonts` reports `LinLibertineT` and `LinBiolinumTB`.
 
 ---
 
@@ -296,3 +298,110 @@ remains in the figure package if a reviewer asks.
 
 Build after revision 3: **0 errors, 0 undefined citations or references,
 1 overfull box (3.5pt), 13 pages, main body pages 1–9.**
+
+
+---
+
+# Revision 4 — Game O and the post-hoc arm back beside their text
+
+Recorded in commit `a0dccef`; the detail is in that commit message. In short:
+revision 3 moved the post-hoc *prose* into the body and left its figure and
+table in an appendix, and Game O had the same split. Both were brought back to
+their own sections, the two emptied appendices were deleted, and the main body
+grew from pages 1–9 to pages 1–12.
+
+---
+
+# Revision 5 — the PDF read page by page
+
+Every page of the built PDF was rendered and read. These are what that found.
+Nothing here changes a number, a claim or a sentence of argument.
+
+## Three section headings with nothing under them
+
+§3.2 Notation, Appendix A and Appendix C each consisted of a heading and a
+float. The float deferred to the following page, so the heading printed alone
+over the next heading. Each now opens with a sentence that says what its
+exhibit contains and refers to it by number, which is what makes the heading a
+section rather than a label.
+
+## Figure 2's caption described a different figure
+
+The caption promised panels (a) and (b), a full-length headline row, the
+Memon-inspired attacker and the post-hoc embedding attacker. The figure has one
+panel, nine grid rows and one attacker plus a baseline tick — confirmed against
+`fig2_grid_reconstruction.csv`, the data frame the figure ships. Rewritten from
+that file. Also in §5.6, "Panel~(b)" named no figure at all; it is now
+Figure~\ref{fig:gradient}(b).
+
+## The bibliography was printing its own audit trail
+
+Every entry's `note` field carried its verification status from
+`docs/BIBLIOGRAPHY_SOURCE_AUDIT.md`, and ACM-Reference-Format **prints**
+`note`. The typeset bibliography was publishing "SECONDARY ONLY — THE PRIMARY
+HAS NOT BEEN READ", "FIXME: volume, number and pages are not on the preprint"
+and "DO NOT cite the PUP mechanism" to the reader. Moved to `annote`, which no
+ACM style emits. The audit trail is unchanged in `refs.bib`; it is now out of
+the PDF.
+
+## Table notes were ASCII where the body was maths
+
+The notes and row labels are shared with the Markdown output, so they were
+written `F1_J`, `b_J`, `A_VJ`, `q_V`, `A_schema`. In LaTeX they printed with
+literal underscores against a body that sets the same symbols as maths.
+`make_tables.py` now applies `tex_math()` after `tex_escape()` to captions,
+cells and notes, and the table headers set F1 upright (`\mathrm{F1}_{J}`) to
+match `\FJ` in the body. `prompt_J` is a request-spec name, not a metric, so it
+is set in `\textsf`, not maths.
+
+## \appendix was issued about a hundred lines early
+
+It sat in front of the acknowledgments, so the mandatory sections and the
+bibliography were formally inside the appendix. It worked only because those
+sections are starred. Moved to where the appendices actually start.
+
+## Four body pages carried no text
+
+Pages 7, 8, 10 and 11 of the previous build were float pages, two of them
+roughly half blank, while figures sat two to three pages from the text that
+cited them. Two causes, both fixed:
+
+- **Every float was declared at the end of its subsection.** LaTeX cannot place
+  a float before the point it is declared, so the top of the page the
+  subsection starts on was never a candidate. Each float group is now declared
+  immediately after its subsection's `\label`.
+- **Placement was `[t]` only**, so a figure that missed a column top had nowhere
+  to go but the deferred queue. One-column figures are now `[htb]` and the
+  spanning floats `[tb]`, and acmart's float separations are tightened, which
+  is worth most of a text line per float at this density.
+
+Two float pages remain, 7 and 8. **They are not a setting.** dbltopnumber,
+dbltopfraction, dblfloatpagefraction and floatpagefraction were each measured
+by building the paper once per value, and every one produces a byte-identical
+PDF, as does removing `dblfloatfix`: once a float is deferred, LaTeX drains the
+queue with `\@makefcolumn`, which consults none of them. The cause is the ratio
+— §§5.2–5.4 declare five large exhibits against about 1.2 pages of prose,
+because §5.3 is four lines and §5.4 is twelve. Either writing those two
+subsections out or dropping one of the two overlapping exhibits would clear it;
+`paper/README.md` already ranks Figure 2 first in the cut order, since Table 4
+carries the same numbers. That is an authors' decision, not a layout one.
+
+## Smaller things
+
+- The running head read "PoPETs, ," because `\acmConference` was given empty
+  date and venue arguments. They now carry `YYYY` and `Issue X`, matching the
+  `\acmYear` and `\acmNumber` placeholders already in the preamble. The real
+  template overwrites all of them.
+- The one remaining 3.5pt overfull line came from "Memon-inspired": TeX will
+  not hyphenate either half of a word that already contains a hyphen. 1em of
+  `\emergencystretch` absorbs it without loosening anything that already fits.
+  The build now reports no overfull or underfull horizontal boxes in the body.
+- The appendix figure is pinned `[b]`. With a top placement it floated to the
+  top of the page the bibliography starts on and printed above the References
+  heading.
+- `paper/patch_floats.py` deleted. It was a one-off that has already been
+  applied, and re-running it would load `placeins` with `[section]`, which
+  acmart refuses to compile.
+
+Build after revision 5: **0 errors, 0 undefined citations or references, 0
+overfull or underfull horizontal boxes, 14 pages, main body pages 1–12.**

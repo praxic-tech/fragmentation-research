@@ -1,4 +1,4 @@
-\begin{table*}[t]
+\begin{table*}[tb]
 \centering
 \footnotesize
 \setlength{\tabcolsep}{3pt}
@@ -9,12 +9,12 @@
 \toprule
 Experiment & Corpus & Sample & Conditions & Attackers & Primary metric & Status \\
 \midrule
-Headline J & prose (PMC case reports) & 46 pools $\times$ 7 docs (322 docs) & sentence cut, full length & One-shot Sonnet; Memon-inspired; embedding$^\dagger$ & F1\_J (F1\_L, q) & prespecified \\
-Grid J & prose, $\leq$30-sentence documents & 24 pools $\times$ 7 docs $\times$ 9 cells (168 docs) & 4 strategies $\times$ 3 granularities, 9 retained cells & One-shot Sonnet; Memon-inspired; embedding$^\dagger$ & F1\_J (F1\_L, q) & prespecified; cells retained after pool-1 screening \\
+Headline J & prose (PMC case reports) & 46 pools $\times$ 7 docs (322 docs) & sentence cut, full length & One-shot Sonnet; Memon-inspired; embedding$^\dagger$ & $\mathrm{F1}_{J}$ ($\mathrm{F1}_{L}$, q) & prespecified \\
+Grid J & prose, $\leq$30-sentence documents & 24 pools $\times$ 7 docs $\times$ 9 cells (168 docs) & 4 strategies $\times$ 3 granularities, 9 retained cells & One-shot Sonnet; Memon-inspired; embedding$^\dagger$ & $\mathrm{F1}_{J}$ ($\mathrm{F1}_{L}$, q) & prespecified; cells retained after pool-1 screening \\
 Headline O & prose & 100 documents (length-stratified) & sentence cut, full length & One-shot Sonnet; Jaccard-Greedy; Jaccard-MST; Random & Kendall $\tau$ & prespecified \\
 Grid O & prose & 30 documents $\times$ 9 cells & the 9 retained cells & One-shot Sonnet; Jaccard-Greedy; Jaccard-MST; Random & Kendall $\tau$ & prespecified \\
-Identifier J & synthetic records (Faker) & 20 pools $\times$ 7 records (28 fields) & one fragment per field & One-shot Sonnet; Memon-inspired; embedding$^\dagger$; Random; analytic and schema-order baselines & F1\_J vs schema baseline (90\% CI rule); F1\_L & prespecified (D11) \\
-Single-token edge J$^\dagger$ & prose, 4-sentence excerpts & 20 headline pools $\times$ 7 docs (140 docs) & sentence cut vs single whitespace token, identical text & One-shot Sonnet; Memon-inspired; embedding & paired A\_VJ (visible-text, null-adjusted) & post-hoc exploratory (D16) \\
+Identifier J & synthetic records (Faker) & 20 pools $\times$ 7 records (28 fields) & one fragment per field & One-shot Sonnet; Memon-inspired; embedding$^\dagger$; Random; analytic and schema-order baselines & $\mathrm{F1}_{J}$ vs schema baseline (90\% CI rule); $\mathrm{F1}_{L}$ & prespecified (D11) \\
+Single-token edge J$^\dagger$ & prose, 4-sentence excerpts & 20 headline pools $\times$ 7 docs (140 docs) & sentence cut vs single whitespace token, identical text & One-shot Sonnet; Memon-inspired; embedding & paired $A_{VJ}$ (visible-text, null-adjusted) & post-hoc exploratory (D16) \\
 \bottomrule
 \end{tabular}}
 \ifdim\wd0>\textwidth\resizebox{\textwidth}{!}{\usebox0}\else\usebox0\fi

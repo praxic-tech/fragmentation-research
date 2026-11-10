@@ -37,10 +37,11 @@
 % \settopmatter FIRST: acmart's \acmConference takes three mandatory arguments
 % ([short]{name}{date}{venue}). Called with one, it silently swallows the next
 % two groups -- which put the literal string "printacmref=false,..." into the
-% running head. popets.sty normally supplies the venue line; the empty date
-% and venue here are placeholders for the local build.
+% running head. popets.sty normally supplies the venue line; YYYY and
+% Issue X match the \acmYear / \acmNumber placeholders above and keep the
+% running head from printing bare commas. The real template overwrites both.
 \settopmatter{printacmref=false,printccs=false,printfolios=true}
-\acmConference[PoPETs]{Proceedings on Privacy Enhancing Technologies}{}{}
+\acmConference[PoPETs]{Proceedings on Privacy Enhancing Technologies}{YYYY}{Issue X}
 
 \usepackage{booktabs}
 \usepackage{graphicx}
@@ -51,10 +52,17 @@
 % of a page and restores ordering; the relaxed fractions let a page carry more
 % float before it gives up and defers.
 \usepackage{dblfloatfix}
-% Loaded but not currently used: dblfloatfix plus the fractions below were
-% enough. If a float starts drifting again, put \FloatBarrier at the boundary
-% it escapes. Do NOT load placeins with [section]: that option redefines
-% \section and acmart refuses to compile.
+% placeins is loaded for \FloatBarrier, which nothing currently uses: the
+% floats are declared at the top of their own subsection, so none of them
+% escapes. If one starts to, put \FloatBarrier at the boundary it crosses. Do
+% NOT load placeins with [section]: that option redefines \section and acmart
+% refuses to compile.
+%
+% MEASURED, do not re-tune: dbltopnumber, dbltopfraction, dblfloatpagefraction
+% and floatpagefraction each produce a byte-identical PDF here, as does
+% removing dblfloatfix. Once a float is deferred LaTeX drains the queue with
+% \@makefcolumn, which consults none of them. The two float-only pages in
+% Section 5 are 5 exhibits against about 1.2 pages of prose, not a setting.
 \usepackage{placeins}
 \setcounter{topnumber}{3}
 \setcounter{bottomnumber}{2}
@@ -66,6 +74,14 @@
 \renewcommand{\dblfloatpagefraction}{0.75}
 \renewcommand{\dbltopfraction}{0.9}
 \setcounter{dbltopnumber}{3}
+% acmart's float separations assume a page with one float on it. At this
+% density each one costs most of a text line, so they are tightened; the
+% stretch components are kept so columns can still be balanced.
+\setlength{\floatsep}{7pt plus 2pt minus 2pt}
+\setlength{\textfloatsep}{9pt plus 2pt minus 3pt}
+\setlength{\dblfloatsep}{7pt plus 2pt minus 2pt}
+\setlength{\dbltextfloatsep}{9pt plus 2pt minus 3pt}
+\setlength{\intextsep}{7pt plus 2pt minus 2pt}
 % Figures and tables are the validated package; rebuilding it updates the
 % paper with no edits here.
 \graphicspath{{../results/paper_package/figures/}{figures/}{./}}
@@ -89,6 +105,11 @@
 \newcommand{\posthoc}{\ensuremath{^{\dagger}}}
 \newcommand{\sonnet}{\textsf{claude-sonnet-5}}
 \newcommand{\TODO}[1]{\textbf{[TODO: #1]}}
+% A narrow two-column measure plus fixed names that already contain a hyphen
+% ("Memon-inspired", which TeX will not hyphenate on either side of an
+% explicit hyphen) leaves the odd line a few points over. 1em of emergency
+% stretch absorbs those without loosening anything that already fits.
+\emergencystretch=1em
 % Long compounds that otherwise overflow a narrow acmart column.
 \hyphenation{de-anon-y-mi-za-tion re-source-bound-ed re-con-struc-tion
   frag-men-ta-tion un-link-abil-i-ty gran-u-lar-i-ty mem-ber-ship}
@@ -339,9 +360,13 @@ resists it a fortiori when the pieces are also encrypted.
 
 \subsection{Notation}
 \label{sec:notation}
+Table~\ref{tab:notation} collects every symbol used in the rest of the paper:
+the fragmentation itself, the pool the adversary sees, and the pair counts the
+scores are built from. The three subsections that follow define the adversary,
+the two games and those scores in turn.
 
 % Spans both columns: the symbol list overflows a single column by ~40pt.
-\begin{table*}[t]
+\begin{table*}[tb]
 \centering
 \small
 \caption{Notation used throughout the paper.}
@@ -624,6 +649,20 @@ headings, captions and table notes.
 
 \subsection{A generative attacker operates in a different regime}
 \label{sec:res-attackers}
+\begin{figure}[htb]
+  \centering
+  \includegraphics{fig1_headline_attackers.pdf}
+  \caption{Headline prose, Game~J (46 pools). (a) Linkage component \FL;
+  (b) joint \FJ. Means with $95\%$ percentile-bootstrap CIs over pools. The
+  dashed line is the analytic one-bucket reference \bJ, which is a
+  trivial-strategy benchmark rather than chance; a legal size-blind random
+  seven-group answer scores $0.077$ (\S\ref{sec:baselines}). Open diamond:
+  post-hoc exploratory attacker.}
+  \label{fig:attackers}
+\end{figure}
+\input{table2_headline_attackers}
+\input{table9_adjacency}
+
 On the 46 headline pools---full-length case reports under the sentence
 cut---the one-shot attacker reached $\FJ = 0.723$ $[0.702, 0.743]$, recovering
 most membership, $\FL = 0.882$ $[0.861, 0.901]$, and most relative order,
@@ -654,22 +693,22 @@ relative-order structure strongly, while immediate adjacency and contiguous
 plaintext recovery remain much weaker.} Exact reconstruction---membership and
 order both perfect---occurred for 1 of 322 headline documents.
 
-\begin{figure}[t]
-  \centering
-  \includegraphics{fig1_headline_attackers.pdf}
-  \caption{Headline prose, Game~J (46 pools). (a) Linkage component \FL;
-  (b) joint \FJ. Means with $95\%$ percentile-bootstrap CIs over pools. The
-  dashed line is the analytic one-bucket reference \bJ, which is a
-  trivial-strategy benchmark rather than chance; a legal size-blind random
-  seven-group answer scores $0.077$ (\S\ref{sec:baselines}). Open diamond:
-  post-hoc exploratory attacker.}
-  \label{fig:attackers}
-\end{figure}
-\input{table2_headline_attackers}
-\input{table9_adjacency}
 
 \subsection{Fragmentation strategy and granularity}
 \label{sec:res-grid}
+\begin{figure}[htb]
+  \centering
+  \includegraphics{fig2_grid_reconstruction.pdf}
+  \caption{Game~J across the nine retained grid conditions, one-shot
+  attacker. Each point is the cell mean of \FJ{} with its $95\%$
+  percentile-bootstrap CI over the cell's pools; the grey tick on each row is
+  the analytic one-bucket reference \bJ{} for that cell ($0.128$--$0.132$). One
+  resource-bounded non-completion (random\,/\,token-window) is excluded and
+  never scored $0$.}
+  \label{fig:grid}
+\end{figure}
+\input{table3_grid}
+
 Across the nine retained conditions, \FJ{} ranged from $0.498$ (subject--verb
 $\times$ clause) to $0.801$ (random $\times$ sentence); every cell sits well
 above the analytic reference, the smallest advantage being $\AJ = 0.422$.
@@ -678,26 +717,10 @@ lowered \FJ{} modestly within three of the four strategies. At matched mean
 fragment length the cutting strategy moved the result more than the granularity
 label did.
 
-\begin{figure}[t]
-  \centering
-  \includegraphics{fig2_grid_reconstruction.pdf}
-  \caption{Game~J across the nine retained conditions and the full-length
-  headline. (a) \FJ{} for the one-shot attacker ($95\%$ CI), Memon-inspired,
-  the post-hoc embedding attacker and the analytic reference \bJ; (b)
-  normalized advantage \AJ. One resource-bounded non-completion
-  (random\,/\,token-window) is excluded and never scored $0$.}
-  \label{fig:grid}
-\end{figure}
-\input{table3_grid}
 
 \subsection{Linkage versus ordering}
 \label{sec:res-decomp}
-The decomposition separates which half each condition attacks. Subject--verb
-cuts and random token windows act mainly on linkage; semantic-style boundaries
-act mainly on ordering. The tested statistical attackers order at chance
-throughout.
-
-\begin{figure*}[t]
+\begin{figure*}[tb]
   \centering
   \includegraphics{fig3_linkage_vs_ordering.pdf}
   \caption{Decomposition of Game~J into (a) the linkage component \FL{} and
@@ -706,19 +729,15 @@ throughout.
   \label{fig:decomp}
 \end{figure*}
 
+The decomposition separates which half each condition attacks. Subject--verb
+cuts and random token windows act mainly on linkage; semantic-style boundaries
+act mainly on ordering. The tested statistical attackers order at chance
+throughout.
+
+
 \subsection{Ordering when membership is given}
 \label{sec:res-gameO}
-With membership supplied, the one-shot attacker ordered the 100 full-length
-headline documents at $\tau = 0.769$, i.e.\ $88.5\%$ of pairs correctly
-ordered, with $\tau$ ranging from $0.724$ to $0.943$ across the grid cells. The
-tested lexical orderers sat at chance. Contiguity on the same headline
-documents was again much lower than the pairwise figure suggests: $32.5\%$ of
-fragments in their exact position, a mean longest intact run of $6.31$
-fragments, and a run fraction of $0.237$. Headline and grid results are
-reported separately throughout and are not pooled; they move in opposite
-directions in some comparisons.
-
-\begin{figure}[t]
+\begin{figure}[htb]
   \centering
   \includegraphics{figA_gameO_vs_gameJ.pdf}
   \caption{Ordering with membership given (Game~O, plotted as $(1+\tau)/2$)
@@ -730,9 +749,31 @@ directions in some comparisons.
 \end{figure}
 \input{table4_gameO}
 
+With membership supplied, the one-shot attacker ordered the 100 full-length
+headline documents at $\tau = 0.769$, i.e.\ $88.5\%$ of pairs correctly
+ordered, with $\tau$ ranging from $0.724$ to $0.943$ across the grid cells. The
+tested lexical orderers sat at chance. Contiguity on the same headline
+documents was again much lower than the pairwise figure suggests: $32.5\%$ of
+fragments in their exact position, a mean longest intact run of $6.31$
+fragments, and a run fraction of $0.237$. Headline and grid results are
+reported separately throughout and are not pooled; they move in opposite
+directions in some comparisons.
+
+
 \FloatBarrier
 \subsection{Structured identifiers}
 \label{sec:res-identifiers}
+\begin{figure}[htb]
+  \centering
+  \includegraphics{fig4_identifiers.pdf}
+  \caption{Synthetic identifiers, Game~J (20 pools of seven records). (a)
+  \FL; (b) \FJ; (c) linkage precision, against the analytic ($0.10$ / $0.20$),
+  schema-order ($0.20$) and template-chance ($1/7$) references. Open circles:
+  the same attacker on the prose headline, for scale.}
+  \label{fig:identifiers}
+\end{figure}
+\input{table5_identifiers}
+
 The identifier arm behaved qualitatively differently. The one-shot attacker
 scored $\FJ = 0.083$ $[0.068, 0.099]$ with $\FL = 0.132$---below the analytic
 reference of $0.10$ and well below the truth-free schema-order baseline of
@@ -756,19 +797,23 @@ establish that identifier fragmentation is safe: it says that \emph{these}
 attackers did not recover record association under \emph{this} setup
 (\S\ref{sec:synthetic}).
 
-\begin{figure}[t]
-  \centering
-  \includegraphics{fig4_identifiers.pdf}
-  \caption{Synthetic identifiers, Game~J (20 pools of seven records). (a)
-  \FL; (b) \FJ; (c) linkage precision, against the analytic ($0.10$ / $0.20$),
-  schema-order ($0.20$) and template-chance ($1/7$) references. Open circles:
-  the same attacker on the prose headline, for scale.}
-  \label{fig:identifiers}
-\end{figure}
-\input{table5_identifiers}
 
 \subsection{A controlled granularity series\posthoc}
 \label{sec:res-gradient}
+\begin{figure}[htb]
+  \centering
+  \includegraphics{fig6_granularity_gradient.pdf}
+  \caption{Post-hoc exploratory granularity series: five cuts of identical
+  text on the same 20 pools. (a) Observed \VJ{} against the random-shuffle
+  reference for the same arm, which is not constant across arms; \AVJ{} is
+  printed at each point. (b) Share of the 76-word excerpt recovered as one
+  contiguous stretch, against the floor leaked by the cut alone. Join recall,
+  which supports the two-regime reading, is $0.464$, $0.476$, $0.315$, $0.153$
+  and $0.022$ from the sentence cut to one word.}
+  \label{fig:gradient}
+\end{figure}
+\input{table8_gradient}
+
 \textbf{This subsection is post-hoc exploratory.} It was designed after the
 prespecified results were seen. On 20 headline pools and 140 four-sentence
 excerpts, with byte-identical text in every arm and only the cut width
@@ -783,22 +828,9 @@ $0.423$ at the sentence cut to $0.141$ at one word---so raw \VJ{} is not
 comparable between arms and the normalized value is the one to read. And the
 identifier-level score tracks the same shape but sits below it throughout.
 
-\begin{figure}[t]
-  \centering
-  \includegraphics{fig6_granularity_gradient.pdf}
-  \caption{Post-hoc exploratory granularity series: five cuts of identical
-  text on the same 20 pools. (a) Observed \VJ{} against the random-shuffle
-  reference for the same arm, which is not constant across arms; \AVJ{} is
-  printed at each point. (b) Share of the 76-word excerpt recovered as one
-  contiguous stretch, against the floor leaked by the cut alone. Join recall,
-  which supports the two-regime reading, is $0.464$, $0.476$, $0.315$, $0.153$
-  and $0.022$ from the sentence cut to one word.}
-  \label{fig:gradient}
-\end{figure}
-\input{table8_gradient}
 
 \paragraph{Two regimes.}
-Panel~(b) separates what the cut gives away from what the attacker earns. At
+Figure~\ref{fig:gradient}(b) separates what the cut gives away from what the attacker earns. At
 the sentence cut the attacker ends up holding $64.2\%$ of the excerpt as one
 contiguous stretch, but $37.7$ points of that are a single fragment, leaked
 before any reconstruction happens. Between the sentence cut and the four-word
@@ -841,7 +873,7 @@ of 20). Raw and normalized scores agree in sign for the one-shot attacker in
 every pool; for Memon-inspired they disagree in three, which is a further
 reason to quote the normalized value.
 
-\begin{figure}[t]
+\begin{figure}[htb]
   \centering
   \includegraphics{fig5_single_token.pdf}
   \caption{Post-hoc exploratory single-token edge case: per-pool \AVJ{} for the
@@ -851,7 +883,6 @@ reason to quote the normalized value.
 \end{figure}
 \input{table6_single_token}
 
-\FloatBarrier
 \subsection{Completion}
 \label{sec:res-resources}
 Of 652 prespecified one-shot units, 651 completed. The one unit that exhausted
@@ -970,8 +1001,6 @@ therefore a property of the data, the granularity and the attacker, and
 plaintext fragmentation should not be assumed to protect narrative text on its
 own.
 
-\appendix
-
 \begin{acks}
 Does NOT count towards page limit. NOT shown (as intended) for anonymous
 submission. Only edit for the camera-ready. \TODO{funding; author
@@ -1064,9 +1093,17 @@ paper. No AI system is listed as an author.
 
 % ===========================================================================
 % APPENDICES (outside the page limit; after the references)
+% \appendix belongs HERE, not before the mandatory sections: it switches
+% \section numbering to letters, and acks/ethics/openscience/AI are starred
+% so they were unnumbered either way.
 % ===========================================================================
+\appendix
+
 \section{Design Summary}
 \label{app:design}
+Table~\ref{tab:design} is the one-page view of the study: the corpus, sample,
+conditions, attackers and primary metric of each experiment, and whether it was
+prespecified or designed after results were seen.
 \input{table1_design}
 
 \section{Prompts}
@@ -1076,7 +1113,14 @@ text. \TODO{paste verbatim from the frozen specs}
 
 \section{Completion, Resources and Cost}
 \label{app:resources}
-\begin{figure}[t]
+Figure~\ref{fig:resources} shows how the answering call's output length grows
+with the number of fragments in the unit, and Table~\ref{tab:resources} gives
+completion, repairs and cost for every paid experiment. Together they are the
+evidence for \S\ref{sec:res-resources}: one unit in 652 exhausted the output
+budget, and fragment count does not predict which one.
+% [b] only. With a top placement this figure floats to the top of the page
+% the bibliography starts on and prints above the References heading.
+\begin{figure}[b]
   \centering
   \includegraphics{figB_resource_scaling.pdf}
   \caption{Output tokens of the answering call against fragment count for every

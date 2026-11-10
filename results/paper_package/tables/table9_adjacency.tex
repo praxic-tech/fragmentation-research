@@ -1,4 +1,4 @@
-\begin{table*}[t]
+\begin{table*}[tb]
 \centering
 \footnotesize
 \setlength{\tabcolsep}{3pt}
@@ -7,7 +7,7 @@
 \sbox0{%
 \begin{tabular}{lrrrrrr}
 \toprule
-Attacker & $F1_J$ & $F1_L$ & Adjacency $F1$ & Run fraction & Longest run (frags) & Docs, no intact pair \\
+Attacker & $\mathrm{F1}_{J}$ & $\mathrm{F1}_{L}$ & Adjacency $\mathrm{F1}$ & Run fraction & Longest run (frags) & Docs, no intact pair \\
 \midrule
 Headline (46 pools) &  &  &  &  &  &  \\
   One-shot Sonnet & 0.723 & 0.882 & 0.287 & 0.178 & 4.53 & 0.00 \\
@@ -26,11 +26,11 @@ Grid (216 units) &  &  &  &  &  &  \\
 \end{tabular}}
 \ifdim\wd0>\textwidth\resizebox{\textwidth}{!}{\usebox0}\else\usebox0\fi
 \begin{flushleft}\footnotesize
-F1\_J scores the FULL within-document precedence relation: every (earlier, later) pair inside a predicted group. Adjacency F1 scores only IMMEDIATE directed pairs. A predicted adjacency spanning two documents is a false positive -- no credit is given for the seam between two completed documents, because the output here is a partition rather than one global permutation.\\
+$\mathrm{F1}_{J}$ scores the FULL within-document precedence relation: every (earlier, later) pair inside a predicted group. Adjacency F1 scores only IMMEDIATE directed pairs. A predicted adjacency spanning two documents is a false positive -- no credit is given for the seam between two completed documents, because the output here is a partition rather than one global permutation.\\
 Longest run is the longest stretch of fragments placed consecutively AND in true order, in fragments; a fragment from another document interrupting the sequence breaks the run. Run fraction divides it by the document's fragment count.\\
 Adjacency precision, recall and F1 are equal by construction here and only one is reported: every answer is a valid partition into exactly the known N groups, so the number of predicted adjacent pairs equals the number of true ones (fragments minus groups).\\
-The random rows are VALID answers to the game: a partition into exactly the known N groups. Size-blind deals round-robin and is the matched comparison, because prompt\_J states only that records may contain different numbers of fragments. The oracle-size row is given the true per-document sizes, is attacker-favourable, and is not the chance level. Both are means of 1,000 seeded partition draws per pool, with C = K/2 exact over the within-group order.\\
-The analytic one-bucket reference used elsewhere is b\_J = 0.149 on the headline pools, but one bucket is not a legal answer to a prompt demanding exactly seven groups: a legal size-blind random answer scores F1\_J 0.077. The one-bucket figure therefore overstates the floor by roughly a factor of two, and A\_J correspondingly understates the advantage over a legal random attacker.\\
-The non-generative attackers collapse on the adjacency surface in a way the precedence score hides: on the headline pools Memon-inspired scores F1\_J 0.169 against a one-bucket 0.149 but adjacency F1 0.010 against a random 0.004, with about five of seven documents returning no correct adjacency at all.\\
+The random rows are VALID answers to the game: a partition into exactly the known N groups. Size-blind deals round-robin and is the matched comparison, because \textsf{prompt\_J} states only that records may contain different numbers of fragments. The oracle-size row is given the true per-document sizes, is attacker-favourable, and is not the chance level. Both are means of 1,000 seeded partition draws per pool, with C = K/2 exact over the within-group order.\\
+The analytic one-bucket reference used elsewhere is $b_{J}$ = 0.149 on the headline pools, but one bucket is not a legal answer to a prompt demanding exactly seven groups: a legal size-blind random answer scores $\mathrm{F1}_{J}$ 0.077. The one-bucket figure therefore overstates the floor by roughly a factor of two, and $A_{J}$ correspondingly understates the advantage over a legal random attacker.\\
+The non-generative attackers collapse on the adjacency surface in a way the precedence score hides: on the headline pools Memon-inspired scores $\mathrm{F1}_{J}$ 0.169 against a one-bucket 0.149 but adjacency F1 0.010 against a random 0.004, with about five of seven documents returning no correct adjacency at all.\\
 \end{flushleft}
 \end{table*}

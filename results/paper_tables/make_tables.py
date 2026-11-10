@@ -51,6 +51,37 @@ def tex_escape(s):
             .replace("†", r"$^\dagger$").replace("**", "").replace("—", "--"))
 
 
+# The note and label strings are shared with the Markdown output, so they are
+# written in ASCII ("F1_J", "b_J"). In LaTeX those have to be real maths, set
+# the same way as in the paper body, or the notes disagree typographically with
+# the table they annotate. Applied AFTER tex_escape, so the patterns are the
+# escaped forms. Longest key first: "A_VJ" must win over "A_V".
+TEX_MATH = [
+    (r"F1\_J",     r"$\mathrm{F1}_{J}$"),
+    (r"F1\_L",     r"$\mathrm{F1}_{L}$"),
+    (r"A\_schema", r"$A_{\mathrm{schema}}$"),
+    (r"A\_VJ",     r"$A_{VJ}$"),
+    (r"A\_VL",     r"$A_{VL}$"),
+    (r"A\_J",      r"$A_{J}$"),
+    (r"V\_J",      r"$V_{J}$"),
+    (r"V\_L",      r"$V_{L}$"),
+    (r"b\_J",      r"$b_{J}$"),
+    (r"b\_L",      r"$b_{L}$"),
+    (r"q\_V",      r"$q_{V}$"),
+    # not a metric: the frozen name of the request spec
+    (r"prompt\_J", r"\textsf{prompt\_J}"),
+    (r"prompt\_O", r"\textsf{prompt\_O}"),
+]
+
+
+def tex_math(s):
+    """Turn the ASCII metric names in an escaped string into real maths."""
+    for ascii_form, math_form in TEX_MATH:
+        s = s.replace(ascii_form, math_form)
+    # "$a$$b$" happens when two names are adjacent; it is legal but ugly.
+    return s.replace("$$", "")
+
+
 def write(name, caption, label, header, rows, notes, align=None, tex_header=None):
     """rows: list of lists of strings (already formatted)."""
     # markdown
@@ -66,17 +97,17 @@ def write(name, caption, label, header, rows, notes, align=None, tex_header=None
     tex_caption = re.sub(r"^Table \d+\. ", "", caption)
     # The tabular is typeset into a box first and shrunk to \textwidth only if
     # it is wider than the page; a table that fits is never enlarged.
-    L = [r"\begin{table*}[t]", r"\centering", r"\footnotesize", r"\setlength{\tabcolsep}{3pt}",
-         f"\\caption{{{tex_escape(tex_caption)}}}", f"\\label{{{label}}}",
+    L = [r"\begin{table*}[tb]", r"\centering", r"\footnotesize", r"\setlength{\tabcolsep}{3pt}",
+         f"\\caption{{{tex_math(tex_escape(tex_caption))}}}", f"\\label{{{label}}}",
          r"\sbox0{%", f"\\begin{{tabular}}{{{align}}}", r"\toprule", " & ".join(th) + r" \\", r"\midrule"]
     for r in rows:
         if r == "MIDRULE":
             L.append(r"\midrule"); continue
-        L.append(" & ".join(c if (c.startswith("$") and c.endswith("$")) else tex_escape(c) for c in r) + r" \\")
+        L.append(" & ".join(c if (c.startswith("$") and c.endswith("$")) else tex_math(tex_escape(c)) for c in r) + r" \\")
     L += [r"\bottomrule", r"\end{tabular}}",
           r"\ifdim\wd0>\textwidth\resizebox{\textwidth}{!}{\usebox0}\else\usebox0\fi",
           r"\begin{flushleft}\footnotesize"]
-    L += [tex_escape(n) + r"\\" for n in notes]
+    L += [tex_math(tex_escape(n)) + r"\\" for n in notes]
     L += [r"\end{flushleft}", r"\end{table*}"]
     open(f"{OUT}/{name}.tex", "w", encoding="utf-8").write("\n".join(L) + "\n")
     print(f"  wrote {name}.md / .tex")
@@ -123,7 +154,7 @@ def table2_headline():
              "† Post-hoc exploratory (D14): motivated by the observed Memon-inspired / Sonnet gap; designed and frozen before evaluation; first complete result kept; F1_L is its primary comparison."]
     write("table2_headline_attackers", "Table 2. Headline prose, Game J: attacker comparison on the 46 headline pools.", "tab:headline",
           ["Attacker", "F1_L [95% CI]", "q [95% CI]", "F1_J [95% CI]", "A_J [95% CI]", "Exact docs", "Completed"], rows, notes,
-          tex_header=["Attacker", "$F1_L$ [95\\% CI]", "$q$ [95\\% CI]", "$F1_J$ [95\\% CI]", "$A_J$ [95\\% CI]", "Exact docs", "Completed"])
+          tex_header=["Attacker", "$\mathrm{F1}_{L}$ [95\\% CI]", "$q$ [95\\% CI]", "$\mathrm{F1}_{J}$ [95\\% CI]", "$A_J$ [95\\% CI]", "Exact docs", "Completed"])
 
 
 def table3_grid():
@@ -144,7 +175,7 @@ def table3_grid():
     write("table3_grid", "Table 3. Full retained prose grid, Game J, One-shot Sonnet.", "tab:grid",
           ["Cell (strategy / granularity)", "Frags/doc", "Words/frag", "F1_J [95% CI]", "b_J", "A_J [95% CI]", "F1_L [95% CI]", "q [95% CI]",
            "Completed"], rows, notes,
-          tex_header=["Cell", "Frags/doc", "Words/frag", "$F1_J$ [95\\% CI]", "$b_J$", "$A_J$ [95\\% CI]", "$F1_L$ [95\\% CI]", "$q$ [95\\% CI]",
+          tex_header=["Cell", "Frags/doc", "Words/frag", "$\mathrm{F1}_{J}$ [95\\% CI]", "$b_J$", "$A_J$ [95\\% CI]", "$\mathrm{F1}_{L}$ [95\\% CI]", "$q$ [95\\% CI]",
                       "Completed"])
 
 
@@ -195,7 +226,7 @@ def table5_identifiers():
     write("table5_identifiers", "Table 5. Structured identifiers, Game J: attackers against the analytic and schema-order baselines.", "tab:identifiers",
           ["Attacker / baseline", "F1_J [95% CI]", "F1_L [95% CI]", "q", "Linkage precision [95% CI]", "A_schema [90% CI]", "F1_J − 0.20 [90% CI]", "Near baseline?"],
           rows, notes,
-          tex_header=["Attacker / baseline", "$F1_J$ [95\\% CI]", "$F1_L$ [95\\% CI]", "$q$", "Link. precision [95\\% CI]", "$A_{schema}$ [90\\% CI]", "$F1_J - 0.20$ [90\\% CI]", "Near baseline?"])
+          tex_header=["Attacker / baseline", "$\mathrm{F1}_{J}$ [95\\% CI]", "$\mathrm{F1}_{L}$ [95\\% CI]", "$q$", "Link. precision [95\\% CI]", "$A_{\mathrm{schema}}$ [90\\% CI]", "$\mathrm{F1}_{J} - 0.20$ [90\\% CI]", "Near baseline?"])
 
 
 def table6_single_token():
@@ -368,7 +399,7 @@ def table9_adjacency():
           ["Attacker", "F1_J", "F1_L", "Adjacency F1", "Run fraction", "Longest run (frags)",
            "Docs with no intact pair"],
           rows, notes, align="l" + "r" * 6,
-          tex_header=["Attacker", "$F1_J$", "$F1_L$", "Adjacency $F1$", "Run fraction",
+          tex_header=["Attacker", "$\mathrm{F1}_{J}$", "$\mathrm{F1}_{L}$", "Adjacency $\mathrm{F1}$", "Run fraction",
                       "Longest run (frags)", "Docs, no intact pair"])
 
 

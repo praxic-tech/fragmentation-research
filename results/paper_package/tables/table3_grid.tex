@@ -1,4 +1,4 @@
-\begin{table*}[t]
+\begin{table*}[tb]
 \centering
 \footnotesize
 \setlength{\tabcolsep}{3pt}
@@ -7,7 +7,7 @@
 \sbox0{%
 \begin{tabular}{lrrrrrrrr}
 \toprule
-Cell & Frags/doc & Words/frag & $F1_J$ [95\% CI] & $b_J$ & $A_J$ [95\% CI] & $F1_L$ [95\% CI] & $q$ [95\% CI] & Completed \\
+Cell & Frags/doc & Words/frag & $\mathrm{F1}_{J}$ [95\% CI] & $b_J$ & $A_J$ [95\% CI] & $\mathrm{F1}_{L}$ [95\% CI] & $q$ [95\% CI] & Completed \\
 \midrule
 random / sentence & 24.6 & 19.5 & 0.801 [0.772, 0.829] & 0.128 & 0.772 [0.739, 0.804] & 0.862 [0.837, 0.886] & 0.926 [0.905, 0.946] & 24/24 \\
 random / clause & 30.9 & 15.5 & 0.754 [0.724, 0.784] & 0.130 & 0.718 [0.683, 0.752] & 0.835 [0.811, 0.857] & 0.899 [0.879, 0.919] & 24/24 \\
@@ -22,7 +22,7 @@ subject-verb / clause & 48.5 & 9.9 & 0.498 [0.476, 0.521] & 0.131 & 0.422 [0.397
 \end{tabular}}
 \ifdim\wd0>\textwidth\resizebox{\textwidth}{!}{\usebox0}\else\usebox0\fi
 \begin{flushleft}\footnotesize
-Grid pools 2--25 (24 pools of 7 documents per cell; documents capped at 30 reference sentences). One-shot Sonnet; 95\% percentile-bootstrap CIs over pools. b\_J is the pool-mean analytic one-bucket baseline. The Memon-inspired and embedding (post hoc) attackers sit near b\_J in every cell, with q $\approx$ 0.5; Game O $\tau$ per cell is reported with the other Game O results.\\
+Grid pools 2--25 (24 pools of 7 documents per cell; documents capped at 30 reference sentences). One-shot Sonnet; 95\% percentile-bootstrap CIs over pools. $b_{J}$ is the pool-mean analytic one-bucket baseline. The Memon-inspired and embedding (post hoc) attackers sit near $b_{J}$ in every cell, with q $\approx$ 0.5; Game O $\tau$ per cell is reported with the other Game O results.\\
 random / token-window: one pool (pool\_002, 322 fragments) exhausted the 128k output budget and is excluded as a resource-bounded non-completion, never scored 0.\\
 Semantic / sentence is standard sentence splitting and the reference cut; the headline is the same cut at full length.\\
 \end{flushleft}

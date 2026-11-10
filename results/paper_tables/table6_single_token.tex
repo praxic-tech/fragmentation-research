@@ -1,4 +1,4 @@
-\begin{table*}[t]
+\begin{table*}[tb]
 \centering
 \footnotesize
 \setlength{\tabcolsep}{3pt}
@@ -9,24 +9,24 @@
 \toprule
 Metric & Sentence & Token & Paired diff (s $-$ t) [95\% CI] & Median diff & Pools s $>$ t & Sign test $p$ \\
 \midrule
-A\_VJ (PRIMARY, oracle-size null) & 0.588 & 0.016 & 0.572 [0.539, 0.607] & 0.563 & 20/20 & 1.9e-06 \\
-raw V\_J & 0.762 & 0.155 & 0.607 [0.586, 0.628] & 0.601 & 20/20 & 1.9e-06 \\
-A\_VL & 0.777 & 0.159 & 0.618 [0.552, 0.695] & 0.581 & 20/20 & 1.9e-06 \\
-raw V\_L & 0.889 & 0.427 & 0.462 [0.425, 0.508] & 0.437 & 20/20 & 1.9e-06 \\
-A\_VJ (predicted-structure null, robustness) & 0.592 & 0.027 & 0.565 [0.532, 0.599] & 0.558 & 20/20 & 1.9e-06 \\
-F1\_J (id-level) & 0.585 & 0.116 & 0.469 [0.437, 0.501] & 0.477 & 20/20 & 1.9e-06 \\
-F1\_L (id-level) & 0.761 & 0.223 & 0.538 [0.482, 0.595] & 0.544 & 20/20 & 1.9e-06 \\
-A\_J (id-level) & 0.539 & -0.016 & 0.555 [0.520, 0.590] & 0.560 & 20/20 & 1.9e-06 \\
+$A_{VJ}$ (PRIMARY, oracle-size null) & 0.588 & 0.016 & 0.572 [0.539, 0.607] & 0.563 & 20/20 & 1.9e-06 \\
+raw $V_{J}$ & 0.762 & 0.155 & 0.607 [0.586, 0.628] & 0.601 & 20/20 & 1.9e-06 \\
+$A_{VL}$ & 0.777 & 0.159 & 0.618 [0.552, 0.695] & 0.581 & 20/20 & 1.9e-06 \\
+raw $V_{L}$ & 0.889 & 0.427 & 0.462 [0.425, 0.508] & 0.437 & 20/20 & 1.9e-06 \\
+$A_{VJ}$ (predicted-structure null, robustness) & 0.592 & 0.027 & 0.565 [0.532, 0.599] & 0.558 & 20/20 & 1.9e-06 \\
+$\mathrm{F1}_{J}$ (id-level) & 0.585 & 0.116 & 0.469 [0.437, 0.501] & 0.477 & 20/20 & 1.9e-06 \\
+$\mathrm{F1}_{L}$ (id-level) & 0.761 & 0.223 & 0.538 [0.482, 0.595] & 0.544 & 20/20 & 1.9e-06 \\
+$A_{J}$ (id-level) & 0.539 & -0.016 & 0.555 [0.520, 0.590] & 0.560 & 20/20 & 1.9e-06 \\
 \midrule
-Memon-inspired A\_VJ (not designed for tokens) & 0.043 & -0.067 & 0.110 [0.047, 0.178] & 0.065 & 17/20 & 2.6e-03 \\
-Embedding A\_VJ (not designed for tokens) & 0.104 & -0.090 & 0.194 [0.155, 0.233] & 0.201 & 20/20 & 1.9e-06 \\
+Memon-inspired $A_{VJ}$ (not designed for tokens) & 0.043 & -0.067 & 0.110 [0.047, 0.178] & 0.065 & 17/20 & 2.6e-03 \\
+Embedding $A_{VJ}$ (not designed for tokens) & 0.104 & -0.090 & 0.194 [0.155, 0.233] & 0.201 & 20/20 & 1.9e-06 \\
 \bottomrule
 \end{tabular}}
 \ifdim\wd0>\textwidth\resizebox{\textwidth}{!}{\usebox0}\else\usebox0\fi
 \begin{flushleft}\footnotesize
 POST-HOC EXPLORATORY (D16). 20 headline pools $\times$ 7 documents, four consecutive source sentences per document, identical text in both arms; sentence arm 28 fragments per pool, token arm median 523 (range 438--669). Completion 20/20 in both arms for every attacker; no RBNC.\\
-Oracle-size null means (10,000 permutations per pool): V\_J 0.423 (sentence) vs 0.141 (token); V\_L 0.503 vs 0.317. A\_V = (V $-$ null mean)/(1 $-$ null mean). Paired differences: percentile bootstrap over pools (10,000 resamples, seed 42, 95\%); exact two-sided sign test. q\_V (diagnostic only): Sonnet 0.860 vs 0.376. No raw-vs-normalized sign disagreement for Sonnet; Memon-inspired disagrees in 3 pools (pool\_017, pool\_032, pool\_041).\\
+Oracle-size null means (10,000 permutations per pool): $V_{J}$ 0.423 (sentence) vs 0.141 (token); $V_{L}$ 0.503 vs 0.317. A\_V = (V $-$ null mean)/(1 $-$ null mean). Paired differences: percentile bootstrap over pools (10,000 resamples, seed 42, 95\%); exact two-sided sign test. $q_{V}$ (diagnostic only): Sonnet 0.860 vs 0.376. No raw-vs-normalized sign disagreement for Sonnet; Memon-inspired disagrees in 3 pools (pool\_017, pool\_032, pool\_041).\\
 Resources (Sonnet, all provider rows): sentence arm 20 rows, 106,375 output tokens, \$0.57; token arm 31 rows (20 base + 11 repairs; 8 repaired, 3 repair calls hit 128k and kept the earlier answer), 2,682,786 output tokens, \$13.58.\\
-Descriptive only: excerpt sentence-arm F1\_J 0.585 vs full-document headline F1\_J 0.723 (different tasks). A binary edge case, not a dose-response experiment: it locates no threshold.\\
+Descriptive only: excerpt sentence-arm $\mathrm{F1}_{J}$ 0.585 vs full-document headline $\mathrm{F1}_{J}$ 0.723 (different tasks). A binary edge case, not a dose-response experiment: it locates no threshold.\\
 \end{flushleft}
 \end{table*}
