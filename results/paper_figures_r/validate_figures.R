@@ -158,11 +158,53 @@ check("the 3 units whose repair call hit 128k use their first call",
 check("token-arm fragment counts = frozen per-pool counts",
       same(tk$n_fragments, P$n_fragments[P$condition == "token"][match(tk$unit, P$pool[P$condition == "token"])]))
 
+# ---- Figure 6: the granularity gradient ----------------------------------------------------
+# Checked against the frozen sources, not against fig6's own script: the D16
+# analysis for the two anchor arms, the D18 visible analysis for the three new
+# ones, and the recovery JSON for panel (b).
+cat("fig6_granularity_gradient\n")
+suppressPackageStartupMessages(library(jsonlite))
+f6  <- fig("fig6_granularity_gradient")
+s16 <- fromJSON("results/single_token_edge/analysis/summary.json")$attackers[["One-shot Sonnet"]]$means
+s18 <- fromJSON("results/gradient/visible_analysis/summary.json")
+rc  <- fromJSON("results/gradient/recovery.json")
+
+check("5 arms, ordered fine to coarse",
+      nrow(f6) == 5 && identical(f6$arm, c("1-word", "2-word", "3-word", "4-word", "sentence")))
+check("anchor arms' A_VJ / V_J / V_L = the frozen D16 analysis",
+      same(c(f6$A_VJ[f6$arm == "sentence"], f6$V_J[f6$arm == "sentence"], f6$V_L[f6$arm == "sentence"],
+             f6$A_VJ[f6$arm == "1-word"],  f6$V_J[f6$arm == "1-word"],  f6$V_L[f6$arm == "1-word"]),
+           c(s16$sentence$A_VJ, s16$sentence$V_J, s16$sentence$V_L,
+             s16$token$A_VJ,    s16$token$V_J,    s16$token$V_L)))
+for (a in c("4-word", "3-word", "2-word")) {
+  k <- c("4-word" = "w4", "3-word" = "w3", "2-word" = "w2")[[a]]
+  check(paste(a, "A_VJ / V_J / V_L = the D18 visible analysis"),
+        same(c(f6$A_VJ[f6$arm == a], f6$V_J[f6$arm == a], f6$V_L[f6$arm == a]),
+             c(s18$arms[[k]]$A_VJ, s18$arms[[k]]$V_J, s18$arms[[k]]$V_L)))
+}
+check("the D18 nulls used the frozen 10,000 permutations",
+      s18$permutations_per_pool_condition_null == 10000)
+check("the D18 nulls kept the frozen namespace",
+      grepl("single-token-edge-v1", s18$null_namespace))
+check("20 pools scored in every new arm",
+      all(vapply(c("w4", "w3", "w2"), function(k) s18$arms[[k]]$n_pools == 20, logical(1))))
+check("panel (b) recovered / floor percentages = recovery.json",
+      same(c(f6$recovered, f6$floor),
+           c(vapply(f6$arm, function(a) rc[[a]]$recovered_pct, numeric(1)),
+             vapply(f6$arm, function(a) rc[[a]]$floor_pct, numeric(1)))))
+check("recovered is never below the floor it is measured against",
+      all(f6$recovered >= f6$floor))
+check("V_J <= V_L in every arm", all(f6$V_J <= f6$V_L + 1e-12))
+check("the primary series is monotone in fragment length",
+      !is.unsorted(f6$A_VJ) && !is.unsorted(f6$frag_words))
+check("mean fragment lengths match the built cells (19.01 / 3.92 / 2.96 / 1.99 / 1.00)",
+      same(round(f6$frag_words, 2), c(1.00, 1.99, 2.96, 3.92, 19.01)))
+
 # ---- Files --------------------------------------------------------------------------------
 cat("files\n")
 for (n in c("fig1_headline_attackers", "fig2_grid_reconstruction", "fig3_linkage_vs_ordering",
-            "fig4_identifiers", "fig5_single_token", "figA_gameO_vs_gameJ",
-            "figB_resource_scaling", "figC_token_raw_vs_null")) {
+            "fig4_identifiers", "fig5_single_token", "fig6_granularity_gradient",
+            "figA_gameO_vs_gameJ", "figB_resource_scaling", "figC_token_raw_vs_null")) {
   check(paste(n, ": pdf svg png csv R"),
         all(file.exists(file.path(dir, paste0(n, c(".pdf", ".svg", ".png", ".csv", ".R"))))))
 }

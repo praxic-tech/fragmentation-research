@@ -1,0 +1,48 @@
+{
+ "what": "VISIBLE-TEXT metrics and permutation nulls for the D18 gradient arms",
+ "permutations_per_pool_condition_null": 10000,
+ "null_namespace": "single-token-edge-v1 (inherited from D16, unchanged)",
+ "d16_arms": "NOT recomputed; read from results/single_token_edge/analysis",
+ "q_V_note": "diagnostic ratio only; V_J and V_L use separate assignments",
+ "arms": {
+  "w4": {
+   "V_L": 0.7110191717756398,
+   "V_J": 0.4818795458879432,
+   "q_V": 0.6767698663488055,
+   "A_VL": 0.551824654206713,
+   "A_VJ": 0.34976975630819906,
+   "null_oracle_V_L": 0.35470556322593116,
+   "null_oracle_V_J": 0.20402198271212474,
+   "A_VL_pred": 0.5542452154695813,
+   "A_VJ_pred": 0.35212430255513266,
+   "n_pools": 20,
+   "n_fragments_mean": 135.7
+  },
+  "w3": {
+   "V_L": 0.6566393407939667,
+   "V_J": 0.39500440695270617,
+   "q_V": 0.6027392326653802,
+   "A_VL": 0.4749330919799646,
+   "A_VJ": 0.25695229465393016,
+   "null_oracle_V_L": 0.3437141800849975,
+   "null_oracle_V_J": 0.18559911115048094,
+   "A_VL_pred": 0.4786007343248314,
+   "A_VJ_pred": 0.25985515330669146,
+   "n_pools": 20,
+   "n_fragments_mean": 179.8
+  },
+  "w2": {
+   "V_L": 0.5508386880658247,
+   "V_J": 0.2708740157875413,
+   "q_V": 0.4935096571836574,
+   "A_VL": 0.32659980441432757,
+   "A_VJ": 0.1267096130570335,
+   "null_oracle_V_L": 0.33159388332533524,
+   "null_oracle_V_J": 0.165021242611911,
+   "A_VL_pred": 0.33152898599173,
+   "A_VJ_pred": 0.13021204156061633,
+   "n_pools": 20,
+   "n_fragments_mean": 268.0
+  }
+ }
+}

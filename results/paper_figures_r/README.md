@@ -20,7 +20,8 @@ figure's CSV against the frozen sources independently of the plotting code
 stops on any failure. Any single figure can be rebuilt with
 `Rscript results/paper_figures_r/<script>.R`.
 
-Requires R 4.4 with `ggplot2`, `patchwork`, `svglite`, `jsonlite`.
+Requires R 4.4 with `ggplot2`, `patchwork`, `svglite`, `jsonlite`, `sysfonts`,
+`showtext`, and the Linux Libertine O / Linux Biolinum O fonts (see Fonts).
 
 ## Files
 
@@ -42,6 +43,7 @@ Each figure has `<name>.R` (the script), `<name>.pdf` (vector, fonts embedded),
 | 3 | `fig3_linkage_vs_ordering.R` | Main | 2 columns | Prespecified | Strategies differ in how much they affect linkage versus ordering | `TABLES/table_C_grid_J.csv` |
 | 4 | `fig4_identifiers.R` | Main | 1 column | (a) prespecified; (b) exploratory post-hoc diagnostic; embedding row post hoc | The record template is visible, but cross-field record association is not recovered in this setup | `TABLES/table_E_identifier_J.csv`, `TABLES/table_E3_identifier_membership.csv` |
 | 5 | `fig5_single_token.R` | Main | 1 column | **Post-hoc exploratory** (D16) | On identical text and pools, single-token cuts drove null-adjusted joint reconstruction to about its random-shuffle reference | `results/single_token_edge/analysis/per_pool.csv`, `summary.json` |
+| 6 | `fig6_granularity_gradient.R` | Main | 1 column | **Post-hoc exploratory** (D16, D18) | Joint reconstruction falls monotonically across five granularities on identical text, and panel (b) says what that means in words of the document | `results/single_token_edge/analysis/summary.json`, `results/gradient/visible_analysis/summary.json`, `results/gradient/recovery.json` |
 | A | `figA_gameO_vs_gameJ.R` | Appendix | 1 column | Prespecified | Ordering with membership given is much easier than joint recovery | `TABLES/table_D_game_O.csv`, `table_C_grid_J.csv`, `table_B_headline_J.csv` |
 | B | `figB_resource_scaling.R` | Appendix | 1 column | Prespecified; single-token points post hoc | Output grows with fragment count, but fragment count does not determine completion | `results/final_analysis/MASTER_RESULTS.csv`; `results/batches/single-token-edge-J*.results.jsonl`; `results/final/singleTokenEdgeJ/edge__token/J.jsonl` |
 | C | `figC_token_raw_vs_null.R` | Appendix | 1 column | **Post-hoc exploratory** (D16) | What A_VJ ≈ 0 means in raw terms | `results/single_token_edge/analysis/per_pool.csv` |
@@ -169,3 +171,38 @@ first answer.
 faint points are the 20 pools, large markers the arm means. Sentence: 0.762 vs
 0.423. Single token: 0.155 vs 0.141. Fig. 5's A_VJ is (V_J − null)/(1 − null)
 per pool.
+
+
+## Fonts
+
+The paper is `acmart` with `\documentclass[sigconf]{acmart}`, which sets its
+text in Linux Libertine with **Linux Biolinum** as the matching sans used for
+headings and captions. Figure text is set in Biolinum so figures match the page
+they sit on, at 8pt for axis titles and 7pt for ticks and legends. `col_width`
+is 3.33in, which is acmart sigconf's `\columnwidth` of 241.14749pt.
+
+**Text in the PDFs is outlines, not selectable text.** `pdffonts` on a figure
+lists no fonts at all. That satisfies any font-embedding requirement trivially,
+but the text cannot be selected, searched or read by a screen reader.
+
+The reason is a silent failure worth knowing about. On Windows, grDevices'
+`cairo_pdf` resolves font families through GDI, which cannot use these
+CFF-flavoured OTFs: every family string — `Linux Biolinum O`, `LinBiolinumO`,
+`LinBiolinum_R` — falls back to `ArialMT` **with no warning**, which `pdffonts`
+exposes and nothing else does. `systemfonts::register_font` does not help, since
+that registry feeds `svglite` and `ragg` rather than cairo. `showtext` draws the
+real glyph outlines on any device, so the shapes are genuinely Biolinum.
+
+On a platform where cairo resolves the font properly (Linux or macOS with
+fontconfig) the same scripts produce real embedded text with no other change.
+If you rebuild finals there, check with `pdffonts` that `LinBiolinum` appears.
+
+Sizing was verified rather than assumed: at 8pt the rendered cap height is
+identical whether `showtext_opts(dpi=)` is 72, 96 or 300, so there is no silent
+scaling. Measured at 400dpi, Arial 8pt gives a 32px cap and Biolinum 8pt a 29px
+cap, which is the two faces' different cap-height ratios.
+
+`theme_paper.R` looks for the OTFs in the per-user Windows font directory, the
+MiKTeX `libertine` tree, and the usual Linux paths, and stops with a clear
+message naming every directory it tried if none has them. The fonts ship with
+the `libertine` package in TeX Live and MiKTeX.
