@@ -52,17 +52,27 @@
 % of a page and restores ordering; the relaxed fractions let a page carry more
 % float before it gives up and defers.
 \usepackage{dblfloatfix}
-% placeins is loaded for \FloatBarrier, which nothing currently uses: the
-% floats are declared at the top of their own subsection, so none of them
-% escapes. If one starts to, put \FloatBarrier at the boundary it crosses. Do
-% NOT load placeins with [section]: that option redefines \section and acmart
-% refuses to compile.
+% HOW THE FLOATS ARE PLACED HERE. Figures 1, 2, 3 and 7 are PINNED with [H]
+% (float package): they are not floats at all, they are set where they are
+% declared, with text before and after. That is what keeps them in the prose
+% and is why Section 5 has no float-only page. The rest float:
+%   Figures 4, 5, 6  [tb]  too tall to pin where they are cited; pinning them
+%                          makes the float package break the column and leaves
+%                          the rest of it blank (measured: page 8 lost a whole
+%                          column, page 9 lost 180 words).
+%   Figure 8         [b]   a top placement puts it above the References heading.
+%   every table*     [tb]  a two-column float cannot be set inline at all.
+% A pinned figure is frozen, so if you rewrite the prose around one, rebuild and
+% look at the page: if it no longer fits where it sits, the column breaks early.
 %
-% MEASURED, do not re-tune: dbltopnumber, dbltopfraction, dblfloatpagefraction
-% and floatpagefraction each produce a byte-identical PDF here, as does
-% removing dblfloatfix. Once a float is deferred LaTeX drains the queue with
-% \@makefcolumn, which consults none of them. The two float-only pages in
-% Section 5 are 5 exhibits against about 1.2 pages of prose, not a setting.
+% MEASURED, do not re-tune: dbltopnumber, dbltopfraction, dblfloatpagefraction,
+% floatpagefraction, "!" overrides and removing dblfloatfix each produce a
+% byte-identical PDF. Once a float is deferred LaTeX drains the queue with
+% \@makefcolumn, which consults none of them -- that is why pinning, not
+% tuning, is what fixed this. placeins is loaded for \FloatBarrier, which
+% nothing currently uses. Do NOT load it with [section]: that option redefines
+% \section and acmart refuses to compile.
+\usepackage{float}   % [H]: set a figure here, do not float it
 \usepackage{placeins}
 \setcounter{topnumber}{3}
 \setcounter{bottomnumber}{2}
@@ -649,19 +659,6 @@ headings, captions and table notes.
 
 \subsection{A generative attacker operates in a different regime}
 \label{sec:res-attackers}
-\begin{figure}[htb]
-  \centering
-  \includegraphics{fig1_headline_attackers.pdf}
-  \caption{Headline prose, Game~J (46 pools). (a) Linkage component \FL;
-  (b) joint \FJ. Means with $95\%$ percentile-bootstrap CIs over pools. The
-  dashed line is the analytic one-bucket reference \bJ, which is a
-  trivial-strategy benchmark rather than chance; a legal size-blind random
-  seven-group answer scores $0.077$ (\S\ref{sec:baselines}). Open diamond:
-  post-hoc exploratory attacker.}
-  \label{fig:attackers}
-\end{figure}
-\input{table2_headline_attackers}
-\input{table9_adjacency}
 
 On the 46 headline pools---full-length case reports under the sentence
 cut---the one-shot attacker reached $\FJ = 0.723$ $[0.702, 0.743]$, recovering
@@ -693,10 +690,32 @@ relative-order structure strongly, while immediate adjacency and contiguous
 plaintext recovery remain much weaker.} Exact reconstruction---membership and
 order both perfect---occurred for 1 of 322 headline documents.
 
+\begin{figure}[H]
+  \centering
+  \includegraphics{fig1_headline_attackers.pdf}
+  \caption{Headline prose, Game~J (46 pools). (a) Linkage component \FL;
+  (b) joint \FJ. Means with $95\%$ percentile-bootstrap CIs over pools. The
+  dashed line is the analytic one-bucket reference \bJ, which is a
+  trivial-strategy benchmark rather than chance; a legal size-blind random
+  seven-group answer scores $0.077$ (\S\ref{sec:baselines}). Open diamond:
+  post-hoc exploratory attacker.}
+  \label{fig:attackers}
+\end{figure}
+\input{table2_headline_attackers}
+\input{table9_adjacency}
 
 \subsection{Fragmentation strategy and granularity}
 \label{sec:res-grid}
-\begin{figure}[htb]
+
+Across the nine retained conditions, \FJ{} ranged from $0.498$ (subject--verb
+$\times$ clause) to $0.801$ (random $\times$ sentence); every cell sits well
+above the analytic reference, the smallest advantage being $\AJ = 0.422$.
+Subject--verb cuts were the most resistant at both granularities. Finer cuts
+lowered \FJ{} modestly within three of the four strategies. At matched mean
+fragment length the cutting strategy moved the result more than the granularity
+label did.
+
+\begin{figure}[H]
   \centering
   \includegraphics{fig2_grid_reconstruction.pdf}
   \caption{Game~J across the nine retained grid conditions, one-shot
@@ -709,18 +728,15 @@ order both perfect---occurred for 1 of 322 headline documents.
 \end{figure}
 \input{table3_grid}
 
-Across the nine retained conditions, \FJ{} ranged from $0.498$ (subject--verb
-$\times$ clause) to $0.801$ (random $\times$ sentence); every cell sits well
-above the analytic reference, the smallest advantage being $\AJ = 0.422$.
-Subject--verb cuts were the most resistant at both granularities. Finer cuts
-lowered \FJ{} modestly within three of the four strategies. At matched mean
-fragment length the cutting strategy moved the result more than the granularity
-label did.
-
-
 \subsection{Linkage versus ordering}
 \label{sec:res-decomp}
-\begin{figure}[htb]
+
+The decomposition separates which half each condition attacks. Subject--verb
+cuts and random token windows act mainly on linkage; semantic-style boundaries
+act mainly on ordering. The tested statistical attackers order at chance
+throughout.
+
+\begin{figure}[H]
   \centering
   \includegraphics{fig3_linkage_vs_ordering.pdf}
   \caption{Decomposition of Game~J into (a) the linkage component \FL{} and
@@ -729,25 +745,8 @@ label did.
   \label{fig:decomp}
 \end{figure}
 
-The decomposition separates which half each condition attacks. Subject--verb
-cuts and random token windows act mainly on linkage; semantic-style boundaries
-act mainly on ordering. The tested statistical attackers order at chance
-throughout.
-
-
 \subsection{Ordering when membership is given}
 \label{sec:res-gameO}
-\begin{figure}[htb]
-  \centering
-  \includegraphics{figA_gameO_vs_gameJ.pdf}
-  \caption{Ordering with membership given (Game~O, plotted as $(1+\tau)/2$)
-  against joint reconstruction (Game~J \FJ{} and $q$) for the one-shot
-  attacker. O: 100 headline documents, 30 per grid cell; J: 46 headline pools,
-  24 (23) per cell. Game~O is a membership-oracle reference, not an upper bound
-  on Game~J.}
-  \label{fig:ovj}
-\end{figure}
-\input{table4_gameO}
 
 With membership supplied, the one-shot attacker ordered the 100 full-length
 headline documents at $\tau = 0.769$, i.e.\ $88.5\%$ of pairs correctly
@@ -761,18 +760,23 @@ directions in some comparisons.
 
 
 \FloatBarrier
+
+% The one figure too tall for the space left where it is declared. Pinned,
+% the float package breaks the column and leaves the rest of it blank.
+\begin{figure}[tb]
+  \centering
+  \includegraphics{figA_gameO_vs_gameJ.pdf}
+  \caption{Ordering with membership given (Game~O, plotted as $(1+\tau)/2$)
+  against joint reconstruction (Game~J \FJ{} and $q$) for the one-shot
+  attacker. O: 100 headline documents, 30 per grid cell; J: 46 headline pools,
+  24 (23) per cell. Game~O is a membership-oracle reference, not an upper bound
+  on Game~J.}
+  \label{fig:ovj}
+\end{figure}
+\input{table4_gameO}
+
 \subsection{Structured identifiers}
 \label{sec:res-identifiers}
-\begin{figure}[htb]
-  \centering
-  \includegraphics{fig4_identifiers.pdf}
-  \caption{Synthetic identifiers, Game~J (20 pools of seven records). (a)
-  \FL; (b) \FJ; (c) linkage precision, against the analytic ($0.10$ / $0.20$),
-  schema-order ($0.20$) and template-chance ($1/7$) references. Open circles:
-  the same attacker on the prose headline, for scale.}
-  \label{fig:identifiers}
-\end{figure}
-\input{table5_identifiers}
 
 The identifier arm behaved qualitatively differently. The one-shot attacker
 scored $\FJ = 0.083$ $[0.068, 0.099]$ with $\FL = 0.132$---below the analytic
@@ -797,10 +801,20 @@ establish that identifier fragmentation is safe: it says that \emph{these}
 attackers did not recover record association under \emph{this} setup
 (\S\ref{sec:synthetic}).
 
+\begin{figure}[tb]
+  \centering
+  \includegraphics{fig4_identifiers.pdf}
+  \caption{Synthetic identifiers, Game~J (20 pools of seven records). (a)
+  \FL; (b) \FJ; (c) linkage precision, against the analytic ($0.10$ / $0.20$),
+  schema-order ($0.20$) and template-chance ($1/7$) references. Open circles:
+  the same attacker on the prose headline, for scale.}
+  \label{fig:identifiers}
+\end{figure}
+\input{table5_identifiers}
 
 \subsection{A controlled granularity series\posthoc}
 \label{sec:res-gradient}
-\begin{figure}[htb]
+\begin{figure}[tb]
   \centering
   \includegraphics{fig6_granularity_gradient.pdf}
   \caption{Post-hoc exploratory granularity series: five cuts of identical
@@ -873,7 +887,7 @@ of 20). Raw and normalized scores agree in sign for the one-shot attacker in
 every pool; for Memon-inspired they disagree in three, which is a further
 reason to quote the normalized value.
 
-\begin{figure}[htb]
+\begin{figure}[H]
   \centering
   \includegraphics{fig5_single_token.pdf}
   \caption{Post-hoc exploratory single-token edge case: per-pool \AVJ{} for the

@@ -45,29 +45,34 @@ shrink, cut in this order:
 
 ## Float layout
 
-Every float is declared at the top of the subsection that discusses it, which
-is what keeps it on or next to that subsection's page. Do not move the
-declarations back to the end of a subsection: LaTeX cannot place a float before
-the point it is declared, and that was what pushed four pages' worth of figures
-two to three pages past their text.
+Figures 1, 2, 3 and 7 are **pinned** with `[H]` (the `float` package): they are
+not floats, they are set where they are declared, with text before and after.
+That is what keeps them in the prose and why Section 5 has no float-only page.
+Figures 4, 5 and 6 float `[tb]` because they are too tall to pin where they are
+cited — pinned, the `float` package breaks the column and leaves the rest of it
+blank. Figure 8 is `[b]` so it cannot print above the References heading. Every
+table is a `table*`, which cannot be set inline at all.
 
-Every figure in the package is one column, 239pt. Do not rebuild Figure 3 at
-`page_width`: as a `figure*` it could only be set at a page top or bottom, and
-it was the hardest float in the document to place.
+**A pinned figure is frozen.** If you rewrite the prose around one, rebuild and
+look at the page: if the figure no longer fits in what is left of the column,
+the column breaks early and you get a hole. Move the `\begin{figure}[H]` to a
+different paragraph boundary, or give that one figure `[tb]`.
 
-Pages 7 and 8 carry floats only. That is a float-to-prose ratio, not a setting:
-§§5.2–5.4 declare five large exhibits against about 1.2 pages of prose, because
-§5.3 is four lines and §5.4 is twelve. `dbltopnumber`, `dbltopfraction`,
-`dblfloatpagefraction`, `floatpagefraction`, `!` placement overrides and
-`dblfloatfix` were each measured on this manuscript and every one of them
-produces a byte-identical PDF — once a float is deferred, LaTeX drains the queue
-with `\@makefcolumn`, which consults none of them. Declaring the wide tables at
-the end of their subsection instead of the head was also tried and is worse.
-Writing those two subsections out, or taking cut 1 above, is what clears it.
+Do not rebuild Figure 3 at `page_width`. Every figure in the package is one
+column, 239pt; as a `figure*` Figure 3 could only be set at a page top or
+bottom and it was the hardest float in the document to place.
 
-Pages 13 and 14 are about half blank for a different reason: Tables 9 and 10
-can only sit at a page top, so they go to page 14, and Appendix B is currently
-one sentence and a TODO. The verbatim prompts fill that space.
+`dbltopnumber`, `dbltopfraction`, `dblfloatpagefraction`, `floatpagefraction`,
+`!` placement overrides and `dblfloatfix` were each measured on this manuscript
+and every one of them produces a byte-identical PDF — once a float is deferred,
+LaTeX drains the queue with `\@makefcolumn`, which consults none of them.
+Pinning, not tuning, is what fixed this.
+
+What is left: a hole in the first column of page 8, where LaTeX ends the column
+to give the top of column 2 to two figures, and about half of page 13. Page 13
+is the appendices: Tables 9 and 10 can only sit at a page top so they go to
+page 14, and Appendix B is currently one sentence and a TODO. The verbatim
+prompts fill that space.
 
 ## What is deliberately missing
 

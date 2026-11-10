@@ -448,5 +448,45 @@ sentence and `\TODO{paste verbatim from the frozen specs}`; the verbatim Game J
 and Game O prompts are what belongs in that space, and they are needed for the
 open-science claim anyway.
 
-Build after revision 5: **0 errors, 0 undefined citations or references, 0
+## Revision 6 — the figures are pinned, not floated
+
+Everything above moved the hole around without closing it. The reason is the
+one measured in revision 5: once a float is deferred, LaTeX drains the queue
+with `\@makefcolumn`, a float page consumes no text, and no further floats are
+declared to fill it. No parameter reaches that code path.
+
+So the figures stop being floats. Figures 1, 2, 3 and 7 are pinned with `[H]`
+(the `float` package), declared after the prose that discusses them. A pinned
+figure is set where it stands, with text before and after it, and never enters
+the deferred queue. **Section 5 now has no float-only page.** Page 6 carries
+three figures interleaved with three subsections of prose; pages 10 and 11 are
+full.
+
+Figures 4, 5 and 6 still float `[tb]`: each is too tall to pin where it is
+cited, and pinning them costs more than it saves — measured, pinning Figure 4
+left the whole first column of page 8 blank, and moving Figure 5 one paragraph
+earlier cost page 9 about 180 words. Figure 8 stays `[b]`. Tables stay
+`table*`, which cannot be set inline at any setting.
+
+Figure 3 was also rebuilt at 4.2in rather than 4.6in. 3.7in was tried, to get
+Figure 3 and Figure 4 inside one 626pt column; it packs no better and reads
+worse, so the height is set for legibility instead.
+
+Also measured and rejected along the way: `!` placement overrides,
+`floatpagefraction` and `dblfloatpagefraction` at 0.92 and 0.95 (the
+revision-5 note claimed these had been measured; the substitution had silently
+failed, and they have now actually been measured — byte-identical), pinning
+every figure at its subsection head instead of after the prose (15 pages), and
+declaring the wide tables at the end of their subsection (page 6 drops from
+1015 words to 472).
+
+**The main body now ends about a fifth of the way down page 12**, against
+filling page 12 before this pass started.
+
+What is left: the first column of page 8, where LaTeX ends the column to give
+the top of column 2 to two figures, and page 13, which is the appendices —
+Tables 9 and 10 can only sit at a page top so they go to page 14, and Appendix
+B is one sentence and `\TODO{paste verbatim from the frozen specs}`.
+
+Build after revision 6: **0 errors, 0 undefined citations or references, 0
 overfull or underfull horizontal boxes, 14 pages, main body pages 1–12.**

@@ -69,4 +69,4 @@ panel_b <- component_panel("q", expression("Direction accuracy on correct links 
 fig <- (panel_a / panel_b) + plot_annotation(tag_levels = list(c("(a)", "(b)")))
 
 # ---- Export -----------------------------------------------------------------
-save_figure(fig, "fig3_linkage_vs_ordering", width = col_width, height = 4.6, data = plot_data)
+save_figure(fig, "fig3_linkage_vs_ordering", width = col_width, height = 4.2, data = plot_data)
