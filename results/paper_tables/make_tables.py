@@ -259,8 +259,122 @@ def table7_resources():
           ["Experiment", "Units", "Completed", "RBNC", "Refused → resent", "Repairs", "Input tokens", "Output tokens", "Cost", "Cost / unit"], rows, notes)
 
 
+# ═════════════════════════════════════════════════════════════════════════════
+def table8_gradient():
+    """The five-point granularity series. Anchors from the frozen D16 analysis,
+    the three new arms from the D18 visible analysis, recovery from
+    results/gradient/recovery.json, random-shuffle reference from the nulls."""
+    g = json.load(open("results/gradient/visible_analysis/summary.json", encoding="utf-8"))["arms"]
+    rec = json.load(open("results/gradient/recovery.json", encoding="utf-8"))
+    s16 = STS["attackers"]["One-shot Sonnet"]["means"]
+    pp = pd.read_csv("results/single_token_edge/analysis/per_pool.csv")
+    pp = pp[pp.attacker == "One-shot Sonnet"]
+    null16 = {c: pp[pp.condition == c].null_oracle_V_J.mean() for c in ("sentence", "token")}
+    a_j_id = {"sentence": 0.5387, "4-word": 0.3127, "3-word": 0.2178,
+              "2-word": 0.0812, "1-word": -0.0165}       # frozen scored reports
+    order = [("sentence", "sentence"), ("4-word", "4 words"), ("3-word", "3 words"),
+             ("2-word", "2 words"), ("1-word", "1 word (token)")]
+    k18 = {"4-word": "w4", "3-word": "w3", "2-word": "w2"}
+    k16 = {"sentence": "sentence", "1-word": "token"}
+
+    rows = []
+    for arm, lab in order:
+        src = s16[k16[arm]] if arm in k16 else g[k18[arm]]
+        nul = null16[k16[arm]] if arm in k16 else g[k18[arm]]["null_oracle_V_J"]
+        r = rec[arm]
+        rows.append([lab, f"{r['frags_per_doc'] * 7:.0f}",
+                     f"{r['doc_words'] / r['frags_per_doc']:.2f}",
+                     f3(src["V_L"]), f3(src["V_J"]), f3(nul), f3(src["A_VJ"]),
+                     f3(a_j_id[arm]), f"{r['recovered_pct']:.1f}%",
+                     f"{r['floor_pct']:.1f}%", f3(r["join_recall"])])
+
+    notes = [
+        "POST-HOC EXPLORATORY (D16, D18). The same 20 headline pools and the same 140 four-sentence excerpts in every arm; "
+        "byte-identical text, only the cut changes. Fragment counts are exact, built by regrouping the frozen token-arm fragments. "
+        "Completion 20/20 in every arm, no resource-bounded non-completions.",
+        "Null V_J is the RANDOM-SHUFFLE REFERENCE for that arm: the mean visible joint score of a random partition of the same pool into the "
+        "true per-document fragment counts, over 10,000 seeded permutations, under the frozen single-token-edge-v1 namespace. "
+        "A_VJ = (V_J − null)/(1 − null) is the PRIMARY metric (D16). Note the reference is not constant across arms: it falls from 0.423 at the "
+        "sentence cut to 0.141 at one word, so raw V_J values are not comparable between arms and the normalised column is the one to read.",
+        "A_J (id-level) is shown for robustness. It tracks the primary series but sits below it throughout, and at one word the two fall on "
+        "opposite sides of their respective references (+0.016 visible against the permutation null, −0.017 id-level against the one-bucket "
+        "reference), which is why D16 made the visible scorer primary. q_V is a diagnostic ratio only and is not the visible analogue of q: "
+        "V_J and V_L are maximised over separate assignments.",
+        "Recovered is the longest run of fragments placed consecutively AND in true order, in words, as a percentage of the 76-word excerpt. "
+        "Floor is the longest single fragment: contiguous original text leaked by the cut alone, before the attacker does anything. "
+        "Join recall is the share of each document's (fragments − 1) true adjacent joins recovered.",
+        "Join recall is essentially unchanged from the sentence arm to the 4-word arm (0.464 vs 0.476) while recovered text falls 64.2% to 28.8%: "
+        "across that range the protection comes from reducing what the cut leaks for free, not from the attacker performing worse. Below four "
+        "words the attacker's own joining ability is what fails.",
+        "One corpus, one model, one cut family (fixed word width). This locates where the advantage falls to its reference on the tested "
+        "excerpts; it does not establish a safe fragment size.",
+    ]
+    write("table8_gradient",
+          "Table 8. POST-HOC EXPLORATORY granularity gradient: five cuts of identical text on the same 20 pools.",
+          "tab:gradient",
+          ["Cut", "Frags/pool", "Words/frag", "V_L", "V_J", "Null V_J (random)",
+           "A_VJ (primary)", "A_J (id)", "Recovered", "Floor", "Join recall"],
+          rows, notes, align="l" + "r" * 10,
+          tex_header=["Cut", "Frags/pool", "Words/frag", "$V_L$", "$V_J$", "Null $V_J$ (random)",
+                      "$A_{VJ}$ (primary)", "$A_J$ (id)", "Recovered", "Floor", "Join recall"])
+
+
+# ═════════════════════════════════════════════════════════════════════════════
+def table9_adjacency():
+    """What F1_J means in local terms, and a random attacker that is a LEGAL
+    answer to the game. Both from results/final_analysis/GAME_J_ADJACENCY.csv."""
+    a = pd.read_csv("results/final_analysis/GAME_J_ADJACENCY.csv")
+    order = ["One-shot Sonnet", "Embedding (post-hoc exploratory)", "Memon-inspired",
+             "Random valid N-group (size-blind)",
+             "Random valid N-group (oracle-size, ATTACKER-FAVOURABLE)"]
+    lab = {order[0]: "One-shot Sonnet", order[1]: "Embedding (post-hoc exploratory)",
+           order[2]: "Memon-inspired", order[3]: "Random, valid 7 groups (size-blind)",
+           order[4]: "Random, valid 7 groups (oracle sizes)"}
+    rows = []
+    for desig, dlab in (("headline", "Headline (46 pools)"), ("primary", "Grid (216 units)")):
+        rows.append([dlab, "", "", "", "", "", ""])
+        for att in order:
+            g = a[(a.designation == desig) & (a.attacker == att)]
+            if not len(g):
+                continue
+            rows.append(["  " + lab[att], f3(g.F1_J.mean()), f3(g.F1_L.mean()),
+                         f3(g.adj_f1.mean()), f3(g.mean_run_fraction.mean()),
+                         f"{g.mean_longest_run.mean():.2f}",
+                         f"{g.records_with_no_intact_pair.mean():.2f}"])
+        if desig == "headline":
+            rows.append("MIDRULE")
+    notes = [
+        "F1_J scores the FULL within-document precedence relation: every (earlier, later) pair inside a predicted group. Adjacency F1 scores "
+        "only IMMEDIATE directed pairs. A predicted adjacency spanning two documents is a false positive — no credit is given for the seam "
+        "between two completed documents, because the output here is a partition rather than one global permutation.",
+        "Longest run is the longest stretch of fragments placed consecutively AND in true order, in fragments; a fragment from another document "
+        "interrupting the sequence breaks the run. Run fraction divides it by the document's fragment count.",
+        "Adjacency precision, recall and F1 are equal by construction here and only one is reported: every answer is a valid partition into "
+        "exactly the known N groups, so the number of predicted adjacent pairs equals the number of true ones (fragments minus groups).",
+        "The random rows are VALID answers to the game: a partition into exactly the known N groups. Size-blind deals round-robin and is the "
+        "matched comparison, because prompt_J states only that records may contain different numbers of fragments. The oracle-size row is given "
+        "the true per-document sizes, is attacker-favourable, and is not the chance level. Both are means of 1,000 seeded partition draws per "
+        "pool, with C = K/2 exact over the within-group order.",
+        "The analytic one-bucket reference used elsewhere is b_J = 0.149 on the headline pools, but one bucket is not a legal answer to a prompt "
+        "demanding exactly seven groups: a legal size-blind random answer scores F1_J 0.077. The one-bucket figure therefore overstates the "
+        "floor by roughly a factor of two, and A_J correspondingly understates the advantage over a legal random attacker.",
+        "The non-generative attackers collapse on the adjacency surface in a way the precedence score hides: on the headline pools Memon-inspired "
+        "scores F1_J 0.169 against a one-bucket 0.149 but adjacency F1 0.010 against a random 0.004, with about five of seven documents returning "
+        "no correct adjacency at all.",
+    ]
+    write("table9_adjacency",
+          "Table 9. Precedence against adjacency, and a random attacker that is a legal answer to the game.",
+          "tab:adjacency",
+          ["Attacker", "F1_J", "F1_L", "Adjacency F1", "Run fraction", "Longest run (frags)",
+           "Docs with no intact pair"],
+          rows, notes, align="l" + "r" * 6,
+          tex_header=["Attacker", "$F1_J$", "$F1_L$", "Adjacency $F1$", "Run fraction",
+                      "Longest run (frags)", "Docs, no intact pair"])
+
+
 if __name__ == "__main__":
     os.makedirs(OUT, exist_ok=True)
-    for f in (table1_design, table2_headline, table3_grid, table4_gameO, table5_identifiers, table6_single_token, table7_resources):
+    for f in (table1_design, table2_headline, table3_grid, table4_gameO, table5_identifiers, table6_single_token, table7_resources,
+              table8_gradient, table9_adjacency):
         f()
     print("done")

@@ -1,0 +1,303 @@
+"set","unit","cell","n_fragments","output_tokens","rbnc","answering_call","post_hoc"
+"headline J","pool_001","semantic__sentence (full length)",195,32082,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"headline J","pool_003","semantic__sentence (full length)",232,38535,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"headline J","pool_005","semantic__sentence (full length)",178,39098,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"headline J","pool_006","semantic__sentence (full length)",143,54252,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"headline J","pool_007","semantic__sentence (full length)",347,63083,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"headline J","pool_008","semantic__sentence (full length)",242,51087,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"headline J","pool_009","semantic__sentence (full length)",207,42081,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"headline J","pool_010","semantic__sentence (full length)",280,52301,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"headline J","pool_011","semantic__sentence (full length)",268,54396,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"headline J","pool_015","semantic__sentence (full length)",210,34745,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"headline J","pool_017","semantic__sentence (full length)",224,33934,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"headline J","pool_018","semantic__sentence (full length)",381,72275,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"headline J","pool_019","semantic__sentence (full length)",220,33590,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"headline J","pool_020","semantic__sentence (full length)",187,39747,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"headline J","pool_021","semantic__sentence (full length)",202,48470,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"headline J","pool_022","semantic__sentence (full length)",213,40523,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"headline J","pool_023","semantic__sentence (full length)",218,40397,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"headline J","pool_024","semantic__sentence (full length)",311,66023,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"headline J","pool_025","semantic__sentence (full length)",284,55641,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"headline J","pool_026","semantic__sentence (full length)",301,65428,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"headline J","pool_028","semantic__sentence (full length)",198,40540,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"headline J","pool_029","semantic__sentence (full length)",180,29892,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"headline J","pool_030","semantic__sentence (full length)",177,49667,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"headline J","pool_031","semantic__sentence (full length)",247,49520,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"headline J","pool_032","semantic__sentence (full length)",207,49724,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"headline J","pool_035","semantic__sentence (full length)",241,45377,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"headline J","pool_037","semantic__sentence (full length)",537,76473,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"headline J","pool_038","semantic__sentence (full length)",200,35855,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"headline J","pool_039","semantic__sentence (full length)",242,45704,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"headline J","pool_041","semantic__sentence (full length)",178,31475,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"headline J","pool_048","semantic__sentence (full length)",198,61120,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"headline J","pool_050","semantic__sentence (full length)",218,39132,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"headline J","pool_052","semantic__sentence (full length)",260,81897,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"headline J","pool_053","semantic__sentence (full length)",167,41087,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"headline J","pool_054","semantic__sentence (full length)",201,55894,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"headline J","pool_056","semantic__sentence (full length)",187,44195,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"headline J","pool_058","semantic__sentence (full length)",167,56262,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"headline J","pool_059","semantic__sentence (full length)",251,63282,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"headline J","pool_061","semantic__sentence (full length)",306,47671,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"headline J","pool_062","semantic__sentence (full length)",198,59617,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"headline J","pool_064","semantic__sentence (full length)",204,46942,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"headline J","pool_065","semantic__sentence (full length)",375,65915,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"headline J","pool_066","semantic__sentence (full length)",325,81683,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"headline J","pool_067","semantic__sentence (full length)",200,52506,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"headline J","pool_069","semantic__sentence (full length)",224,64805,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"headline J","pool_070","semantic__sentence (full length)",247,51776,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_002","random__sentence",177,64565,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_004","random__sentence",179,77540,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_012","random__sentence",176,54256,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_013","random__sentence",161,42064,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_014","random__sentence",166,59589,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_016","random__sentence",177,80948,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_002","random__clause",222,70584,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_004","random__clause",225,89466,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_012","random__clause",212,70631,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_013","random__clause",195,64653,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_014","random__clause",211,79755,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_016","random__clause",238,90456,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_002","random__token-window",322,128000,TRUE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_004","random__token-window",290,82844,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_012","random__token-window",302,79715,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_013","random__token-window",260,94676,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_014","random__token-window",290,93851,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_016","random__token-window",295,103000,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_002","semantic__sentence",177,32716,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_004","semantic__sentence",179,23838,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_012","semantic__sentence",176,39597,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_013","semantic__sentence",161,27404,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_014","semantic__sentence",166,47802,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_016","semantic__sentence",177,40811,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_002","semantic__clause",222,45664,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_004","semantic__clause",225,54606,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_012","semantic__clause",212,38780,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_013","semantic__clause",195,29751,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_014","semantic__clause",211,80392,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_016","semantic__clause",238,45390,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_002","coherence-sever__clause",157,46855,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_004","coherence-sever__clause",147,51964,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_012","coherence-sever__clause",153,39019,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_013","coherence-sever__clause",144,31701,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_014","coherence-sever__clause",170,51769,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_016","coherence-sever__clause",164,51301,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_002","coherence-sever__token-window",321,63631,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_004","coherence-sever__token-window",289,93374,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_012","coherence-sever__token-window",303,62640,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_013","coherence-sever__token-window",261,85659,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_014","coherence-sever__token-window",288,88894,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_016","coherence-sever__token-window",296,85090,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_002","subject-verb__sentence",291,89236,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_004","subject-verb__sentence",290,85870,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_012","subject-verb__sentence",279,76974,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_013","subject-verb__sentence",258,85388,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_014","subject-verb__sentence",274,97498,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_016","subject-verb__sentence",288,85917,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_002","subject-verb__clause",343,82946,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_004","subject-verb__clause",345,76840,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_012","subject-verb__clause",322,92921,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_013","subject-verb__clause",298,110874,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_014","subject-verb__clause",327,86554,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_016","subject-verb__clause",357,113494,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_027","random__sentence",166,87333,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_033","random__sentence",186,72325,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_034","random__sentence",205,72160,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_036","random__sentence",153,50937,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_040","random__sentence",170,62700,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_042","random__sentence",136,73997,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_027","random__clause",212,78846,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_033","random__clause",214,103001,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_034","random__clause",257,88991,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_036","random__clause",189,62974,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_040","random__clause",212,90132,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_042","random__clause",178,63772,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_027","random__token-window",267,74802,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_033","random__token-window",268,117067,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_034","random__token-window",336,59946,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_036","random__token-window",238,93033,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_040","random__token-window",264,82065,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_042","random__token-window",267,98855,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_027","semantic__sentence",166,29515,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_033","semantic__sentence",186,47971,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_034","semantic__sentence",205,47241,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_036","semantic__sentence",153,24114,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_040","semantic__sentence",170,32409,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_042","semantic__sentence",136,28832,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_027","semantic__clause",212,43794,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_033","semantic__clause",214,50843,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_034","semantic__clause",257,55269,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_036","semantic__clause",189,30277,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_040","semantic__clause",212,51697,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_042","semantic__clause",178,41609,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_027","coherence-sever__clause",157,38936,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_033","coherence-sever__clause",156,39334,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_034","coherence-sever__clause",193,54715,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_036","coherence-sever__clause",133,34083,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_040","coherence-sever__clause",154,37104,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_042","coherence-sever__clause",125,37730,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_027","coherence-sever__token-window",264,88591,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_033","coherence-sever__token-window",268,83383,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_034","coherence-sever__token-window",333,113054,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_036","coherence-sever__token-window",236,58777,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_040","coherence-sever__token-window",262,54112,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_042","coherence-sever__token-window",271,83686,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_027","subject-verb__sentence",272,82173,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_033","subject-verb__sentence",309,75114,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_034","subject-verb__sentence",344,74291,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_036","subject-verb__sentence",260,92028,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_040","subject-verb__sentence",289,62383,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_042","subject-verb__sentence",236,74075,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_027","subject-verb__clause",329,78559,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_033","subject-verb__clause",343,97089,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_034","subject-verb__clause",414,119071,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_036","subject-verb__clause",300,81948,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_040","subject-verb__clause",337,78945,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_042","subject-verb__clause",288,97847,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_043","random__sentence",177,71126,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_044","random__sentence",180,70682,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_045","random__sentence",152,65962,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_046","random__sentence",179,66393,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_047","random__sentence",160,70233,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_049","random__sentence",193,76285,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_043","random__clause",229,65936,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_044","random__clause",221,86140,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_045","random__clause",192,71216,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_046","random__clause",218,84178,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_047","random__clause",200,60675,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_049","random__clause",250,82490,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_043","random__token-window",290,77642,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_044","random__token-window",272,103887,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_045","random__token-window",249,88457,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_046","random__token-window",282,112062,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_047","random__token-window",283,91681,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_049","random__token-window",286,108087,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_043","semantic__sentence",177,34312,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_044","semantic__sentence",180,39346,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_045","semantic__sentence",152,26933,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_046","semantic__sentence",179,36714,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_047","semantic__sentence",160,42719,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_049","semantic__sentence",193,50180,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_043","semantic__clause",229,51242,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_044","semantic__clause",221,63530,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_045","semantic__clause",192,47942,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_046","semantic__clause",218,45915,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_047","semantic__clause",200,51239,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_049","semantic__clause",250,78000,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_043","coherence-sever__clause",176,32202,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_044","coherence-sever__clause",169,44912,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_045","coherence-sever__clause",145,38410,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_046","coherence-sever__clause",164,42473,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_047","coherence-sever__clause",149,34837,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_049","coherence-sever__clause",200,52701,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_043","coherence-sever__token-window",290,79149,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_044","coherence-sever__token-window",272,73165,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_045","coherence-sever__token-window",246,70265,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_046","coherence-sever__token-window",281,91674,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_047","coherence-sever__token-window",285,80475,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_049","coherence-sever__token-window",285,73074,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_043","subject-verb__sentence",307,76198,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_044","subject-verb__sentence",304,119337,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_045","subject-verb__sentence",257,99766,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_046","subject-verb__sentence",296,86411,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_047","subject-verb__sentence",271,72211,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_049","subject-verb__sentence",302,75259,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_043","subject-verb__clause",365,86192,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_044","subject-verb__clause",356,110454,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_045","subject-verb__clause",307,85048,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_046","subject-verb__clause",340,96223,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_047","subject-verb__clause",319,81258,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_049","subject-verb__clause",365,91463,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_051","random__sentence",195,94187,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_055","random__sentence",150,57512,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_057","random__sentence",186,77888,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_060","random__sentence",169,64850,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_063","random__sentence",168,68384,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_068","random__sentence",165,67580,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_051","random__clause",255,88982,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_055","random__clause",192,67591,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_057","random__clause",246,120740,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_060","random__clause",212,57670,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_063","random__clause",203,90741,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_068","random__clause",209,89381,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_051","random__token-window",318,98000,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_055","random__token-window",246,77566,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_057","random__token-window",315,124927,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_060","random__token-window",262,96642,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_063","random__token-window",300,94947,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_068","random__token-window",265,94111,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_051","semantic__sentence",195,36633,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_055","semantic__sentence",150,22290,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_057","semantic__sentence",186,70902,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_060","semantic__sentence",169,45044,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_063","semantic__sentence",168,30942,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_068","semantic__sentence",165,45443,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_051","semantic__clause",255,62024,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_055","semantic__clause",192,36108,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_057","semantic__clause",246,87196,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_060","semantic__clause",212,54095,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_063","semantic__clause",203,51507,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_068","semantic__clause",209,58019,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_051","coherence-sever__clause",190,44669,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_055","coherence-sever__clause",140,29687,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_057","coherence-sever__clause",164,58705,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_060","coherence-sever__clause",163,37500,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_063","coherence-sever__clause",129,54832,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_068","coherence-sever__clause",163,47956,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_051","coherence-sever__token-window",319,111802,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_055","coherence-sever__token-window",244,93503,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_057","coherence-sever__token-window",316,83198,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_060","coherence-sever__token-window",263,70539,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_063","coherence-sever__token-window",300,67580,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_068","coherence-sever__token-window",264,83929,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_051","subject-verb__sentence",319,104644,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_055","subject-verb__sentence",252,83588,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_057","subject-verb__sentence",310,107334,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_060","subject-verb__sentence",285,67254,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_063","subject-verb__sentence",298,85598,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_068","subject-verb__sentence",287,84442,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_051","subject-verb__clause",392,100221,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_055","subject-verb__clause",302,55329,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_057","subject-verb__clause",380,64913,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_060","subject-verb__clause",333,96803,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_063","subject-verb__clause",340,88565,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"grid J","pool_068","subject-verb__clause",344,86465,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"identifier J","idpool_000","identifier__field",28,3674,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"identifier J","idpool_001","identifier__field",28,12965,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"identifier J","idpool_002","identifier__field",28,5502,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"identifier J","idpool_003","identifier__field",28,7973,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"identifier J","idpool_004","identifier__field",28,4542,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"identifier J","idpool_005","identifier__field",28,2070,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"identifier J","idpool_006","identifier__field",28,16909,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"identifier J","idpool_007","identifier__field",28,3809,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"identifier J","idpool_008","identifier__field",28,5515,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"identifier J","idpool_009","identifier__field",28,6710,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"identifier J","idpool_010","identifier__field",28,10758,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"identifier J","idpool_011","identifier__field",28,6718,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"identifier J","idpool_012","identifier__field",28,7566,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"identifier J","idpool_013","identifier__field",28,7610,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"identifier J","idpool_014","identifier__field",28,10360,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"identifier J","idpool_015","identifier__field",28,16599,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"identifier J","idpool_016","identifier__field",28,7346,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"identifier J","idpool_017","identifier__field",28,8779,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"identifier J","idpool_018","identifier__field",28,11245,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"identifier J","idpool_019","identifier__field",28,27563,FALSE,"as recorded in MASTER_RESULTS",FALSE
+"single-token arm","pool_008","edge__token",662,68821,FALSE,"edge-token__J__pool-008",TRUE
+"single-token arm","pool_015","edge__token",443,102957,FALSE,"edge-token__J__pool-015-r1",TRUE
+"single-token arm","pool_017","edge__token",465,48331,FALSE,"edge-token__J__pool-017-r1",TRUE
+"single-token arm","pool_018","edge__token",573,45937,FALSE,"edge-token__J__pool-018",TRUE
+"single-token arm","pool_022","edge__token",551,74755,FALSE,"edge-token__J__pool-022",TRUE
+"single-token arm","pool_023","edge__token",476,120745,FALSE,"edge-token__J__pool-023-r1",TRUE
+"single-token arm","pool_025","edge__token",438,71186,FALSE,"edge-token__J__pool-025",TRUE
+"single-token arm","pool_028","edge__token",498,106282,FALSE,"edge-token__J__pool-028-r1",TRUE
+"single-token arm","pool_029","edge__token",478,103547,FALSE,"edge-token__J__pool-029",TRUE
+"single-token arm","pool_030","edge__token",669,59345,FALSE,"edge-token__J__pool-030-r1",TRUE
+"single-token arm","pool_031","edge__token",485,94954,FALSE,"edge-token__J__pool-031",TRUE
+"single-token arm","pool_032","edge__token",578,88972,FALSE,"edge-token__J__pool-032",TRUE
+"single-token arm","pool_039","edge__token",503,37319,FALSE,"edge-token__J__pool-039-r1",TRUE
+"single-token arm","pool_041","edge__token",525,99577,FALSE,"edge-token__J__pool-041",TRUE
+"single-token arm","pool_048","edge__token",534,63317,FALSE,"edge-token__J__pool-048",TRUE
+"single-token arm","pool_052","edge__token",563,100248,FALSE,"edge-token__J__pool-052",TRUE
+"single-token arm","pool_054","edge__token",585,113473,FALSE,"edge-token__J__pool-054-r1",TRUE
+"single-token arm","pool_058","edge__token",521,97401,FALSE,"edge-token__J__pool-058",TRUE
+"single-token arm","pool_064","edge__token",497,83920,FALSE,"edge-token__J__pool-064",TRUE
+"single-token arm","pool_067","edge__token",602,107840,FALSE,"edge-token__J__pool-067-r1",TRUE

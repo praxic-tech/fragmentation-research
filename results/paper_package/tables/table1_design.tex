@@ -1,0 +1,25 @@
+\begin{table*}[t]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\caption{Datasets, games and design summary.}
+\label{tab:design}
+\sbox0{%
+\begin{tabular}{@{}p{0.10\textwidth}p{0.11\textwidth}p{0.13\textwidth}p{0.14\textwidth}p{0.20\textwidth}p{0.12\textwidth}p{0.10\textwidth}@{}}
+\toprule
+Experiment & Corpus & Sample & Conditions & Attackers & Primary metric & Status \\
+\midrule
+Headline J & prose (PMC case reports) & 46 pools $\times$ 7 docs (322 docs) & sentence cut, full length & One-shot Sonnet; Memon-inspired; embedding$^\dagger$ & F1\_J (F1\_L, q) & prespecified \\
+Grid J & prose, $\leq$30-sentence documents & 24 pools $\times$ 7 docs $\times$ 9 cells (168 docs) & 4 strategies $\times$ 3 granularities, 9 retained cells & One-shot Sonnet; Memon-inspired; embedding$^\dagger$ & F1\_J (F1\_L, q) & prespecified; cells retained after pool-1 screening \\
+Headline O & prose & 100 documents (length-stratified) & sentence cut, full length & One-shot Sonnet; Jaccard-Greedy; Jaccard-MST; Random & Kendall $\tau$ & prespecified \\
+Grid O & prose & 30 documents $\times$ 9 cells & the 9 retained cells & One-shot Sonnet; Jaccard-Greedy; Jaccard-MST; Random & Kendall $\tau$ & prespecified \\
+Identifier J & synthetic records (Faker) & 20 pools $\times$ 7 records (28 fields) & one fragment per field & One-shot Sonnet; Memon-inspired; embedding$^\dagger$; Random; analytic and schema-order baselines & F1\_J vs schema baseline (90\% CI rule); F1\_L & prespecified (D11) \\
+Single-token edge J$^\dagger$ & prose, 4-sentence excerpts & 20 headline pools $\times$ 7 docs (140 docs) & sentence cut vs single whitespace token, identical text & One-shot Sonnet; Memon-inspired; embedding & paired A\_VJ (visible-text, null-adjusted) & post-hoc exploratory (D16) \\
+\bottomrule
+\end{tabular}}
+\ifdim\wd0>\textwidth\resizebox{\textwidth}{!}{\usebox0}\else\usebox0\fi
+\begin{flushleft}\footnotesize
+$^\dagger$ Post-hoc exploratory: the embedding attacker (D14) and the single-token edge experiment (D16) were designed after the prespecified results were seen, then frozen before their own evaluation. Every pool holds N = 7 sources; the attacker is told N, sees masked aliases in a per-unit shuffled order, and never sees raw ids.\\
+One-shot Sonnet units in the final run: 652 (651 completed, 1 RBNC) plus 40 post-hoc excerpt units (40 completed).\\
+\end{flushleft}
+\end{table*}

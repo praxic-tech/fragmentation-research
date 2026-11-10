@@ -22,6 +22,6 @@ single-token edge J (post hoc) & 40 & 40 & 0 & 0 & 11 & 199,260 & 2,789,161 & \$
 \ifdim\wd0>\textwidth\resizebox{\textwidth}{!}{\usebox0}\else\usebox0\fi
 \begin{flushleft}\footnotesize
 One-shot Sonnet (claude-sonnet-5, Message Batches API), 128,000 output tokens per call (D6), one attempt per unit; a call that exhausts the budget without an answer is a resource-bounded non-completion (RBNC), never re-asked and never scored 0. Repairs = units that received the one structural repair round (unparseable or missing / duplicated / unknown labels; the repair reads no score). Provider refusals = requests declined before inference for insufficient prepaid credit and resent unchanged once (0 token usage).\\
-Output tokens are almost entirely the model's internal reasoning (visible answers are $\leq$ ~2k tokens). Ledger total for every paid call in the project, including the pool-1 screening slice, the hierarchical live sample and the G3 masking control: \$144.32 in API credit (\$130.18 before the post-hoc single-token run).\\
+Output tokens are almost entirely the model's internal reasoning (visible answers are $\leq$ ~2k tokens). Ledger total for every paid call in the project, including the pool-1 screening slice, the hierarchical live sample and the G3 masking control: \$161.26 in API credit (\$130.18 before the post-hoc single-token run).\\
 \end{flushleft}
 \end{table*}

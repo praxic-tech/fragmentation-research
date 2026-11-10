@@ -1,0 +1,19 @@
+**Table 6. POST-HOC EXPLORATORY single-token edge case: sentence cut versus single-token cut on identical excerpts (paired, 20 pools).**
+
+| Metric | Sentence mean | Token mean | Paired diff (s − t) [95% CI] | Median diff | Pools s > t | Sign test p |
+|---|---|---|---|---|---|---|
+| A_VJ (PRIMARY, oracle-size null) | 0.588 | 0.016 | 0.572 [0.539, 0.607] | 0.563 | 20/20 | 1.9e-06 |
+| raw V_J | 0.762 | 0.155 | 0.607 [0.586, 0.628] | 0.601 | 20/20 | 1.9e-06 |
+| A_VL | 0.777 | 0.159 | 0.618 [0.552, 0.695] | 0.581 | 20/20 | 1.9e-06 |
+| raw V_L | 0.889 | 0.427 | 0.462 [0.425, 0.508] | 0.437 | 20/20 | 1.9e-06 |
+| A_VJ (predicted-structure null, robustness) | 0.592 | 0.027 | 0.565 [0.532, 0.599] | 0.558 | 20/20 | 1.9e-06 |
+| F1_J (id-level) | 0.585 | 0.116 | 0.469 [0.437, 0.501] | 0.477 | 20/20 | 1.9e-06 |
+| F1_L (id-level) | 0.761 | 0.223 | 0.538 [0.482, 0.595] | 0.544 | 20/20 | 1.9e-06 |
+| A_J (id-level) | 0.539 | -0.016 | 0.555 [0.520, 0.590] | 0.560 | 20/20 | 1.9e-06 |
+| Memon-inspired A_VJ (not designed for tokens) | 0.043 | -0.067 | 0.110 [0.047, 0.178] | 0.065 | 17/20 | 2.6e-03 |
+| Embedding A_VJ (not designed for tokens) | 0.104 | -0.090 | 0.194 [0.155, 0.233] | 0.201 | 20/20 | 1.9e-06 |
+
+POST-HOC EXPLORATORY (D16). 20 headline pools × 7 documents, four consecutive source sentences per document, identical text in both arms; sentence arm 28 fragments per pool, token arm median 523 (range 438–669). Completion 20/20 in both arms for every attacker; no RBNC.
+Oracle-size null means (10,000 permutations per pool): V_J 0.423 (sentence) vs 0.141 (token); V_L 0.503 vs 0.317. A_V = (V − null mean)/(1 − null mean). Paired differences: percentile bootstrap over pools (10,000 resamples, seed 42, 95%); exact two-sided sign test. q_V (diagnostic only): Sonnet 0.860 vs 0.376. No raw-vs-normalized sign disagreement for Sonnet; Memon-inspired disagrees in 3 pools (pool_017, pool_032, pool_041).
+Resources (Sonnet, all provider rows): sentence arm 20 rows, 106,375 output tokens, $0.57; token arm 31 rows (20 base + 11 repairs; 8 repaired, 3 repair calls hit 128k and kept the earlier answer), 2,682,786 output tokens, $13.58.
+Descriptive only: excerpt sentence-arm F1_J 0.585 vs full-document headline F1_J 0.723 (different tasks). A binary edge case, not a dose-response experiment: it locates no threshold.

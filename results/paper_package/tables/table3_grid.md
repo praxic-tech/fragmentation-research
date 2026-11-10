@@ -1,0 +1,17 @@
+**Table 3. Full retained prose grid, Game J, One-shot Sonnet.**
+
+| Cell (strategy / granularity) | Frags/doc | Words/frag | F1_J [95% CI] | b_J | A_J [95% CI] | F1_L [95% CI] | q [95% CI] | Completed |
+|---|---|---|---|---|---|---|---|---|
+| random / sentence | 24.6 | 19.5 | 0.801 [0.772, 0.829] | 0.128 | 0.772 [0.739, 0.804] | 0.862 [0.837, 0.886] | 0.926 [0.905, 0.946] | 24/24 |
+| random / clause | 30.9 | 15.5 | 0.754 [0.724, 0.784] | 0.130 | 0.718 [0.683, 0.752] | 0.835 [0.811, 0.857] | 0.899 [0.879, 0.919] | 24/24 |
+| random / token-window | 40.3 | 11.9 | 0.634 [0.599, 0.670] | 0.132 | 0.579 [0.538, 0.619] | 0.747 [0.718, 0.775] | 0.845 [0.818, 0.870] | 23/24 |
+| semantic / sentence | 24.6 | 19.5 | 0.739 [0.707, 0.769] | 0.128 | 0.700 [0.665, 0.735] | 0.879 [0.851, 0.904] | 0.838 [0.820, 0.856] | 24/24 |
+| semantic / clause | 30.9 | 15.5 | 0.679 [0.643, 0.714] | 0.130 | 0.631 [0.591, 0.671] | 0.823 [0.784, 0.858] | 0.823 [0.802, 0.844] | 24/24 |
+| coherence-sever / clause | 22.6 | 21.3 | 0.726 [0.702, 0.749] | 0.131 | 0.684 [0.657, 0.711] | 0.849 [0.832, 0.864] | 0.851 [0.830, 0.873] | 24/24 |
+| coherence-sever / token-window | 40.2 | 11.9 | 0.700 [0.670, 0.730] | 0.132 | 0.655 [0.620, 0.689] | 0.860 [0.829, 0.889] | 0.810 [0.790, 0.830] | 24/24 |
+| subject-verb / sentence | 40.9 | 11.7 | 0.553 [0.527, 0.579] | 0.130 | 0.487 [0.457, 0.516] | 0.689 [0.659, 0.719] | 0.800 [0.782, 0.819] | 24/24 |
+| subject-verb / clause | 48.5 | 9.9 | 0.498 [0.476, 0.521] | 0.131 | 0.422 [0.397, 0.449] | 0.646 [0.621, 0.670] | 0.768 [0.746, 0.791] | 24/24 |
+
+Grid pools 2–25 (24 pools of 7 documents per cell; documents capped at 30 reference sentences). One-shot Sonnet; 95% percentile-bootstrap CIs over pools. b_J is the pool-mean analytic one-bucket baseline. The Memon-inspired and embedding (post hoc) attackers sit near b_J in every cell, with q ≈ 0.5; Game O τ per cell is reported with the other Game O results.
+random / token-window: one pool (pool_002, 322 fragments) exhausted the 128k output budget and is excluded as a resource-bounded non-completion, never scored 0.
+Semantic / sentence is standard sentence splitting and the reference cut; the headline is the same cut at full length.

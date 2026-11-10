@@ -1,0 +1,12 @@
+"panel","layer","row","metric","value","lo","hi","n_pools","post_hoc"
+"a","estimate","Random partition","F1_J",0.0555082142857081,0.0553589255952319,0.055674407738089,20,FALSE
+"a","estimate","Memon-inspired","F1_J",0.0540165038474891,0.0420300419062307,0.0663092782180046,20,FALSE
+"a","estimate","Embedding (post-hoc exploratory)","F1_J",0.0537040862630028,0.0425276213240937,0.0648204832695008,20,TRUE
+"a","estimate","One-shot Sonnet","F1_J",0.0833333333333333,0.0678571428571429,0.0988095238095238,20,FALSE
+"b","estimate","Random partition","linkage_precision",0.111098452380942,0.11093487797618,0.111269288690466,20,TRUE
+"b","estimate","Memon-inspired","linkage_precision",0.111209581714738,0.0955150146485751,0.127918941282417,20,TRUE
+"b","estimate","Embedding (post-hoc exploratory)","linkage_precision",0.073161710107137,0.0677272122140352,0.0790040061144855,20,TRUE
+"b","estimate","One-shot Sonnet","linkage_precision",0.132142857142857,0.113095238095238,0.153571428571429,20,TRUE
+"a","reference","analytic baseline","F1_J",0.1,NA,NA,20,FALSE
+"a","reference","schema-order baseline","F1_J",0.2,NA,NA,20,FALSE
+"b","reference","template-respecting chance","linkage_precision",0.142857142857143,NA,NA,20,TRUE

@@ -1,0 +1,222 @@
+{
+ "figures": [
+  {
+   "figure": "1",
+   "name": "fig1_headline_attackers",
+   "placement": "Main",
+   "width": "1 col",
+   "status": "Prespecified; embedding row post hoc",
+   "shows": "The generative attacker reconstructs far more than the tested statistical and similarity attackers",
+   "files": {
+    "pdf": "9423eec78b12",
+    "png": "0b2e6acf6cb5",
+    "svg": "8a274e2b6f57",
+    "csv": "00625269b608"
+   }
+  },
+  {
+   "figure": "2",
+   "name": "fig2_grid_reconstruction",
+   "placement": "Main",
+   "width": "1 col",
+   "status": "Prespecified",
+   "shows": "Reconstruction across nine strategy x granularity cells",
+   "files": {
+    "pdf": "7b31f9dc9a62",
+    "png": "256a755c563b",
+    "svg": "415880c15923",
+    "csv": "638c2e2c3cb8"
+   }
+  },
+  {
+   "figure": "3",
+   "name": "fig3_linkage_vs_ordering",
+   "placement": "Main",
+   "width": "1 col",
+   "status": "Prespecified",
+   "shows": "The joint score split into linkage and conditional ordering",
+   "files": {
+    "pdf": "ee91d72bab61",
+    "png": "d83bf56b08a3",
+    "svg": "7db1a6585d30",
+    "csv": "64eb61eae288"
+   }
+  },
+  {
+   "figure": "4",
+   "name": "fig4_identifiers",
+   "placement": "Main",
+   "width": "1 col",
+   "status": "Prespecified; D11 baselines",
+   "shows": "Structured identifiers behave qualitatively differently from prose",
+   "files": {
+    "pdf": "4d4249c39c6f",
+    "png": "4269616480b6",
+    "svg": "053df57e9275",
+    "csv": "644569bb34ac"
+   }
+  },
+  {
+   "figure": "5",
+   "name": "fig5_single_token",
+   "placement": "Main",
+   "width": "1 col",
+   "status": "POST-HOC EXPLORATORY (D16)",
+   "shows": "Single-token cuts drive null-adjusted joint reconstruction to about its random-shuffle reference",
+   "files": {
+    "pdf": "b0ecbba88e3d",
+    "png": "1d6dcc48e916",
+    "svg": "cbe097bfec0f",
+    "csv": "8dec564147e5"
+   }
+  },
+  {
+   "figure": "6",
+   "name": "fig6_granularity_gradient",
+   "placement": "Main",
+   "width": "1 col",
+   "status": "POST-HOC EXPLORATORY (D16, D18)",
+   "shows": "Five cuts of identical text: observed against the random-shuffle reference, and what it means in words",
+   "files": {
+    "pdf": "9acd5cfd49c2",
+    "png": "fece0727d28e",
+    "svg": "3bcc0ddc2ed7",
+    "csv": "8d1cd6d8bbc5"
+   }
+  },
+  {
+   "figure": "A",
+   "name": "figA_gameO_vs_gameJ",
+   "placement": "Appendix",
+   "width": "1 col",
+   "status": "Prespecified",
+   "shows": "Ordering with membership given is much easier than joint recovery",
+   "files": {
+    "pdf": "ccca352d51bb",
+    "png": "3814af37edef",
+    "svg": "6937f124be3f",
+    "csv": "452a10a2a657"
+   }
+  },
+  {
+   "figure": "B",
+   "name": "figB_resource_scaling",
+   "placement": "Appendix",
+   "width": "1 col",
+   "status": "Prespecified; single-token points post hoc",
+   "shows": "Output grows with fragment count, but fragment count does not determine completion",
+   "files": {
+    "pdf": "80322dc124a0",
+    "png": "6f33a350eaa7",
+    "svg": "4b185cece883",
+    "csv": "edffb960488c"
+   }
+  },
+  {
+   "figure": "C",
+   "name": "figC_token_raw_vs_null",
+   "placement": "Appendix",
+   "width": "1 col",
+   "status": "POST-HOC EXPLORATORY (D16)",
+   "shows": "What A_VJ near zero means in raw terms",
+   "files": {
+    "pdf": "a928f07cbe8d",
+    "png": "b76b13a4a815",
+    "svg": "5b30df9e6945",
+    "csv": "264edd033ca4"
+   }
+  }
+ ],
+ "tables": [
+  {
+   "table": "1",
+   "name": "table1_design",
+   "status": "Prespecified",
+   "shows": "The design: corpora, cells, pools, units",
+   "files": {
+    "tex": "f4b68fd3f2e3",
+    "md": "91ad29c61361"
+   }
+  },
+  {
+   "table": "2",
+   "name": "table2_headline_attackers",
+   "status": "Prespecified; embedding row post hoc",
+   "shows": "Headline attacker comparison with 95% CIs",
+   "files": {
+    "tex": "13a6c4c39702",
+    "md": "3754c12300bf"
+   }
+  },
+  {
+   "table": "3",
+   "name": "table3_grid",
+   "status": "Prespecified",
+   "shows": "The nine-cell grid",
+   "files": {
+    "tex": "493cb63e2cb1",
+    "md": "ecb7c002c6a8"
+   }
+  },
+  {
+   "table": "4",
+   "name": "table4_gameO",
+   "status": "Prespecified",
+   "shows": "Game O: ordering with membership given",
+   "files": {
+    "tex": "b9248c94fc1a",
+    "md": "f16ab2570cb1"
+   }
+  },
+  {
+   "table": "5",
+   "name": "table5_identifiers",
+   "status": "Prespecified; D11 baselines",
+   "shows": "The structured-identifier arm",
+   "files": {
+    "tex": "3249a017b4a9",
+    "md": "03a3df42de18"
+   }
+  },
+  {
+   "table": "6",
+   "name": "table6_single_token",
+   "status": "POST-HOC EXPLORATORY (D16)",
+   "shows": "Sentence against single-token cuts on identical excerpts, paired",
+   "files": {
+    "tex": "ee3345187eaf",
+    "md": "517be6197b80"
+   }
+  },
+  {
+   "table": "7",
+   "name": "table7_resources",
+   "status": "Prespecified",
+   "shows": "Resources, completion and cost",
+   "files": {
+    "tex": "34cfe74fe9c4",
+    "md": "9bc8a8f9befc"
+   }
+  },
+  {
+   "table": "8",
+   "name": "table8_gradient",
+   "status": "POST-HOC EXPLORATORY (D16, D18)",
+   "shows": "The five-point granularity gradient, with its random-shuffle reference per arm",
+   "files": {
+    "tex": "6a4a77d154ec",
+    "md": "c657322db67a"
+   }
+  },
+  {
+   "table": "9",
+   "name": "table9_adjacency",
+   "status": "Post hoc, free reanalysis",
+   "shows": "Precedence against adjacency, and a random attacker that is a legal answer",
+   "files": {
+    "tex": "8f18b891c034",
+    "md": "525e16e33415"
+   }
+  }
+ ]
+}

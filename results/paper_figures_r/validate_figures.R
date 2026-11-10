@@ -195,6 +195,33 @@ check("panel (b) recovered / floor percentages = recovery.json",
 check("recovered is never below the floor it is measured against",
       all(f6$recovered >= f6$floor))
 check("V_J <= V_L in every arm", all(f6$V_J <= f6$V_L + 1e-12))
+check("random-shuffle reference = the frozen nulls, and is NOT constant across arms",
+      same(c(f6$null_V_J[f6$arm == "sentence"], f6$null_V_J[f6$arm == "1-word"],
+             f6$null_V_J[f6$arm == "4-word"]),
+           c(mean(subset(read.csv("results/single_token_edge/analysis/per_pool.csv"),
+                         attacker == "One-shot Sonnet" & condition == "sentence")$null_oracle_V_J),
+             mean(subset(read.csv("results/single_token_edge/analysis/per_pool.csv"),
+                         attacker == "One-shot Sonnet" & condition == "token")$null_oracle_V_J),
+             s18$arms$w4$null_oracle_V_J)) &&
+      length(unique(round(f6$null_V_J, 3))) == 5)
+check("observed V_J is above its own reference in every arm", all(f6$V_J > f6$null_V_J))
+# A_VJ is the mean of PER-POOL advantages, which is not the advantage of the
+# means: normalising grand means is a different quantity (joint_metrics.advantage).
+# Check it against the per-pool files, and assert the two really do differ, so
+# that a future refactor computing it the wrong way is caught rather than passing.
+pp16 <- subset(read.csv("results/single_token_edge/analysis/per_pool.csv"),
+               attacker == "One-shot Sonnet")
+pp18 <- read.csv("results/gradient/visible_analysis/per_pool.csv")
+per_pool_A <- c("sentence" = mean(pp16$A_VJ[pp16$condition == "sentence"]),
+                "1-word"   = mean(pp16$A_VJ[pp16$condition == "token"]),
+                "4-word"   = mean(pp18$A_VJ[pp18$condition == "w4"]),
+                "3-word"   = mean(pp18$A_VJ[pp18$condition == "w3"]),
+                "2-word"   = mean(pp18$A_VJ[pp18$condition == "w2"]))
+check("A_VJ = mean of PER-POOL advantages (not the advantage of the means)",
+      same(f6$A_VJ, per_pool_A[f6$arm]))
+check("and that really is a different quantity from normalising the means",
+      !same(f6$A_VJ, (f6$V_J - f6$null_V_J) / (1 - f6$null_V_J)) &&
+      max(abs(f6$A_VJ - (f6$V_J - f6$null_V_J) / (1 - f6$null_V_J))) < 0.01)
 check("the primary series is monotone in fragment length",
       !is.unsorted(f6$A_VJ) && !is.unsorted(f6$frag_words))
 check("mean fragment lengths match the built cells (19.01 / 3.92 / 2.96 / 1.99 / 1.00)",
