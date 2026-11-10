@@ -44,6 +44,28 @@
 
 \usepackage{booktabs}
 \usepackage{graphicx}
+
+% Float placement. Standard LaTeX can only put a table*/figure* at the top of a
+% page and defers it when the top is full, which was pushing wide tables two to
+% three pages past the text that calls them. dblfloatfix also allows the bottom
+% of a page and restores ordering; the relaxed fractions let a page carry more
+% float before it gives up and defers.
+\usepackage{dblfloatfix}
+% Loaded but not currently used: dblfloatfix plus the fractions below were
+% enough. If a float starts drifting again, put \FloatBarrier at the boundary
+% it escapes. Do NOT load placeins with [section]: that option redefines
+% \section and acmart refuses to compile.
+\usepackage{placeins}
+\setcounter{topnumber}{3}
+\setcounter{bottomnumber}{2}
+\setcounter{totalnumber}{5}
+\renewcommand{\topfraction}{0.9}
+\renewcommand{\bottomfraction}{0.7}
+\renewcommand{\textfraction}{0.07}
+\renewcommand{\floatpagefraction}{0.75}
+\renewcommand{\dblfloatpagefraction}{0.75}
+\renewcommand{\dbltopfraction}{0.9}
+\setcounter{dbltopnumber}{3}
 % Figures and tables are the validated package; rebuilding it updates the
 % paper with no edits here.
 \graphicspath{{../results/paper_package/figures/}{figures/}{./}}
@@ -543,7 +565,6 @@ The granularity labels overlap substantially in realised fragment length, so
 we treat the grid's granularity axis as a strategy-confounded proxy and use the
 controlled series of \S\ref{sec:res-gradient} for anything that depends on
 length.
-\input{table1_design}
 
 \subsection{Attackers}
 \label{sec:attackers}
@@ -695,9 +716,21 @@ documents was again much lower than the pairwise figure suggests: $32.5\%$ of
 fragments in their exact position, a mean longest intact run of $6.31$
 fragments, and a run fraction of $0.237$. Headline and grid results are
 reported separately throughout and are not pooled; they move in opposite
-directions in some comparisons. Full results are in
-Appendix~\ref{app:gameO}.
+directions in some comparisons.
 
+\begin{figure}[t]
+  \centering
+  \includegraphics{figA_gameO_vs_gameJ.pdf}
+  \caption{Ordering with membership given (Game~O, plotted as $(1+\tau)/2$)
+  against joint reconstruction (Game~J \FJ{} and $q$) for the one-shot
+  attacker. O: 100 headline documents, 30 per grid cell; J: 46 headline pools,
+  24 (23) per cell. Game~O is a membership-oracle reference, not an upper bound
+  on Game~J.}
+  \label{fig:ovj}
+\end{figure}
+\input{table4_gameO}
+
+\FloatBarrier
 \subsection{Structured identifiers}
 \label{sec:res-identifiers}
 The identifier arm behaved qualitatively differently. The one-shot attacker
@@ -794,9 +827,31 @@ a null of $0.423$ at the sentence cut and $0.155$ against $0.141$ at the token
 cut. Linkage degraded less than joint structure: \AVL{} fell from $0.777$ to
 $0.159$, so some membership signal survived where ordering did not. Being
 binary, that arm located no threshold, which is what the five-point series
-above was built to address. Its figures and per-pool table are in
-Appendix~\ref{app:token}.
+above was built to address.
 
+Two details matter for reading either arm. The permutation null is not constant
+between them---mean \VJ{} under the null is $0.423$ at the sentence cut and
+$0.141$ at the token cut, with \VL{} at $0.503$ and $0.317$---which is why we
+quote the normalized value and never compare raw scores across arms. And the
+two non-generative attackers, which were not designed for single-token input,
+both end at or below their own null: Memon-inspired moved from $\AVJ = 0.043$
+to $-0.067$ (paired difference $0.110$ $[0.047, 0.178]$, 17 of 20 pools) and
+the embedding attacker from $0.104$ to $-0.090$ ($0.194$ $[0.155, 0.233]$, 20
+of 20). Raw and normalized scores agree in sign for the one-shot attacker in
+every pool; for Memon-inspired they disagree in three, which is a further
+reason to quote the normalized value.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics{fig5_single_token.pdf}
+  \caption{Post-hoc exploratory single-token edge case: per-pool \AVJ{} for the
+  sentence and single-token cuts of identical excerpts (a), and the paired
+  difference with its $95\%$ CI (b). Zero is the oracle-size permutation null.}
+  \label{fig:token}
+\end{figure}
+\input{table6_single_token}
+
+\FloatBarrier
 \subsection{Completion}
 \label{sec:res-resources}
 Of 652 prespecified one-shot units, 651 completed. The one unit that exhausted
@@ -1010,24 +1065,14 @@ paper. No AI system is listed as an author.
 % ===========================================================================
 % APPENDICES (outside the page limit; after the references)
 % ===========================================================================
+\section{Design Summary}
+\label{app:design}
+\input{table1_design}
+
 \section{Prompts}
 \label{app:prompts}
 Verbatim Game~J and Game~O prompts; alias format; parsing rule; repair feedback
 text. \TODO{paste verbatim from the frozen specs}
-
-\section{Game O Details}
-\label{app:gameO}
-\begin{figure}[t]
-  \centering
-  \includegraphics{figA_gameO_vs_gameJ.pdf}
-  \caption{Ordering with membership given (Game~O, plotted as $(1+\tau)/2$)
-  against joint reconstruction (Game~J \FJ{} and $q$) for the one-shot
-  attacker. O: 100 headline documents, 30 per grid cell; J: 46 headline pools,
-  24 (23) per cell. Game~O is a membership-oracle reference, not an upper bound
-  on Game~J.}
-  \label{fig:ovj}
-\end{figure}
-\input{table4_gameO}
 
 \section{Completion, Resources and Cost}
 \label{app:resources}
@@ -1041,43 +1086,5 @@ text. \TODO{paste verbatim from the frozen specs}
   \label{fig:resources}
 \end{figure}
 \input{table7_resources}
-
-\section{Single-Token Edge Case: Figures and Per-Pool Data\posthoc}
-\label{app:token}
-Supporting material for the binary arm reported in \S\ref{sec:res-gradient}.
-Figure~\ref{fig:token} shows the per-pool spread behind the paired difference,
-and Table~\ref{tab:singletoken} gives every metric with its paired statistics.
-
-The oracle-size permutation null is not constant between the two arms: mean
-\VJ{} under the null is $0.423$ at the sentence cut and $0.141$ at the token
-cut, with \VL{} at $0.503$ and $0.317$. This is why the normalized \AVJ{} is
-the quantity we report and the raw scores are not compared across arms.
-
-The two non-generative attackers were not designed for single-token input and
-are reported only for completeness. Memon-inspired moved from $\AVJ = 0.043$ to
-$-0.067$ (paired difference $0.110$ $[0.047, 0.178]$, positive in 17 of 20
-pools) and the embedding attacker from $0.104$ to $-0.090$ (paired difference
-$0.194$ $[0.155, 0.233]$, 20 of 20). Both sit at or below their null at the
-token cut. The raw and normalized scores agree in sign for the one-shot
-attacker in every pool; for Memon-inspired they disagree in three
-(\textsf{pool\_017}, \textsf{pool\_032}, \textsf{pool\_041}), which is why the
-normalized value is the one quoted.
-
-The diagnostic ratio $q_V$ was $0.860$ at the sentence cut and $0.376$ at the
-token cut. As \S\ref{sec:scoring} notes, $q_V$ is not the visible-text analogue
-of $q$: \VJ{} and \VL{} are maximized over separate assignments, so their ratio
-does not decompose the score.
-
-\begin{figure}[!htbp]
-  \centering
-  \includegraphics{fig5_single_token.pdf}
-  \caption{Post-hoc exploratory single-token edge case.}
-  \label{fig:token}
-\end{figure}
-\input{table6_single_token}
-% figC_token_raw_vs_null.pdf is NOT included: it duplicates panel (c) of
-% Figure 8, and the raw-versus-null values it shows (0.762 against 0.423;
-% 0.155 against 0.141) are already stated in the main text. It remains in the
-% figure package if a reviewer asks for it.
 
 \end{document}
