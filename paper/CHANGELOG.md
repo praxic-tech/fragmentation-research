@@ -403,5 +403,50 @@ carries the same numbers. That is an authors' decision, not a layout one.
   applied, and re-running it would load `placeins` with `[section]`, which
   acmart refuses to compile.
 
+## Figure 3 rebuilt as a one-column figure
+
+It was the only two-column figure in the package: 504pt wide, panels (a) and
+(b) side by side. A `figure*` can only be set at a page top or bottom, never
+inside a column, which makes it the hardest float in the document to place.
+Every other two-panel figure here — fig1, fig4, fig5, fig6, fig7 — is 239pt
+with the panels stacked, so this was also the odd one out stylistically.
+
+Rebuilt stacked at 239×331pt. Panel (b) gets its own row labels and strategy
+strips back, since it is no longer beside panel (a). `fig3_linkage_vs_ordering.csv`
+is byte-identical before and after, so the same numbers are plotted, and
+`validate_figures.R` reports 0 failures. In the paper it is now an ordinary
+`figure` with `[htb]`.
+
+This did not remove the float page — see below — but it removed the float that
+was hardest to place, and page 8 now carries two figures side by side instead
+of one stacked above empty space.
+
+## What is still empty, and why
+
+**Page 8** is still a float page, about 40% blank. The cause is a deferred-float
+cascade: once one float cannot be placed, LaTeX drains the queue with
+`\@makefcolumn`, and a float page consumes no text, so no further floats are
+declared to fill it. The first deferral happens on page 6, where Tables 2 and 3
+occupy the page top and Figure 2 has nowhere to go.
+
+Measured and rejected, all byte-identical or worse: `dbltopnumber` (1 and 3),
+`dbltopfraction` (0.62, 0.65, 0.9), `dblfloatpagefraction`, `floatpagefraction`
+(0.75, 0.92), `!` placement overrides, removing `dblfloatfix`, and declaring the
+wide tables at the end of their subsection instead of the head (that one makes
+page 6 worse: 1015 words down to 472).
+
+What is left is the ratio. §§5.2–5.4 declare five large exhibits against about
+1.2 pages of prose, because §5.3 is four lines and §5.4 is twelve. Two authors'
+decisions would each clear it: writing those two subsections out, or dropping
+Figure 2, whose numbers are all in Table 4 and which `paper/README.md` already
+ranks first in the cut order.
+
+**Pages 13–14** are about half blank. Tables 9 and 10 are `table*` and can only
+sit at a page top, so they go to page 14, and the three appendix sections do
+not have enough text to fill page 13 behind them. Appendix B is currently one
+sentence and `\TODO{paste verbatim from the frozen specs}`; the verbatim Game J
+and Game O prompts are what belongs in that space, and they are needed for the
+open-science claim anyway.
+
 Build after revision 5: **0 errors, 0 undefined citations or references, 0
 overfull or underfull horizontal boxes, 14 pages, main body pages 1–12.**

@@ -36,8 +36,8 @@ and clearly marked appendices do **not** count. §7 currently ends about two
 fifths down page 12, so there is roughly half a page of margin. If it needs to
 shrink, cut in this order:
 
-1. Figure 2 (grid) — Table 4 carries the same numbers, and dropping it would
-   also clear one of the two float-only pages (see below).
+1. Figure 2 (grid) — Table 4 carries the same numbers, and dropping it is also
+   what would clear the float-only page 8 (see below).
 2. Figure 3 (linkage against ordering) — overlaps Tables 4 and 7.
 3. The grid section (§5.2) can lose its figure and keep its table.
 4. §5.3 and §5.4 can be compressed, but the interpretation boundary §5.3
@@ -51,14 +51,23 @@ declarations back to the end of a subsection: LaTeX cannot place a float before
 the point it is declared, and that was what pushed four pages' worth of figures
 two to three pages past their text.
 
+Every figure in the package is one column, 239pt. Do not rebuild Figure 3 at
+`page_width`: as a `figure*` it could only be set at a page top or bottom, and
+it was the hardest float in the document to place.
+
 Pages 7 and 8 carry floats only. That is a float-to-prose ratio, not a setting:
 §§5.2–5.4 declare five large exhibits against about 1.2 pages of prose, because
 §5.3 is four lines and §5.4 is twelve. `dbltopnumber`, `dbltopfraction`,
-`dblfloatpagefraction`, `floatpagefraction` and `dblfloatfix` were each measured
-on this manuscript and every one of them produces a byte-identical PDF — once a
-float is deferred, LaTeX drains the queue with `\@makefcolumn`, which consults
-none of them. Writing those two subsections out, or taking cut 1 above, is what
-clears it.
+`dblfloatpagefraction`, `floatpagefraction`, `!` placement overrides and
+`dblfloatfix` were each measured on this manuscript and every one of them
+produces a byte-identical PDF — once a float is deferred, LaTeX drains the queue
+with `\@makefcolumn`, which consults none of them. Declaring the wide tables at
+the end of their subsection instead of the head was also tried and is worse.
+Writing those two subsections out, or taking cut 1 above, is what clears it.
+
+Pages 13 and 14 are about half blank for a different reason: Tables 9 and 10
+can only sit at a page top, so they go to page 14, and Appendix B is currently
+one sentence and a TODO. The verbatim prompts fill that space.
 
 ## What is deliberately missing
 
