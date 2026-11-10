@@ -1,0 +1,135 @@
+% refs.bib — the paper's bibliography, under version control.
+%
+% STATUS MARKERS. Every entry carries one, from docs/BIBLIOGRAPHY_SOURCE_AUDIT.md.
+%   PRIMARY VERIFIED  full text read; fields taken from the source
+%   METADATA ONLY     publisher/author page read; full text not obtained
+%   SECONDARY ONLY    the primary was NOT read; do not cite specifics
+% Fields marked FIXME are genuinely unresolved, not guesses. Resolve them
+% before camera-ready; do not fill them from memory.
+%
+% The audit flags one withdrawn figure: a "~55-word recovered chunk" statistic
+% circulating for galle2015 is NOT in that paper's abstract and came from a
+% summary of a different method. It is not cited here and must not be added
+% without reading the ACM text.
+
+% ---------------------------------------------------------------- PRIMARY VERIFIED
+@inproceedings{shanmugasundaram2003,
+  author    = {Shanmugasundaram, Kulesh and Memon, Nasir},
+  title     = {Automatic Reassembly of Document Fragments via Context Based
+               Statistical Models},
+  booktitle = {Proceedings of the 19th Annual Computer Security Applications
+               Conference (ACSAC)},
+  year      = {2003},
+  note      = {PRIMARY VERIFIED (full text read). FIXME: page numbers are not in
+               the PDF and the PDF names no venue; confirm both against the
+               ACSAC/IEEE record. Served from acsac.org/2003/papers/97.pdf}
+}
+
+@article{ciriani2010,
+  author    = {Ciriani, Valentina and De Capitani di Vimercati, Sabrina and
+               Foresti, Sara and Jajodia, Sushil and Paraboschi, Stefano and
+               Samarati, Pierangela},
+  title     = {Combining Fragmentation and Encryption to Protect Privacy in Data
+               Storage},
+  journal   = {ACM Transactions on Information and System Security},
+  volume    = {13},
+  number    = {3},
+  articleno = {22},
+  pages     = {22:1--22:33},
+  year      = {2010},
+  month     = jul,
+  note      = {PRIMARY VERIFIED (full text read)}
+}
+
+@article{decapitani2014,
+  author  = {De Capitani di Vimercati, Sabrina and Foresti, Sara and
+             Jajodia, Sushil and Livraga, Giovanni and Paraboschi, Stefano and
+             Samarati, Pierangela},
+  title   = {Fragmentation in Presence of Data Dependencies},
+  journal = {IEEE Transactions on Dependable and Secure Computing},
+  year    = {2014},
+  doi     = {10.1109/TDSC.2013.2295798},
+  note    = {PRIMARY VERIFIED from the author preprint. FIXME: volume, number
+             and pages are not on the preprint; take them from IEEE Xplore.
+             Copyright line reads 2013; commonly cited as 2014}
+}
+
+@article{paixao2020,
+  author  = {Paix{\~a}o, Thiago M. and Berriel, Rodrigo F. and
+             Boeres, Maria C. S. and Koerich, Alessandro L. and
+             Badue, Claudine and De Souza, Alberto F. and
+             Oliveira-Santos, Thiago},
+  title   = {Self-supervised Deep Reconstruction of Mixed Strip-shredded Text
+             Documents},
+  journal = {Pattern Recognition},
+  year    = {2020},
+  doi     = {10.1016/j.patcog.2020.107535},
+  note    = {PRIMARY VERIFIED (full text read). FIXME: volume and article/page
+             numbers. Preprint arXiv:2007.00779}
+}
+
+@inproceedings{shredbench2026,
+  author    = {Guo, Zichun and Shi, Yuling and Zeng, Wenhao and Hu, Chao and
+               Lin, Haotian and Zhuo, Terry Yue and Chen, Jiawei and
+               Gu, Xiaodong and Ma, Wenping},
+  title     = {{ShredBench}: Evaluating the Semantic Reasoning Capabilities of
+               Multimodal {LLMs} in Document Reconstruction},
+  booktitle = {Findings of the Association for Computational Linguistics: ACL
+               2026},
+  pages     = {22603--22615},
+  year      = {2026},
+  note      = {PRIMARY VERIFIED (full text read). Nine authors; do not truncate}
+}
+
+@inproceedings{lermen2026,
+  author    = {Lermen, Simon and Paleka, Daniel and Swanson, Joshua and
+               Aerni, Michael and Carlini, Nicholas and Tram{\`e}r, Florian},
+  title     = {Large-scale Online Deanonymization with {LLMs}},
+  booktitle = {35th USENIX Security Symposium (USENIX Security 26)},
+  pages     = {1947--1966},
+  year      = {2026},
+  note      = {PRIMARY VERIFIED (full text read). Title is "deanonymization",
+               not "semantic linkage"}
+}
+
+% ---------------------------------------------------------------- METADATA ONLY
+@inproceedings{galle2015,
+  author    = {Gall{\'e}, Matthias and Tealdi, Matias},
+  title     = {Reconstructing Textual Documents from $n$-grams},
+  booktitle = {Proceedings of the 21st ACM SIGKDD International Conference on
+               Knowledge Discovery and Data Mining (KDD)},
+  pages     = {329--338},
+  year      = {2015},
+  doi       = {10.1145/2783258.2783361},
+  note      = {METADATA ONLY -- full text NOT obtained. Cite only the de Bruijn
+               formulation and the overlap property, both of which follow from
+               the abstract. The CiteSeerX link in circulation is dead (404)}
+}
+
+% ---------------------------------------------------------------- SECONDARY ONLY
+@article{memonpal2006,
+  author  = {Memon, Nasir and Pal, Anandabrata},
+  title   = {Automated Reassembly of File Fragmented Images Using Greedy
+             Algorithms},
+  journal = {IEEE Transactions on Image Processing},
+  volume  = {15},
+  number  = {2},
+  pages   = {385--393},
+  year    = {2006},
+  note    = {SECONDARY ONLY -- THE PRIMARY HAS NOT BEEN READ. IEEE-paywalled;
+             two CiteSeerX links both returned 404. Cite ONLY at the level of
+             "multiple files are reassembled at once from a mixed pool".
+             Do NOT cite the PUP mechanism, what the headers supply, the
+             complexity bound, or the k-vertex-disjoint formulation until
+             someone reads IEEE TIP 15(2):385-393; the last of those may belong
+             to a different paper}
+}
+
+% ---------------------------------------------------------------- TOOLING
+% These are used by the harness and analysis and need real entries before
+% camera-ready. Left as FIXME rather than invented.
+% - spaCy (sentence segmentation) -- pin the version actually used
+% - sentence-transformers/all-mpnet-base-v2, revision e8c3b32edf5434bc2275fc9bab85f82640a19130
+% - Crochemore et al. 2001 and Hyyro 2004 (bit-parallel LCS)
+% - SciPy (linear_sum_assignment)
+% - the attacker model and its batch pricing basis

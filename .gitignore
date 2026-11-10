@@ -1,44 +1,39 @@
-# Secrets — never commit. The adversary reads apikey.env from the repo root.
-.env
-*.env
+
+
 !*.env.example
-
-# Python
-__pycache__/
-*.py[cod]
-.venv/
-venv/
-
-# IDE
-.idea/
-.vscode/
-
-# Grid cell output — regenerate with datagen/prose_cutter.py
-results/grid/
-
-# Local drafts — meeting prep and outgoing comms, not project record
-docs/deliverables/week6_full_grid/
-
-# Local key backups — .env.bak is NOT matched by the .env rules above
-*.bak
-
-# Batch state and results — regenerate, do not version
-results/batches/
-
-# Grid run record — regenerate with harness/run_grid.py
-results/grid_results.json
-
-# Length-capped grid corpus — rebuild with datagen/build_grid_corpus.py
 # (tracked deliberately: every cell must cut the SAME bytes)
-
-# Pilot response data — regenerate with adversaries/joint_game.py
-results/joint_pilot*/
-
-# Run ledger — live run state, regenerate by running
-results/run_ledger.json
-
-# Smoke-test output - regenerate with adversaries/hierarchical.py
-results/hierarchical_smoke/
-
+# Batch state and results — regenerate, do not version
 # Blocker measurement output - regenerate with analysis/blocker.py
+# Grid cell output — regenerate with datagen/prose_cutter.py
+# Grid run record — regenerate with harness/run_grid.py
+# IDE
+# Length-capped grid corpus — rebuild with datagen/build_grid_corpus.py
+# Local drafts — meeting prep and outgoing comms, not project record
+# Local key backups — .env.bak is NOT matched by the .env rules above
+# Pilot response data — regenerate with adversaries/joint_game.py
+# Python
+# Run ledger — live run state, regenerate by running
+# Secrets — never commit. The adversary reads apikey.env from the repo root.
+# Smoke-test output - regenerate with adversaries/hierarchical.py
+*.bak
+*.env
+*.py[cod]
+.env
+.idea/
+.venv/
+.vscode/
+__pycache__/
+docs/deliverables/week6_full_grid/
+paper/*.aux
+paper/*.bbl
+paper/*.blg
+paper/*.log
+paper/*.out
+results/batches/
 results/blocker/
+results/grid/
+results/grid_results.json
+results/hierarchical_smoke/
+results/joint_pilot*/
+results/run_ledger.json
+venv/
