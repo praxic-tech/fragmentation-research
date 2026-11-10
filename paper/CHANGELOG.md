@@ -231,3 +231,68 @@ Mohammed Arafat Nadaf. `\shortauthors` updated to `Tejada et al.`
 
 Build after revision 2: **0 errors, 0 undefined citations or references, 2
 overfull boxes, 13 pages, main body pages 1–9.**
+
+---
+
+# Revision 3 — post-hoc results out of the appendix, and the A–H skeleton cut
+
+Two problems, both introduced here rather than inherited.
+
+## The post-hoc result was stranded behind the references
+
+Revision 1 moved the binary single-token experiment to an appendix, following
+the instruction to "consider moving the old binary single-token figure to the
+appendix... **only make this change if it improves layout**." It did not
+improve layout: it put a real result behind the bibliography and left page 13
+two-thirds blank.
+
+**The result is now reported in the main body**, as a short closing paragraph
+of §5.6 ("The binary arm this series extends"), with its full numbers: A_VJ
+0.588 → 0.016, paired difference 0.572 [0.539, 0.607], 20/20 pools, sign test
+p = 1.9e-06, raw V_J 0.762 vs null 0.423 and 0.155 vs 0.141, and A_VL 0.777 →
+0.159. Only the supporting figure and per-pool table remain in an appendix,
+which is where supporting material belongs.
+
+Appendix placement after the references was **not** the bug: acmart puts
+appendices there, and the supplied template says so explicitly.
+
+## Eight appendices, five of which said nothing
+
+The template's appendix outline comments were converted into real numbered
+sections in revision 1. The result was A–H, where five contained a single
+descriptive sentence and two displayed as bare headings because their floats
+had drifted to the next page. That reads as scaffolding, not a paper.
+
+**Removed** (they described material that does not exist yet):
+
+- Full Grid Results and Paired Comparisons
+- Visible-Text Scorer, Nulls and Per-Pool Data
+- Audits and Controls
+- Development History and Screening
+
+Those are still worth writing. The plan is preserved here so it is not lost:
+strategy and granularity paired tables and per-cell fragment mechanics; the
+scorer definition, its tests and the predicted-structure robustness null; the
+Jaccard identifier-order leak correction with before/after, the masking
+side-channel control and corpus fidelity checks; and the screening history,
+the development-contact inventory for the 21 documents in 18 headline pools,
+and the decomposed attacker that was designed but never run.
+
+**Kept, now four appendices:** A Prompts (still a marked TODO, and required
+for the open-science claim), B Game O Details, C Completion/Resources and
+Cost, D Single-Token figures and per-pool data.
+
+**Appendix D given real content** rather than one sentence and two floats: the
+per-arm null means (V_J 0.423 vs 0.141; V_L 0.503 vs 0.317) and why that makes
+the normalized value the one to quote; the two non-generative attackers, which
+were not designed for single-token input (Memon-inspired 0.043 → −0.067,
+17/20; embedding 0.104 → −0.090, 20/20); the three pools where raw and
+normalized scores disagree in sign for Memon-inspired; and q_V 0.860 vs 0.376
+with a pointer to why it does not decompose the score.
+
+**`figC_token_raw_vs_null` dropped from the paper.** It duplicates panel (c)
+of Figure 8, and the values it shows are now stated in the main text. It
+remains in the figure package if a reviewer asks.
+
+Build after revision 3: **0 errors, 0 undefined citations or references,
+1 overfull box (3.5pt), 13 pages, main body pages 1–9.**

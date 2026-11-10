@@ -783,8 +783,19 @@ than privacy gains coming primarily from reducing the text each fragment
 exposes. \textbf{Four words is not a universal threshold.} The arm uses one
 corpus, one model, four-sentence excerpts and fixed-width word cuts, and is
 post-hoc exploratory; the integer widths tested should not be interpolated.
-This series extends the earlier binary sentence-versus-token edge case, which
-is reported in Appendix~\ref{app:token}.
+
+\paragraph{The binary arm this series extends.}
+The two endpoints were run first, as a separate post-hoc experiment on the same
+pools and excerpts. Cutting at single tokens rather than sentences moved \AVJ{}
+from $0.588$ to $0.016$: a paired difference of $0.572$ $[0.539, 0.607]$,
+positive in all 20 pools, exact two-sided sign test $p = 1.9\times10^{-6}$, and
+robust to the predicted-structure null. In raw terms \VJ{} was $0.762$ against
+a null of $0.423$ at the sentence cut and $0.155$ against $0.141$ at the token
+cut. Linkage degraded less than joint structure: \AVL{} fell from $0.777$ to
+$0.159$, so some membership signal survived where ordering did not. Being
+binary, that arm located no threshold, which is what the five-point series
+above was built to address. Its figures and per-pool table are in
+Appendix~\ref{app:token}.
 
 \subsection{Completion}
 \label{sec:res-resources}
@@ -1004,11 +1015,6 @@ paper. No AI system is listed as an author.
 Verbatim Game~J and Game~O prompts; alias format; parsing rule; repair feedback
 text. \TODO{paste verbatim from the frozen specs}
 
-\section{Full Grid Results and Paired Comparisons}
-\label{app:grid}
-Strategy and granularity paired tables; fragment mechanics per cell;
-relationships between document length, fragment count and fragment size.
-
 \section{Game O Details}
 \label{app:gameO}
 \begin{figure}[t]
@@ -1036,51 +1042,42 @@ relationships between document length, fragment count and fragment size.
 \end{figure}
 \input{table7_resources}
 
-\section{The Binary Single-Token Edge Case\posthoc}
+\section{Single-Token Edge Case: Figures and Per-Pool Data\posthoc}
 \label{app:token}
-Post-hoc exploratory. The same 20 headline pools and four-sentence excerpts cut
-into sentences (28 fragments per pool) or single tokens: $\AVJ$ fell from
-$0.588$ to $0.016$, a paired difference of $0.572$ $[0.539, 0.607]$, positive
-in 20 of 20 pools, exact sign test $p = 1.9\times10^{-6}$, and robust to the
-alternative null. Raw \VJ{} was $0.762$ against a null of $0.423$ at the
-sentence cut and $0.155$ against $0.141$ at the token cut, while $\AVL$ fell
-from $0.777$ to $0.159$: linkage signal survives where joint structure does
-not. The binary design locates no threshold; \S\ref{sec:res-gradient} extends
-it to five granularities.
+Supporting material for the binary arm reported in \S\ref{sec:res-gradient}.
+Figure~\ref{fig:token} shows the per-pool spread behind the paired difference,
+and Table~\ref{tab:singletoken} gives every metric with its paired statistics.
 
-\begin{figure}[t]
+The oracle-size permutation null is not constant between the two arms: mean
+\VJ{} under the null is $0.423$ at the sentence cut and $0.141$ at the token
+cut, with \VL{} at $0.503$ and $0.317$. This is why the normalized \AVJ{} is
+the quantity we report and the raw scores are not compared across arms.
+
+The two non-generative attackers were not designed for single-token input and
+are reported only for completeness. Memon-inspired moved from $\AVJ = 0.043$ to
+$-0.067$ (paired difference $0.110$ $[0.047, 0.178]$, positive in 17 of 20
+pools) and the embedding attacker from $0.104$ to $-0.090$ (paired difference
+$0.194$ $[0.155, 0.233]$, 20 of 20). Both sit at or below their null at the
+token cut. The raw and normalized scores agree in sign for the one-shot
+attacker in every pool; for Memon-inspired they disagree in three
+(\textsf{pool\_017}, \textsf{pool\_032}, \textsf{pool\_041}), which is why the
+normalized value is the one quoted.
+
+The diagnostic ratio $q_V$ was $0.860$ at the sentence cut and $0.376$ at the
+token cut. As \S\ref{sec:scoring} notes, $q_V$ is not the visible-text analogue
+of $q$: \VJ{} and \VL{} are maximized over separate assignments, so their ratio
+does not decompose the score.
+
+\begin{figure}[!htbp]
   \centering
   \includegraphics{fig5_single_token.pdf}
   \caption{Post-hoc exploratory single-token edge case.}
   \label{fig:token}
 \end{figure}
 \input{table6_single_token}
-
-\begin{figure}[t]
-  \centering
-  \includegraphics{figC_token_raw_vs_null.pdf}
-  \caption{Post-hoc exploratory: observed against the null in raw terms.}
-  \label{fig:rawnull}
-\end{figure}
-
-\section{Visible-Text Scorer, Nulls and Per-Pool Data}
-\label{app:scorer}
-Visible-text scorer definition and tests; permutation nulls (10{,}000 draws per
-pool and condition); the predicted-structure robustness null; per-pool tables;
-and results for the Memon-inspired and embedding attackers, which were not
-designed for single-token input.
-
-\section{Audits and Controls}
-\label{app:audits}
-The Jaccard orderer correction (an identifier-order leak via tie-breaking,
-before and after); the masking side-channel control; the deterministic-seed fix
-and reproducibility; and corpus fidelity checks.
-
-\section{Development History and Screening}
-\label{app:history}
-Screening on a single pool and the dropped cells; the development-contact
-inventory for the 21 documents in 18 headline pools; the synthetic-prose signal
-inversion recorded during corpus construction; and the decomposed attacker that
-was designed but not run.
+% figC_token_raw_vs_null.pdf is NOT included: it duplicates panel (c) of
+% Figure 8, and the raw-versus-null values it shows (0.762 against 0.423;
+% 0.155 against 0.141) are already stated in the main text. It remains in the
+% figure package if a reviewer asks for it.
 
 \end{document}
