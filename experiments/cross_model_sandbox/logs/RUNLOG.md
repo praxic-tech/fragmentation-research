@@ -126,3 +126,69 @@ Install (user granted install permission, asked to keep it small):
 - Time estimate for headline J (46 requests, 32,768-token output budget): about
   25 s prefill + up to ~10-12 min of generation per request if it uses the full
   budget; roughly 2-9 h for the wave depending on reasoning length.
+
+## 2026-11-11 — Gemma file re-check, Gemma load test, headline token counts, gpt-oss server probe
+
+### Gemma file vs Hugging Face listing at its pinned revision
+- Repo google/gemma-4-12B-it-qat-q4_0-gguf, revision 29d097773436b69ff9feafd636ab4cf873786537,
+  file gemma-4-12b-it-qat-q4_0.gguf, 6,975,879,296 bytes, SHA-256
+  93567e57a8fe10b23569b9d9ec38cd005deedf71e29477c421a4b83f418a538b.
+- HF API tree at that revision lists the same size and LFS oid; the resolve URL's
+  headers give X-Repo-Commit 29d09777..., X-Linked-Size 6975879296, X-Linked-ETag
+  = the same SHA-256. Local file hash matches. MATCH.
+
+### Gemma 4 12B load test (generic prompt, not a study run)
+- Prompt: the first 1,200 lines of the gpt-oss filler plus the question
+  (synthetic, nothing from frozen/). Gemma's tokenizer gives 29,456 tokens for the
+  file as written (CRLF) and 28,256 with LF; llama-completion reads -f in text mode
+  and evaluated 28,255 tokens (CR stripped; 1-token gap = BOS accounting).
+  Lesson: count tokens on the exact string sent, never on a file re-read in a
+  different mode. The frozen spec prompts contain no CR.
+- Command: `llama-completion -m runtime/models/gemma-4-12b-it-qat-q4_0.gguf -dev Vulkan0
+  -ngl 99 -c 65536 -fit off -n 512 -s 42 -no-cnv -v -f filler_gemma.txt`
+  (runtime: llama.cpp build b12110, Vulkan, zip SHA-256 9732a5e4...874f).
+- Placement: 49/49 layers on Vulkan0, none elsewhere; n_ctx = 65536; flash_attn auto.
+- Buffers (Vulkan0): model 6,637.63 MiB; KV 1,024 MiB (8 full-attention layers,
+  65,536 cells) + 480 MiB (40 SWA layers, 1,536 cells); compute 607.53 MiB
+  = 8,749 MiB. Host: CPU_Mapped 787.50 MiB, Vulkan_Host compute 95.53 MiB.
+- Windows counters: adapter dedicated 1,686 -> peak 10,632 MiB of 16,304
+  (5,672 MiB headroom); llama process peak 8,953 MiB; adapter shared 115 -> 212 MiB.
+- Speed: prefill 799 tok/s (28,255 tokens, 35.4 s); generation 58.2 tok/s at
+  ~28k context. Wall 55.7 s.
+
+### Headline J prompt token counts (46 prompts, no generation)
+- Method: `work/probes/count_prompt_tokens.py` against llama-server
+  (`work/probes/serve.sh`: -dev Vulkan0 -ngl 99 -c 65536 -np 1 -fit off --jinja).
+  Each request rendered as ONE user message = request["prompt"] verbatim, exactly
+  as Sonnet received it (batch_submit.py:199 sends no system message), through
+  /apply-template, then /tokenize (parse_special on). Asserted the frozen prompt
+  appears verbatim in the rendered text. Per-prompt counts saved in
+  models/<slug>/headlineJ_prompt_tokens.json.
+- gpt-oss-20b, chat_template_kwargs {"reasoning_effort": "high"}: template adds a
+  system block "You are ChatGPT ... Knowledge cutoff: 2024-06 / Current date:
+  2026-11-11 / Reasoning: high / # Valid channels ...". max 17,144 (pool_037),
+  median 7,707, min 5,573. 17,144 + 32,768 = 49,912 <= 65,536. OK.
+  NOTE: the template inserts the run date, so the system text changes per day.
+- Gemma 4 12B, {"enable_thinking": true}: template adds a system turn holding
+  only `<|think|>`. max 19,563 (pool_037), median 8,603.5, min 6,106 (with BOS;
+  19,562 without). 19,563 + 32,768 = 52,331 <= 65,536. OK.
+- Sonnet reference: max 26,851, median 11,940 input tokens.
+
+### gpt-oss-20b: one generic request through llama-server
+- Server started with --reasoning-format auto, n_slots 1, n_ctx_slot 65536.
+- Request: user "List the four seasons in order, starting from spring. Answer as a
+  JSON array of strings only.", chat_template_kwargs {"reasoning_effort":"high"},
+  max_tokens 4096, temperature 1.0, top_p 1.0, seed 42.
+- Result: finish_reason stop; content '["spring","summer","autumn","winter"]';
+  reasoning_content separate (1,076 chars); no channel markers in content.
+  usage prompt_tokens 87 = /tokenize count of the /apply-template render (87). MATCH.
+  completion_tokens 263; 174 tok/s at short context.
+- "high" reaching the model: the /apply-template render of the identical request
+  body contains "Reasoning: high". The completion's own rendered prompt is not
+  exposed by /slots or the default log, and the token count cannot tell high from
+  low (same length). Direct confirmation still open.
+- Finding: llama-server applied its own defaults top_k=40 and min_p=0.05 on top of
+  the requested temperature/top_p (seen in /slots params). Preregistration must
+  set top_k and min_p explicitly for every model.
+- Servers stopped afterwards (TaskStop does not kill the exec'd llama-server.exe
+  on Windows; it was ended with taskkill by PID).
