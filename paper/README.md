@@ -68,8 +68,22 @@ and every one of them produces a byte-identical PDF — once a float is deferred
 LaTeX drains the queue with `\@makefcolumn`, which consults none of them.
 Pinning, not tuning, is what fixed this.
 
-What is left: a hole in the first column of page 8, where LaTeX ends the column
-to give the top of column 2 to two figures, and about half of page 13. Page 13
+Measure whitespace with `scratchpad/ink.py`-style ink detection, not word
+counts: a table's notes are hundreds of words and say nothing about how full a
+column is. By that measure the body is 89–99% full everywhere except page 8's
+first column, at 33%, and about half of page 13.
+
+Page 8's first column is handed `goal height=218.64717` instead of 626 — run
+`\tracingpages=1` to see it. 407pt is reserved and nothing is put there. Do not
+try to tune it: every float on that page was swept through every placement
+specifier including `figure*`, moved to five different paragraph boundaries,
+and deleted outright; `topnumber`, `bottomnumber`, `textfraction`,
+`floatpagefraction`, `dblfloatpagefraction`, `dblfloatfix`, the `review` option
+and `\raggedbottom` were all tried. The goal stays at 218.647. Deleting every
+`table*` from the body makes all fourteen columns fill to 99%, so the spanning
+tables are the cause. `paper/CHANGELOG.md` records the one arrangement that
+fixes it (cuted strips, no body floats, body ends on page 11) and the reason it
+is not used (two figures then run past the bottom margin). Page 13
 is the appendices: Tables 9 and 10 can only sit at a page top so they go to
 page 14, and Appendix B is currently one sentence and a TODO. The verbatim
 prompts fill that space.

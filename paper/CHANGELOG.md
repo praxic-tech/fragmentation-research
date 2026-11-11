@@ -488,5 +488,66 @@ the top of column 2 to two figures, and page 13, which is the appendices —
 Tables 9 and 10 can only sit at a page top so they go to page 14, and Appendix
 B is one sentence and `\TODO{paste verbatim from the frozen specs}`.
 
+## Figure 5's caption described three panels; it has two
+
+The caption claimed "(a) F1_L; (b) F1_J; (c) linkage precision".
+`fig4_identifiers.R` builds two panels: (a) joint reconstruction F1_J and
+(b) linkage precision. There is no F1_L panel. Corrected from the script and
+the shipped data frame. That is the second caption in this paper that
+described a figure it does not match; both were found by looking at the
+rendered page, not the source.
+
+## Page 8's short first column: measured, diagnosed, not solved
+
+**Measure whitespace with ink, not word counts.** A table's notes are hundreds
+of words, so word counts say nothing about how full a column is.
+`scratchpad/ink.py` renders each page and reports how far down each column the
+last ink sits. Against that measure the body is 89–99% full everywhere except
+**page 8's first column, at 33%**.
+
+`\tracingpages=1` gives the cause outright: that column is handed
+`goal height=218.64717` instead of 626. Something reserved 407.35pt of it and
+then put nothing there. (216.81 + 187.70 — the Game O and identifier graphics —
+is 404.5, which is suggestive but not conclusive; removing either one leaves
+the goal unchanged.)
+
+Swept, every one leaving the goal at 218.647:
+
+- Figures 4, 5, 6 and Tables 5 and 6 through `[t]`, `[b]`, `[!b]`, `[!t]`,
+  `[tb]`, `[!h]`, `[!ht]`, `[!hb]`, `[H]` and `figure*`.
+- Those figures declared at five different paragraph boundaries, and the whole
+  5.5/5.6 float run moved after 5.6's first, second and third paragraphs.
+- `topnumber` 1 and 2, `bottomnumber` 0, `textfraction` 0.25 and 0.4,
+  `floatpagefraction` and `dblfloatpagefraction` 0.95, removing `dblfloatfix`,
+  removing the `review` class option, `\raggedbottom`, and six extra LaTeX
+  passes.
+- Deleting Table 5, Table 6, Figure 4 or Figure 5 outright.
+
+Two things do move it. Inserting throwaway prose at the end of 5.5 fills the
+column completely, so the column is fillable and what is missing is text.
+And **deleting every `table*` from the body makes all fourteen columns fill to
+99%**, so the spanning tables are the whole cause.
+
+### The fix that works, and why it is not committed
+
+Set the wide tables inline with `cuted`'s `strip` instead of floating them, and
+make the body figures ordinary centred material instead of floats. The body
+then contains no floats at all. Measured: every body column 83–100%, the
+appendix page from 49% to 98%, and **the main body ends on page 11 instead of
+page 12**.
+
+It is not committed because two figures then run off the bottom of the page.
+`cuted` takes over the output routine and loses the page-height accounting, and
+nothing recovers it: `\Needspace*` at the figure's own measured height plus 78,
+135 and 600pt, `\filbreak` (14 errors), `\raggedbottom`, top-only floats, and
+rebuilding Figure 3 at 3.5in and Figure 6 at 3.15in all leave the same 63pt
+overrun on two pages. A submission with content past the bottom margin is worse
+than a short column, so the clean layout stands.
+
+If this is worth another attempt, the lead is: keep the strips, and find a way
+to make an unbreakable box move to the next column under `cuted`. Otherwise it
+is the ratio, as it has been throughout — 5.5 is about 26 lines of prose
+carrying two figures, one of them inherited from 5.4.
+
 Build after revision 6: **0 errors, 0 undefined citations or references, 0
 overfull or underfull horizontal boxes, 14 pages, main body pages 1–12.**
