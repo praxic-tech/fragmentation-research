@@ -46,35 +46,28 @@
 \usepackage{booktabs}
 \usepackage{graphicx}
 
-% Float placement. Standard LaTeX can only put a table*/figure* at the top of a
-% page and defers it when the top is full, which was pushing wide tables two to
-% three pages past the text that calls them. dblfloatfix also allows the bottom
-% of a page and restores ordering; the relaxed fractions let a page carry more
-% float before it gives up and defers.
-\usepackage{dblfloatfix}
-% HOW THE FLOATS ARE PLACED HERE. Figures 1, 2, 3 and 7 are PINNED with [H]
-% (float package): they are not floats at all, they are set where they are
-% declared, with text before and after. That is what keeps them in the prose
-% and is why Section 5 has no float-only page. The rest float:
-%   Figures 4, 5, 6  [tb]  too tall to pin where they are cited; pinning them
-%                          makes the float package break the column and leaves
-%                          the rest of it blank (measured: page 8 lost a whole
-%                          column, page 9 lost 180 words).
-%   Figure 8         [b]   a top placement puts it above the References heading.
-%   every table*     [tb]  a two-column float cannot be set inline at all.
-% A pinned figure is frozen, so if you rewrite the prose around one, rebuild and
-% look at the page: if it no longer fits where it sits, the column breaks early.
+% HOW THE EXHIBITS ARE PLACED. Every results table and figure is a spanning
+% float with [t] and nothing else, and all nine are declared together, early
+% (look for "RESULTS EXHIBITS" in Section 4). Three rules, each learned the
+% hard way; paper/CHANGELOG.md revision 10 has the measurements.
 %
-% MEASURED, do not re-tune: dbltopnumber, dbltopfraction, dblfloatpagefraction,
-% floatpagefraction, "!" overrides and removing dblfloatfix each produce a
-% byte-identical PDF. Once a float is deferred LaTeX drains the queue with
-% \@makefcolumn, which consults none of them -- that is why pinning, not
-% tuning, is what fixed this. placeins is loaded for \FloatBarrier, which
-% nothing currently uses. Do NOT load it with [section]: that option redefines
-% \section and acmart refuses to compile.
-\usepackage{cuted}   % strip: full-width material set in place
-\usepackage{float}   % [H]: set a figure here, do not float it
-\usepackage{placeins}
+%  1. No "p". "p" is permission to build a page of nothing but floats. Without
+%     it an exhibit can only sit at the top of a page that also carries text.
+%  2. Declared early, all at once. A spanning float cannot print on the page it
+%     is declared on, so one declared under its own heading starts a page
+%     late, and with two or three to a page top the lag compounds to three
+%     pages. With the whole queue available from the start LaTeX deals them
+%     out in order, one page top at a time, in step with the text.
+%  3. NO \FloatBarrier, anywhere. One left between 5.4 and 5.5 forced every
+%     pending float out at that point for four revisions: it was the short
+%     column, the float-only pages and the "reserved" 407pt, all of it.
+%
+% \dbltopnumber and \dbltopfraction below cap a page top at three exhibits and
+% three quarters of the page, so there is always text under them. Measured
+% stable from 0.65 to 0.80; at 0.85 pages thin out to two paragraphs.
+%
+% After editing prose in Sections 4-5, rebuild and run the four checks in
+% tools/ (page_map, page_prose, page_overflow, page_attached).
 \setcounter{topnumber}{3}
 \setcounter{bottomnumber}{2}
 \setcounter{totalnumber}{5}
@@ -83,7 +76,7 @@
 \renewcommand{\textfraction}{0.07}
 \renewcommand{\floatpagefraction}{0.75}
 \renewcommand{\dblfloatpagefraction}{0.75}
-\renewcommand{\dbltopfraction}{0.9}
+\renewcommand{\dbltopfraction}{0.75}
 \setcounter{dbltopnumber}{3}
 % acmart's float separations assume a page with one float on it. At this
 % density each one costs most of a text line, so they are tightened; the
@@ -577,6 +570,45 @@ external-validity limits are stated in \S\ref{sec:synthetic}.
 
 \subsection{Pools and provenance}
 \label{sec:pools}
+% ---- RESULTS EXHIBITS --------------------------------------------------------
+% All nine are declared HERE, a section before the results, on purpose. A
+% spanning float cannot print on the page it is declared on; declared here
+% they start at the top of the page the results begin on and keep pace with
+% the text (every one lands within a page of its subsection; check with
+% tools/page_map.py). Their order here is the order they print in. Do not move
+% them back under their own headings: that puts each one two to three pages
+% behind its text.
+\input{table2_headline_attackers}
+\input{table9_adjacency}
+\input{table3_grid}
+\begin{figure*}[t]
+  \centering
+  
+  \includegraphics{fig3_linkage_vs_ordering.pdf}
+  \caption{Decomposition of Game~J into (a) the linkage component \FL{} and
+  (b) direction accuracy $q$ on the attacker's own correctly linked pairs;
+  $\FJ=\FL\times q$ holds exactly per pool. The dotted line is chance for $q$.}
+  \label{fig:decomp}
+\end{figure*}
+\input{table4_gameO}
+\input{table5_identifiers}
+\begin{figure*}[t]
+  \centering
+  
+  \includegraphics{fig6_granularity_gradient.pdf}
+  \caption{Post-hoc exploratory granularity series: five cuts of identical
+  text on the same 20 pools. (a) Observed \VJ{} against the random-shuffle
+  reference for the same arm, which is not constant across arms; \AVJ{} is
+  printed at each point. (b) Share of the 76-word excerpt recovered as one
+  contiguous stretch, against the floor leaked by the cut alone. Join recall,
+  which supports the two-regime reading, is $0.464$, $0.476$, $0.315$, $0.153$
+  and $0.022$ from the sentence cut to one word.}
+  \label{fig:gradient}
+\end{figure*}
+\input{table8_gradient}
+\input{table6_single_token}
+% ---- end of results exhibits -------------------------------------------------
+
 Seventy-one pools of seven documents, fixed before any pool-level attack:
 25 development pools forming the grid and 46 headline pools. Grid documents are
 capped at 30 reference sentences; headline documents are full length.
@@ -691,9 +723,6 @@ relative-order structure strongly, while immediate adjacency and contiguous
 plaintext recovery remain much weaker.} Exact reconstruction---membership and
 order both perfect---occurred for 1 of 322 headline documents.
 
-\input{table2_headline_attackers}
-\input{table9_adjacency}
-
 \subsection{Fragmentation strategy and granularity}
 \label{sec:res-grid}
 
@@ -705,8 +734,6 @@ lowered \FJ{} modestly within three of the four strategies. At matched mean
 fragment length the cutting strategy moved the result more than the granularity
 label did.
 
-\input{table3_grid}
-
 \subsection{Linkage versus ordering}
 \label{sec:res-decomp}
 
@@ -714,15 +741,6 @@ The decomposition separates which half each condition attacks. Subject--verb
 cuts and random token windows act mainly on linkage; semantic-style boundaries
 act mainly on ordering. The tested statistical attackers order at chance
 throughout.
-
-\begin{center}
-  
-  \includegraphics{fig3_linkage_vs_ordering.pdf}
-  \captionof{figure}{Decomposition of Game~J into (a) the linkage component \FL{} and
-  (b) direction accuracy $q$ on the attacker's own correctly linked pairs;
-  $\FJ=\FL\times q$ holds exactly per pool. The dotted line is chance for $q$.}
-  \label{fig:decomp}
-\end{center}
 
 \subsection{Ordering when membership is given}
 \label{sec:res-gameO}
@@ -737,16 +755,8 @@ fragments, and a run fraction of $0.237$. Headline and grid results are
 reported separately throughout and are not pooled; they move in opposite
 directions in some comparisons.
 
-
-\FloatBarrier
-
-% The one figure too tall for the space left where it is declared. Pinned,
-% the float package breaks the column and leaves the rest of it blank.
-\input{table4_gameO}
-
 \subsection{Structured identifiers}
 \label{sec:res-identifiers}
-\input{table5_identifiers}
 
 The identifier arm behaved qualitatively differently. The one-shot attacker
 scored $\FJ = 0.083$ $[0.068, 0.099]$ with $\FL = 0.132$---below the analytic
@@ -771,22 +781,8 @@ establish that identifier fragmentation is safe: it says that \emph{these}
 attackers did not recover record association under \emph{this} setup
 (\S\ref{sec:synthetic}).
 
-
 \subsection{A controlled granularity series\posthoc}
 \label{sec:res-gradient}
-\begin{center}
-  
-  \includegraphics{fig6_granularity_gradient.pdf}
-  \captionof{figure}{Post-hoc exploratory granularity series: five cuts of identical
-  text on the same 20 pools. (a) Observed \VJ{} against the random-shuffle
-  reference for the same arm, which is not constant across arms; \AVJ{} is
-  printed at each point. (b) Share of the 76-word excerpt recovered as one
-  contiguous stretch, against the floor leaked by the cut alone. Join recall,
-  which supports the two-regime reading, is $0.464$, $0.476$, $0.315$, $0.153$
-  and $0.022$ from the sentence cut to one word.}
-  \label{fig:gradient}
-\end{center}
-\input{table8_gradient}
 
 \textbf{This subsection is post-hoc exploratory.} It was designed after the
 prespecified results were seen. On 20 headline pools and 140 four-sentence
@@ -801,7 +797,6 @@ random-shuffle reference is \emph{not} constant across arms---it falls from
 $0.423$ at the sentence cut to $0.141$ at one word---so raw \VJ{} is not
 comparable between arms and the normalized value is the one to read. And the
 identifier-level score tracks the same shape but sits below it throughout.
-
 
 \paragraph{Two regimes.}
 Figure~\ref{fig:gradient}(b) separates what the cut gives away from what the attacker earns. At
@@ -846,8 +841,6 @@ the embedding attacker from $0.104$ to $-0.090$ ($0.194$ $[0.155, 0.233]$, 20
 of 20). Raw and normalized scores agree in sign for the one-shot attacker in
 every pool; for Memon-inspired they disagree in three, which is a further
 reason to quote the normalized value.
-
-\input{table6_single_token}
 
 \subsection{Completion}
 \label{sec:res-resources}
@@ -1085,7 +1078,8 @@ completion, repairs and cost for every paid experiment. Together they are the
 evidence for \S\ref{sec:res-resources}: one unit in 652 exhausted the output
 budget, and fragment count does not predict which one.
 % [tbp]: with [b] alone this figure found no page bottom and LaTeX dropped
-% it silently, leaving Figure~ef{fig:resources} undefined.
+% it silently, leaving Figure~
+ef{fig:resources} undefined.
 \begin{figure}[tbp]
   \centering
   \includegraphics{figB_resource_scaling.pdf}

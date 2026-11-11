@@ -33,9 +33,9 @@ pages = {n: norm(subprocess.run(["pdftotext", "-f", str(n), "-l", str(n), pdf, "
 
 def where(text, nwords=10):
     w = norm(text).split()
-    if len(w) < nwords:
+    if len(w) < 4:
         return None
-    probe = " ".join(w[:nwords])
+    probe = " ".join(w[:nwords])     # a short caption is matched whole
     hits = [n for n in pages if probe in pages[n]]
     return hits[0] if len(hits) == 1 else (hits if hits else None)
 

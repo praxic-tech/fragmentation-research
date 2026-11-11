@@ -2,9 +2,11 @@
 # Figure 3 (main text): the two components of Game J, F1_J = F1_L x q, for the
 # nine retained cells, one-shot Sonnet. Prespecified (grid pools 2-25).
 #
-# One column, panels stacked. Do not widen it back to page_width: as a
-# figure* it could only be set at a page top or bottom, and it was what
-# forced a float-only page in Section 5.
+# Page width, panels side by side. It is a spanning float and shares page
+# tops with the tables, so the width is already paid for: stacked in one
+# column it took twice the height for the same two panels. (The float-only
+# page once blamed on this figure was a stray \FloatBarrier; see
+# paper/CHANGELOG.md, revision 10.)
 #
 # Run from the repository root:
 #   Rscript results/paper_figures_r/fig3_linkage_vs_ordering.R
@@ -60,13 +62,11 @@ component_panel <- function(which_metric, x_title) {
 }
 
 panel_a <- component_panel("F1_L", expression("Linkage " * (F1[L])))
-# Stacked, not side by side: a one-column figure can be set inside a column,
-# which a figure* cannot, and it matches every other two-panel figure here.
-# Panel (b) keeps its own row labels and strategy strips because it is no
-# longer beside panel (a).
-panel_b <- component_panel("q", expression("Direction accuracy on correct links " * (italic(q))))
+panel_b <- component_panel("q", expression("Direction accuracy on correct links " * (italic(q)))) +
+  # Same rows as panel (a), so the strategy strips and row labels are not repeated.
+  theme(strip.text.y.left = element_blank(), axis.text.y = element_blank())
 
-fig <- (panel_a / panel_b) + plot_annotation(tag_levels = list(c("(a)", "(b)")))
+fig <- (panel_a | panel_b) + plot_annotation(tag_levels = list(c("(a)", "(b)")))
 
 # ---- Export -----------------------------------------------------------------
-save_figure(fig, "fig3_linkage_vs_ordering", width = col_width, height = 4.2, data = plot_data)
+save_figure(fig, "fig3_linkage_vs_ordering", width = page_width, height = 2.3, data = plot_data)

@@ -88,7 +88,7 @@ pa <- ggplot(dat, aes(frag_words)) +
            size = label_size, colour = sonnet_colour, hjust = 1, family = font_family) +
   scale_x_log10(breaks = x_breaks, labels = x_labels) +
   scale_y_continuous(limits = c(0, 0.92), breaks = seq(0, 0.8, 0.2)) +
-  labs(x = NULL, y = "Visible joint\nreconstruction") +
+  labs(x = "Mean fragment length (words)", y = "Visible joint\nreconstruction") +
   theme_paper()
 
 # ---- (b) contiguous text recovered -------------------------------------------
@@ -112,8 +112,10 @@ pb <- ggplot(dat, aes(frag_words)) +
        y = "Document recovered as one\ncontiguous stretch") +
   theme_paper()
 
-fig <- pa / pb + plot_layout(heights = c(1, 1)) +
+# Side by side at page width: a spanning float, so the width is already paid
+# for, and stacked in one column the same two panels were twice as tall.
+fig <- (pa | pb) +
   plot_annotation(tag_levels = "a", tag_prefix = "(", tag_suffix = ")",
                   theme = theme(plot.margin = margin(2, 5, 2, 2)))
 
-save_figure(fig, "fig6_granularity_gradient", col_width, 3.6, dat)
+save_figure(fig, "fig6_granularity_gradient", page_width, 2.1, dat)

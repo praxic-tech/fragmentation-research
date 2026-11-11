@@ -17,7 +17,7 @@ pdflatex main && bibtex main && pdflatex main && pdflatex main
 ```
 
 Current state: **0 errors, 0 undefined citations or references, 0 overfull or
-underfull horizontal boxes, 14 pages total, main body pages 1–12.** Figures
+underfull boxes, 12 pages total, main body pages 1–10.** Figures
 resolve from `../results/paper_package/figures/` and tables from
 `../results/paper_package/tables/`, so rebuilding the package updates the paper
 with no edits here.
@@ -32,67 +32,56 @@ why the figure typeface matches the page.
 PoPETs 2027 caps the main body at 12 typeset pages and desk-rejects
 over-length papers without appeal. The mandatory sections (ethical
 considerations, open science, AI use), the acknowledgments, the bibliography
-and clearly marked appendices do **not** count. §7 currently ends about two
-fifths down page 12, so there is roughly half a page of margin. If it needs to
-shrink, cut in this order:
+and clearly marked appendices do **not** count. §7 currently ends on page 10,
+so there are about two pages of margin for the rewrite.
 
-1. Figure 2 (grid) — Table 4 carries the same numbers, and dropping it is also
-   what would clear the float-only page 8 (see below).
-2. Figure 3 (linkage against ordering) — overlaps Tables 4 and 7.
-3. The grid section (§5.2) can lose its figure and keep its table.
-4. §5.3 and §5.4 can be compressed, but the interpretation boundary §5.3
-   establishes should not be dropped entirely.
+Five of the original eight figures are already out of the paper: each repeated
+a table that is still in the body, and none was cited in the prose. They are
+untouched in `results/paper_package/figures/` with their data frames and build
+scripts. To put one back, add a `figure*` to the `RESULTS EXHIBITS` block in
+`main.tex` and run `python tools/check_layout.py`.
+
+If the body ever needs to shrink further, the next candidates are Figure 1
+(linkage against ordering), whose numbers are the F1_L and q columns of Table
+4, and the two longest note blocks (precedence against adjacency, granularity
+gradient), which run to about 2,000 characters each.
 
 ## How the exhibits are placed
 
-**The body contains almost no floats.** The wide tables are set in place with
-`cuted`'s `strip`, and the figures are centred material. A `table*` can only go
-to a page top or bottom; with nine of them the float queue never emptied and
-columns were left part-full — one at 33% of its height. Deleting every table
-from the body was what proved it: all fourteen columns then filled to 99%.
+Standard LaTeX floats and nothing else. Three rules:
 
-Four exceptions stay real floats, set in `make_tables.py`'s `FLOAT_TABLES`, not
-in the generated files: `table4_gameO` and `table5_identifiers`, which sit next
-to each other and overrun the page as strips, and the two appendix tables. Do
-not move that choice into the generated `.tex` files — a package rebuild has
-already silently undone it once.
+1. **Every body exhibit is `[t]` only.** No `p` means no page of nothing but
+   exhibits: a table can only sit at the top of a page that also carries text.
+2. **All nine results exhibits are declared together, a section early** — the
+   `RESULTS EXHIBITS` block in §4.2 of `main.tex`. A spanning float cannot
+   print on the page it is declared on, so one declared under its own heading
+   starts a page late and the lag compounds to three pages. Declared up front
+   they are dealt out in order, one page top at a time, in step with the text.
+   Their order in that block is the order they print in.
+3. **Never `\FloatBarrier`.** One stray barrier between §5.4 and §5.5 caused
+   every layout problem recorded in `CHANGELOG.md` revisions 5–9.
 
-**Measure prose, not ink.** `tools/page_prose.py` reports how many body
-paragraphs landed on each page; a page with none is an exhibit wall. Ink and
-word counts both miss this, because a table's notes are hundreds of words of
-6pt type and make an exhibit-only page measure as a full one. Every body page
-currently carries running text, and the thinnest carries two paragraphs.
+`\dbltopnumber` 3 and `\dbltopfraction` 0.75 cap a page top so there is always
+text under the exhibits. Both body figures are wide and short (504pt, panels
+side by side) because they are spanning floats; do not rebuild them at column
+width.
 
-**Every table carries its own notes.** They were set outside the strip for a
-while, so they would flow and fill columns, but a `cuted` strip lets its
-contents split across a page and Table 2 ended up one page away from its
-notes. `tools/page_attached.py` checks for that.
+### Check it after every prose edit
 
-**The cost is page 8**, which carries three tables and no prose. Fifteen
-arrangements were measured against four things at once — pages, content past
-the margin, detached notes, pages without prose — and none has all four; see
-`CHANGELOG.md` for the table. What would resolve it is not a setting: two note
-blocks run to about 2,000 characters each, roughly a fifth of a page apiece,
-and shortening those two is what makes their tables small enough to share a
-page with text.
+```bash
+python tools/check_layout.py
+```
 
-**Measure ink too, but second.** `tools/page_ink.py` reports how far down
-each column the last ink sits; `tools/page_overflow.py` reports content past
-the bottom margin. A table's notes are hundreds of words and tell you nothing
-about how full a column is. Current state: every body column at 93–99% except
-page 8's second at 63%.
+It runs four checks and exits non-zero if any fails: every exhibit within one
+page of its section, every body page carrying prose, nothing past the bottom
+margin, every table on the page with its notes. The layout depends on how much
+text sits between exhibits, so it **will** move when Sections 4–5 are
+rewritten. If an exhibit drifts, reorder or move the `\input` lines in the
+`RESULTS EXHIBITS` block.
 
-**Do not tune the float parameters.** `dbltopnumber`, `dbltopfraction`,
-`dblfloatpagefraction`, `floatpagefraction`, `topnumber`, `bottomnumber`,
-`textfraction`, `!` overrides, `dblfloatfix`, the `review` option and
-`\raggedbottom` were each measured on this manuscript and none of them changes
-the result. Once a float is deferred LaTeX drains the queue with
-`\@makefcolumn`, which consults none of them.
-
-**Known imperfection:** the granularity figure's caption sits at the top of the
-column after its panels. Centred material can break between a graphic and its
-caption. `\nopagebreak[4]`, a minipage wrapper and three other declaration
-points were each measured and all cost more elsewhere than they save.
+Word counts and ink are both misleading here — a table's notes are hundreds of
+words of small type, so an exhibit-only page measures as a full one. That is
+why the checks count body paragraphs and exhibit-to-section distance instead.
 
 ## What is deliberately missing
 

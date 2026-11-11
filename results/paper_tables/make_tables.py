@@ -82,23 +82,13 @@ def tex_math(s):
     return s.replace("$$", "")
 
 
-# Tables set in place with cuted's strip rather than floated. A table* can
-# only go to a page top or bottom; with nine of them the queue never empties
-# and columns are left part-full (one was at 33% of its height). A strip is
-# set where it is declared, so it also fixes the order the tables appear in.
+# Every table is a table* float that carries its own notes. Setting them in
+# place with cuted's strip was tried and abandoned: a strip lets its contents
+# split across a page, which printed one table on page 5 and its notes on
+# page 6, and pushed others past the bottom margin. See paper/CHANGELOG.md.
 #
-# FLOAT_TABLES stay real floats:
-#   table4_gameO, table5_identifiers  adjacent in the text, and a strip in
-#       that position overruns the bottom of the page. As floats they take
-#       page tops in declaration order, so the numbering still reads in order.
-#   table1_design, table7_resources   appendix; nothing there needs packing.
-# The paper must load cuted for the strips. See paper/CHANGELOG.md.
-FLOAT_TABLES = {"table1_design", "table4_gameO", "table5_identifiers",
-                "table7_resources"}
-
-# Too tall for a page top with its notes: let it take a float page rather
-# than overrun the bottom margin.
-TALL_TABLES = {"table9_adjacency"}
+# Appendix tables may take a float page; body tables may not (see write()).
+APPENDIX_TABLES = {"table1_design", "table7_resources"}
 
 
 def write(name, caption, label, header, rows, notes, align=None, tex_header=None):
@@ -116,12 +106,15 @@ def write(name, caption, label, header, rows, notes, align=None, tex_header=None
     tex_caption = re.sub(r"^Table \d+\. ", "", caption)
     # The tabular is typeset into a box first and shrunk to \textwidth only if
     # it is wider than the page; a table that fits is never enlarged.
-    floating = True   # every table is a float: a strip detaches its notes
-    open_env = r"\begin{table*}[tbp]" if floating else r"\begin{strip}"
-    close_env = r"\end{table*}" if floating else r"\end{strip}"
-    cap = "caption" if floating else "captionof{table}"
-    L = [open_env, r"\centering", r"\footnotesize", r"\setlength{\tabcolsep}{3pt}",
-         f"\\{cap}{{{tex_math(tex_escape(tex_caption))}}}", f"\\label{{{label}}}",
+    #
+    # PLACEMENT. Body tables are [t] and nothing else. The missing "p" is the
+    # point: "p" is LaTeX's permission to build a page of nothing but floats,
+    # and with it three tables took page 8 between two halves of the same
+    # prose. Without it a table can only sit at the top of a page that also
+    # carries text. Appendix tables keep "p"; a float page there is harmless.
+    spec = "tp" if name in APPENDIX_TABLES else "t"
+    L = [f"\\begin{{table*}}[{spec}]", r"\centering", r"\footnotesize", r"\setlength{\tabcolsep}{3pt}",
+         f"\\caption{{{tex_math(tex_escape(tex_caption))}}}", f"\\label{{{label}}}",
          r"\sbox0{%", f"\\begin{{tabular}}{{{align}}}", r"\toprule", " & ".join(th) + r" \\", r"\midrule"]
     for r in rows:
         if r == "MIDRULE":
@@ -129,19 +122,11 @@ def write(name, caption, label, header, rows, notes, align=None, tex_header=None
         L.append(" & ".join(c if (c.startswith("$") and c.endswith("$")) else tex_math(tex_escape(c)) for c in r) + r" \\")
     L += [r"\bottomrule", r"\end{tabular}}",
           r"\ifdim\wd0>\textwidth\resizebox{\textwidth}{!}{\usebox0}\else\usebox0\fi"]
-    body_notes = [tex_math(tex_escape(n)) for n in notes]
-    if floating:
-        # a float carries its notes with it, or they detach when it moves
-        L += [r"\begin{flushleft}\footnotesize"]
-        L += [n + r"\\" for n in body_notes]
-        L += [r"\end{flushleft}", close_env]
-    else:
-        # a strip is one unbreakable box, and these notes are most of its
-        # height. Outside it they are ordinary text that flows with the column.
-        L += [close_env, r"\begingroup\footnotesize\setlength{\parindent}{0pt}",
-              r"\setlength{\parskip}{1pt plus 1pt}"]
-        L += [n + r"\par" for n in body_notes]
-        L += [r"\endgroup", r"\par\addvspace{\intextsep}"]
+    # The notes stay inside the float so they can never print on a different
+    # page from their table (they did, once, when they were set outside it).
+    L += [r"\begin{flushleft}\footnotesize"]
+    L += [tex_math(tex_escape(n)) + r"\\" for n in notes]
+    L += [r"\end{flushleft}", r"\end{table*}"]
     open(f"{OUT}/{name}.tex", "w", encoding="utf-8").write("\n".join(L) + "\n")
     print(f"  wrote {name}.md / .tex")
 

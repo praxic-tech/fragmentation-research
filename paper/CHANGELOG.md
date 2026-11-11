@@ -745,3 +745,91 @@ flowing, which fills page 8 and detaches Table 2's notes.
 Build after revision 9: **0 errors, 0 undefined citations or references, no
 content past the bottom margin, every table with its own notes, 12 pages,
 main body pages 1–10. Page 8 carries three tables and no prose.**
+
+---
+
+# Revision 10 — the root cause, and the layout that follows from it
+
+## One stray `\FloatBarrier` was behind revisions 5 to 9
+
+`patch_floats.py` (revision 4) planted two `\FloatBarrier` commands. Revision 5
+removed the one before §5.7. The other sat between §5.4 and §5.5 until now,
+forcing LaTeX to dump every pending float at that point. It explains, in one
+line of source, everything the last five revisions measured around:
+
+- the column that stopped a third of the way down the page;
+- the `goal height=218.64717` and the "reserved" 407pt that nothing occupied;
+- the tables-only pages that survived every placement specifier;
+- why no float parameter changed anything — a barrier flushes regardless.
+
+**The conclusions drawn in revisions 5–9 about what LaTeX "cannot do" are
+withdrawn.** The parameters were not inert; they were being overridden. The
+`cuted` strips, the `[H]` pinning, the notes set outside their tables and the
+figure-height experiments were all workarounds for a symptom. They are gone:
+`cuted`, `float`, `needspace`, `placeins` and `dblfloatfix` are no longer
+loaded, and the body uses nothing but standard floats.
+
+It was found by rendering the page after removing `p` from the table
+placement: a tables-only page appeared that standard LaTeX cannot build
+without `p`, which meant something in the source was forcing it. `grep` did
+the rest. It should have been the first thing checked, not the last.
+
+## The layout, now that the floats behave
+
+Three rules, all in the preamble comment of `main.tex`:
+
+1. **`[t]` and nothing else.** No `p`, so no page of nothing but exhibits.
+2. **All nine results exhibits are declared together, a section early** (the
+   `RESULTS EXHIBITS` block in §4.2). A spanning float cannot print on the
+   page it is declared on. Declared under its own heading each one starts a
+   page late and the lag compounds: measured at +2 to +3 pages for seven of
+   nine. Declared up front, LaTeX deals them out in order, one page top at a
+   time, in step with the text.
+3. **A page top holds at most three exhibits and three quarters of the page**,
+   so there is always text beneath them. Stable from 0.65 to 0.80.
+
+Both body figures were rebuilt wide and short (504pt across, panels side by
+side). They are spanning floats, so a tall one-column stack was occupying a
+full-width slot and using half of it. Same data frames, byte-identical;
+`validate_figures.R` reports 0 failures.
+
+## Measured
+
+`python tools/check_layout.py` runs all four checks:
+
+| check | result |
+|---|---|
+| every exhibit within one page of its section | **9 of 9** (4 on the same page) |
+| every body page carries prose | **yes** — thinnest has 4 paragraphs |
+| nothing past the bottom margin | **yes** |
+| every table on the page with its notes | **9 of 9** |
+
+12 pages; main body pages 1–10; every body column 96–99% of the text block;
+0 errors, 0 undefined references, 0 overfull boxes of any kind.
+
+Where the exhibits land: Tables 2–3 on page 5 above the end of §4 (their
+section starts on page 6); Table 4 and Figure 1 on page 6; Tables 5–6 on page
+7 directly above §5.4 and §5.5; Figure 2 and Table 7 on page 8 directly above
+§5.6; Table 8 on page 9.
+
+## Still true from the earlier revisions
+
+- Five of the original eight figures are cut because each repeated a table and
+  none was cited. That reasoning stands. **The measured "cost" of restoring the
+  headline figure (revision 8) does not** — it was taken with the barrier in
+  place. If you want it back, it needs re-measuring; it is one float in the
+  `RESULTS EXHIBITS` block.
+- The corrected captions (Figures 2 and 5 of the old numbering), the `annote`
+  bibliography fields, the maths in table notes, and `\appendix` in the right
+  place are all unaffected.
+- Appendix B (prompts) is still a TODO, and page 12 is half empty until it is
+  written.
+
+## After you edit the prose
+
+The layout depends on how much text sits between the exhibits, so it will
+shift when Sections 4–5 are rewritten. Rebuild and run
+`python tools/check_layout.py`. If `page_map` reports an exhibit two pages
+from its section, the fix is the order or position of the `\input` lines in
+the `RESULTS EXHIBITS` block — not a new package, and never a `\FloatBarrier`.
+
