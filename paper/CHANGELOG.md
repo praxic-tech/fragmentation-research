@@ -690,3 +690,58 @@ paragraphs to one.
 
 Build after revision 8: **0 errors, 0 undefined citations or references, no
 content past the bottom margin, 12 pages, main body pages 1–10.**
+
+---
+
+# Revision 9 — notes reattached, and the trade-off that is left
+
+## The notes were detaching from their tables
+
+Revision 8 set the big note blocks outside the strip so they would flow and
+fill columns. They flowed too well: Table 2 ended up on page 5 and its four
+notes on page 6. A table whose key is on the next page is worse than a page
+that is mostly exhibits, so this is reverted. Every table is a `table*` again
+and carries its notes inside it.
+
+`tools/page_attached.py` checks this now — it reads each note out of the
+generated `.tex` and finds which page it printed on:
+
+```
+python tools/page_attached.py results/paper_package/tables paper/main.pdf
+```
+
+## What was tried in between
+
+Fifteen or so arrangements, each measured on four things at once: pages,
+content past the bottom margin, notes detached from their table, and pages
+with no body prose.
+
+| arrangement | pages | past margin | detached | no-prose pages |
+|---|---|---|---|---|
+| all floats, notes inside (**now**) | 12 | none | none | 8 |
+| big-note tables as strips, notes outside | 12 | none | Table 2 | none |
+| ditto + Table 2 boxed | 12 | none | Table 2 | none |
+| ditto + Table 2 floated | 12 | two pages | Tables 8, 9 | none |
+| all strips, notes outside, short ones inside | 12 | two pages | Table 9 | none |
+| notes inside everywhere except Table 9 | 12 | one page | Table 9 | none |
+
+The pattern never breaks: a `cuted` strip lets its contents split across a
+page, so any table set as a strip eventually detaches its notes or pushes
+something past the bottom margin; and any arrangement that keeps every note
+with its table hands page 8 to the exhibits.
+
+## What would actually resolve it
+
+Not a setting. Two note blocks are about 2,000 characters each — the
+precedence-against-adjacency notes and the granularity-gradient notes. They
+are roughly a fifth of a page apiece, which is what makes their tables tall
+enough to own a page. Shortening those two is the one change that gets both
+properties at once, and it is the authors' text, not a layout decision.
+
+Until then it is one flag: `FLOAT_TABLES` in `make_tables.py`. Every table in
+it carries its notes; anything left out is set in place with its notes
+flowing, which fills page 8 and detaches Table 2's notes.
+
+Build after revision 9: **0 errors, 0 undefined citations or references, no
+content past the bottom margin, every table with its own notes, 12 pages,
+main body pages 1–10. Page 8 carries three tables and no prose.**

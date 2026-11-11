@@ -63,10 +63,18 @@ word counts both miss this, because a table's notes are hundreds of words of
 6pt type and make an exhibit-only page measure as a full one. Every body page
 currently carries running text, and the thinnest carries two paragraphs.
 
-**Table notes are set outside the strips**, as ordinary text under the table.
-They were most of each exhibit's height, and inside an unbreakable box that is
-what gave whole pages to exhibits. The float tables keep their notes inside or
-they would detach when the float moves.
+**Every table carries its own notes.** They were set outside the strip for a
+while, so they would flow and fill columns, but a `cuted` strip lets its
+contents split across a page and Table 2 ended up one page away from its
+notes. `tools/page_attached.py` checks for that.
+
+**The cost is page 8**, which carries three tables and no prose. Fifteen
+arrangements were measured against four things at once — pages, content past
+the margin, detached notes, pages without prose — and none has all four; see
+`CHANGELOG.md` for the table. What would resolve it is not a setting: two note
+blocks run to about 2,000 characters each, roughly a fifth of a page apiece,
+and shortening those two is what makes their tables small enough to share a
+page with text.
 
 **Measure ink too, but second.** `tools/page_ink.py` reports how far down
 each column the last ink sits; `tools/page_overflow.py` reports content past

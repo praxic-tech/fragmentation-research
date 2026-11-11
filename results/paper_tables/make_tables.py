@@ -96,6 +96,10 @@ def tex_math(s):
 FLOAT_TABLES = {"table1_design", "table4_gameO", "table5_identifiers",
                 "table7_resources"}
 
+# Too tall for a page top with its notes: let it take a float page rather
+# than overrun the bottom margin.
+TALL_TABLES = {"table9_adjacency"}
+
 
 def write(name, caption, label, header, rows, notes, align=None, tex_header=None):
     """rows: list of lists of strings (already formatted)."""
@@ -112,8 +116,8 @@ def write(name, caption, label, header, rows, notes, align=None, tex_header=None
     tex_caption = re.sub(r"^Table \d+\. ", "", caption)
     # The tabular is typeset into a box first and shrunk to \textwidth only if
     # it is wider than the page; a table that fits is never enlarged.
-    floating = name in FLOAT_TABLES
-    open_env = r"\begin{table*}[t]" if floating else r"\begin{strip}"
+    floating = True   # every table is a float: a strip detaches its notes
+    open_env = r"\begin{table*}[tbp]" if floating else r"\begin{strip}"
     close_env = r"\end{table*}" if floating else r"\end{strip}"
     cap = "caption" if floating else "captionof{table}"
     L = [open_env, r"\centering", r"\footnotesize", r"\setlength{\tabcolsep}{3pt}",

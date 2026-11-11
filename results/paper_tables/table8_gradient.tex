@@ -1,8 +1,8 @@
-\begin{strip}
+\begin{table*}[tbp]
 \centering
 \footnotesize
 \setlength{\tabcolsep}{3pt}
-\captionof{table}{POST-HOC EXPLORATORY granularity gradient: five cuts of identical text on the same 20 pools.}
+\caption{POST-HOC EXPLORATORY granularity gradient: five cuts of identical text on the same 20 pools.}
 \label{tab:gradient}
 \sbox0{%
 \begin{tabular}{lrrrrrrrrrr}
@@ -17,14 +17,12 @@ sentence & 28 & 19.01 & 0.889 & 0.762 & 0.423 & 0.588 & 0.539 & 64.2\% & 37.7\% 
 \bottomrule
 \end{tabular}}
 \ifdim\wd0>\textwidth\resizebox{\textwidth}{!}{\usebox0}\else\usebox0\fi
-\end{strip}
-\begingroup\footnotesize\setlength{\parindent}{0pt}
-\setlength{\parskip}{1pt plus 1pt}
-POST-HOC EXPLORATORY (D16, D18). The same 20 headline pools and the same 140 four-sentence excerpts in every arm; byte-identical text, only the cut changes. Fragment counts are exact, built by regrouping the frozen token-arm fragments. Completion 20/20 in every arm, no resource-bounded non-completions.\par
-Null $V_{J}$ is the RANDOM-SHUFFLE REFERENCE for that arm: the mean visible joint score of a random partition of the same pool into the true per-document fragment counts, over 10,000 seeded permutations, under the frozen single-token-edge-v1 namespace. $A_{VJ}$ = ($V_{J}$ $-$ null)/(1 $-$ null) is the PRIMARY metric (D16). Note the reference is not constant across arms: it falls from 0.423 at the sentence cut to 0.141 at one word, so raw $V_{J}$ values are not comparable between arms and the normalised column is the one to read.\par
-$A_{J}$ (id-level) is shown for robustness. It tracks the primary series but sits below it throughout, and at one word the two fall on opposite sides of their respective references (+0.016 visible against the permutation null, $-$0.017 id-level against the one-bucket reference), which is why D16 made the visible scorer primary. $q_{V}$ is a diagnostic ratio only and is not the visible analogue of q: $V_{J}$ and $V_{L}$ are maximised over separate assignments.\par
-Recovered is the longest run of fragments placed consecutively AND in true order, in words, as a percentage of the 76-word excerpt. Floor is the longest single fragment: contiguous original text leaked by the cut alone, before the attacker does anything. Join recall is the share of each document's (fragments $-$ 1) true adjacent joins recovered.\par
-Join recall is essentially unchanged from the sentence arm to the 4-word arm (0.464 vs 0.476) while recovered text falls 64.2\% to 28.8\%: across that range the protection comes from reducing what the cut leaks for free, not from the attacker performing worse. Below four words the attacker's own joining ability is what fails.\par
-One corpus, one model, one cut family (fixed word width). This locates where the advantage falls to its reference on the tested excerpts; it does not establish a safe fragment size.\par
-\endgroup
-\par\addvspace{\intextsep}
+\begin{flushleft}\footnotesize
+POST-HOC EXPLORATORY (D16, D18). The same 20 headline pools and the same 140 four-sentence excerpts in every arm; byte-identical text, only the cut changes. Fragment counts are exact, built by regrouping the frozen token-arm fragments. Completion 20/20 in every arm, no resource-bounded non-completions.\\
+Null $V_{J}$ is the RANDOM-SHUFFLE REFERENCE for that arm: the mean visible joint score of a random partition of the same pool into the true per-document fragment counts, over 10,000 seeded permutations, under the frozen single-token-edge-v1 namespace. $A_{VJ}$ = ($V_{J}$ $-$ null)/(1 $-$ null) is the PRIMARY metric (D16). Note the reference is not constant across arms: it falls from 0.423 at the sentence cut to 0.141 at one word, so raw $V_{J}$ values are not comparable between arms and the normalised column is the one to read.\\
+$A_{J}$ (id-level) is shown for robustness. It tracks the primary series but sits below it throughout, and at one word the two fall on opposite sides of their respective references (+0.016 visible against the permutation null, $-$0.017 id-level against the one-bucket reference), which is why D16 made the visible scorer primary. $q_{V}$ is a diagnostic ratio only and is not the visible analogue of q: $V_{J}$ and $V_{L}$ are maximised over separate assignments.\\
+Recovered is the longest run of fragments placed consecutively AND in true order, in words, as a percentage of the 76-word excerpt. Floor is the longest single fragment: contiguous original text leaked by the cut alone, before the attacker does anything. Join recall is the share of each document's (fragments $-$ 1) true adjacent joins recovered.\\
+Join recall is essentially unchanged from the sentence arm to the 4-word arm (0.464 vs 0.476) while recovered text falls 64.2\% to 28.8\%: across that range the protection comes from reducing what the cut leaks for free, not from the attacker performing worse. Below four words the attacker's own joining ability is what fails.\\
+One corpus, one model, one cut family (fixed word width). This locates where the advantage falls to its reference on the tested excerpts; it does not establish a safe fragment size.\\
+\end{flushleft}
+\end{table*}
