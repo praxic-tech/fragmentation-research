@@ -134,7 +134,7 @@
    "status": "Prespecified",
    "shows": "The design: corpora, cells, pools, units",
    "files": {
-    "tex": "0793d0010b5e",
+    "tex": "818cf6b50ff5",
     "md": "91ad29c61361"
    }
   },
@@ -144,7 +144,7 @@
    "status": "Prespecified; embedding row post hoc",
    "shows": "Headline attacker comparison with 95% CIs",
    "files": {
-    "tex": "be5d4a553d62",
+    "tex": "c89ce2db64f3",
     "md": "3754c12300bf"
    }
   },
@@ -154,7 +154,7 @@
    "status": "Prespecified",
    "shows": "The nine-cell grid",
    "files": {
-    "tex": "e6e1b4cb11a7",
+    "tex": "fe3bfe354535",
     "md": "ecb7c002c6a8"
    }
   },
@@ -164,7 +164,7 @@
    "status": "Prespecified",
    "shows": "Game O: ordering with membership given",
    "files": {
-    "tex": "0aeacd0d8949",
+    "tex": "b9248c94fc1a",
     "md": "f16ab2570cb1"
    }
   },
@@ -174,7 +174,7 @@
    "status": "Prespecified; D11 baselines",
    "shows": "The structured-identifier arm",
    "files": {
-    "tex": "4e1e7098e867",
+    "tex": "e65786684f32",
     "md": "03a3df42de18"
    }
   },
@@ -184,7 +184,7 @@
    "status": "POST-HOC EXPLORATORY (D16)",
    "shows": "Sentence against single-token cuts on identical excerpts, paired",
    "files": {
-    "tex": "d07a71a439da",
+    "tex": "c88c8649e3de",
     "md": "517be6197b80"
    }
   },
@@ -194,7 +194,7 @@
    "status": "Prespecified",
    "shows": "Resources, completion and cost",
    "files": {
-    "tex": "0c1a5510e13b",
+    "tex": "34cfe74fe9c4",
     "md": "9bc8a8f9befc"
    }
   },
@@ -204,7 +204,7 @@
    "status": "POST-HOC EXPLORATORY (D16, D18)",
    "shows": "The five-point granularity gradient, with its random-shuffle reference per arm",
    "files": {
-    "tex": "96ba5296a8f1",
+    "tex": "59c0ed819ef7",
     "md": "c657322db67a"
    }
   },
@@ -214,7 +214,7 @@
    "status": "Post hoc, free reanalysis",
    "shows": "Precedence against adjacency, and a random attacker that is a legal answer",
    "files": {
-    "tex": "56ac78ddf004",
+    "tex": "c403cad14864",
     "md": "525e16e33415"
    }
   }

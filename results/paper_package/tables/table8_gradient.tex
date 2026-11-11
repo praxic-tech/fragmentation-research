@@ -1,8 +1,8 @@
-\begin{table*}[tb]
+\begin{strip}
 \centering
 \footnotesize
 \setlength{\tabcolsep}{3pt}
-\caption{POST-HOC EXPLORATORY granularity gradient: five cuts of identical text on the same 20 pools.}
+\captionof{table}{POST-HOC EXPLORATORY granularity gradient: five cuts of identical text on the same 20 pools.}
 \label{tab:gradient}
 \sbox0{%
 \begin{tabular}{lrrrrrrrrrr}
@@ -25,4 +25,4 @@ Recovered is the longest run of fragments placed consecutively AND in true order
 Join recall is essentially unchanged from the sentence arm to the 4-word arm (0.464 vs 0.476) while recovered text falls 64.2\% to 28.8\%: across that range the protection comes from reducing what the cut leaks for free, not from the attacker performing worse. Below four words the attacker's own joining ability is what fails.\\
 One corpus, one model, one cut family (fixed word width). This locates where the advantage falls to its reference on the tested excerpts; it does not establish a safe fragment size.\\
 \end{flushleft}
-\end{table*}
+\end{strip}

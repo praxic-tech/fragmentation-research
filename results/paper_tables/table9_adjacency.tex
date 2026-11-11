@@ -1,8 +1,8 @@
-\begin{table*}[tb]
+\begin{strip}
 \centering
 \footnotesize
 \setlength{\tabcolsep}{3pt}
-\caption{Precedence against adjacency, and a random attacker that is a legal answer to the game.}
+\captionof{table}{Precedence against adjacency, and a random attacker that is a legal answer to the game.}
 \label{tab:adjacency}
 \sbox0{%
 \begin{tabular}{lrrrrrr}
@@ -33,4 +33,4 @@ The random rows are VALID answers to the game: a partition into exactly the know
 The analytic one-bucket reference used elsewhere is $b_{J}$ = 0.149 on the headline pools, but one bucket is not a legal answer to a prompt demanding exactly seven groups: a legal size-blind random answer scores $\mathrm{F1}_{J}$ 0.077. The one-bucket figure therefore overstates the floor by roughly a factor of two, and $A_{J}$ correspondingly understates the advantage over a legal random attacker.\\
 The non-generative attackers collapse on the adjacency surface in a way the precedence score hides: on the headline pools Memon-inspired scores $\mathrm{F1}_{J}$ 0.169 against a one-bucket 0.149 but adjacency F1 0.010 against a random 0.004, with about five of seven documents returning no correct adjacency at all.\\
 \end{flushleft}
-\end{table*}
+\end{strip}

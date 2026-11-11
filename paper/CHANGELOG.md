@@ -549,5 +549,74 @@ to make an unbreakable box move to the next column under `cuted`. Otherwise it
 is the ratio, as it has been throughout — 5.5 is about 26 lines of prose
 carrying two figures, one of them inherited from 5.4.
 
-Build after revision 6: **0 errors, 0 undefined citations or references, 0
-overfull or underfull horizontal boxes, 14 pages, main body pages 1–12.**
+# Revision 7 — three figures cut, tables set in place
+
+## Three figures cut, because every body figure repeated a table
+
+Figure 1 repeated Table 2, Figure 2 Table 4, Figure 3 Table 4 again, Figure 4
+Table 5, Figure 5 Table 6, Figure 6 Table 7, Figure 7 Table 8. Every result in
+the paper was shown twice. And only **one** body figure was referred to in the
+prose at all — the granularity series. The rest sat near the text without ever
+being pointed at.
+
+Cut: the grid dot plot, the Game O dot plot and the identifier dot plot. Each
+duplicated a table that is still in the body, none was cited, and together
+they were about 850pt of exhibit in exactly the stretch that would not pack.
+Kept: the headline comparison, the linkage/ordering decomposition (the
+conceptual point of §5.3), the granularity series (the one cited figure) and
+the single-token per-pool spread, which shows all 20 pools where the table
+gives only a summary.
+
+Putting any of them back is one `\begin{figure}` block; the figures, data
+frames and scripts are untouched in the package.
+
+## The tables are set in place, not floated
+
+Revision 6 established by deletion that the `table*` floats were the whole
+cause of the short columns. They are now set with `cuted`'s `strip`, which
+puts full-width material where it is declared with text above and below — no
+float queue, no deferred-float accounting, and the tables appear in the order
+they are declared.
+
+Two stay floats. `table4_gameO` and `table5_identifiers` sit next to each
+other, and as strips one of them overruns the bottom of the page wherever it
+is placed; as floats they take page tops in declaration order, so the
+numbering still reads 1–10 in order. The two appendix tables stay floats
+because nothing there needs packing. The choice lives in `make_tables.py`
+(`FLOAT_TABLES`), not in the generated files, because a package rebuild
+already silently undid it once.
+
+The body figures are no longer floats either — they are centred material, set
+where they are declared.
+
+## Measured result
+
+| | before | after |
+|---|---|---|
+| pages | 14 | **13** |
+| main body ends | a fifth down page 12 | **page 11** |
+| worst body column | **33%** | 93% |
+| columns below 90% | one at 33% | one at 63% |
+| appendix page | 49% | 54% |
+| content past the bottom margin | none | none |
+| table and figure numbering | in order | in order |
+
+Everything from page 1 to page 7 and page 9 to page 11 now sits at 93–99% of
+the text block.
+
+## What is still imperfect
+
+- **Page 8's second column is at 63%**, and the granularity figure's caption
+  sits at the top of that column while its panels are at the foot of the first
+  one. Centred material can break between a graphic and its caption.
+  `\nopagebreak[4]` after the graphic, a `\columnwidth` minipage around the
+  block, and moving the figure to three other paragraph boundaries were each
+  measured: every one of them costs more elsewhere than it saves (page 9 to
+  29%, page 12 to 36%, or a page overrun), so the split caption stands.
+- Letting the figures float again fills those columns to 93–99% but scrambles
+  the table numbering, because floats drift past the strips, which do not.
+- Page 13 is the appendix: Appendix B is still one sentence and a TODO, and
+  the verbatim prompts are what fills it.
+
+Build after revision 7: **0 errors, 0 undefined citations or references, no
+content past the bottom margin, 13 pages, main body pages 1–11.**

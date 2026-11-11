@@ -72,6 +72,7 @@
 % tuning, is what fixed this. placeins is loaded for \FloatBarrier, which
 % nothing currently uses. Do NOT load it with [section]: that option redefines
 % \section and acmart refuses to compile.
+\usepackage{cuted}   % strip: full-width material set in place
 \usepackage{float}   % [H]: set a figure here, do not float it
 \usepackage{placeins}
 \setcounter{topnumber}{3}
@@ -690,17 +691,17 @@ relative-order structure strongly, while immediate adjacency and contiguous
 plaintext recovery remain much weaker.} Exact reconstruction---membership and
 order both perfect---occurred for 1 of 322 headline documents.
 
-\begin{figure}[H]
-  \centering
+\begin{center}
+  
   \includegraphics{fig1_headline_attackers.pdf}
-  \caption{Headline prose, Game~J (46 pools). (a) Linkage component \FL;
+  \captionof{figure}{Headline prose, Game~J (46 pools). (a) Linkage component \FL;
   (b) joint \FJ. Means with $95\%$ percentile-bootstrap CIs over pools. The
   dashed line is the analytic one-bucket reference \bJ, which is a
   trivial-strategy benchmark rather than chance; a legal size-blind random
   seven-group answer scores $0.077$ (\S\ref{sec:baselines}). Open diamond:
   post-hoc exploratory attacker.}
   \label{fig:attackers}
-\end{figure}
+\end{center}
 \input{table2_headline_attackers}
 \input{table9_adjacency}
 
@@ -715,17 +716,6 @@ lowered \FJ{} modestly within three of the four strategies. At matched mean
 fragment length the cutting strategy moved the result more than the granularity
 label did.
 
-\begin{figure}[H]
-  \centering
-  \includegraphics{fig2_grid_reconstruction.pdf}
-  \caption{Game~J across the nine retained grid conditions, one-shot
-  attacker. Each point is the cell mean of \FJ{} with its $95\%$
-  percentile-bootstrap CI over the cell's pools; the grey tick on each row is
-  the analytic one-bucket reference \bJ{} for that cell ($0.128$--$0.132$). One
-  resource-bounded non-completion (random\,/\,token-window) is excluded and
-  never scored $0$.}
-  \label{fig:grid}
-\end{figure}
 \input{table3_grid}
 
 \subsection{Linkage versus ordering}
@@ -736,14 +726,14 @@ cuts and random token windows act mainly on linkage; semantic-style boundaries
 act mainly on ordering. The tested statistical attackers order at chance
 throughout.
 
-\begin{figure}[H]
-  \centering
+\begin{center}
+  
   \includegraphics{fig3_linkage_vs_ordering.pdf}
-  \caption{Decomposition of Game~J into (a) the linkage component \FL{} and
+  \captionof{figure}{Decomposition of Game~J into (a) the linkage component \FL{} and
   (b) direction accuracy $q$ on the attacker's own correctly linked pairs;
   $\FJ=\FL\times q$ holds exactly per pool. The dotted line is chance for $q$.}
   \label{fig:decomp}
-\end{figure}
+\end{center}
 
 \subsection{Ordering when membership is given}
 \label{sec:res-gameO}
@@ -763,20 +753,11 @@ directions in some comparisons.
 
 % The one figure too tall for the space left where it is declared. Pinned,
 % the float package breaks the column and leaves the rest of it blank.
-\begin{figure}[tb]
-  \centering
-  \includegraphics{figA_gameO_vs_gameJ.pdf}
-  \caption{Ordering with membership given (Game~O, plotted as $(1+\tau)/2$)
-  against joint reconstruction (Game~J \FJ{} and $q$) for the one-shot
-  attacker. O: 100 headline documents, 30 per grid cell; J: 46 headline pools,
-  24 (23) per cell. Game~O is a membership-oracle reference, not an upper bound
-  on Game~J.}
-  \label{fig:ovj}
-\end{figure}
 \input{table4_gameO}
 
 \subsection{Structured identifiers}
 \label{sec:res-identifiers}
+\input{table5_identifiers}
 
 The identifier arm behaved qualitatively differently. The one-shot attacker
 scored $\FJ = 0.083$ $[0.068, 0.099]$ with $\FL = 0.132$---below the analytic
@@ -801,24 +782,13 @@ establish that identifier fragmentation is safe: it says that \emph{these}
 attackers did not recover record association under \emph{this} setup
 (\S\ref{sec:synthetic}).
 
-\begin{figure}[tb]
-  \centering
-  \includegraphics{fig4_identifiers.pdf}
-  \caption{Synthetic identifiers, Game~J (20 pools of seven records).
-  (a) joint reconstruction \FJ{} against the analytic ($0.10$) and truth-free
-  schema-order ($0.20$) references; (b) linkage precision against
-  template-respecting chance ($1/7$). Open circles: the same attacker on the
-  prose headline, for scale.}
-  \label{fig:identifiers}
-\end{figure}
-\input{table5_identifiers}
 
 \subsection{A controlled granularity series\posthoc}
 \label{sec:res-gradient}
-\begin{figure}[tb]
-  \centering
+\begin{center}
+  
   \includegraphics{fig6_granularity_gradient.pdf}
-  \caption{Post-hoc exploratory granularity series: five cuts of identical
+  \captionof{figure}{Post-hoc exploratory granularity series: five cuts of identical
   text on the same 20 pools. (a) Observed \VJ{} against the random-shuffle
   reference for the same arm, which is not constant across arms; \AVJ{} is
   printed at each point. (b) Share of the 76-word excerpt recovered as one
@@ -826,7 +796,7 @@ attackers did not recover record association under \emph{this} setup
   which supports the two-regime reading, is $0.464$, $0.476$, $0.315$, $0.153$
   and $0.022$ from the sentence cut to one word.}
   \label{fig:gradient}
-\end{figure}
+\end{center}
 \input{table8_gradient}
 
 \textbf{This subsection is post-hoc exploratory.} It was designed after the
@@ -888,14 +858,14 @@ of 20). Raw and normalized scores agree in sign for the one-shot attacker in
 every pool; for Memon-inspired they disagree in three, which is a further
 reason to quote the normalized value.
 
-\begin{figure}[H]
-  \centering
+\begin{center}
+  
   \includegraphics{fig5_single_token.pdf}
-  \caption{Post-hoc exploratory single-token edge case: per-pool \AVJ{} for the
+  \captionof{figure}{Post-hoc exploratory single-token edge case: per-pool \AVJ{} for the
   sentence and single-token cuts of identical excerpts (a), and the paired
   difference with its $95\%$ CI (b). Zero is the oracle-size permutation null.}
   \label{fig:token}
-\end{figure}
+\end{center}
 \input{table6_single_token}
 
 \subsection{Completion}

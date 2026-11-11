@@ -82,6 +82,21 @@ def tex_math(s):
     return s.replace("$$", "")
 
 
+# Tables set in place with cuted's strip rather than floated. A table* can
+# only go to a page top or bottom; with nine of them the queue never empties
+# and columns are left part-full (one was at 33% of its height). A strip is
+# set where it is declared, so it also fixes the order the tables appear in.
+#
+# FLOAT_TABLES stay real floats:
+#   table4_gameO, table5_identifiers  adjacent in the text, and a strip in
+#       that position overruns the bottom of the page. As floats they take
+#       page tops in declaration order, so the numbering still reads in order.
+#   table1_design, table7_resources   appendix; nothing there needs packing.
+# The paper must load cuted for the strips. See paper/CHANGELOG.md.
+FLOAT_TABLES = {"table1_design", "table4_gameO", "table5_identifiers",
+                "table7_resources"}
+
+
 def write(name, caption, label, header, rows, notes, align=None, tex_header=None):
     """rows: list of lists of strings (already formatted)."""
     # markdown
@@ -97,8 +112,12 @@ def write(name, caption, label, header, rows, notes, align=None, tex_header=None
     tex_caption = re.sub(r"^Table \d+\. ", "", caption)
     # The tabular is typeset into a box first and shrunk to \textwidth only if
     # it is wider than the page; a table that fits is never enlarged.
-    L = [r"\begin{table*}[tb]", r"\centering", r"\footnotesize", r"\setlength{\tabcolsep}{3pt}",
-         f"\\caption{{{tex_math(tex_escape(tex_caption))}}}", f"\\label{{{label}}}",
+    floating = name in FLOAT_TABLES
+    open_env = r"\begin{table*}[t]" if floating else r"\begin{strip}"
+    close_env = r"\end{table*}" if floating else r"\end{strip}"
+    cap = "caption" if floating else "captionof{table}"
+    L = [open_env, r"\centering", r"\footnotesize", r"\setlength{\tabcolsep}{3pt}",
+         f"\\{cap}{{{tex_math(tex_escape(tex_caption))}}}", f"\\label{{{label}}}",
          r"\sbox0{%", f"\\begin{{tabular}}{{{align}}}", r"\toprule", " & ".join(th) + r" \\", r"\midrule"]
     for r in rows:
         if r == "MIDRULE":
@@ -108,7 +127,7 @@ def write(name, caption, label, header, rows, notes, align=None, tex_header=None
           r"\ifdim\wd0>\textwidth\resizebox{\textwidth}{!}{\usebox0}\else\usebox0\fi",
           r"\begin{flushleft}\footnotesize"]
     L += [tex_math(tex_escape(n)) + r"\\" for n in notes]
-    L += [r"\end{flushleft}", r"\end{table*}"]
+    L += [r"\end{flushleft}", close_env]
     open(f"{OUT}/{name}.tex", "w", encoding="utf-8").write("\n".join(L) + "\n")
     print(f"  wrote {name}.md / .tex")
 

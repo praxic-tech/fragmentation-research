@@ -43,50 +43,37 @@ shrink, cut in this order:
 4. §5.3 and §5.4 can be compressed, but the interpretation boundary §5.3
    establishes should not be dropped entirely.
 
-## Float layout
+## How the exhibits are placed
 
-Figures 1, 2, 3 and 7 are **pinned** with `[H]` (the `float` package): they are
-not floats, they are set where they are declared, with text before and after.
-That is what keeps them in the prose and why Section 5 has no float-only page.
-Figures 4, 5 and 6 float `[tb]` because they are too tall to pin where they are
-cited — pinned, the `float` package breaks the column and leaves the rest of it
-blank. Figure 8 is `[b]` so it cannot print above the References heading. Every
-table is a `table*`, which cannot be set inline at all.
+**The body contains almost no floats.** The wide tables are set in place with
+`cuted`'s `strip`, and the figures are centred material. A `table*` can only go
+to a page top or bottom; with nine of them the float queue never emptied and
+columns were left part-full — one at 33% of its height. Deleting every table
+from the body was what proved it: all fourteen columns then filled to 99%.
 
-**A pinned figure is frozen.** If you rewrite the prose around one, rebuild and
-look at the page: if the figure no longer fits in what is left of the column,
-the column breaks early and you get a hole. Move the `\begin{figure}[H]` to a
-different paragraph boundary, or give that one figure `[tb]`.
+Four exceptions stay real floats, set in `make_tables.py`'s `FLOAT_TABLES`, not
+in the generated files: `table4_gameO` and `table5_identifiers`, which sit next
+to each other and overrun the page as strips, and the two appendix tables. Do
+not move that choice into the generated `.tex` files — a package rebuild has
+already silently undone it once.
 
-Do not rebuild Figure 3 at `page_width`. Every figure in the package is one
-column, 239pt; as a `figure*` Figure 3 could only be set at a page top or
-bottom and it was the hardest float in the document to place.
+**Measure with ink, not word counts.** `tools/page_ink.py` reports how far down
+each column the last ink sits; `tools/page_overflow.py` reports content past
+the bottom margin. A table's notes are hundreds of words and tell you nothing
+about how full a column is. Current state: every body column at 93–99% except
+page 8's second at 63%.
 
-`dbltopnumber`, `dbltopfraction`, `dblfloatpagefraction`, `floatpagefraction`,
-`!` placement overrides and `dblfloatfix` were each measured on this manuscript
-and every one of them produces a byte-identical PDF — once a float is deferred,
-LaTeX drains the queue with `\@makefcolumn`, which consults none of them.
-Pinning, not tuning, is what fixed this.
+**Do not tune the float parameters.** `dbltopnumber`, `dbltopfraction`,
+`dblfloatpagefraction`, `floatpagefraction`, `topnumber`, `bottomnumber`,
+`textfraction`, `!` overrides, `dblfloatfix`, the `review` option and
+`\raggedbottom` were each measured on this manuscript and none of them changes
+the result. Once a float is deferred LaTeX drains the queue with
+`\@makefcolumn`, which consults none of them.
 
-Measure whitespace with `scratchpad/ink.py`-style ink detection, not word
-counts: a table's notes are hundreds of words and say nothing about how full a
-column is. By that measure the body is 89–99% full everywhere except page 8's
-first column, at 33%, and about half of page 13.
-
-Page 8's first column is handed `goal height=218.64717` instead of 626 — run
-`\tracingpages=1` to see it. 407pt is reserved and nothing is put there. Do not
-try to tune it: every float on that page was swept through every placement
-specifier including `figure*`, moved to five different paragraph boundaries,
-and deleted outright; `topnumber`, `bottomnumber`, `textfraction`,
-`floatpagefraction`, `dblfloatpagefraction`, `dblfloatfix`, the `review` option
-and `\raggedbottom` were all tried. The goal stays at 218.647. Deleting every
-`table*` from the body makes all fourteen columns fill to 99%, so the spanning
-tables are the cause. `paper/CHANGELOG.md` records the one arrangement that
-fixes it (cuted strips, no body floats, body ends on page 11) and the reason it
-is not used (two figures then run past the bottom margin). Page 13
-is the appendices: Tables 9 and 10 can only sit at a page top so they go to
-page 14, and Appendix B is currently one sentence and a TODO. The verbatim
-prompts fill that space.
+**Known imperfection:** the granularity figure's caption sits at the top of the
+column after its panels. Centred material can break between a graphic and its
+caption. `\nopagebreak[4]`, a minipage wrapper and three other declaration
+points were each measured and all cost more elsewhere than they save.
 
 ## What is deliberately missing
 
