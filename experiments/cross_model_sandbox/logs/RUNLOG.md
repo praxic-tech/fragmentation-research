@@ -76,3 +76,53 @@ Install (user granted install permission, asked to keep it small):
   - The first attempt failed with `invalid argument` because PowerShell's
     Start-Process split the unquoted prompt. Wrappers must pass arguments as a
     list (Python subprocess), not a joined string.
+
+## 2026-11-11 — step 2 (local part): candidate research, nothing downloaded
+
+- Sources: Google Gemma 4 and Gemma 3 model cards (ai.google.dev), gpt-oss model
+  card (arXiv 2508.10925) and openai/gpt-oss README, Qwen and Microsoft HF model
+  cards, HF API file listings (sizes, SHA-256) and config.json (attention layout).
+- VRAM check: 5,728 MiB of the 9070 XT's dedicated memory is held by desktop apps
+  (dwm 1.8 GB, Edge, AMDChat, GalaxyClient, Spotify, wallpaper, ...). Vulkan
+  reports 15,419 MiB "free" but WDDM would page to system RAM past the real
+  limit (slow, not wrong). Plan against ~10 GB unless apps are closed.
+- Proposed (not chosen): gpt-oss-20b MXFP4 (ggml-org GGUF) and Gemma 4 12B
+  QAT Q4_0 (google GGUF), both 64k context with a 32,768-token output budget.
+  Excluded: Qwen3.5/3.6/3.8 (released Feb-Aug 2026, cutoff not stated),
+  Gemma 4 26B-A4B (13.45 GiB weights), Phi-4 (16k context), Qwen3-8B/14B
+  (32k native context).
+
+## 2026-11-11 — model weights downloaded (user approved), not yet loaded
+
+- Free VRAM before: 14,649 MiB (1,655 MiB in use after the user closed apps).
+- `gpt-oss-20b-MXFP4.gguf`, 12,109,566,624 bytes, from
+  https://huggingface.co/ggml-org/gpt-oss-20b-GGUF at revision
+  15dcfc7e7c608c6161507211ed43c5b590801b4b. SHA-256
+  27cd6c432c7672cb812a92f611cf3ba7bbc35928262bb1e1253ff4ee6ae35901: matches HF LFS listing.
+- `gemma-4-12b-it-qat-q4_0.gguf`, 6,975,879,296 bytes, from
+  https://huggingface.co/google/gemma-4-12B-it-qat-q4_0-gguf at revision
+  29d097773436b69ff9feafd636ab4cf873786537. SHA-256
+  93567e57a8fe10b23569b9d9ec38cd005deedf71e29477c421a4b83f418a538b: matches HF LFS listing.
+- GGUF files only (no mmproj/image projector). Stored in `runtime/models/` (gitignored).
+
+## 2026-11-11 — gpt-oss-20b load test (generic prompt, not a study run)
+
+- Prompt: 29,413 gpt-oss tokens of synthetic "Note N: the <adj> <noun> was <verb>
+  by team T on day D." lines plus one question (seeded generator, nothing from
+  frozen/). Raw completion mode, no chat template.
+- Command: `llama-completion -m runtime/models/gpt-oss-20b-MXFP4.gguf -dev Vulkan0
+  -ngl 99 -c 65536 -fit off -n 512 -s 42 -no-cnv -v -f filler.txt`
+  (runtime: llama.cpp build b12110, Vulkan, zip SHA-256 9732a5e4...874f).
+- Placement: 25/25 layers on Vulkan0, none on other devices; n_ctx = 65536 as set
+  (fit off, no silent change); flash_attn auto.
+- Buffers (Vulkan0): model 10,949 MiB, KV 1,536 MiB (full-attn, 65,536 cells)
+  + 18 MiB (SWA, 768 cells), compute 480 MiB = 12,983 MiB. Host: CPU_Mapped model
+  587 MiB, Vulkan_Host compute 87 MiB.
+- Windows counters: adapter dedicated 1,679 -> peak 13,329 MiB of 16,304
+  (2,975 MiB headroom); llama process peak 11,647 MiB; adapter shared 96 -> 1,689 MiB
+  (host-side mapped/pinned buffers; no device buffer was placed off-GPU).
+- Speed: prefill 1,363 tok/s (29,413 tokens in 21.6 s); generation 60.4 tok/s
+  at ~29.5k context (511 tokens). Wall time 42.5 s including load.
+- Time estimate for headline J (46 requests, 32,768-token output budget): about
+  25 s prefill + up to ~10-12 min of generation per request if it uses the full
+  budget; roughly 2-9 h for the wave depending on reasoning length.
