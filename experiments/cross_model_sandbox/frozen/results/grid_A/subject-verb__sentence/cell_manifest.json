@@ -1,0 +1,40 @@
+{
+  "cell": "subject-verb__sentence",
+  "strategy": "subject-verb",
+  "granularity": "sentence",
+  "cutter_module": "subject_verb",
+  "cutter_function": "cut_corpus",
+  "params": {
+    "granularity": "sentence"
+  },
+  "source": "data/grid_corpus_A/prose_raw.jsonl",
+  "source_sha256": "66b646c9c02ca59821f455981c8e1e0669a1ccda7e6be6ea0325d680bf652dcc",
+  "selection": "data/pools/grid_selection_A.json",
+  "git_commit": "e2876dbd48d9aa7dcdaa86aa5862b4fb54db70bf",
+  "code_uncommitted": [
+    "M adversaries/answer_store.py",
+    " M adversaries/batch_game.py",
+    " M adversaries/batch_submit.py",
+    " M adversaries/joint_game.py",
+    " M adversaries/llm_adversary.py",
+    " M analysis/cost_model_v2.py",
+    " M datagen/coherence_sever.py",
+    " M datagen/llm_cutter.py",
+    " M datagen/subject_verb.py",
+    " M harness/run_ledger.py",
+    "?? adversaries/hier_batch.py",
+    "?? analysis/budget_final.py",
+    "?? analysis/llm_cut_prompt_compare.py",
+    "?? harness/test_parser.py",
+    "?? harness/test_truncation.py"
+  ],
+  "change": "D7: a cut must fall on whitespace in the source (4 frame-A cut points did not)",
+  "supersedes": {
+    "path": "results/grid_A/_superseded_2026-09-11/subject-verb__sentence",
+    "n_fragments": 7115
+  },
+  "cut_at": "2026-09-11T21:29:02.485553+00:00",
+  "n_docs": 175,
+  "n_fragments": 7115,
+  "fidelity_gate": "pass"
+}

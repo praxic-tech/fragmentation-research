@@ -1,0 +1,40 @@
+{
+  "cell": "coherence-sever__clause",
+  "strategy": "coherence-sever",
+  "granularity": "clause",
+  "cutter_module": "coherence_sever",
+  "cutter_function": "cut_corpus",
+  "params": {
+    "granularity": "clause"
+  },
+  "source": "data/grid_corpus_A/prose_raw.jsonl",
+  "source_sha256": "66b646c9c02ca59821f455981c8e1e0669a1ccda7e6be6ea0325d680bf652dcc",
+  "selection": "data/pools/grid_selection_A.json",
+  "git_commit": "e2876dbd48d9aa7dcdaa86aa5862b4fb54db70bf",
+  "code_uncommitted": [
+    "M adversaries/answer_store.py",
+    " M adversaries/batch_game.py",
+    " M adversaries/batch_submit.py",
+    " M adversaries/joint_game.py",
+    " M adversaries/llm_adversary.py",
+    " M analysis/cost_model_v2.py",
+    " M datagen/coherence_sever.py",
+    " M datagen/llm_cutter.py",
+    " M datagen/subject_verb.py",
+    " M harness/run_ledger.py",
+    "?? adversaries/hier_batch.py",
+    "?? analysis/budget_final.py",
+    "?? analysis/llm_cut_prompt_compare.py",
+    "?? harness/test_parser.py",
+    "?? harness/test_truncation.py"
+  ],
+  "change": "D7: topic shift = adjacent units share no content word (was Jaccard < 0.12); token-window counts whitespace words (was spaCy tokens)",
+  "supersedes": {
+    "path": "results/grid_A/_superseded_2026-09-11/coherence-sever__clause",
+    "n_fragments": 5119
+  },
+  "cut_at": "2026-09-11T21:26:49.952110+00:00",
+  "n_docs": 175,
+  "n_fragments": 3926,
+  "fidelity_gate": "pass"
+}

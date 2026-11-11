@@ -1,0 +1,74 @@
+{
+  "purpose": "llm_cutter prompt comparison sample (v1 / v2-adversarial / v3-strategist), Kimi K3",
+  "n_documents": 11,
+  "seed": 20260910,
+  "constraint": "documents drawn only from the 25 development pools (data/pools/linkage_grid.json) or the 3 unpooled held-out docs; never from the 46 headline pools in data/pools/pools.json (docs/RUN_DECISIONS.md D2)",
+  "documents": [
+    {
+      "record_id": "prose_0012",
+      "pool_id": null,
+      "source": "held_out",
+      "n_clause_units": 76
+    },
+    {
+      "record_id": "prose_0057",
+      "pool_id": null,
+      "source": "held_out",
+      "n_clause_units": 46
+    },
+    {
+      "record_id": "prose_0327",
+      "pool_id": null,
+      "source": "held_out",
+      "n_clause_units": 60
+    },
+    {
+      "record_id": "prose_0499",
+      "pool_id": "pool_055",
+      "source": "dev_pool",
+      "n_clause_units": 7
+    },
+    {
+      "record_id": "prose_0276",
+      "pool_id": "pool_044",
+      "source": "dev_pool",
+      "n_clause_units": 51
+    },
+    {
+      "record_id": "prose_0196",
+      "pool_id": "pool_027",
+      "source": "dev_pool",
+      "n_clause_units": 11
+    },
+    {
+      "record_id": "prose_0431",
+      "pool_id": "pool_046",
+      "source": "dev_pool",
+      "n_clause_units": 40
+    },
+    {
+      "record_id": "prose_0207",
+      "pool_id": "pool_013",
+      "source": "dev_pool",
+      "n_clause_units": 29
+    },
+    {
+      "record_id": "prose_0029",
+      "pool_id": "pool_042",
+      "source": "dev_pool",
+      "n_clause_units": 38
+    },
+    {
+      "record_id": "prose_0295",
+      "pool_id": "pool_060",
+      "source": "dev_pool",
+      "n_clause_units": 27
+    },
+    {
+      "record_id": "prose_0126",
+      "pool_id": "pool_051",
+      "source": "dev_pool",
+      "n_clause_units": 73
+    }
+  ]
+}

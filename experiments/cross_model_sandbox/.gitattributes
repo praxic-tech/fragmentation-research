@@ -1,0 +1,3 @@
+# frozen/ must check out byte-identical on every machine, or its checksums fail.
+# No end-of-line conversion for anything in it, whatever core.autocrlf says.
+frozen/** -text

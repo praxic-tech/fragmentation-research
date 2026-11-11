@@ -1,0 +1,7 @@
+anthropic==0.104.1
+Faker==40.36.0
+numpy==2.4.6
+openai==1.55.3
+python-dotenv==1.2.1
+scipy==1.16.1
+spacy==3.8.5

@@ -1,0 +1,8 @@
+{
+  "cell": "edge__w4",
+  "condition": "w4",
+  "experiment": "POST-HOC EXPLORATORY \u2014 INTERMEDIATE GRANULARITY GRADIENT (D18)",
+  "unit": "4 consecutive whitespace tokens joined by one space; the last fragment of a document holds the remainder and may be shorter",
+  "derived_from": "results/single_token_edge/edge__token",
+  "inherits": "pools, excerpts, membership, prompt, model, masking, per-unit shuffle, 128k rule, repair policy, visible-text scorer, single-token-edge-v1 null namespace (D16)"
+}

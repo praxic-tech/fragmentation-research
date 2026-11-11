@@ -1,0 +1,1233 @@
+{
+ "n_documents": 175,
+ "fragment_cap": 30,
+ "seed": 42,
+ "frame": "A: the 25 development pools of data/pools/linkage_grid.json (docs/RUN_DECISIONS.md D2)",
+ "documents": [
+  {
+   "record_id": "prose_0045",
+   "pool_id": "pool_000",
+   "n_fragments_full": 11,
+   "n_fragments_capped": 11,
+   "band": "5-15"
+  },
+  {
+   "record_id": "prose_0053",
+   "pool_id": "pool_000",
+   "n_fragments_full": 15,
+   "n_fragments_capped": 15,
+   "band": "5-15"
+  },
+  {
+   "record_id": "prose_0072",
+   "pool_id": "pool_000",
+   "n_fragments_full": 35,
+   "n_fragments_capped": 30,
+   "band": "31-60"
+  },
+  {
+   "record_id": "prose_0156",
+   "pool_id": "pool_000",
+   "n_fragments_full": 19,
+   "n_fragments_capped": 19,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0164",
+   "pool_id": "pool_000",
+   "n_fragments_full": 16,
+   "n_fragments_capped": 16,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0315",
+   "pool_id": "pool_000",
+   "n_fragments_full": 20,
+   "n_fragments_capped": 20,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0383",
+   "pool_id": "pool_000",
+   "n_fragments_full": 36,
+   "n_fragments_capped": 30,
+   "band": "31-60"
+  },
+  {
+   "record_id": "prose_0059",
+   "pool_id": "pool_002",
+   "n_fragments_full": 34,
+   "n_fragments_capped": 30,
+   "band": "31-60"
+  },
+  {
+   "record_id": "prose_0163",
+   "pool_id": "pool_002",
+   "n_fragments_full": 7,
+   "n_fragments_capped": 7,
+   "band": "5-15"
+  },
+  {
+   "record_id": "prose_0210",
+   "pool_id": "pool_002",
+   "n_fragments_full": 24,
+   "n_fragments_capped": 24,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0251",
+   "pool_id": "pool_002",
+   "n_fragments_full": 31,
+   "n_fragments_capped": 30,
+   "band": "31-60"
+  },
+  {
+   "record_id": "prose_0368",
+   "pool_id": "pool_002",
+   "n_fragments_full": 27,
+   "n_fragments_capped": 27,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0443",
+   "pool_id": "pool_002",
+   "n_fragments_full": 63,
+   "n_fragments_capped": 30,
+   "band": "61+"
+  },
+  {
+   "record_id": "prose_0479",
+   "pool_id": "pool_002",
+   "n_fragments_full": 49,
+   "n_fragments_capped": 30,
+   "band": "31-60"
+  },
+  {
+   "record_id": "prose_0041",
+   "pool_id": "pool_004",
+   "n_fragments_full": 27,
+   "n_fragments_capped": 27,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0129",
+   "pool_id": "pool_004",
+   "n_fragments_full": 40,
+   "n_fragments_capped": 30,
+   "band": "31-60"
+  },
+  {
+   "record_id": "prose_0162",
+   "pool_id": "pool_004",
+   "n_fragments_full": 11,
+   "n_fragments_capped": 11,
+   "band": "5-15"
+  },
+  {
+   "record_id": "prose_0211",
+   "pool_id": "pool_004",
+   "n_fragments_full": 23,
+   "n_fragments_capped": 23,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0223",
+   "pool_id": "pool_004",
+   "n_fragments_full": 31,
+   "n_fragments_capped": 30,
+   "band": "31-60"
+  },
+  {
+   "record_id": "prose_0245",
+   "pool_id": "pool_004",
+   "n_fragments_full": 28,
+   "n_fragments_capped": 28,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0278",
+   "pool_id": "pool_004",
+   "n_fragments_full": 44,
+   "n_fragments_capped": 30,
+   "band": "31-60"
+  },
+  {
+   "record_id": "prose_0026",
+   "pool_id": "pool_012",
+   "n_fragments_full": 30,
+   "n_fragments_capped": 30,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0077",
+   "pool_id": "pool_012",
+   "n_fragments_full": 78,
+   "n_fragments_capped": 30,
+   "band": "61+"
+  },
+  {
+   "record_id": "prose_0089",
+   "pool_id": "pool_012",
+   "n_fragments_full": 36,
+   "n_fragments_capped": 30,
+   "band": "31-60"
+  },
+  {
+   "record_id": "prose_0345",
+   "pool_id": "pool_012",
+   "n_fragments_full": 27,
+   "n_fragments_capped": 27,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0396",
+   "pool_id": "pool_012",
+   "n_fragments_full": 15,
+   "n_fragments_capped": 15,
+   "band": "5-15"
+  },
+  {
+   "record_id": "prose_0425",
+   "pool_id": "pool_012",
+   "n_fragments_full": 70,
+   "n_fragments_capped": 30,
+   "band": "61+"
+  },
+  {
+   "record_id": "prose_0426",
+   "pool_id": "pool_012",
+   "n_fragments_full": 15,
+   "n_fragments_capped": 15,
+   "band": "5-15"
+  },
+  {
+   "record_id": "prose_0095",
+   "pool_id": "pool_013",
+   "n_fragments_full": 15,
+   "n_fragments_capped": 15,
+   "band": "5-15"
+  },
+  {
+   "record_id": "prose_0100",
+   "pool_id": "pool_013",
+   "n_fragments_full": 24,
+   "n_fragments_capped": 24,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0182",
+   "pool_id": "pool_013",
+   "n_fragments_full": 23,
+   "n_fragments_capped": 23,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0184",
+   "pool_id": "pool_013",
+   "n_fragments_full": 17,
+   "n_fragments_capped": 17,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0207",
+   "pool_id": "pool_013",
+   "n_fragments_full": 24,
+   "n_fragments_capped": 24,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0262",
+   "pool_id": "pool_013",
+   "n_fragments_full": 84,
+   "n_fragments_capped": 30,
+   "band": "61+"
+  },
+  {
+   "record_id": "prose_0419",
+   "pool_id": "pool_013",
+   "n_fragments_full": 28,
+   "n_fragments_capped": 28,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0085",
+   "pool_id": "pool_014",
+   "n_fragments_full": 32,
+   "n_fragments_capped": 30,
+   "band": "31-60"
+  },
+  {
+   "record_id": "prose_0155",
+   "pool_id": "pool_014",
+   "n_fragments_full": 11,
+   "n_fragments_capped": 11,
+   "band": "5-15"
+  },
+  {
+   "record_id": "prose_0230",
+   "pool_id": "pool_014",
+   "n_fragments_full": 19,
+   "n_fragments_capped": 19,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0237",
+   "pool_id": "pool_014",
+   "n_fragments_full": 28,
+   "n_fragments_capped": 28,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0353",
+   "pool_id": "pool_014",
+   "n_fragments_full": 18,
+   "n_fragments_capped": 18,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0362",
+   "pool_id": "pool_014",
+   "n_fragments_full": 35,
+   "n_fragments_capped": 30,
+   "band": "31-60"
+  },
+  {
+   "record_id": "prose_0394",
+   "pool_id": "pool_014",
+   "n_fragments_full": 36,
+   "n_fragments_capped": 30,
+   "band": "31-60"
+  },
+  {
+   "record_id": "prose_0031",
+   "pool_id": "pool_016",
+   "n_fragments_full": 21,
+   "n_fragments_capped": 21,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0069",
+   "pool_id": "pool_016",
+   "n_fragments_full": 27,
+   "n_fragments_capped": 27,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0106",
+   "pool_id": "pool_016",
+   "n_fragments_full": 26,
+   "n_fragments_capped": 26,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0158",
+   "pool_id": "pool_016",
+   "n_fragments_full": 24,
+   "n_fragments_capped": 24,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0348",
+   "pool_id": "pool_016",
+   "n_fragments_full": 84,
+   "n_fragments_capped": 30,
+   "band": "61+"
+  },
+  {
+   "record_id": "prose_0428",
+   "pool_id": "pool_016",
+   "n_fragments_full": 29,
+   "n_fragments_capped": 29,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0489",
+   "pool_id": "pool_016",
+   "n_fragments_full": 20,
+   "n_fragments_capped": 20,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0124",
+   "pool_id": "pool_027",
+   "n_fragments_full": 42,
+   "n_fragments_capped": 30,
+   "band": "31-60"
+  },
+  {
+   "record_id": "prose_0196",
+   "pool_id": "pool_027",
+   "n_fragments_full": 10,
+   "n_fragments_capped": 10,
+   "band": "5-15"
+  },
+  {
+   "record_id": "prose_0242",
+   "pool_id": "pool_027",
+   "n_fragments_full": 53,
+   "n_fragments_capped": 30,
+   "band": "31-60"
+  },
+  {
+   "record_id": "prose_0288",
+   "pool_id": "pool_027",
+   "n_fragments_full": 21,
+   "n_fragments_capped": 21,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0318",
+   "pool_id": "pool_027",
+   "n_fragments_full": 53,
+   "n_fragments_capped": 30,
+   "band": "31-60"
+  },
+  {
+   "record_id": "prose_0339",
+   "pool_id": "pool_027",
+   "n_fragments_full": 16,
+   "n_fragments_capped": 16,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0457",
+   "pool_id": "pool_027",
+   "n_fragments_full": 41,
+   "n_fragments_capped": 30,
+   "band": "31-60"
+  },
+  {
+   "record_id": "prose_0090",
+   "pool_id": "pool_033",
+   "n_fragments_full": 39,
+   "n_fragments_capped": 30,
+   "band": "31-60"
+  },
+  {
+   "record_id": "prose_0105",
+   "pool_id": "pool_033",
+   "n_fragments_full": 17,
+   "n_fragments_capped": 17,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0221",
+   "pool_id": "pool_033",
+   "n_fragments_full": 27,
+   "n_fragments_capped": 27,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0371",
+   "pool_id": "pool_033",
+   "n_fragments_full": 72,
+   "n_fragments_capped": 30,
+   "band": "61+"
+  },
+  {
+   "record_id": "prose_0410",
+   "pool_id": "pool_033",
+   "n_fragments_full": 38,
+   "n_fragments_capped": 30,
+   "band": "31-60"
+  },
+  {
+   "record_id": "prose_0416",
+   "pool_id": "pool_033",
+   "n_fragments_full": 53,
+   "n_fragments_capped": 30,
+   "band": "31-60"
+  },
+  {
+   "record_id": "prose_0452",
+   "pool_id": "pool_033",
+   "n_fragments_full": 23,
+   "n_fragments_capped": 23,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0048",
+   "pool_id": "pool_034",
+   "n_fragments_full": 41,
+   "n_fragments_capped": 30,
+   "band": "31-60"
+  },
+  {
+   "record_id": "prose_0104",
+   "pool_id": "pool_034",
+   "n_fragments_full": 30,
+   "n_fragments_capped": 30,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0168",
+   "pool_id": "pool_034",
+   "n_fragments_full": 26,
+   "n_fragments_capped": 26,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0206",
+   "pool_id": "pool_034",
+   "n_fragments_full": 38,
+   "n_fragments_capped": 30,
+   "band": "31-60"
+  },
+  {
+   "record_id": "prose_0240",
+   "pool_id": "pool_034",
+   "n_fragments_full": 52,
+   "n_fragments_capped": 30,
+   "band": "31-60"
+  },
+  {
+   "record_id": "prose_0247",
+   "pool_id": "pool_034",
+   "n_fragments_full": 34,
+   "n_fragments_capped": 30,
+   "band": "31-60"
+  },
+  {
+   "record_id": "prose_0402",
+   "pool_id": "pool_034",
+   "n_fragments_full": 30,
+   "n_fragments_capped": 30,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0109",
+   "pool_id": "pool_036",
+   "n_fragments_full": 9,
+   "n_fragments_capped": 9,
+   "band": "5-15"
+  },
+  {
+   "record_id": "prose_0121",
+   "pool_id": "pool_036",
+   "n_fragments_full": 14,
+   "n_fragments_capped": 14,
+   "band": "5-15"
+  },
+  {
+   "record_id": "prose_0294",
+   "pool_id": "pool_036",
+   "n_fragments_full": 27,
+   "n_fragments_capped": 27,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0440",
+   "pool_id": "pool_036",
+   "n_fragments_full": 38,
+   "n_fragments_capped": 30,
+   "band": "31-60"
+  },
+  {
+   "record_id": "prose_0451",
+   "pool_id": "pool_036",
+   "n_fragments_full": 21,
+   "n_fragments_capped": 21,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0484",
+   "pool_id": "pool_036",
+   "n_fragments_full": 22,
+   "n_fragments_capped": 22,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0491",
+   "pool_id": "pool_036",
+   "n_fragments_full": 30,
+   "n_fragments_capped": 30,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0102",
+   "pool_id": "pool_040",
+   "n_fragments_full": 22,
+   "n_fragments_capped": 22,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0159",
+   "pool_id": "pool_040",
+   "n_fragments_full": 23,
+   "n_fragments_capped": 23,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0310",
+   "pool_id": "pool_040",
+   "n_fragments_full": 17,
+   "n_fragments_capped": 17,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0337",
+   "pool_id": "pool_040",
+   "n_fragments_full": 55,
+   "n_fragments_capped": 30,
+   "band": "31-60"
+  },
+  {
+   "record_id": "prose_0344",
+   "pool_id": "pool_040",
+   "n_fragments_full": 21,
+   "n_fragments_capped": 21,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0365",
+   "pool_id": "pool_040",
+   "n_fragments_full": 28,
+   "n_fragments_capped": 28,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0372",
+   "pool_id": "pool_040",
+   "n_fragments_full": 34,
+   "n_fragments_capped": 30,
+   "band": "31-60"
+  },
+  {
+   "record_id": "prose_0029",
+   "pool_id": "pool_042",
+   "n_fragments_full": 29,
+   "n_fragments_capped": 29,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0043",
+   "pool_id": "pool_042",
+   "n_fragments_full": 17,
+   "n_fragments_capped": 17,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0122",
+   "pool_id": "pool_042",
+   "n_fragments_full": 6,
+   "n_fragments_capped": 6,
+   "band": "5-15"
+  },
+  {
+   "record_id": "prose_0123",
+   "pool_id": "pool_042",
+   "n_fragments_full": 20,
+   "n_fragments_capped": 20,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0248",
+   "pool_id": "pool_042",
+   "n_fragments_full": 15,
+   "n_fragments_capped": 15,
+   "band": "5-15"
+  },
+  {
+   "record_id": "prose_0375",
+   "pool_id": "pool_042",
+   "n_fragments_full": 19,
+   "n_fragments_capped": 19,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0417",
+   "pool_id": "pool_042",
+   "n_fragments_full": 52,
+   "n_fragments_capped": 30,
+   "band": "31-60"
+  },
+  {
+   "record_id": "prose_0009",
+   "pool_id": "pool_043",
+   "n_fragments_full": 29,
+   "n_fragments_capped": 29,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0157",
+   "pool_id": "pool_043",
+   "n_fragments_full": 20,
+   "n_fragments_capped": 20,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0165",
+   "pool_id": "pool_043",
+   "n_fragments_full": 91,
+   "n_fragments_capped": 30,
+   "band": "61+"
+  },
+  {
+   "record_id": "prose_0250",
+   "pool_id": "pool_043",
+   "n_fragments_full": 24,
+   "n_fragments_capped": 24,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0306",
+   "pool_id": "pool_043",
+   "n_fragments_full": 14,
+   "n_fragments_capped": 14,
+   "band": "5-15"
+  },
+  {
+   "record_id": "prose_0330",
+   "pool_id": "pool_043",
+   "n_fragments_full": 42,
+   "n_fragments_capped": 30,
+   "band": "31-60"
+  },
+  {
+   "record_id": "prose_0355",
+   "pool_id": "pool_043",
+   "n_fragments_full": 63,
+   "n_fragments_capped": 30,
+   "band": "61+"
+  },
+  {
+   "record_id": "prose_0000",
+   "pool_id": "pool_044",
+   "n_fragments_full": 42,
+   "n_fragments_capped": 30,
+   "band": "31-60"
+  },
+  {
+   "record_id": "prose_0082",
+   "pool_id": "pool_044",
+   "n_fragments_full": 26,
+   "n_fragments_capped": 26,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0191",
+   "pool_id": "pool_044",
+   "n_fragments_full": 18,
+   "n_fragments_capped": 18,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0271",
+   "pool_id": "pool_044",
+   "n_fragments_full": 25,
+   "n_fragments_capped": 25,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0276",
+   "pool_id": "pool_044",
+   "n_fragments_full": 45,
+   "n_fragments_capped": 30,
+   "band": "31-60"
+  },
+  {
+   "record_id": "prose_0347",
+   "pool_id": "pool_044",
+   "n_fragments_full": 21,
+   "n_fragments_capped": 21,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0473",
+   "pool_id": "pool_044",
+   "n_fragments_full": 35,
+   "n_fragments_capped": 30,
+   "band": "31-60"
+  },
+  {
+   "record_id": "prose_0054",
+   "pool_id": "pool_045",
+   "n_fragments_full": 27,
+   "n_fragments_capped": 27,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0091",
+   "pool_id": "pool_045",
+   "n_fragments_full": 21,
+   "n_fragments_capped": 21,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0152",
+   "pool_id": "pool_045",
+   "n_fragments_full": 20,
+   "n_fragments_capped": 20,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0256",
+   "pool_id": "pool_045",
+   "n_fragments_full": 18,
+   "n_fragments_capped": 18,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0259",
+   "pool_id": "pool_045",
+   "n_fragments_full": 44,
+   "n_fragments_capped": 30,
+   "band": "31-60"
+  },
+  {
+   "record_id": "prose_0319",
+   "pool_id": "pool_045",
+   "n_fragments_full": 9,
+   "n_fragments_capped": 9,
+   "band": "5-15"
+  },
+  {
+   "record_id": "prose_0399",
+   "pool_id": "pool_045",
+   "n_fragments_full": 27,
+   "n_fragments_capped": 27,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0001",
+   "pool_id": "pool_046",
+   "n_fragments_full": 79,
+   "n_fragments_capped": 30,
+   "band": "61+"
+  },
+  {
+   "record_id": "prose_0080",
+   "pool_id": "pool_046",
+   "n_fragments_full": 18,
+   "n_fragments_capped": 18,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0222",
+   "pool_id": "pool_046",
+   "n_fragments_full": 24,
+   "n_fragments_capped": 24,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0430",
+   "pool_id": "pool_046",
+   "n_fragments_full": 58,
+   "n_fragments_capped": 30,
+   "band": "31-60"
+  },
+  {
+   "record_id": "prose_0431",
+   "pool_id": "pool_046",
+   "n_fragments_full": 30,
+   "n_fragments_capped": 30,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0459",
+   "pool_id": "pool_046",
+   "n_fragments_full": 20,
+   "n_fragments_capped": 20,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0498",
+   "pool_id": "pool_046",
+   "n_fragments_full": 48,
+   "n_fragments_capped": 30,
+   "band": "31-60"
+  },
+  {
+   "record_id": "prose_0005",
+   "pool_id": "pool_047",
+   "n_fragments_full": 19,
+   "n_fragments_capped": 19,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0058",
+   "pool_id": "pool_047",
+   "n_fragments_full": 53,
+   "n_fragments_capped": 30,
+   "band": "31-60"
+  },
+  {
+   "record_id": "prose_0283",
+   "pool_id": "pool_047",
+   "n_fragments_full": 9,
+   "n_fragments_capped": 9,
+   "band": "5-15"
+  },
+  {
+   "record_id": "prose_0328",
+   "pool_id": "pool_047",
+   "n_fragments_full": 55,
+   "n_fragments_capped": 30,
+   "band": "31-60"
+  },
+  {
+   "record_id": "prose_0404",
+   "pool_id": "pool_047",
+   "n_fragments_full": 17,
+   "n_fragments_capped": 17,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0436",
+   "pool_id": "pool_047",
+   "n_fragments_full": 25,
+   "n_fragments_capped": 25,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0455",
+   "pool_id": "pool_047",
+   "n_fragments_full": 66,
+   "n_fragments_capped": 30,
+   "band": "61+"
+  },
+  {
+   "record_id": "prose_0024",
+   "pool_id": "pool_049",
+   "n_fragments_full": 27,
+   "n_fragments_capped": 27,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0056",
+   "pool_id": "pool_049",
+   "n_fragments_full": 35,
+   "n_fragments_capped": 30,
+   "band": "31-60"
+  },
+  {
+   "record_id": "prose_0078",
+   "pool_id": "pool_049",
+   "n_fragments_full": 22,
+   "n_fragments_capped": 22,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0305",
+   "pool_id": "pool_049",
+   "n_fragments_full": 79,
+   "n_fragments_capped": 30,
+   "band": "61+"
+  },
+  {
+   "record_id": "prose_0429",
+   "pool_id": "pool_049",
+   "n_fragments_full": 41,
+   "n_fragments_capped": 30,
+   "band": "31-60"
+  },
+  {
+   "record_id": "prose_0458",
+   "pool_id": "pool_049",
+   "n_fragments_full": 30,
+   "n_fragments_capped": 30,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0487",
+   "pool_id": "pool_049",
+   "n_fragments_full": 24,
+   "n_fragments_capped": 24,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0126",
+   "pool_id": "pool_051",
+   "n_fragments_full": 55,
+   "n_fragments_capped": 30,
+   "band": "31-60"
+  },
+  {
+   "record_id": "prose_0134",
+   "pool_id": "pool_051",
+   "n_fragments_full": 18,
+   "n_fragments_capped": 18,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0219",
+   "pool_id": "pool_051",
+   "n_fragments_full": 51,
+   "n_fragments_capped": 30,
+   "band": "31-60"
+  },
+  {
+   "record_id": "prose_0275",
+   "pool_id": "pool_051",
+   "n_fragments_full": 35,
+   "n_fragments_capped": 30,
+   "band": "31-60"
+  },
+  {
+   "record_id": "prose_0298",
+   "pool_id": "pool_051",
+   "n_fragments_full": 35,
+   "n_fragments_capped": 30,
+   "band": "31-60"
+  },
+  {
+   "record_id": "prose_0299",
+   "pool_id": "pool_051",
+   "n_fragments_full": 27,
+   "n_fragments_capped": 27,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0474",
+   "pool_id": "pool_051",
+   "n_fragments_full": 33,
+   "n_fragments_capped": 30,
+   "band": "31-60"
+  },
+  {
+   "record_id": "prose_0138",
+   "pool_id": "pool_055",
+   "n_fragments_full": 24,
+   "n_fragments_capped": 24,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0285",
+   "pool_id": "pool_055",
+   "n_fragments_full": 22,
+   "n_fragments_capped": 22,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0350",
+   "pool_id": "pool_055",
+   "n_fragments_full": 21,
+   "n_fragments_capped": 21,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0352",
+   "pool_id": "pool_055",
+   "n_fragments_full": 20,
+   "n_fragments_capped": 20,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0463",
+   "pool_id": "pool_055",
+   "n_fragments_full": 38,
+   "n_fragments_capped": 30,
+   "band": "31-60"
+  },
+  {
+   "record_id": "prose_0467",
+   "pool_id": "pool_055",
+   "n_fragments_full": 28,
+   "n_fragments_capped": 28,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0499",
+   "pool_id": "pool_055",
+   "n_fragments_full": 5,
+   "n_fragments_capped": 5,
+   "band": "5-15"
+  },
+  {
+   "record_id": "prose_0036",
+   "pool_id": "pool_057",
+   "n_fragments_full": 30,
+   "n_fragments_capped": 30,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0136",
+   "pool_id": "pool_057",
+   "n_fragments_full": 30,
+   "n_fragments_capped": 30,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0311",
+   "pool_id": "pool_057",
+   "n_fragments_full": 26,
+   "n_fragments_capped": 26,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0331",
+   "pool_id": "pool_057",
+   "n_fragments_full": 47,
+   "n_fragments_capped": 30,
+   "band": "31-60"
+  },
+  {
+   "record_id": "prose_0343",
+   "pool_id": "pool_057",
+   "n_fragments_full": 18,
+   "n_fragments_capped": 18,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0349",
+   "pool_id": "pool_057",
+   "n_fragments_full": 22,
+   "n_fragments_capped": 22,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0470",
+   "pool_id": "pool_057",
+   "n_fragments_full": 30,
+   "n_fragments_capped": 30,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0023",
+   "pool_id": "pool_060",
+   "n_fragments_full": 29,
+   "n_fragments_capped": 29,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0035",
+   "pool_id": "pool_060",
+   "n_fragments_full": 16,
+   "n_fragments_capped": 16,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0098",
+   "pool_id": "pool_060",
+   "n_fragments_full": 17,
+   "n_fragments_capped": 17,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0116",
+   "pool_id": "pool_060",
+   "n_fragments_full": 40,
+   "n_fragments_capped": 30,
+   "band": "31-60"
+  },
+  {
+   "record_id": "prose_0295",
+   "pool_id": "pool_060",
+   "n_fragments_full": 24,
+   "n_fragments_capped": 24,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0338",
+   "pool_id": "pool_060",
+   "n_fragments_full": 23,
+   "n_fragments_capped": 23,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0360",
+   "pool_id": "pool_060",
+   "n_fragments_full": 66,
+   "n_fragments_capped": 30,
+   "band": "61+"
+  },
+  {
+   "record_id": "prose_0049",
+   "pool_id": "pool_063",
+   "n_fragments_full": 18,
+   "n_fragments_capped": 18,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0135",
+   "pool_id": "pool_063",
+   "n_fragments_full": 40,
+   "n_fragments_capped": 30,
+   "band": "31-60"
+  },
+  {
+   "record_id": "prose_0176",
+   "pool_id": "pool_063",
+   "n_fragments_full": 13,
+   "n_fragments_capped": 13,
+   "band": "5-15"
+  },
+  {
+   "record_id": "prose_0183",
+   "pool_id": "pool_063",
+   "n_fragments_full": 23,
+   "n_fragments_capped": 23,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0194",
+   "pool_id": "pool_063",
+   "n_fragments_full": 26,
+   "n_fragments_capped": 26,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0309",
+   "pool_id": "pool_063",
+   "n_fragments_full": 27,
+   "n_fragments_capped": 27,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0433",
+   "pool_id": "pool_063",
+   "n_fragments_full": 48,
+   "n_fragments_capped": 30,
+   "band": "31-60"
+  },
+  {
+   "record_id": "prose_0015",
+   "pool_id": "pool_068",
+   "n_fragments_full": 28,
+   "n_fragments_capped": 28,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0016",
+   "pool_id": "pool_068",
+   "n_fragments_full": 24,
+   "n_fragments_capped": 24,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0047",
+   "pool_id": "pool_068",
+   "n_fragments_full": 31,
+   "n_fragments_capped": 30,
+   "band": "31-60"
+  },
+  {
+   "record_id": "prose_0111",
+   "pool_id": "pool_068",
+   "n_fragments_full": 37,
+   "n_fragments_capped": 30,
+   "band": "31-60"
+  },
+  {
+   "record_id": "prose_0119",
+   "pool_id": "pool_068",
+   "n_fragments_full": 8,
+   "n_fragments_capped": 8,
+   "band": "5-15"
+  },
+  {
+   "record_id": "prose_0258",
+   "pool_id": "pool_068",
+   "n_fragments_full": 19,
+   "n_fragments_capped": 19,
+   "band": "16-30"
+  },
+  {
+   "record_id": "prose_0308",
+   "pool_id": "pool_068",
+   "n_fragments_full": 27,
+   "n_fragments_capped": 27,
+   "band": "16-30"
+  }
+ ]
+}

@@ -1,0 +1,619 @@
+{
+ "what": "POST-HOC EXPLORATORY \u2014 CONTROLLED EXCERPT GRANULARITY EXPERIMENT (RUN_DECISIONS D15)",
+ "rule": "500 documents ordered by sha256('xgran-select-v1|' + record_id); first 70; pools of 7 in that order. Excerpt start: sha256('xgran-start-v1|' + record_id) mod valid starts; whole sentences to >= 40 words. No score, difficulty, topic or length criterion.",
+ "pools": [
+  {
+   "pool_id": "xpool_00",
+   "members": [
+    "prose_0436",
+    "prose_0145",
+    "prose_0343",
+    "prose_0410",
+    "prose_0244",
+    "prose_0230",
+    "prose_0313"
+   ]
+  },
+  {
+   "pool_id": "xpool_01",
+   "members": [
+    "prose_0379",
+    "prose_0450",
+    "prose_0216",
+    "prose_0274",
+    "prose_0163",
+    "prose_0368",
+    "prose_0253"
+   ]
+  },
+  {
+   "pool_id": "xpool_02",
+   "members": [
+    "prose_0320",
+    "prose_0258",
+    "prose_0259",
+    "prose_0000",
+    "prose_0089",
+    "prose_0100",
+    "prose_0239"
+   ]
+  },
+  {
+   "pool_id": "xpool_03",
+   "members": [
+    "prose_0271",
+    "prose_0491",
+    "prose_0446",
+    "prose_0231",
+    "prose_0188",
+    "prose_0168",
+    "prose_0464"
+   ]
+  },
+  {
+   "pool_id": "xpool_04",
+   "members": [
+    "prose_0312",
+    "prose_0283",
+    "prose_0474",
+    "prose_0108",
+    "prose_0072",
+    "prose_0275",
+    "prose_0422"
+   ]
+  },
+  {
+   "pool_id": "xpool_05",
+   "members": [
+    "prose_0426",
+    "prose_0367",
+    "prose_0359",
+    "prose_0029",
+    "prose_0146",
+    "prose_0404",
+    "prose_0205"
+   ]
+  },
+  {
+   "pool_id": "xpool_06",
+   "members": [
+    "prose_0162",
+    "prose_0132",
+    "prose_0376",
+    "prose_0358",
+    "prose_0465",
+    "prose_0428",
+    "prose_0272"
+   ]
+  },
+  {
+   "pool_id": "xpool_07",
+   "members": [
+    "prose_0348",
+    "prose_0186",
+    "prose_0167",
+    "prose_0269",
+    "prose_0318",
+    "prose_0445",
+    "prose_0055"
+   ]
+  },
+  {
+   "pool_id": "xpool_08",
+   "members": [
+    "prose_0035",
+    "prose_0495",
+    "prose_0024",
+    "prose_0116",
+    "prose_0066",
+    "prose_0297",
+    "prose_0020"
+   ]
+  },
+  {
+   "pool_id": "xpool_09",
+   "members": [
+    "prose_0325",
+    "prose_0403",
+    "prose_0339",
+    "prose_0008",
+    "prose_0296",
+    "prose_0203",
+    "prose_0199"
+   ]
+  }
+ ],
+ "excerpts": {
+  "prose_0436": {
+   "start_sentence": 16,
+   "end_sentence": 17,
+   "n_doc_sentences": 25,
+   "words": 52,
+   "n_sentences": 2
+  },
+  "prose_0145": {
+   "start_sentence": 24,
+   "end_sentence": 27,
+   "n_doc_sentences": 30,
+   "words": 66,
+   "n_sentences": 4
+  },
+  "prose_0343": {
+   "start_sentence": 11,
+   "end_sentence": 12,
+   "n_doc_sentences": 18,
+   "words": 52,
+   "n_sentences": 2
+  },
+  "prose_0410": {
+   "start_sentence": 14,
+   "end_sentence": 16,
+   "n_doc_sentences": 38,
+   "words": 52,
+   "n_sentences": 3
+  },
+  "prose_0244": {
+   "start_sentence": 12,
+   "end_sentence": 15,
+   "n_doc_sentences": 27,
+   "words": 48,
+   "n_sentences": 4
+  },
+  "prose_0230": {
+   "start_sentence": 0,
+   "end_sentence": 1,
+   "n_doc_sentences": 19,
+   "words": 43,
+   "n_sentences": 2
+  },
+  "prose_0313": {
+   "start_sentence": 4,
+   "end_sentence": 7,
+   "n_doc_sentences": 19,
+   "words": 50,
+   "n_sentences": 4
+  },
+  "prose_0379": {
+   "start_sentence": 9,
+   "end_sentence": 11,
+   "n_doc_sentences": 27,
+   "words": 42,
+   "n_sentences": 3
+  },
+  "prose_0450": {
+   "start_sentence": 16,
+   "end_sentence": 18,
+   "n_doc_sentences": 27,
+   "words": 50,
+   "n_sentences": 3
+  },
+  "prose_0216": {
+   "start_sentence": 0,
+   "end_sentence": 2,
+   "n_doc_sentences": 17,
+   "words": 44,
+   "n_sentences": 3
+  },
+  "prose_0274": {
+   "start_sentence": 15,
+   "end_sentence": 18,
+   "n_doc_sentences": 33,
+   "words": 46,
+   "n_sentences": 4
+  },
+  "prose_0163": {
+   "start_sentence": 1,
+   "end_sentence": 2,
+   "n_doc_sentences": 7,
+   "words": 63,
+   "n_sentences": 2
+  },
+  "prose_0368": {
+   "start_sentence": 1,
+   "end_sentence": 3,
+   "n_doc_sentences": 27,
+   "words": 70,
+   "n_sentences": 3
+  },
+  "prose_0253": {
+   "start_sentence": 12,
+   "end_sentence": 13,
+   "n_doc_sentences": 34,
+   "words": 42,
+   "n_sentences": 2
+  },
+  "prose_0320": {
+   "start_sentence": 8,
+   "end_sentence": 9,
+   "n_doc_sentences": 24,
+   "words": 51,
+   "n_sentences": 2
+  },
+  "prose_0258": {
+   "start_sentence": 15,
+   "end_sentence": 17,
+   "n_doc_sentences": 19,
+   "words": 71,
+   "n_sentences": 3
+  },
+  "prose_0259": {
+   "start_sentence": 36,
+   "end_sentence": 38,
+   "n_doc_sentences": 44,
+   "words": 45,
+   "n_sentences": 3
+  },
+  "prose_0000": {
+   "start_sentence": 13,
+   "end_sentence": 16,
+   "n_doc_sentences": 42,
+   "words": 50,
+   "n_sentences": 4
+  },
+  "prose_0089": {
+   "start_sentence": 10,
+   "end_sentence": 12,
+   "n_doc_sentences": 36,
+   "words": 55,
+   "n_sentences": 3
+  },
+  "prose_0100": {
+   "start_sentence": 6,
+   "end_sentence": 7,
+   "n_doc_sentences": 24,
+   "words": 49,
+   "n_sentences": 2
+  },
+  "prose_0239": {
+   "start_sentence": 8,
+   "end_sentence": 10,
+   "n_doc_sentences": 40,
+   "words": 74,
+   "n_sentences": 3
+  },
+  "prose_0271": {
+   "start_sentence": 16,
+   "end_sentence": 17,
+   "n_doc_sentences": 25,
+   "words": 45,
+   "n_sentences": 2
+  },
+  "prose_0491": {
+   "start_sentence": 19,
+   "end_sentence": 21,
+   "n_doc_sentences": 30,
+   "words": 58,
+   "n_sentences": 3
+  },
+  "prose_0446": {
+   "start_sentence": 14,
+   "end_sentence": 15,
+   "n_doc_sentences": 58,
+   "words": 43,
+   "n_sentences": 2
+  },
+  "prose_0231": {
+   "start_sentence": 25,
+   "end_sentence": 27,
+   "n_doc_sentences": 47,
+   "words": 53,
+   "n_sentences": 3
+  },
+  "prose_0188": {
+   "start_sentence": 11,
+   "end_sentence": 13,
+   "n_doc_sentences": 24,
+   "words": 64,
+   "n_sentences": 3
+  },
+  "prose_0168": {
+   "start_sentence": 6,
+   "end_sentence": 7,
+   "n_doc_sentences": 26,
+   "words": 46,
+   "n_sentences": 2
+  },
+  "prose_0464": {
+   "start_sentence": 29,
+   "end_sentence": 30,
+   "n_doc_sentences": 39,
+   "words": 45,
+   "n_sentences": 2
+  },
+  "prose_0312": {
+   "start_sentence": 6,
+   "end_sentence": 7,
+   "n_doc_sentences": 25,
+   "words": 42,
+   "n_sentences": 2
+  },
+  "prose_0283": {
+   "start_sentence": 4,
+   "end_sentence": 5,
+   "n_doc_sentences": 9,
+   "words": 63,
+   "n_sentences": 2
+  },
+  "prose_0474": {
+   "start_sentence": 7,
+   "end_sentence": 9,
+   "n_doc_sentences": 33,
+   "words": 63,
+   "n_sentences": 3
+  },
+  "prose_0108": {
+   "start_sentence": 1,
+   "end_sentence": 2,
+   "n_doc_sentences": 28,
+   "words": 40,
+   "n_sentences": 2
+  },
+  "prose_0072": {
+   "start_sentence": 18,
+   "end_sentence": 20,
+   "n_doc_sentences": 35,
+   "words": 41,
+   "n_sentences": 3
+  },
+  "prose_0275": {
+   "start_sentence": 11,
+   "end_sentence": 12,
+   "n_doc_sentences": 35,
+   "words": 44,
+   "n_sentences": 2
+  },
+  "prose_0422": {
+   "start_sentence": 15,
+   "end_sentence": 17,
+   "n_doc_sentences": 28,
+   "words": 55,
+   "n_sentences": 3
+  },
+  "prose_0426": {
+   "start_sentence": 5,
+   "end_sentence": 7,
+   "n_doc_sentences": 15,
+   "words": 43,
+   "n_sentences": 3
+  },
+  "prose_0367": {
+   "start_sentence": 7,
+   "end_sentence": 9,
+   "n_doc_sentences": 24,
+   "words": 50,
+   "n_sentences": 3
+  },
+  "prose_0359": {
+   "start_sentence": 11,
+   "end_sentence": 13,
+   "n_doc_sentences": 16,
+   "words": 44,
+   "n_sentences": 3
+  },
+  "prose_0029": {
+   "start_sentence": 26,
+   "end_sentence": 27,
+   "n_doc_sentences": 29,
+   "words": 42,
+   "n_sentences": 2
+  },
+  "prose_0146": {
+   "start_sentence": 1,
+   "end_sentence": 3,
+   "n_doc_sentences": 46,
+   "words": 41,
+   "n_sentences": 3
+  },
+  "prose_0404": {
+   "start_sentence": 2,
+   "end_sentence": 4,
+   "n_doc_sentences": 17,
+   "words": 45,
+   "n_sentences": 3
+  },
+  "prose_0205": {
+   "start_sentence": 14,
+   "end_sentence": 15,
+   "n_doc_sentences": 36,
+   "words": 60,
+   "n_sentences": 2
+  },
+  "prose_0162": {
+   "start_sentence": 1,
+   "end_sentence": 3,
+   "n_doc_sentences": 11,
+   "words": 49,
+   "n_sentences": 3
+  },
+  "prose_0132": {
+   "start_sentence": 44,
+   "end_sentence": 47,
+   "n_doc_sentences": 66,
+   "words": 49,
+   "n_sentences": 4
+  },
+  "prose_0376": {
+   "start_sentence": 0,
+   "end_sentence": 1,
+   "n_doc_sentences": 25,
+   "words": 56,
+   "n_sentences": 2
+  },
+  "prose_0358": {
+   "start_sentence": 14,
+   "end_sentence": 15,
+   "n_doc_sentences": 33,
+   "words": 64,
+   "n_sentences": 2
+  },
+  "prose_0465": {
+   "start_sentence": 14,
+   "end_sentence": 16,
+   "n_doc_sentences": 30,
+   "words": 42,
+   "n_sentences": 3
+  },
+  "prose_0428": {
+   "start_sentence": 10,
+   "end_sentence": 12,
+   "n_doc_sentences": 29,
+   "words": 63,
+   "n_sentences": 3
+  },
+  "prose_0272": {
+   "start_sentence": 2,
+   "end_sentence": 4,
+   "n_doc_sentences": 40,
+   "words": 44,
+   "n_sentences": 3
+  },
+  "prose_0348": {
+   "start_sentence": 38,
+   "end_sentence": 39,
+   "n_doc_sentences": 84,
+   "words": 41,
+   "n_sentences": 2
+  },
+  "prose_0186": {
+   "start_sentence": 4,
+   "end_sentence": 5,
+   "n_doc_sentences": 12,
+   "words": 49,
+   "n_sentences": 2
+  },
+  "prose_0167": {
+   "start_sentence": 4,
+   "end_sentence": 5,
+   "n_doc_sentences": 15,
+   "words": 46,
+   "n_sentences": 2
+  },
+  "prose_0269": {
+   "start_sentence": 29,
+   "end_sentence": 31,
+   "n_doc_sentences": 32,
+   "words": 64,
+   "n_sentences": 3
+  },
+  "prose_0318": {
+   "start_sentence": 2,
+   "end_sentence": 4,
+   "n_doc_sentences": 53,
+   "words": 51,
+   "n_sentences": 3
+  },
+  "prose_0445": {
+   "start_sentence": 8,
+   "end_sentence": 10,
+   "n_doc_sentences": 19,
+   "words": 55,
+   "n_sentences": 3
+  },
+  "prose_0055": {
+   "start_sentence": 32,
+   "end_sentence": 33,
+   "n_doc_sentences": 38,
+   "words": 42,
+   "n_sentences": 2
+  },
+  "prose_0035": {
+   "start_sentence": 0,
+   "end_sentence": 1,
+   "n_doc_sentences": 16,
+   "words": 48,
+   "n_sentences": 2
+  },
+  "prose_0495": {
+   "start_sentence": 5,
+   "end_sentence": 6,
+   "n_doc_sentences": 25,
+   "words": 49,
+   "n_sentences": 2
+  },
+  "prose_0024": {
+   "start_sentence": 15,
+   "end_sentence": 18,
+   "n_doc_sentences": 27,
+   "words": 52,
+   "n_sentences": 4
+  },
+  "prose_0116": {
+   "start_sentence": 0,
+   "end_sentence": 1,
+   "n_doc_sentences": 40,
+   "words": 53,
+   "n_sentences": 2
+  },
+  "prose_0066": {
+   "start_sentence": 22,
+   "end_sentence": 24,
+   "n_doc_sentences": 25,
+   "words": 42,
+   "n_sentences": 3
+  },
+  "prose_0297": {
+   "start_sentence": 16,
+   "end_sentence": 18,
+   "n_doc_sentences": 22,
+   "words": 46,
+   "n_sentences": 3
+  },
+  "prose_0020": {
+   "start_sentence": 29,
+   "end_sentence": 31,
+   "n_doc_sentences": 42,
+   "words": 46,
+   "n_sentences": 3
+  },
+  "prose_0325": {
+   "start_sentence": 20,
+   "end_sentence": 23,
+   "n_doc_sentences": 79,
+   "words": 45,
+   "n_sentences": 4
+  },
+  "prose_0403": {
+   "start_sentence": 21,
+   "end_sentence": 22,
+   "n_doc_sentences": 28,
+   "words": 48,
+   "n_sentences": 2
+  },
+  "prose_0339": {
+   "start_sentence": 9,
+   "end_sentence": 11,
+   "n_doc_sentences": 16,
+   "words": 47,
+   "n_sentences": 3
+  },
+  "prose_0008": {
+   "start_sentence": 12,
+   "end_sentence": 15,
+   "n_doc_sentences": 22,
+   "words": 56,
+   "n_sentences": 4
+  },
+  "prose_0296": {
+   "start_sentence": 25,
+   "end_sentence": 26,
+   "n_doc_sentences": 40,
+   "words": 54,
+   "n_sentences": 2
+  },
+  "prose_0203": {
+   "start_sentence": 24,
+   "end_sentence": 25,
+   "n_doc_sentences": 26,
+   "words": 68,
+   "n_sentences": 2
+  },
+  "prose_0199": {
+   "start_sentence": 29,
+   "end_sentence": 31,
+   "n_doc_sentences": 57,
+   "words": 51,
+   "n_sentences": 3
+  }
+ },
+ "built_at_commit": "6f184085c7f43c4db23825d1cd60a717e844ba65"
+}

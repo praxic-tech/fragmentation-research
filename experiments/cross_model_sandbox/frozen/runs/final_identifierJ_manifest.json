@@ -1,0 +1,19 @@
+{
+  "spec": "runs/final_identifierJ.json",
+  "spec_sha256": "8b0cdcd3c6d2cf5a1c8861ae8138b67098806d4a35a81b98d2c29b09c056da6e",
+  "git_commit": "2c5c5bfefcd09d6fcf8ec070f18bb81696352bbd",
+  "pools": "data/pools/identifier_J_pools.json",
+  "cell": "results/identifier_J/identifier__field",
+  "n_requests": 20,
+  "estimate": {
+    "n_requests": 20,
+    "est_input_tokens": 6549,
+    "est_output_tokens_worst_case": 2560000,
+    "est_cost_worst_case": 12.806549,
+    "est_cost_input_only": 0.006549
+  },
+  "preflight": {
+    "checked": 20,
+    "blocked": 0
+  }
+}

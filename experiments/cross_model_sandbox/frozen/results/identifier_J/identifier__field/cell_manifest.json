@@ -1,0 +1,22 @@
+{
+  "cell": "identifier__field",
+  "strategy": "one fragment per field (name, ssn, account, address)",
+  "granularity": "field",
+  "source": {
+    "records": "data/identifier/records.jsonl",
+    "fragments": "data/identifier/fragments.jsonl",
+    "answer_key": "data/identifier/answer_key.jsonl"
+  },
+  "source_sha256": {
+    "records": "c2c040ffbd06e569a9d7f231eed86664fb6e8936c11b56c983d027b49fa2b511",
+    "fragments": "4d1b3b2b1e11eb5f38e17e030dfcdbe84621c87df1720a9308b4677d2dd394fe",
+    "answer_key": "0f71b7775f97624dbead82992cb800e26821ab4766594f3cba3734705523ed4c"
+  },
+  "records": 448,
+  "excluded": "r_0000..r_0049 (shown to an LLM in exploratory O/L runs)",
+  "order_note": "answer-key order is the generator's FIXED field template: report J against a schema-order baseline as well as the analytic one (D11)",
+  "git_commit": "2c5c5bfefcd09d6fcf8ec070f18bb81696352bbd",
+  "cut_at": "2026-09-13T18:34:53.859310+00:00",
+  "n_fragments": 1792,
+  "fidelity_gate": "pass (one fragment per field, verbatim)"
+}

@@ -1,0 +1,6 @@
+{
+  "cell": "edge__token",
+  "condition": "token",
+  "experiment": "POST-HOC EXPLORATORY \u2014 CONTROLLED SINGLE-TOKEN EDGE-CASE EXPERIMENT (D16)",
+  "unit": "one whitespace-delimited token, verbatim"
+}

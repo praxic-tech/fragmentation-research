@@ -1,0 +1,23 @@
+{
+  "spec": "runs/gradient_J.json",
+  "spec_sha256": "3ddcc0ba33f219039eda9d679ab8812a048ac926c972d62e7dbe7fc51438e743",
+  "git_commit_at_build": "ce324841600861507f237f6ab433d6a0aceab7b8",
+  "pools": "data/pools/single_token_edge_pools.json",
+  "cells": [
+    "results/gradient\\edge__w4",
+    "results/gradient\\edge__w3",
+    "results/gradient\\edge__w2"
+  ],
+  "n_requests": 60,
+  "estimate": {
+    "n_requests": 60,
+    "est_input_tokens": 97567,
+    "est_output_tokens_worst_case": 7680000,
+    "est_cost_worst_case": 38.497567,
+    "est_cost_input_only": 0.097567
+  },
+  "preflight": {
+    "checked": 60,
+    "blocked": 0
+  }
+}

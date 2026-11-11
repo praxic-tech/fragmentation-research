@@ -1,0 +1,62 @@
+{
+ "sentence": {
+  "n_docs": 140,
+  "frags_per_doc": 4.0,
+  "doc_words": 76.04285714285714,
+  "floor_words": 28.692857142857143,
+  "recovered_words": 48.82857142857143,
+  "lift_words": 20.135714285714286,
+  "recovered_pct": 64.21191057674244,
+  "floor_pct": 37.73248168326132,
+  "longest_run_frags": 2.342857142857143,
+  "join_recall": 0.4642857142857143
+ },
+ "4-word": {
+  "n_docs": 140,
+  "frags_per_doc": 19.385714285714286,
+  "doc_words": 76.04285714285714,
+  "floor_words": 4.0,
+  "recovered_words": 21.914285714285715,
+  "lift_words": 17.914285714285715,
+  "recovered_pct": 28.818335525079842,
+  "floor_pct": 5.260191621266203,
+  "longest_run_frags": 5.542857142857143,
+  "join_recall": 0.4756210034609964
+ },
+ "3-word": {
+  "n_docs": 140,
+  "frags_per_doc": 25.685714285714287,
+  "doc_words": 76.04285714285714,
+  "floor_words": 3.0,
+  "recovered_words": 12.714285714285714,
+  "lift_words": 9.714285714285714,
+  "recovered_pct": 16.719894796167573,
+  "floor_pct": 3.9451437159496523,
+  "longest_run_frags": 4.264285714285714,
+  "join_recall": 0.3151103837000559
+ },
+ "2-word": {
+  "n_docs": 140,
+  "frags_per_doc": 38.285714285714285,
+  "doc_words": 76.04285714285714,
+  "floor_words": 2.0,
+  "recovered_words": 6.378571428571429,
+  "lift_words": 4.378571428571429,
+  "recovered_pct": 8.388126996054856,
+  "floor_pct": 2.6300958106331014,
+  "longest_run_frags": 3.2,
+  "join_recall": 0.15253090655580953
+ },
+ "1-word": {
+  "n_docs": 140,
+  "frags_per_doc": 76.04285714285714,
+  "doc_words": 76.04285714285714,
+  "floor_words": 1.0,
+  "recovered_words": 1.7857142857142858,
+  "lift_words": 0.7857142857142858,
+  "recovered_pct": 2.348299830922412,
+  "floor_pct": 1.3150479053165507,
+  "longest_run_frags": 1.7857142857142858,
+  "join_recall": 0.02180791887301866
+ }
+}
