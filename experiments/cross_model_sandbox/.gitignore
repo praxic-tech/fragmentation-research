@@ -16,3 +16,6 @@ __pycache__/
 *.py[cod]
 .venv/
 venv/
+
+# Local runtimes (llama.cpp binaries): provenance in logs/RUNLOG.md
+runtime/
