@@ -124,10 +124,20 @@ def write(name, caption, label, header, rows, notes, align=None, tex_header=None
             L.append(r"\midrule"); continue
         L.append(" & ".join(c if (c.startswith("$") and c.endswith("$")) else tex_math(tex_escape(c)) for c in r) + r" \\")
     L += [r"\bottomrule", r"\end{tabular}}",
-          r"\ifdim\wd0>\textwidth\resizebox{\textwidth}{!}{\usebox0}\else\usebox0\fi",
-          r"\begin{flushleft}\footnotesize"]
-    L += [tex_math(tex_escape(n)) + r"\\" for n in notes]
-    L += [r"\end{flushleft}", close_env]
+          r"\ifdim\wd0>\textwidth\resizebox{\textwidth}{!}{\usebox0}\else\usebox0\fi"]
+    body_notes = [tex_math(tex_escape(n)) for n in notes]
+    if floating:
+        # a float carries its notes with it, or they detach when it moves
+        L += [r"\begin{flushleft}\footnotesize"]
+        L += [n + r"\\" for n in body_notes]
+        L += [r"\end{flushleft}", close_env]
+    else:
+        # a strip is one unbreakable box, and these notes are most of its
+        # height. Outside it they are ordinary text that flows with the column.
+        L += [close_env, r"\begingroup\footnotesize\setlength{\parindent}{0pt}",
+              r"\setlength{\parskip}{1pt plus 1pt}"]
+        L += [n + r"\par" for n in body_notes]
+        L += [r"\endgroup", r"\par\addvspace{\intextsep}"]
     open(f"{OUT}/{name}.tex", "w", encoding="utf-8").write("\n".join(L) + "\n")
     print(f"  wrote {name}.md / .tex")
 

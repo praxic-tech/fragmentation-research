@@ -21,9 +21,11 @@ subject-verb / clause & 48.5 & 9.9 & 0.498 [0.476, 0.521] & 0.131 & 0.422 [0.397
 \bottomrule
 \end{tabular}}
 \ifdim\wd0>\textwidth\resizebox{\textwidth}{!}{\usebox0}\else\usebox0\fi
-\begin{flushleft}\footnotesize
-Grid pools 2--25 (24 pools of 7 documents per cell; documents capped at 30 reference sentences). One-shot Sonnet; 95\% percentile-bootstrap CIs over pools. $b_{J}$ is the pool-mean analytic one-bucket baseline. The Memon-inspired and embedding (post hoc) attackers sit near $b_{J}$ in every cell, with q $\approx$ 0.5; Game O $\tau$ per cell is reported with the other Game O results.\\
-random / token-window: one pool (pool\_002, 322 fragments) exhausted the 128k output budget and is excluded as a resource-bounded non-completion, never scored 0.\\
-Semantic / sentence is standard sentence splitting and the reference cut; the headline is the same cut at full length.\\
-\end{flushleft}
 \end{strip}
+\begingroup\footnotesize\setlength{\parindent}{0pt}
+\setlength{\parskip}{1pt plus 1pt}
+Grid pools 2--25 (24 pools of 7 documents per cell; documents capped at 30 reference sentences). One-shot Sonnet; 95\% percentile-bootstrap CIs over pools. $b_{J}$ is the pool-mean analytic one-bucket baseline. The Memon-inspired and embedding (post hoc) attackers sit near $b_{J}$ in every cell, with q $\approx$ 0.5; Game O $\tau$ per cell is reported with the other Game O results.\par
+random / token-window: one pool (pool\_002, 322 fragments) exhausted the 128k output budget and is excluded as a resource-bounded non-completion, never scored 0.\par
+Semantic / sentence is standard sentence splitting and the reference cut; the headline is the same cut at full length.\par
+\endgroup
+\par\addvspace{\intextsep}

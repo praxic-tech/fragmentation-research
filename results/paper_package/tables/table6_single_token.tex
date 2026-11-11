@@ -23,10 +23,12 @@ Embedding $A_{VJ}$ (not designed for tokens) & 0.104 & -0.090 & 0.194 [0.155, 0.
 \bottomrule
 \end{tabular}}
 \ifdim\wd0>\textwidth\resizebox{\textwidth}{!}{\usebox0}\else\usebox0\fi
-\begin{flushleft}\footnotesize
-POST-HOC EXPLORATORY (D16). 20 headline pools $\times$ 7 documents, four consecutive source sentences per document, identical text in both arms; sentence arm 28 fragments per pool, token arm median 523 (range 438--669). Completion 20/20 in both arms for every attacker; no RBNC.\\
-Oracle-size null means (10,000 permutations per pool): $V_{J}$ 0.423 (sentence) vs 0.141 (token); $V_{L}$ 0.503 vs 0.317. A\_V = (V $-$ null mean)/(1 $-$ null mean). Paired differences: percentile bootstrap over pools (10,000 resamples, seed 42, 95\%); exact two-sided sign test. $q_{V}$ (diagnostic only): Sonnet 0.860 vs 0.376. No raw-vs-normalized sign disagreement for Sonnet; Memon-inspired disagrees in 3 pools (pool\_017, pool\_032, pool\_041).\\
-Resources (Sonnet, all provider rows): sentence arm 20 rows, 106,375 output tokens, \$0.57; token arm 31 rows (20 base + 11 repairs; 8 repaired, 3 repair calls hit 128k and kept the earlier answer), 2,682,786 output tokens, \$13.58.\\
-Descriptive only: excerpt sentence-arm $\mathrm{F1}_{J}$ 0.585 vs full-document headline $\mathrm{F1}_{J}$ 0.723 (different tasks). A binary edge case, not a dose-response experiment: it locates no threshold.\\
-\end{flushleft}
 \end{strip}
+\begingroup\footnotesize\setlength{\parindent}{0pt}
+\setlength{\parskip}{1pt plus 1pt}
+POST-HOC EXPLORATORY (D16). 20 headline pools $\times$ 7 documents, four consecutive source sentences per document, identical text in both arms; sentence arm 28 fragments per pool, token arm median 523 (range 438--669). Completion 20/20 in both arms for every attacker; no RBNC.\par
+Oracle-size null means (10,000 permutations per pool): $V_{J}$ 0.423 (sentence) vs 0.141 (token); $V_{L}$ 0.503 vs 0.317. A\_V = (V $-$ null mean)/(1 $-$ null mean). Paired differences: percentile bootstrap over pools (10,000 resamples, seed 42, 95\%); exact two-sided sign test. $q_{V}$ (diagnostic only): Sonnet 0.860 vs 0.376. No raw-vs-normalized sign disagreement for Sonnet; Memon-inspired disagrees in 3 pools (pool\_017, pool\_032, pool\_041).\par
+Resources (Sonnet, all provider rows): sentence arm 20 rows, 106,375 output tokens, \$0.57; token arm 31 rows (20 base + 11 repairs; 8 repaired, 3 repair calls hit 128k and kept the earlier answer), 2,682,786 output tokens, \$13.58.\par
+Descriptive only: excerpt sentence-arm $\mathrm{F1}_{J}$ 0.585 vs full-document headline $\mathrm{F1}_{J}$ 0.723 (different tasks). A binary edge case, not a dose-response experiment: it locates no threshold.\par
+\endgroup
+\par\addvspace{\intextsep}

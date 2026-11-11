@@ -620,3 +620,73 @@ the text block.
 
 Build after revision 7: **0 errors, 0 undefined citations or references, no
 content past the bottom margin, 13 pages, main body pages 1–11.**
+
+---
+
+# Revision 8 — measuring prose instead of ink, and acting on it
+
+## Ink was the wrong measure
+
+Revision 7 reported the body at 93–99% full and called it done. It was not.
+Page 8 was 93% full and contained **no body text at all**: two tables, a
+heading and a figure. A table's notes are hundreds of words of 6pt type, so an
+exhibit-only page measures as a full page.
+
+`tools/page_prose.py` measures the right thing. It lifts the running prose out
+of `main.tex`, fingerprints each paragraph with four five-word windows, and
+reports which page each one landed on. All 86 paragraphs are located, so the
+count is exact rather than indicative. Run it on the built PDF:
+
+```
+python tools/page_prose.py paper/main.tex paper/main.pdf
+```
+
+On revision 7 it said: **pages 6 and 8 carried zero body paragraphs.** Not one
+sentence of argument on either.
+
+## Three things fixed it
+
+**The note blocks came out of the exhibits.** The gradient table had ten lines
+of notes, the adjacency table six; the notes, not the numbers, were most of
+each exhibit's height. Set after `\end{strip}` instead of inside it, the same
+words become ordinary breakable text that flows with the column. Nothing was
+deleted and nothing moved away from its table. The float tables keep their
+notes inside, or the notes would detach when the float moves.
+
+**Two more duplicate figures cut.** The headline comparison duplicated Table 2
+and the single-token per-pool plot duplicated Table 8; neither was cited.
+Five of the original eight figures are now gone, all of them uncited repeats
+of a table that is still in the body. What remains: the linkage/ordering
+decomposition, the granularity series (the only figure the prose refers to)
+and the resource scaling plot in the appendix.
+
+**A figure that had silently vanished was restored.** `figB_resource_scaling`
+was pinned `[b]`, found no page bottom once the paper got shorter, and LaTeX
+dropped it without an error — leaving `Figure~\ref{fig:resources}` undefined in
+the appendix. It is `[tbp]` now. Worth remembering: a float with one placement
+letter can disappear from a document and only an undefined reference shows it.
+
+## Measured result
+
+| | revision 6 | revision 7 | now |
+|---|---|---|---|
+| pages | 14 | 13 | **12** |
+| main body ends | a fifth down p12 | page 11 | **page 10** |
+| pages with no body prose | 6 and 8 | 6 and 8 | **none** |
+| thinnest body page | 0 paragraphs | 0 paragraphs | **2 paragraphs** |
+| worst body column | 33% | 63% | **94%** |
+| content past the margin | none | none | none |
+| figures | 8 | 5 | 3 |
+
+Every body column now sits at 94–99% of the text block and every page carries
+running text.
+
+## Restoring any of the cut figures
+
+Each is one block in `main.tex`; the figures, their data frames and their build
+scripts are untouched in the package. Measured cost of putting the headline
+figure back: 13 pages instead of 12, and page 8 drops from three body
+paragraphs to one.
+
+Build after revision 8: **0 errors, 0 undefined citations or references, no
+content past the bottom margin, 12 pages, main body pages 1–10.**

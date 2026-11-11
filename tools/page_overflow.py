@@ -36,7 +36,7 @@ for p in range(1, npages + 1):
     f = [x for x in os.listdir(tmp) if x.startswith("p%d-" % p)][0]
     w, h, stride, bits = read_pbm(os.path.join(tmp, f))
     low = 0
-    for y in range(BOT, min(h, 1080)):
+    for y in range(BOT, min(h, 1099)):
         if y in range(FOOT - 8, FOOT + 10):
             continue
         row = bits[y * stride:(y + 1) * stride]

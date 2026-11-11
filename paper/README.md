@@ -57,7 +57,18 @@ to each other and overrun the page as strips, and the two appendix tables. Do
 not move that choice into the generated `.tex` files — a package rebuild has
 already silently undone it once.
 
-**Measure with ink, not word counts.** `tools/page_ink.py` reports how far down
+**Measure prose, not ink.** `tools/page_prose.py` reports how many body
+paragraphs landed on each page; a page with none is an exhibit wall. Ink and
+word counts both miss this, because a table's notes are hundreds of words of
+6pt type and make an exhibit-only page measure as a full one. Every body page
+currently carries running text, and the thinnest carries two paragraphs.
+
+**Table notes are set outside the strips**, as ordinary text under the table.
+They were most of each exhibit's height, and inside an unbreakable box that is
+what gave whole pages to exhibits. The float tables keep their notes inside or
+they would detach when the float moves.
+
+**Measure ink too, but second.** `tools/page_ink.py` reports how far down
 each column the last ink sits; `tools/page_overflow.py` reports content past
 the bottom margin. A table's notes are hundreds of words and tell you nothing
 about how full a column is. Current state: every body column at 93–99% except

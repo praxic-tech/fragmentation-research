@@ -691,17 +691,6 @@ relative-order structure strongly, while immediate adjacency and contiguous
 plaintext recovery remain much weaker.} Exact reconstruction---membership and
 order both perfect---occurred for 1 of 322 headline documents.
 
-\begin{center}
-  
-  \includegraphics{fig1_headline_attackers.pdf}
-  \captionof{figure}{Headline prose, Game~J (46 pools). (a) Linkage component \FL;
-  (b) joint \FJ. Means with $95\%$ percentile-bootstrap CIs over pools. The
-  dashed line is the analytic one-bucket reference \bJ, which is a
-  trivial-strategy benchmark rather than chance; a legal size-blind random
-  seven-group answer scores $0.077$ (\S\ref{sec:baselines}). Open diamond:
-  post-hoc exploratory attacker.}
-  \label{fig:attackers}
-\end{center}
 \input{table2_headline_attackers}
 \input{table9_adjacency}
 
@@ -858,14 +847,6 @@ of 20). Raw and normalized scores agree in sign for the one-shot attacker in
 every pool; for Memon-inspired they disagree in three, which is a further
 reason to quote the normalized value.
 
-\begin{center}
-  
-  \includegraphics{fig5_single_token.pdf}
-  \captionof{figure}{Post-hoc exploratory single-token edge case: per-pool \AVJ{} for the
-  sentence and single-token cuts of identical excerpts (a), and the paired
-  difference with its $95\%$ CI (b). Zero is the oracle-size permutation null.}
-  \label{fig:token}
-\end{center}
 \input{table6_single_token}
 
 \subsection{Completion}
@@ -1103,9 +1084,9 @@ with the number of fragments in the unit, and Table~\ref{tab:resources} gives
 completion, repairs and cost for every paid experiment. Together they are the
 evidence for \S\ref{sec:res-resources}: one unit in 652 exhausted the output
 budget, and fragment count does not predict which one.
-% [b] only. With a top placement this figure floats to the top of the page
-% the bibliography starts on and prints above the References heading.
-\begin{figure}[b]
+% [tbp]: with [b] alone this figure found no page bottom and LaTeX dropped
+% it silently, leaving Figure~ef{fig:resources} undefined.
+\begin{figure}[tbp]
   \centering
   \includegraphics{figB_resource_scaling.pdf}
   \caption{Output tokens of the answering call against fragment count for every

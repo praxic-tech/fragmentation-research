@@ -144,7 +144,7 @@
    "status": "Prespecified; embedding row post hoc",
    "shows": "Headline attacker comparison with 95% CIs",
    "files": {
-    "tex": "c89ce2db64f3",
+    "tex": "c6d38e69f7ab",
     "md": "3754c12300bf"
    }
   },
@@ -154,7 +154,7 @@
    "status": "Prespecified",
    "shows": "The nine-cell grid",
    "files": {
-    "tex": "fe3bfe354535",
+    "tex": "5bd665d9457f",
     "md": "ecb7c002c6a8"
    }
   },
@@ -184,7 +184,7 @@
    "status": "POST-HOC EXPLORATORY (D16)",
    "shows": "Sentence against single-token cuts on identical excerpts, paired",
    "files": {
-    "tex": "c88c8649e3de",
+    "tex": "52a29780d859",
     "md": "517be6197b80"
    }
   },
@@ -204,7 +204,7 @@
    "status": "POST-HOC EXPLORATORY (D16, D18)",
    "shows": "The five-point granularity gradient, with its random-shuffle reference per arm",
    "files": {
-    "tex": "59c0ed819ef7",
+    "tex": "e62448f075c4",
     "md": "c657322db67a"
    }
   },
@@ -214,7 +214,7 @@
    "status": "Post hoc, free reanalysis",
    "shows": "Precedence against adjacency, and a random attacker that is a legal answer",
    "files": {
-    "tex": "c403cad14864",
+    "tex": "07cc0e114385",
     "md": "525e16e33415"
    }
   }
