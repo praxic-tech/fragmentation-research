@@ -1,0 +1,35 @@
+server pid 4900
+ready after ~9s
+== gptoss-b-final start 09:19:19
+gptoss-b-final: 0 lines, 81 prompt tokens, max_tokens 4096
+{
+ "test": "gptoss-b-final",
+ "prompt_lines": 0,
+ "tokenizer_count": 81,
+ "reported_prompt_tokens": 81,
+ "prompt_tokens_match": true,
+ "completion_tokens": 52,
+ "stream_chunks": 42,
+ "reasoning_chunks": 41,
+ "content_chunks": 1,
+ "finish_reason": "stop",
+ "time_to_first_token_s": 0.19636082649230957,
+ "wall_s": 0.5,
+ "timings": {
+  "cache_n": 0,
+  "prompt_n": 81,
+  "prompt_ms": 158.853,
+  "prompt_per_token_ms": 1.9611481481481483,
+  "prompt_per_second": 509.90538422314967,
+  "predicted_n": 52,
+  "predicted_ms": 364.787,
+  "predicted_per_token_ms": 7.152686274509803,
+  "predicted_per_second": 139.80761375816573
+ },
+ "reasoning_text": "The user: \"What is 17 + 25? Reply with the number only.\" The reply should be just the numeric result: 42. Ensure no extra text. So answer: \"42\".",
+ "content_text": "42"
+}
+== gptoss-b-final end 09:19:20
+4900 still running after 90.0s
+SUCCESS: The process with PID 4900 has been terminated.
+done

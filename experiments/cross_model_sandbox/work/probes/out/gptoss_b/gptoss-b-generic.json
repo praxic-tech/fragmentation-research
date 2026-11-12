@@ -1,0 +1,43 @@
+{
+ "test": "gptoss-b-generic",
+ "prompt_lines": 106,
+ "tokenizer_count": 1990,
+ "reported_prompt_tokens": 1990,
+ "prompt_tokens_match": true,
+ "completion_tokens": 4096,
+ "stream_chunks": 4093,
+ "reasoning_chunks": 4093,
+ "content_chunks": 0,
+ "finish_reason": "length",
+ "time_to_first_token_s": 0.5357699394226074,
+ "wall_s": 34.3,
+ "timings": {
+  "cache_n": 0,
+  "prompt_n": 1990,
+  "prompt_ms": 509.51,
+  "prompt_per_token_ms": 0.256035175879397,
+  "prompt_per_second": 3905.7133324174206,
+  "predicted_n": 4096,
+  "predicted_ms": 33750.547,
+  "predicted_per_token_ms": 8.24189181929182,
+  "predicted_per_second": 121.33136686643924
+ },
+ "timeline_every_1000": [
+  [
+   1000,
+   8.07
+  ],
+  [
+   2000,
+   16.27
+  ],
+  [
+   3000,
+   24.79
+  ],
+  [
+   4000,
+   33.46
+  ]
+ ]
+}

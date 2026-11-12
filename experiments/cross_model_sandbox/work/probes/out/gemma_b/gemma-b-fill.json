@@ -1,0 +1,59 @@
+{
+ "test": "gemma-b-fill",
+ "prompt_lines": 6171,
+ "tokenizer_count": 149980,
+ "reported_prompt_tokens": 149980,
+ "prompt_tokens_match": true,
+ "completion_tokens": 8192,
+ "stream_chunks": 8189,
+ "reasoning_chunks": 8189,
+ "content_chunks": 0,
+ "finish_reason": "length",
+ "time_to_first_token_s": 811.3975031375885,
+ "wall_s": 997.7,
+ "timings": {
+  "cache_n": 0,
+  "prompt_n": 149980,
+  "prompt_ms": 811247.688,
+  "prompt_per_token_ms": 5.409039125216696,
+  "prompt_per_second": 184.8757194855636,
+  "predicted_n": 8192,
+  "predicted_ms": 186353.794,
+  "predicted_per_token_ms": 22.751043096081062,
+  "predicted_per_second": 43.95402864725148
+ },
+ "timeline_every_1000": [
+  [
+   1000,
+   833.92
+  ],
+  [
+   2000,
+   856.53
+  ],
+  [
+   3000,
+   879.25
+  ],
+  [
+   4000,
+   901.95
+  ],
+  [
+   5000,
+   924.7
+  ],
+  [
+   6000,
+   947.48
+  ],
+  [
+   7000,
+   970.42
+  ],
+  [
+   8000,
+   993.35
+  ]
+ ]
+}

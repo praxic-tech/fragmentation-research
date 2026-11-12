@@ -1,0 +1,26 @@
+{
+ "chat_template_kwargs": {
+  "reasoning_effort": "high",
+  "current_date": "2026-11-11"
+ },
+ "max_tokens": 4096,
+ "ignore_eos": false,
+ "stream": true,
+ "stream_options": {
+  "include_usage": true
+ },
+ "temperature": 1.0,
+ "top_p": 1.0,
+ "top_k": 0,
+ "min_p": 0.0,
+ "typical_p": 1.0,
+ "repeat_penalty": 1.0,
+ "presence_penalty": 0.0,
+ "frequency_penalty": 0.0,
+ "dry_multiplier": 0.0,
+ "xtc_probability": 0.0,
+ "top_n_sigma": -1.0,
+ "mirostat": 0,
+ "dynatemp_range": 0.0,
+ "seed": 42
+}

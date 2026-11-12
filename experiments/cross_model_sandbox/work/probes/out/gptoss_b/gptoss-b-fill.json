@@ -1,0 +1,59 @@
+{
+ "test": "gptoss-b-fill",
+ "prompt_lines": 4679,
+ "tokenizer_count": 87984,
+ "reported_prompt_tokens": 87984,
+ "prompt_tokens_match": true,
+ "completion_tokens": 8192,
+ "stream_chunks": 8182,
+ "reasoning_chunks": 3186,
+ "content_chunks": 4996,
+ "finish_reason": "length",
+ "time_to_first_token_s": 50.76542830467224,
+ "wall_s": 421.6,
+ "timings": {
+  "cache_n": 0,
+  "prompt_n": 87984,
+  "prompt_ms": 50563.978,
+  "prompt_per_token_ms": 0.5746951491180214,
+  "prompt_per_second": 1740.0529681426567,
+  "predicted_n": 8192,
+  "predicted_ms": 370945.415,
+  "predicted_per_token_ms": 45.286950921743376,
+  "predicted_per_second": 22.08141594094107
+ },
+ "timeline_every_1000": [
+  [
+   1000,
+   94.12
+  ],
+  [
+   2000,
+   138.47
+  ],
+  [
+   3000,
+   183.41
+  ],
+  [
+   4000,
+   228.5
+  ],
+  [
+   5000,
+   274.05
+  ],
+  [
+   6000,
+   319.98
+  ],
+  [
+   7000,
+   366.35
+  ],
+  [
+   8000,
+   413.16
+  ]
+ ]
+}

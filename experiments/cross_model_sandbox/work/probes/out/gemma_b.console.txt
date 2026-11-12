@@ -1,0 +1,118 @@
+server pid 33024
+ready after ~7s
+== gemma-b-fill start 20:33:30
+gemma-b-fill: 6171 lines, 149980 prompt tokens, max_tokens 8192
+  1000 tokens at 834 s
+  2000 tokens at 857 s
+  3000 tokens at 879 s
+  4000 tokens at 902 s
+  5000 tokens at 925 s
+  6000 tokens at 947 s
+  7000 tokens at 970 s
+  8000 tokens at 993 s
+{
+ "test": "gemma-b-fill",
+ "prompt_lines": 6171,
+ "tokenizer_count": 149980,
+ "reported_prompt_tokens": 149980,
+ "prompt_tokens_match": true,
+ "completion_tokens": 8192,
+ "stream_chunks": 8189,
+ "reasoning_chunks": 8189,
+ "content_chunks": 0,
+ "finish_reason": "length",
+ "time_to_first_token_s": 811.3975031375885,
+ "wall_s": 997.7,
+ "timings": {
+  "cache_n": 0,
+  "prompt_n": 149980,
+  "prompt_ms": 811247.688,
+  "prompt_per_token_ms": 5.409039125216696,
+  "prompt_per_second": 184.8757194855636,
+  "predicted_n": 8192,
+  "predicted_ms": 186353.794,
+  "predicted_per_token_ms": 22.751043096081062,
+  "predicted_per_second": 43.95402864725148
+ }
+}
+== gemma-b-fill end 20:50:10
+== gemma-b-long start 20:50:10
+gemma-b-long: 836 lines, 19551 prompt tokens, max_tokens 50000
+  1000 tokens at 34 s
+  2000 tokens at 50 s
+  3000 tokens at 66 s
+  4000 tokens at 82 s
+  5000 tokens at 98 s
+  6000 tokens at 115 s
+  7000 tokens at 131 s
+  8000 tokens at 147 s
+  9000 tokens at 164 s
+  10000 tokens at 180 s
+  11000 tokens at 197 s
+  12000 tokens at 213 s
+  13000 tokens at 230 s
+  14000 tokens at 247 s
+  15000 tokens at 263 s
+  16000 tokens at 280 s
+  17000 tokens at 297 s
+  18000 tokens at 314 s
+  19000 tokens at 331 s
+  20000 tokens at 348 s
+  21000 tokens at 365 s
+  22000 tokens at 382 s
+  23000 tokens at 399 s
+  24000 tokens at 416 s
+  25000 tokens at 433 s
+  26000 tokens at 450 s
+  27000 tokens at 468 s
+  28000 tokens at 485 s
+  29000 tokens at 503 s
+  30000 tokens at 520 s
+  31000 tokens at 538 s
+  32000 tokens at 555 s
+  33000 tokens at 573 s
+  34000 tokens at 591 s
+  35000 tokens at 608 s
+  36000 tokens at 626 s
+  37000 tokens at 644 s
+  38000 tokens at 662 s
+  39000 tokens at 680 s
+  40000 tokens at 698 s
+  41000 tokens at 716 s
+  42000 tokens at 734 s
+  43000 tokens at 752 s
+  44000 tokens at 771 s
+  45000 tokens at 789 s
+  46000 tokens at 807 s
+  47000 tokens at 826 s
+  48000 tokens at 844 s
+  49000 tokens at 863 s
+{
+ "test": "gemma-b-long",
+ "prompt_lines": 836,
+ "tokenizer_count": 19551,
+ "reported_prompt_tokens": 19551,
+ "prompt_tokens_match": true,
+ "completion_tokens": 50000,
+ "stream_chunks": 49996,
+ "reasoning_chunks": 41215,
+ "content_chunks": 8781,
+ "finish_reason": "length",
+ "time_to_first_token_s": 17.715190887451172,
+ "wall_s": 881.0,
+ "timings": {
+  "cache_n": 0,
+  "prompt_n": 19551,
+  "prompt_ms": 17633.541,
+  "prompt_per_token_ms": 0.901925272364585,
+  "prompt_per_second": 1108.7393053953258,
+  "predicted_n": 50000,
+  "predicted_ms": 863298.363,
+  "predicted_per_token_ms": 17.266312586251725,
+  "predicted_per_second": 57.91624557962935
+ }
+}
+== gemma-b-long end 21:04:52
+33024 still running after 90.0s
+SUCCESS: The process with PID 33024 has been terminated.
+done

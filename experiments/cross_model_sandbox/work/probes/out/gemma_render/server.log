@@ -1,0 +1,14 @@
+0.00.114.015 I srv  llama_server: initializing ...
+0.00.114.023 I cmn  common_param: common_params_print_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+0.00.114.139 I srv  init_listene: The UI is disabled
+0.00.114.141 I srv  init_listene: Use --ui/--no-ui (or deprecated --webui/--no-webui) to enable/disable
+0.00.114.218 W srv  server_setup: security: no API key is set and CORS allows all origins (see https://github.com/ggml-org/llama.cpp/pull/25655)
+0.00.116.785 I srv    load_model: loading model 'C:\Users\aiden\Desktop\projects\fragmentation\fragmentation-research\experiments\cross_model_sandbox\runtime\models\gemma-4-12b-it-qat-q4_0.gguf'
+0.00.287.699 W load: control-looking token:     50 '<|tool_response>' was not control-type; this is probably a bug in the model. its type will be overridden
+0.00.287.732 W load: control-looking token:    212 '</s>' was not control-type; this is probably a bug in the model. its type will be overridden
+0.00.310.794 W load: '</s>' is a normal token here, removing it from EOG list
+0.04.017.096 I cmn          init: llama threadpool init, n_threads = 8
+0.04.205.939 I srv    load_model: initializing, n_slots = 1, n_ctx_slot = 163840, kv_unified = 'false'
+0.04.205.990 W srv          init: --cache-idle-slots requires --cache-ram, disabling
+0.04.213.880 I srv  server_run_i: model loaded
+0.04.213.887 I srv  server_on_li: listening on http://127.0.0.1:8092

@@ -1,0 +1,150 @@
+server pid 18788
+ready after ~19s
+== gptoss-b-generic start 23:51:23
+gptoss-b-generic: 106 lines, 1990 prompt tokens, max_tokens 4096
+  1000 tokens at 8 s
+  2000 tokens at 16 s
+  3000 tokens at 25 s
+  4000 tokens at 33 s
+{
+ "test": "gptoss-b-generic",
+ "prompt_lines": 106,
+ "tokenizer_count": 1990,
+ "reported_prompt_tokens": 1990,
+ "prompt_tokens_match": true,
+ "completion_tokens": 4096,
+ "stream_chunks": 4093,
+ "reasoning_chunks": 4093,
+ "content_chunks": 0,
+ "finish_reason": "length",
+ "time_to_first_token_s": 0.5357699394226074,
+ "wall_s": 34.3,
+ "timings": {
+  "cache_n": 0,
+  "prompt_n": 1990,
+  "prompt_ms": 509.51,
+  "prompt_per_token_ms": 0.256035175879397,
+  "prompt_per_second": 3905.7133324174206,
+  "predicted_n": 4096,
+  "predicted_ms": 33750.547,
+  "predicted_per_token_ms": 8.24189181929182,
+  "predicted_per_second": 121.33136686643924
+ }
+}
+== gptoss-b-generic end 23:51:58
+== gptoss-b-fill start 23:51:58
+gptoss-b-fill: 4679 lines, 87984 prompt tokens, max_tokens 8192
+  1000 tokens at 94 s
+  2000 tokens at 138 s
+  3000 tokens at 183 s
+  4000 tokens at 228 s
+  5000 tokens at 274 s
+  6000 tokens at 320 s
+  7000 tokens at 366 s
+  8000 tokens at 413 s
+{
+ "test": "gptoss-b-fill",
+ "prompt_lines": 4679,
+ "tokenizer_count": 87984,
+ "reported_prompt_tokens": 87984,
+ "prompt_tokens_match": true,
+ "completion_tokens": 8192,
+ "stream_chunks": 8182,
+ "reasoning_chunks": 3186,
+ "content_chunks": 4996,
+ "finish_reason": "length",
+ "time_to_first_token_s": 50.76542830467224,
+ "wall_s": 421.6,
+ "timings": {
+  "cache_n": 0,
+  "prompt_n": 87984,
+  "prompt_ms": 50563.978,
+  "prompt_per_token_ms": 0.5746951491180214,
+  "prompt_per_second": 1740.0529681426567,
+  "predicted_n": 8192,
+  "predicted_ms": 370945.415,
+  "predicted_per_token_ms": 45.286950921743376,
+  "predicted_per_second": 22.08141594094107
+ }
+}
+== gptoss-b-fill end 23:59:02
+== gptoss-b-long start 23:59:02
+gptoss-b-long: 947 lines, 17128 prompt tokens, max_tokens 50000
+  1000 tokens at 18 s
+  2000 tokens at 32 s
+  3000 tokens at 47 s
+  4000 tokens at 62 s
+  5000 tokens at 78 s
+  6000 tokens at 94 s
+  7000 tokens at 110 s
+  8000 tokens at 127 s
+  9000 tokens at 144 s
+  10000 tokens at 162 s
+  11000 tokens at 180 s
+  12000 tokens at 198 s
+  13000 tokens at 217 s
+  14000 tokens at 236 s
+  15000 tokens at 256 s
+  16000 tokens at 276 s
+  17000 tokens at 297 s
+  18000 tokens at 317 s
+  19000 tokens at 339 s
+  20000 tokens at 361 s
+  21000 tokens at 383 s
+  22000 tokens at 405 s
+  23000 tokens at 428 s
+  24000 tokens at 452 s
+  25000 tokens at 476 s
+  26000 tokens at 500 s
+  27000 tokens at 525 s
+  28000 tokens at 550 s
+  29000 tokens at 576 s
+  30000 tokens at 602 s
+  31000 tokens at 628 s
+  32000 tokens at 655 s
+  33000 tokens at 682 s
+  34000 tokens at 710 s
+  35000 tokens at 738 s
+  36000 tokens at 766 s
+  37000 tokens at 795 s
+  38000 tokens at 825 s
+  39000 tokens at 854 s
+  40000 tokens at 885 s
+  41000 tokens at 915 s
+  42000 tokens at 946 s
+  43000 tokens at 978 s
+  44000 tokens at 1010 s
+  45000 tokens at 1042 s
+  46000 tokens at 1075 s
+  47000 tokens at 1108 s
+  48000 tokens at 1141 s
+  49000 tokens at 1175 s
+{
+ "test": "gptoss-b-long",
+ "prompt_lines": 947,
+ "tokenizer_count": 17128,
+ "reported_prompt_tokens": 17128,
+ "prompt_tokens_match": true,
+ "completion_tokens": 50000,
+ "stream_chunks": 49997,
+ "reasoning_chunks": 49997,
+ "content_chunks": 0,
+ "finish_reason": "length",
+ "time_to_first_token_s": 4.237741708755493,
+ "wall_s": 1209.4,
+ "timings": {
+  "cache_n": 0,
+  "prompt_n": 17128,
+  "prompt_ms": 4180.259,
+  "prompt_per_token_ms": 0.24405996029892574,
+  "prompt_per_second": 4097.353776404763,
+  "predicted_n": 50000,
+  "predicted_ms": 1205173.57,
+  "predicted_per_token_ms": 24.10395347906958,
+  "predicted_per_second": 41.48697021292958
+ }
+}
+== gptoss-b-long end 00:19:13
+18788 still running after 90.0s
+SUCCESS: The process with PID 18788 has been terminated.
+done
