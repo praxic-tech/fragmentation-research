@@ -192,3 +192,158 @@ Install (user granted install permission, asked to keep it small):
   set top_k and min_p explicitly for every model.
 - Servers stopped afterwards (TaskStop does not kill the exec'd llama-server.exe
   on Windows; it was ended with taskkill by PID).
+
+## 2026-11-11 — gpt-oss re-send, sampler settings, fixed date, Gemma request, Sonnet output tokens
+
+- gpt-oss re-send (approved, once): same generic request, server with `-v`.
+  Same result (content '["spring","summer","autumn","winter"]', reasoning 1,076
+  chars separate, prompt_tokens 87). The verbose log does NOT print the rendered
+  prompt; its only "Reasoning:" line ("Reasoning: medium") is the startup
+  template example (log line ~2007; the request began at line 2023), not the
+  request. Direct confirmation still open: llama-server `--log-prompts-dir`
+  writes the rendered prompt (confirmed on Gemma); needs one more request.
+- Effective sampler settings read from /props (server defaults) and /slots
+  (after request). gpt-oss defaults: temperature 0.8, top_p 0.95, top_k 40,
+  min_p 0.05, typical_p 1.0, repeat_penalty 1.0 (last_n 64), presence 0,
+  frequency 0, dry_multiplier 0 (base 1.75, allowed_length 2, last_n 64),
+  xtc_probability 0 (threshold 0.1), top_n_sigma -1, mirostat 0, dynatemp_range 0,
+  adaptive_target -1, seed 4294967295 (random). Gemma defaults differ only in
+  temperature 1.0 and top_k 64 (from the GGUF). Sampler order: penalties, dry,
+  top_n_sigma, top_k, typ_p, top_p, min_p, xtc, temperature.
+- gpt-oss date: embedded template (SHA-256 b2215de6...0e89) calls
+  strftime_now. A template that raises when current_date is missing is rejected
+  by llama-server at startup (it test-renders with no kwargs). Final:
+  work/templates/gpt-oss-20b.fixed-date.jinja (SHA-256 56290db7...59f5), one-line
+  change, missing date renders "PINNED-DATE-MISSING". Served with
+  --chat-template-file, --no-cache-prompt, --cache-ram 0.
+  work/probes/render_check.py on the 46 headline prompts with
+  {"reasoning_effort":"high","current_date":"2026-11-11"}: repeat renders
+  identical, a different date changes only the "Current date:" line, prompts
+  verbatim, missing date shows the sentinel, max 17,144 tokens (unchanged).
+  Hashes: models/gpt-oss-20b/headlineJ_render_sha256.json.
+- Gemma generic request (approved, once), server with --no-cache-prompt
+  --cache-ram 0 --log-prompts-dir, enable_thinking true, all sampler values
+  explicit. Logged rendered prompt: "<|turn>system\n<|think|>\n<turn|>\n<|turn>user\n
+  ...<turn|>\n<|turn>model\n". finish stop; content '["Spring", "Summer",
+  "Autumn", "Winter"]'; reasoning_content 1,112 chars, separate; prompt_tokens 36
+  = /tokenize count of the render. /slots after the call: all 14 requested
+  sampler values applied. Gemma's embedded template (SHA-256 6a1015c4...ab82)
+  has no date or time call.
+- Sonnet headline output tokens (frozen raw rows): base wave 40 succeeded +
+  6 errored ("Your credit..." InvalidRequestError), resent in rs1 (6 succeeded);
+  2 repairs (r1). 46 first-pass answers: min 29,892, p10 33,831, p25 40,234,
+  median 49,594, p75 59,993, p90 67,899, max 81,897, mean 50,559; > 32,768: 43/46;
+  > 44,000: 30/46; > 64,000: 8/46; all end_turn, none at 128,000.
+- Frozen-code note: max_tokens_for() binds cap=MODEL_MAX_OUTPUT at definition
+  (128,000); build_repair_spec and at_ceiling read batch_game.MODEL_MAX_OUTPUT at
+  call time. The caller must send max_tokens = budget on every request.
+  Rebuilt (in memory) Sonnet's two headline repair prompts: feedback 356 and
+  180 chars.
+- Drafted both preregistration entries in work/prereg_drafts/ (not committed).
+
+## 2026-11-11 — Option B conditions: trained context, repair margin, gpt-oss B load test STOPPED (spill)
+
+- Trained context (GGUF header via work/probes/gguf_meta.py; HF config.json;
+  model cards): gpt-oss-20b gpt-oss.context_length 131072 (YaRN factor 32 from
+  4096; config max_position_embeddings 131072). Gemma 4 12B gemma4.context_length
+  262144 (config 262144; card "256K" for 12B). Option B contexts 98,304 and
+  163,840 are within both. The 131,072 fallback for Gemma does not apply.
+- Repair margin: frozen repair_report_text caps each list at 40 labels.
+  Worst case built with it (40 missing + "(and 360 more)", 40 duplicated,
+  40 invalid label-shaped ids, group-count sentence): 1,590 chars; 778 gpt-oss
+  tokens, 1,262 Gemma tokens. Proposed margin 2,048 tokens for both.
+  gpt-oss B: 98,304 - 17,144 - 78,000 = 3,160 >= 2,048. Gemma B: 163,840 -
+  19,563 - 128,000 = 16,277 >= 2,048 (the formula would allow 142,229; budget
+  kept at 128,000 = Sonnet's ceiling).
+- gpt-oss load test at B (approved): work/probes/loadtest_server.ps1, llama-server
+  with the preregistered flags, -c 98304, fixed-date template, --log-prompts-dir.
+  The test request never ran (my bug: PowerShell stripped the JSON quotes passed
+  to the background job). Memory samples during load (MiB):
+    idle            adapter ded 2,332  shared 250
+    weights loaded  adapter ded 13,440 shared 253   process ded 11,077 shared 0
+    context alloc   adapter ded 14,037 shared 2,174 process ded 11,677 shared 2,040
+  About 2 GB of llama-server's GPU allocations (size of the 2,304 MiB KV cache)
+  went to shared system memory. => SPILL. Stopped as instructed: no request,
+  no gpt-oss generic request (step 3), no Gemma B test.
+- CORRECTION to the 64k gpt-oss load test above: it had the same signature
+  (process dedicated 11,647 MiB vs 12,983 MiB of llama.cpp Vulkan0 buffers;
+  adapter shared +1.6 GB). That was also a spill, not host-side buffers as I
+  wrote. Gemma at 64k did not spill (process dedicated 8,953 MiB ~ its 8,749 MiB
+  of buffers; shared +97 MiB).
+- Vulkan limits for the 9070 XT (vulkaninfo): maxMemoryAllocationSize and
+  maxBufferSize 0x80000000 (2 GiB); heap 1 DEVICE_LOCAL 15.92 GiB; heap 0
+  (system) 15.58 GiB. Cause of the spill not yet established.
+
+## 2026-11-11 — gpt-oss spill diagnosis (approved: one verbose start, no requests)
+
+- Tools: work/probes/server_ctl.py (starts llama-server from argv lists written in
+  Python; no shell quoting), work/probes/memsample.ps1 (memory sampler; reads
+  counters only). loadtest_server.ps1 deleted (its JSON-quoting bug is why the B
+  request never ran); requests are now built in work/probes/loadtest_requests.py.
+- Run: config gptoss-b-verbose = prereg flags, -c 98304, fixed-date template, -v.
+  Ready in ~7 s, no request sent, stopped. Log: work/probes/out/gptoss_b_verbose/.
+  The memory sampler did not run (PowerShell execution policy; now invoked with
+  -ExecutionPolicy Bypass for that one process). Memory counters for these exact
+  buffers are the earlier B-attempt samples above (same flags minus -v).
+- Ctrl+C reached the server ("stop: all tasks already finished") but it had not
+  exited after 60 s; killed with taskkill /F. So llama.cpp's exit-time memory
+  breakdown table was not printed; breakdown below is from the load lines.
+- Placement (verbose): all 25 layers on Vulkan0; every non-SWA KV layer
+  "dev = Vulkan0"; token_embd (q8_0) on CPU by design.
+- llama.cpp memory breakdown (MiB):
+    Vulkan0 model 10,949.35 + KV 2,304.00 (non-SWA, 98,304 cells, 12 layers,
+    f16 K 1,152 + V 1,152) + KV 18.00 (SWA, 768 cells) + compute 186.77
+    = 13,458 MiB on Vulkan0.
+    Host: CPU_Mapped model 586.82, Vulkan_Host compute 119.28, output 0.77.
+  llama.cpp saw "15419 MiB free" on Vulkan0 at start, so by its own accounting
+  everything fits; no Vulkan allocation error or fallback message in the log.
+- 2 GiB per-allocation limit: not implicated by the evidence. The 10.9 GB of
+  weights are also allocated in <= 2 GiB pieces and stayed in VRAM; the KV cache
+  is per-layer tensors of 96 MiB each, and nothing failed to allocate.
+- Pattern across the three gpt-oss runs (llama-server process dedicated memory):
+    64k (llama-completion): adapter idle 1,679; process dedicated peak 11,647;
+      buffers on Vulkan0 12,983 -> ~1.3 GB elsewhere; adapter peak 13,329 of 16,304.
+    98,304 (llama-server): adapter idle 2,332; process dedicated 11,677;
+      buffers 13,458 -> ~1.8 GB elsewhere; adapter peak 14,037 of 16,304.
+  The process stopped at ~11.65 GB dedicated both times, although the card still
+  had ~3.0 GB and ~2.3 GB unused, and the idle baseline differed by 650 MB.
+  Gemma at 64k (8,953 MiB) stayed under it and did not spill. Working hypothesis:
+  a per-process limit on dedicated memory near 11.65 GB in this driver/WDDM
+  setup, not the card running out. Two data points; not established.
+
+## 2026-11-11 — Gemma 4 12B load test at Option B (approved; made-up prompts only)
+
+- Command: `bash work/probes/run_loadtest.sh gemma-b work/probes/out/gemma_b
+  gemma-b-fill gemma-b-long`. Server argv from server_ctl.py config gemma-b:
+  prereg flags, -c 163840, -np 1, -fit off, no KV quantization (f16 default).
+  Request bodies built in loadtest_requests.py (draft Gemma sampling, seed 42,
+  enable_thinking true, ignore_eos true so generation length is controlled).
+  Runtime: llama.cpp build b12110, Vulkan, zip SHA-256 9732a5e4...874f.
+- /slots after the run: n_ctx 163840; temperature 1.0, top_p 0.95, top_k 64,
+  min_p 0, typical_p 1, repeat_penalty 1, presence 0, frequency 0, dry 0, xtc 0,
+  top_n_sigma -1, mirostat 0, dynatemp 0, seed 42 (all as sent).
+- Request 1 (fill): 6,171 synthetic lines = 149,980 prompt tokens (tokenizer =
+  reported, match), 8,192 generated (finish "length"). Prefill 811 s
+  (185 tok/s average over 150k); decode 44.0 tok/s at depth 150k-158k.
+- Request 2 (long): 836 lines = 19,551 prompt tokens (match; ~ the longest Gemma
+  headline prompt, 19,563), 50,000 generated (41,215 reasoning chunks, 8,781
+  content chunks, finish "length"). Prefill 17.6 s (1,109 tok/s); decode
+  57.9 tok/s average; 62.2 tok/s at depth 21k falling to 54.8 at 63k.
+- Decode time per token vs depth (both requests, 1,000-token intervals):
+  ms/token = 15.03 + 0.0000503 * depth (max residual 0.12 ms).
+- Memory (626 samples, ~3 s apart, whole run): llama-server dedicated max
+  10,194 MiB, shared max 197 MiB; adapter dedicated 2,523 idle -> max 12,584 of
+  16,304; adapter shared 150 -> max 343. Expected Vulkan0 buffers (not printed
+  without -v): model 6,638 + KV 2,560 (8 full-attention layers x 163,840) + 480
+  (SWA) + compute ~500 = ~10.2 GB = the dedicated figure, so no device buffer
+  spilled; the ~200 MiB shared is in line with the host-side Vulkan_Host compute
+  buffer (95 MiB at 64k). No spill. Server stopped with taskkill after Ctrl+C
+  did not end it within 90 s.
+- Worst-case time estimates (from the fit; display on the 9070 XT as now):
+  one 128,000-token answer to the longest headline prompt: 18 s prefill +
+  41.0 min decode = 41.3 min. A 46-request wave in which every answer hits the
+  budget: 31.7 h (such answers are D6 and never re-asked). Absolute upper bound
+  with every answer finishing just under budget AND needing a repair that also
+  runs to the budget: 92 calls = 63.3 h, plus one 41-min resend per transport
+  error. If Gemma's lengths resembled Sonnet's (median 49,594), ~14 min per
+  request, ~11 h for 46.
