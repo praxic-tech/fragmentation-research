@@ -347,3 +347,74 @@ Install (user granted install permission, asked to keep it small):
   runs to the budget: 92 calls = 63.3 h, plus one 41-min resend per transport
   error. If Gemma's lengths resembled Sonnet's (median 49,594), ~14 min per
   request, ~11 h for 46.
+
+## 2026-11-11/12 — gpt-oss-20b retest at Option B, monitor unchanged (approved; made-up prompts only)
+
+- Commit 4471132 (drafts + log) pushed to origin/main before this run; the push
+  also carried the earlier unpushed sandbox commits d711cbe, 9a2d26c, d2ae9b1.
+- Command: `bash work/probes/run_loadtest.sh gptoss-b work/probes/out/gptoss_b
+  gptoss-b-generic gptoss-b-fill gptoss-b-long`. Server: prereg flags, -c 98304,
+  fixed-date template, --log-prompts-dir work/probes/out/gptoss_b/prompts, f16 KV.
+  Bodies from loadtest_requests.py: reasoning_effort high, current_date
+  2026-11-11, draft gpt-oss sampling, seed 42. Monitor still on the 9070 XT.
+  Runtime: llama.cpp build b12110, Vulkan, zip SHA-256 9732a5e4...874f.
+- Step 3 checks:
+  - Logged rendered prompts (2 files, generic and fill) begin with the system
+    block "Knowledge cutoff: 2024-06 / Current date: 2026-11-11 / Reasoning:
+    high". Confirmed.
+  - Prompt tokens: tokenizer = reported on all three requests (1,990; 87,984;
+    17,128).
+  - /slots after the run: n_ctx 98304; temperature 1.0, top_p 1.0, top_k 0,
+    min_p 0, typical_p 1, repeat_penalty 1, presence 0, frequency 0, dry 0,
+    xtc 0, top_n_sigma -1, mirostat 0, dynatemp 0, seed 42. All as sent.
+  - Reasoning returned separately: every generated token came back as
+    reasoning_content. But no request reached a final answer (the generic one
+    used its 4,096 tokens reasoning; the others are fixed-length), so a final
+    answer separated from reasoning under the fixed-date template is NOT yet
+    shown.
+- Memory: same spill as before. llama-server dedicated max 11,699 MiB, shared
+  max 2,041 MiB; adapter dedicated max 14,336 of 16,304, adapter shared max 2,246.
+- Speed: prefill 3,906 tok/s (2k), 4,097 tok/s (17k), 1,740 tok/s (88k).
+  Decode by depth: 122 tok/s at 3.5k; 66 at 21k; 47 at 36k; 36 at 51k; 30 at
+  66k; 21.8 at 93k; 21.4 at 95k. ms/token = 6.35 + 0.000422 * depth (max
+  residual 0.41 ms) -- the depth slope is ~8x Gemma's, consistent with the KV
+  cache being read partly from system memory.
+- Worst-case times (longest headline prompt 17,144, budget 78,000): one answer
+  at the budget 39.2 min; 46 requests all at the budget 30.0 h (D6, not
+  re-asked); absolute ceiling with every answer just under budget plus a repair
+  to the budget, 92 calls, 60.0 h. Sonnet-median-length answers (49,594 from a
+  7,707 prompt): ~16.6 min each, ~12.7 h for 46.
+- Server stopped with taskkill after Ctrl+C did not end it within 90 s.
+
+## 2026-11-12 — gpt-oss spill accepted; final-answer check; Gemma render hashes; draft updates
+
+- Decision (user): the gpt-oss spill at -c 98304 is accepted and recorded as the
+  known placement, with the speed-by-depth table above as the evidence
+  (draft Entry 1, "GPU placement").
+- Ceiling check (from the 4,096-token generic request, 2026-11-11): sent
+  max_tokens 4,096, reported completion_tokens exactly 4,096, finish_reason
+  "length". So a budget hit reports output == budget, and the frozen at_ceiling
+  (stop_reason max_tokens AND usage.output_tokens >= MODEL_MAX_OUTPUT) fires,
+  provided the caller stores completion_tokens as usage.output_tokens (now in
+  the draft's raw-row rule).
+- Approved: one short generic gpt-oss request (config gptoss-b, test
+  gptoss-b-final, `bash work/probes/run_loadtest.sh gptoss-b
+  work/probes/out/gptoss_final gptoss-b-final`). Prompt "What is 17 + 25? Reply
+  with the number only." 81 prompt tokens (tokenizer = reported). 52
+  completion tokens, finish "stop". content = "42"; reasoning_content (41
+  chunks) = the model's reasoning, separate; no harmony control tokens in
+  content. Logged rendered prompt contains "Current date: 2026-11-11" and
+  "Reasoning: high". C-1 closed.
+- Gemma render hashes (no generation: /apply-template and /tokenize only;
+  server log shows no slot launched): `work/probes/render_check.py` (now also
+  handles templates without a date; required substring "<|think|>") on all 46
+  headline prompts with {"enable_thinking": true}: repeat renders identical,
+  prompts verbatim, "<|think|>" present, no date in any render; max 19,563
+  tokens. Written to models/gemma-4-12b/headlineJ_render_sha256.json.
+- Gemma template control markers (from the GGUF's embedded template): <|think|>,
+  <|channel>, <channel|>, <|turn>, <turn|> (plus tool/media markers).
+- Draft updates: Option B values filled in per model; gpt-oss placement
+  accepted; raw rows store output_tokens/input_tokens; per-call control-token
+  check on text (failure stops the wave); integrity-gate refusal is the
+  primary result, allow_partial mean secondary and labelled "answered units
+  only"; run order Gemma first, then gpt-oss.

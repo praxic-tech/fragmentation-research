@@ -1,3 +1,6 @@
 # frozen/ must check out byte-identical on every machine, or its checksums fail.
 # No end-of-line conversion for anything in it, whatever core.autocrlf says.
 frozen/** -text
+# Chat templates are identified by SHA-256 in the preregistration drafts: no
+# end-of-line conversion, so a checkout reproduces the recorded hashes.
+work/templates/*.jinja -text

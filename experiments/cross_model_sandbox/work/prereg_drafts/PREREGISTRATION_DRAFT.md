@@ -1,37 +1,37 @@
-# DRAFT preregistration entries: gpt-oss-20b and Gemma 4 12B (not committed)
+# DRAFT preregistration entries: Gemma 4 12B and gpt-oss-20b (for review)
 
-Status: draft for review, 2026-11-11. Nothing here is preregistered until the
+Status: draft for review, 2026-11-12. Nothing here is preregistered until the
 reviewed text is copied into `PREREGISTRATION.md` and committed. No study
-request has been sent to either model.
+request has been sent to either model. Order of runs: Gemma 4 12B first, then
+gpt-oss-20b (see "Order between models").
 
-## Open decisions and open checks (resolve before committing)
+## Decisions taken (formerly open)
 
-**D-A. Output budget and context length.** Sonnet's 46 first-pass headline
-answers (40 base rows + 6 transport resends) used 29,892 to 81,897 output
-tokens: median 49,594, 43/46 above 32,768, 30/46 above 44,000, 8/46 above
-64,000, none at its 128,000 ceiling. If either model reasons at a similar
-length, a 32,768 budget would make most requests D6 non-completions. Options:
+**D-A. Output budget and context length: Option B for both.** Sonnet's 46
+first-pass headline answers (40 base rows + 6 transport resends) used 29,892
+to 81,897 output tokens: median 49,594, 43/46 above 32,768, 30/46 above
+44,000, 8/46 above 64,000, none at its 128,000 ceiling. A 32,768 budget would
+make most requests D6 non-completions if a model reasons at that length.
 
-| | context `-c` | output budget | headroom over max prompt + budget | status |
-|---|---|---|---|---|
-| A (as specified so far), both models | 65,536 | 32,768 | gpt-oss 15,624; Gemma 13,205 | gpt-oss SPILLS (~1.3 GB of its buffers in shared memory); Gemma fits |
-| B, gpt-oss | 98,304 | 78,000 | 3,160 | gpt-oss SPILLS (~1.8 GB in shared memory); unresolved, see RUNLOG |
-| B, Gemma | 163,840 | 128,000 (= Sonnet's) | 16,277 | load-tested: no spill; 10.2 GB process peak; worst-case answer 41.3 min, 46-request wave <= 31.7 h if every answer hits the budget |
+| model | context `-c` | output budget | trained context | headroom over max prompt + budget | load test (made-up prompts) |
+|---|---|---|---|---|---|
+| Gemma 4 12B | 163,840 | 128,000 (= Sonnet's) | 262,144 | 16,277 | no spill; process peak 10.2 GB dedicated |
+| gpt-oss-20b | 98,304 | 78,000 | 131,072 | 3,160 | spills ~2 GB to shared memory; accepted (Entry 1, "GPU placement") |
 
-Gemma: B is ready to adopt (`<CTX>` 163,840, `<BUDGET>` 128,000). gpt-oss:
-open until the spill is resolved or accepted. The rest of this draft is
-written with `<CTX>` and `<BUDGET>`.
+Measured worst-case time (longest headline prompt, answer at the budget):
+Gemma 41.3 min per answer, a 46-request wave <= 31.7 h; gpt-oss 39.2 min per
+answer, a 46-request wave <= 30.0 h (answers at the budget are D6 and never
+re-asked). Absolute ceiling if every answer ends just under the budget and its
+repair runs to the budget: Gemma 63.3 h, gpt-oss 60.0 h.
 
-**D-B. Pinned date for gpt-oss.** `current_date` = `2026-11-11` (the date of
-this draft). Any constant works; it only has to be fixed and recorded.
+**D-B. Pinned date for gpt-oss.** `current_date` = `2026-11-11`. Any constant
+works; it only has to be fixed and recorded.
 
-**Open check C-1 (gpt-oss).** Direct confirmation that "Reasoning: high" is in
-the prompt the server rendered for a completion is still missing: neither the
-verbose log nor `/slots` exposes it. llama-server's `--log-prompts-dir` does
-(confirmed with Gemma). One generic gpt-oss request with that flag, using the
-fixed-date template, would also confirm that the patched template still gets
-llama.cpp's GPT-OSS reasoning parser (reasoning separate from content) and that
-the explicit sampler settings below are applied. Needs approval.
+**C-1 (gpt-oss), done.** One generic request through the fixed-date template
+with `--log-prompts-dir`: the logged prompt contains "Current date: 2026-11-11"
+and "Reasoning: high"; the final answer ("42") came back in `content`, the
+reasoning separately in `reasoning_content`; `/slots` shows every sampler value
+below as sent. Record: `logs/RUNLOG.md`.
 
 ---
 
@@ -51,11 +51,29 @@ the explicit sampler settings below are applied. Needs approval.
   `9732a5e48887ca54d0bfe4af4324dc85fd56cd8cda19b52df3542fa6ebe6874f`;
   `llama-server`. GPU: AMD Radeon RX 9070 XT (Vulkan0 only), driver
   32.0.32015.7029 (Adrenalin 26.10.1), Windows 11 Pro 10.0.26200.
-- **Server flags (fixed):** `-m <gguf> -dev Vulkan0 -ngl 99 -c <CTX> -np 1
+- **Server flags (fixed):** `-m <gguf> -dev Vulkan0 -ngl 99 -c 98304 -np 1
   -fit off --jinja --reasoning-format auto --no-cache-prompt --cache-ram 0
   --chat-template-file work/templates/gpt-oss-20b.fixed-date.jinja
   --log-prompts-dir <run log dir>`. `-np 1`: one slot holds the whole context.
   `-fit off`: llama.cpp may not shrink context or offload. Prompt cache off.
+- **GPU placement (known, accepted):** llama.cpp places all 25 layers and the
+  whole KV cache on Vulkan0 (model 10,949 MiB + KV 2,304 + 18 + compute 187 =
+  13,458 MiB; f16 KV, not quantized). Windows gives the llama-server process
+  at most ~11.7 GB of dedicated VRAM, and about 2 GB of its GPU allocations
+  sit in shared system memory (process dedicated 11,699 MiB, shared 2,041 MiB
+  in the load test at these flags). This changes speed, not answers, and is
+  accepted. Evidence, decode speed by depth (made-up prompts, these flags,
+  display on the same GPU):
+
+  | depth (tokens) | 3.5k | 21k | 36k | 51k | 66k | 93k | 95k |
+  |---|---|---|---|---|---|---|---|
+  | tok/s | 122 | 66 | 47 | 36 | 30 | 21.8 | 21.4 |
+
+  ms/token = 6.35 + 0.000422 x depth (max residual 0.41 ms). One answer at
+  the budget from the longest prompt: 39.2 min; 46 requests all at the
+  budget: 30.0 h. Recorded in `logs/RUNLOG.md`. The run log records process
+  dedicated and shared memory during the run; a run whose placement differs
+  materially from this (shared above ~2.3 GB) is reported.
 - **Chat template:** the GGUF's embedded template (SHA-256
   `b2215de6da8ba369957eece8c5aa18f4af94f6c4d311d85e691373a421d80e89`, saved as
   `work/templates/gpt-oss-20b.embedded.jinja`) with one change: the line
@@ -76,9 +94,9 @@ the explicit sampler settings below are applied. Needs approval.
   "Knowledge cutoff: 2024-06". Weights released August 2025. Both before the
   prose corpus (case reports published February 2026 or later), so prose
   results are read as reconstruction, not recall, on the stated cutoff.
-- **Context / output budget:** `-c <CTX>`, `max_tokens = <BUDGET>` on every
+- **Context / output budget:** `-c 98304`, `max_tokens = 78000` on every
   request, including resends and repairs (the frozen repair spec carries
-  128,000; the caller sends `<BUDGET>`). Measured headline prompts (this
+  128,000; the caller sends `78000`). Measured headline prompts (this
   tokenizer and template): max 17,144 (pool_037), median 7,707, min 5,573.
 - **Reasoning:** `reasoning_effort` "high" (Sonnet ran at its default effort with
   no reasoning cut; RUN_DECISIONS records that effort "low" returned invalid
@@ -100,24 +118,39 @@ the explicit sampler settings below are applied. Needs approval.
   value in `models/gpt-oss-20b/headlineJ_render_sha256.json`; the logged
   rendered prompt (`--log-prompts-dir`) equals that render; response
   `usage.prompt_tokens` equals the `/tokenize` count of the render;
-  `prompt_tokens + <BUDGET> <= <CTX>`; `/props` reports n_ctx `<CTX>` and one
-  slot; `/slots` params after the call equal the sampling values above.
+  `prompt_tokens + 78000 <= 98304`; `/props` reports n_ctx `98304` and one
+  slot; `/slots` params after the call equal the sampling values above;
+  the answer `text` (`content`) contains none of the harmony control tokens
+  `<|channel|>`, `<|message|>`, `<|start|>`, `<|end|>`, `<|return|>`,
+  `<|call|>`, `<|constrain|>` (a leak would mean the reasoning parser failed).
 - **Raw rows:** `raw/gpt-oss-20b/<spec_tag>.results.jsonl`, one row per request
   in the README format; `custom_id` from `batch_submit.make_custom_id`;
   `finish_reason` "stop" → `end_turn`, "length" → `max_tokens`; `usage` as
-  reported by llama-server; reasoning in `reasoning`.
+  reported by llama-server plus `output_tokens` = `completion_tokens` and
+  `input_tokens` = `prompt_tokens`, because the frozen `at_ceiling` reads
+  `usage.output_tokens` and needs `>= MODEL_MAX_OUTPUT` (checked: a request
+  stopped at `max_tokens` 4,096 reported `completion_tokens` exactly 4,096 with
+  `finish_reason` "length"); reasoning in `reasoning`.
 - **Specs, in order:** `final_headlineJ` (46 requests) only. Other specs are
   proposed after the headline result is reported.
 - **D4 / D6 as applied:** a transport failure (connection error, HTTP 5xx,
   timeout after 4 h, empty body) is `result_type: "errored"` and is resent once,
   unchanged, in a `-rs1` wave (`batch_game.build_resubmit_spec`). One repair
   round (`batch_game.build_repair_spec(..., 1, 1, tag + "-r1")`). The wrapper
-  sets `batch_game.MODEL_MAX_OUTPUT = <BUDGET>`, so a call that stops at
-  `max_tokens` having used `<BUDGET>` tokens is a resource-bounded
+  sets `batch_game.MODEL_MAX_OUTPUT = 78000`, so a call that stops at
+  `max_tokens` having used 78,000 tokens is a resource-bounded
   non-completion, recorded, never re-asked. Scoring:
   `batch_game.score([(spec, files), (repair_spec, repair_files)], out_root)`
   into `results/gpt-oss-20b/final_headlineJ/`. No other retries, no prompt
   changes, no second scorer.
+- **Primary result and the integrity gate:** the frozen `score` (default
+  `allow_partial=False`) runs the same integrity gate as for Sonnet. If it
+  refuses the headline J game for any cell (a unit with no parseable answer
+  after repair, or a unit over `joint_game.POLICY_CAP`), that refusal, with
+  its counts (units without an answer, units over the cap, D6
+  non-completions), IS the primary result for the model. The mean from
+  `score(..., allow_partial=True)` is then reported only as a secondary
+  figure, labelled "answered units only", never in place of the verdict.
 - **Comparison:** F1_J, F1_L and q on the same 46 pools against Sonnet's
   headline (F1_J 0.7225, F1_L 0.8817, q 0.8206), each reported beside the
   completion rate, the D6 non-completion rate, the transport-error rate and the
@@ -140,11 +173,15 @@ the explicit sampler settings below are applied. Needs approval.
   (`mmproj`) is not downloaded or loaded.
 - **Runtime:** as Entry 1 (llama.cpp build b12110, Vulkan, zip SHA-256
   `9732a5e4...874f`, RX 9070 XT Vulkan0 only).
-- **Server flags (fixed):** `-m <gguf> -dev Vulkan0 -ngl 99 -c <CTX> -np 1
+- **Server flags (fixed):** `-m <gguf> -dev Vulkan0 -ngl 99 -c 163840 -np 1
   -fit off --jinja --reasoning-format auto --no-cache-prompt --cache-ram 0
   --log-prompts-dir <run log dir>`. Embedded chat template, unchanged
   (SHA-256 `6a1015c47ccfcfa67c3b772385bccee357a4d37c3cda37bd202e9047f391ab82`;
   it contains no date or time call).
+- **GPU placement:** all 49 layers and the KV cache on Vulkan0; no spill
+  (load test at these flags: process dedicated 10,194 MiB, shared 197 MiB,
+  the host-side compute buffer). Decode 62 tok/s at depth 21k, 44 tok/s at
+  150k; ms/token = 15.03 + 0.0000503 x depth.
 - **Messages:** one user message, `request["prompt"]` verbatim; repairs send the
   frozen repair prompt verbatim. `chat_template_kwargs = {"enable_thinking": true}`,
   so the template adds a system turn holding only `<|think|>` (Google's switch
@@ -154,7 +191,7 @@ the explicit sampler settings below are applied. Needs approval.
   cutoff for the family. Note: this GGUF repo was created 2026-06-05, after the
   corpus window opened; the reading as reconstruction rests on Google's stated
   cutoff, and the report says so.
-- **Context / output budget:** `-c <CTX>`, `max_tokens = <BUDGET>` on every
+- **Context / output budget:** `-c 163840`, `max_tokens = 128000` on every
   request including resends and repairs. Measured headline prompts (this
   tokenizer and template, with BOS): max 19,563 (pool_037), median 8,603.5,
   min 6,106.
@@ -170,13 +207,16 @@ the explicit sampler settings below are applied. Needs approval.
   Temperature, top_p and top_k are Google's recommendation (Gemma 4 model card).
   All fourteen values confirmed applied via `/slots` on the generic request.
 - **Per-call checks:** as Entry 1, with the render required to contain the
-  `<|think|>` system turn instead of the date and reasoning lines; render
+  `<|think|>` system turn instead of the date and reasoning lines, and the
+  control-token check on `text` using Gemma's markers `<|think|>`,
+  `<|channel>`, `<channel|>`, `<|turn>`, `<turn|>` (taken from the embedded
+  template); render
   hashes for the base wave stored before the run in
   `models/gemma-4-12b/headlineJ_render_sha256.json`.
 - **Raw rows, specs, D4/D6, scoring, comparison:** as Entry 1, with
   `raw/gemma-4-12b/` and `results/gemma-4-12b/final_headlineJ/`, and
-  `batch_game.MODEL_MAX_OUTPUT = <BUDGET>`.
-- **Order between models:** gpt-oss-20b headline first, then Gemma 4 12B
+  `batch_game.MODEL_MAX_OUTPUT = 128000`.
+- **Order between models:** Gemma 4 12B headline first, then gpt-oss-20b
   headline; each reported before the next starts.
 
 ---
