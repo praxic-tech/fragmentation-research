@@ -143,6 +143,19 @@ below as sent. Record: `logs/RUNLOG.md`.
   `batch_game.score([(spec, files), (repair_spec, repair_files)], out_root)`
   into `results/gpt-oss-20b/final_headlineJ/`. No other retries, no prompt
   changes, no second scorer.
+- **Restarts:** the runner appends one row per request to the wave's results
+  file and, when started again, skips every `custom_id` already present in
+  that file. A request interrupted before its row was written (runner stopped,
+  crashed, or the machine went down) is sent again as its first attempt,
+  because no answer was seen. Every restart is logged with the time, the wave,
+  the rows already present and the requests still to send. A restart is
+  neither a D4 resend nor a repair. A transport failure the runner did see
+  (connection error, HTTP 5xx, timeout, empty body) is not a restart: it is
+  written as an errored row and handled by D4. A request stopped by a failed
+  per-call check writes no results row; the failure is recorded in
+  `<spec_tag>.check_failures.jsonl`, and the wave resumes only on the user's
+  instruction, which is logged; the request is then sent again as its first
+  attempt.
 - **Primary result and the integrity gate:** the frozen `score` (default
   `allow_partial=False`) runs the same integrity gate as for Sonnet. If it
   refuses the headline J game for any cell (a unit with no parseable answer
@@ -216,6 +229,10 @@ below as sent. Record: `logs/RUNLOG.md`.
 - **Raw rows, specs, D4/D6, scoring, comparison:** as Entry 1, with
   `raw/gemma-4-12b/` and `results/gemma-4-12b/final_headlineJ/`, and
   `batch_game.MODEL_MAX_OUTPUT = 128000`.
+- **Restarts:** the same rule as Entry 1. Rows are appended and a restarted
+  runner skips every `custom_id` already in the wave's results file; a request
+  interrupted before its row was written is sent again as its first attempt;
+  every restart is logged; a restart is neither a D4 resend nor a repair.
 - **Order between models:** Gemma 4 12B headline first, then gpt-oss-20b
   headline; each reported before the next starts.
 

@@ -418,3 +418,35 @@ Install (user granted install permission, asked to keep it small):
   check on text (failure stops the wave); integrity-gate refusal is the
   primary result, allow_partial mean secondary and labelled "answered units
   only"; run order Gemma first, then gpt-oss.
+
+## 2026-11-12 — runner, Sonnet replay, preregistration (no model calls)
+
+- Probe scripts and small load-test outputs committed (6c23f65). Left out:
+  `work/probes/out/gptoss_b/prompts/000000061904.txt` (298 KB made-up fill
+  prompt), `work/probes/out/gptoss_b_verbose/server.log` (238 KB), empty
+  marker files.
+- Restart rule added to both draft entries (rows appended; a restarted runner
+  skips custom_ids already present; an interrupted request is sent again as its
+  first attempt; every restart logged; not a D4 resend, not a repair).
+- Runner `work/runner/runner.py`. Streams from llama-server (as in the load
+  tests) and assembles the non-stream response shape; the row writer mirrors
+  `batch_submit.fetch` (max_tokens stop -> TruncatedAnswerError + partial_text;
+  empty answer -> ZeroAnswerError). Found while writing it: llama-server writes
+  `--log-prompts-dir` files in Windows text mode (LF -> CRLF; checked on the
+  committed gpt-oss prompt log), so the logged-prompt check compares after
+  CRLF -> LF and requires the render to contain no CR.
+- `work/runner/replay_sonnet.py`: Sonnet's raw headline rows -> llama-server
+  format -> fake server -> runner checks and row writer -> frozen resend, repair,
+  score. Same 46/6/2 requests per wave, rows agree, every final answer equals
+  the committed scored row, F1_J 0.7225, F1_L 0.8817, q 0.8206 (= KEY_NUMBERS
+  to 1e-9). REPLAY PASSED.
+- `work/runner/test_runner.py`: 11/11 injected-fault cases pass. Noted from the
+  D6 case: the frozen integrity gate does not refuse a cell for a D6
+  non-completion (recorded in J.rbnc.jsonl beside the rows), as for Sonnet.
+- `tools/selfcheck_sonnet.py` PASSED. `server_ctl.py` gains `gemma-run` and
+  `gptoss-run` (prompt logs in `logs/<slug>/prompts/`).
+- Not yet exercised against a real server: the runner's `/props` fields
+  (`total_slots`, `default_generation_settings.n_ctx`). A mismatch stops the
+  wave before the first call is sent.
+- Both entries copied into PREREGISTRATION.md (Gemma first) and committed with
+  the runner.

@@ -43,6 +43,15 @@ CONFIGS = {
     "gemma-b": {
         "model": MODELS / "gemma-4-12b-it-qat-q4_0.gguf", "ctx": 163840, "port": 8092,
         "extra": []},
+    # Study servers for work/runner/runner.py (preregistered flags; prompt logs where
+    # the runner's logged-prompt check reads them)
+    "gemma-run": {
+        "model": MODELS / "gemma-4-12b-it-qat-q4_0.gguf", "ctx": 163840, "port": 8092,
+        "extra": ["--log-prompts-dir", str(SANDBOX / "logs" / "gemma-4-12b" / "prompts")]},
+    "gptoss-run": {
+        "model": MODELS / "gpt-oss-20b-MXFP4.gguf", "ctx": 98304, "port": 8091,
+        "extra": ["--chat-template-file", str(TEMPLATES / "gpt-oss-20b.fixed-date.jinja"),
+                  "--log-prompts-dir", str(SANDBOX / "logs" / "gpt-oss-20b" / "prompts")]},
 }
 
 
