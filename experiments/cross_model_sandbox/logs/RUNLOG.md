@@ -450,3 +450,21 @@ Install (user granted install permission, asked to keep it small):
   wave before the first call is sent.
 - Both entries copied into PREREGISTRATION.md (Gemma first) and committed with
   the runner.
+
+## 2026-11-12 — Gemma 4 12B headline J run launched (approved)
+
+- Preflight (approved; no completions): `gemma-run` server, GET /props:
+  `total_slots` 1, `default_generation_settings.n_ctx` 163840 (exact field
+  names), `build_info` "b12110-cd959bae9", chat template SHA-256 6a1015c4...ab82.
+  Server stopped. (A first preflight started the `gemma-b` config by mistake,
+  same flags minus `--log-prompts-dir`; repeated with `gemma-run`.) Output:
+  `work/probes/out/gemma_props_run/`.
+- Run started 2026-11-12 16:30 UTC with `bash work/runner/run_headline.sh
+  gemma-run gemma-4-12b`. The launcher starts the server only through the
+  committed `work/probes/server_ctl.py` `gemma-run` config, with no added or
+  changed flags (its saved argv equals `server_ctl.py show gemma-run`, and the
+  running llama-server command line was checked to be exactly that argv), and
+  runs `work/runner/runner.py gemma-4-12b` unmodified (runner.py and
+  server_ctl.py identical to commit 6a08a87). Memory sampled every 5 s to
+  `logs/gemma-4-12b/mem.<stamp>.csv`. Runtime: llama.cpp build b12110 + Vulkan,
+  zip SHA-256 9732a5e48887ca54d0bfe4af4324dc85fd56cd8cda19b52df3542fa6ebe6874f.
