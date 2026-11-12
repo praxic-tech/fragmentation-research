@@ -39,3 +39,6 @@ results/hierarchical_smoke/
 results/joint_pilot*/
 results/run_ledger.json
 venv/
+
+# Disjoint training corpus (D19) - regenerate with datagen/pull_disjoint_train.py
+data/disjoint_train/

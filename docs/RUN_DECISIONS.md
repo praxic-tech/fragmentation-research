@@ -1108,6 +1108,82 @@ repair policy, the analysis, or the pre-commitment that all three widths
 execute regardless of intermediate outcomes. Only the credit precondition was
 relaxed, with the user's approval, and it is recorded here.
 
+## D19 — 2026-11-12: strong non-LLM attacker ladder (tiers 0–3) joins the main comparison; tier 0 design frozen
+
+- **Why.** Reviewer-gap review (Notion, "Closing the Reviewer Gaps — Weekend
+  Plan"): the free attackers order at chance (q ≈ 0.50), so F1_J ≤ ~0.5·F1_L
+  for them, and the Memon-inspired attacker does not implement Pal & Memon's
+  published decoder (Parallel Unique Path, PUP). The Sonnet-vs-baseline gap
+  therefore cannot separate "LLMs are special" from "the baselines are weak".
+- **Status in the analysis (user decision, 2026-11-12).** Tiers 0–3 are
+  **main comparisons**, not exploratory. This amends the D13 results plan:
+  the main attacker comparison expands to include every tier below. D14's
+  embedding attacker keeps its exploratory label (its own rule, unchanged).
+  Disclosure, stated once in Methods: these attackers were added after the
+  main LLM results were known; each design and every tuned value is fixed on
+  disjoint training data before the attacker touches an evaluation pool.
+- **Commitments, fixed before any tier has an evaluation score.**
+  - The ladder is committed now: tier 0 (classical), tier 1/2 (zero-shot
+    language-model scores with a joint 7-path decoder), tier 3 (fine-tuned
+    cross-encoder). Every tier that finishes by the user's results freeze is
+    reported; none is dropped for its outcome. Tiers 1–3 get their own frozen
+    design addenda before they run.
+  - Outcome rule (user agreed, 2026-11-12): tier 3 far below Sonnet → the
+    "LLMs open a new regime" reading stands; tier 3 F1_J well above 0.5 →
+    the reading becomes "fragmentation fails against modern NLP generally;
+    LLMs widen the margin". Reported whichever way it goes.
+  - No tuning on evaluation pools, ever. Development and tuning use only the
+    disjoint corpus below. Evaluation runs are one-shot, deterministic, and
+    the first complete result is kept.
+  - No existing attacker or result is edited: new files only.
+- **Disjoint training corpus** (`datagen/pull_disjoint_train.py`; download
+  authorised by the user 2026-11-12). PMC open-access case reports published
+  2024/01–2025/12 (evaluation corpus: 2026/02 onward), every PMCID found
+  anywhere under data/ excluded and asserted absent. Same query, licence
+  check, case-narrative extraction and sentence splitter as the evaluation
+  corpus (imported, not edited). Shuffled with seed 42 across months, target
+  20,000 documents. No personal e-mail is sent to NCBI (blanked for this
+  process). The text is gitignored; the PMCID manifest is kept. Split by
+  SHA-256 of PMCID: 90% train, 10% development.
+- **Tier 0 design (frozen here).** Code: `adversaries/classical_t0.py`.
+  Masking, shown order and seeds exactly as runs/final_free_attackers.py.
+  - **T0-PUP — Pal & Memon's decoder as published, on the frozen statistic.**
+    Edge score s(A→B) = memon.score_pair with the frozen n = d = 2 model
+    built from the pool's fragments (as memon_joint). N paths (N known).
+    Starts: the N fragments with the lowest best-incoming score
+    max_A s(A→B), the header surrogate (no file headers exist in text).
+    PUP: each path proposes its best unused successor; the globally best
+    proposal is committed; proposals invalidated by it are recomputed;
+    repeat until every fragment is placed. Groups are the paths. No free
+    parameter, no training. Runs on all 282 final pools, as the other
+    free attackers do.
+  - **T0-classical — tuned classical attacker.**
+    - Grouping: content-term TF-IDF within the pool (lower-cased
+      alphanumeric tokens incl. numbers with . - /, English stop words and
+      1-character tokens removed); only terms in ≥ 2 fragments and ≤ c·m/N
+      fragments (m fragments, N documents) are kept, so genre-level
+      vocabulary is dropped; sublinear tf, smoothed idf, L2. Symmetric kNN
+      cosine graph (k neighbours), spectral clustering to exactly N
+      (`assign_labels="cluster_qr"`, deterministic). Fragments with no kept
+      term are assigned afterwards to the cluster with the highest mean
+      full-vocabulary TF-IDF similarity (memon_linkage.build_tfidf).
+    - Ordering: a relative-position regressor trained on the disjoint
+      training split (word 1–2-gram TF-IDF, min_df 5, sublinear tf; ridge
+      regression on i/(n−1)); each cluster is sorted by predicted position.
+    - Tuned on the development split only: k ∈ {5, 10, 15} and
+      c ∈ {0.5, 1, 2} by mean F1_L over 46 development pools of 7 documents
+      (documents with 5–287 sentences, the evaluation range; pools drawn with
+      seed 42); ridge α ∈ {0.3, 1, 3, 10} by mean within-document Kendall τ
+      on development documents. Ties go to the first value listed. The
+      chosen values, the development scores and the model's SHA-256 are
+      written to an addendum before the evaluation run.
+    - Primary on the 46 headline pools. The position model is trained on
+      sentences, so it is not run on the clause / token-window grid cells
+      or the identifier arm.
+  - **Reported** with the same scorer (joint_game.score_row) and columns as
+    results/final_free: F1_J, F1_L, q, exact records, per-pool rows,
+    determinism re-run of the first pool. Output: results/final_t0/.
+
 ## Development history — 2026-09-10: headline documents used before frame A existed
 
 Development work done before D2 was taken used documents that frame A later
