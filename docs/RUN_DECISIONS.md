@@ -1184,6 +1184,22 @@ relaxed, with the user's approval, and it is recorded here.
     results/final_free: F1_J, F1_L, q, exact records, per-pool rows,
     determinism re-run of the first pool. Output: results/final_t0/.
 
+### D19 addendum — 2026-11-12: licence check source for the disjoint pull
+
+- NCBI's OA web service (`www.ncbi.nlm.nih.gov/pmc/utils/oa/oa.fcgi`), which
+  pull_prose.license_ok queried, now returns HTTP 404 for every id, including
+  evaluation documents that passed it in September. The first pull attempt
+  therefore rejected all 1,093 documents it tried; it was stopped and the
+  tried list cleared.
+- The pull now reads the licence from the BioC record's document infons
+  (`license`, e.g. "CC BY") and applies license_ok's decision rule unchanged
+  (CC0, CC BY, CC BY-SA, CC BY-ND; any NC rejected). Checked: evaluation
+  document PMC13382086 passes under the new source. One BioC request per
+  document now serves both the licence check and the text.
+- A 404 / 400 now fails at once instead of riding pull_prose._get's ~30 s
+  retry ladder; other errors keep the original backoff and rate limit.
+- pull_prose.py is not edited; both changes live in pull_disjoint_train.py.
+
 ## Development history — 2026-09-10: headline documents used before frame A existed
 
 Development work done before D2 was taken used documents that frame A later

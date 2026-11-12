@@ -47,6 +47,68 @@ PP.EMAIL = ""                               # never send a personal address
 PP.TOOL = "pmc-corpus-client"
 from pull_prose_v4 import split_sentences   # noqa: E402
 
+import urllib.error                          # noqa: E402
+
+_orig_get = PP._get
+
+
+def _get_fast_404(url, params=None, tries=7):
+    """pull_prose._get retries every error, a 404 included, for ~30 s. A missing
+    BioC record is permanent, so here a 404 / 400 returns "" at once (callers
+    already treat "" as no record); every other error keeps the original
+    backoff. Same rate limit: the first attempt goes through the original."""
+    try:
+        return _orig_get(url, params, tries=1)
+    except urllib.error.HTTPError as e:
+        if e.code in (400, 404):
+            return ""
+    except Exception:
+        pass
+    return _orig_get(url, params, tries=tries)
+
+
+_cache = {"url": None, "text": None}
+
+
+def _get_cached(url, params=None, tries=7):
+    """One-entry cache so the licence check and the body fetch share one BioC
+    request per document."""
+    if params is None and url == _cache["url"]:
+        return _cache["text"]
+    text = _get_fast_404(url, params, tries)
+    if params is None:
+        _cache.update(url=url, text=text)
+    return text
+
+
+PP._get = _get_cached
+
+
+def license_ok_bioc(pmcid):
+    """pull_prose.license_ok's decision rule, reading the licence from the BioC
+    record's document infons. The OA web service it queried
+    (www.ncbi.nlm.nih.gov/pmc/utils/oa/oa.fcgi) now returns 404 for every id,
+    including evaluation documents that passed it in 2026-09."""
+    out = PP._get(PP.BIOC.format(pmcid=pmcid))
+    try:
+        doc = json.loads(out)
+    except Exception:
+        return False
+    colls = doc if isinstance(doc, list) else [doc]
+    lic = ""
+    for coll in colls:
+        for d in coll.get("documents", []):
+            lic = lic or (d.get("infons", {}) or {}).get("license", "") or ""
+    if not lic:
+        return False
+    lic = re.sub(r"[-\s]+", " ", lic.strip().upper()).strip()
+    if lic.replace(" ", "").startswith("CC0"):
+        return True
+    parts = lic.split()
+    if "NC" in parts:
+        return False
+    return lic in {"CC BY", "CC BY SA", "CC BY ND"}
+
 OUT = os.path.join(ROOT, "data", "disjoint_train")
 MONTHS = [f"{y}/{m:02d}" for y in (2024, 2025) for m in range(1, 13)]
 MIN_FRAGS = 4
@@ -124,7 +186,7 @@ def main():
         th.write(c + "\n")
         th.flush()
         try:
-            if not PP.license_ok(c):
+            if not license_ok_bioc(c):
                 continue
             body = PP.fetch_body_text(c, case_only=True)
         except Exception as e:          # one bad record never stops the pull
@@ -147,7 +209,7 @@ def main():
 
     json.dump({"window": [MONTHS[0], MONTHS[-1]],
                "query": "case reports[Publication Type] AND pubmed pmc open access[filter], monthly windows",
-               "licence": "commercial-use CC only (pull_prose.license_ok)",
+               "licence": "commercial-use CC only (pull_prose.license_ok rule, read from BioC document infons; OA service now 404s)",
                "extraction": "pull_prose.fetch_body_text(case_only=True); pull_prose_v4.split_sentences (min 15 chars)",
                "min_sentences": MIN_FRAGS, "shuffle_seed": 42,
                "excluded_pmcids_found_under_data": len(exclude),
