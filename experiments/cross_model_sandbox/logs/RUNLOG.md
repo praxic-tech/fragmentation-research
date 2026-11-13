@@ -557,3 +557,29 @@ Install (user granted install permission, asked to keep it small):
   F1_L 0.4655, q 0.5629.
 - No new model run until the gate fix is in and a new preregistration entry
   for the next models is written (user's instruction).
+
+## 2026-11-13 — Sonnet-dependence sweep: runner, offline tests, smoke tests
+
+- Preregistration entry committed and pushed (515571f, merged with origin as
+  561ca0d) before any API request. Runner committed (d78ada1) before the smoke
+  tests: `work/runner/api_runner.py`, `score_api.py`, `test_api_runner.py`
+  (5/5 offline: Sonnet replay reproduces 0.7225/0.8817/0.8206 with identical
+  final answers; content filter, provider mismatch, base-wave cap and a
+  below-budget length stop behave as preregistered).
+- `score_api.py` offline on the references: Sonnet PASS (46 pools
+  0.7225/0.8817/0.8206; 41 pools 0.7218/0.8825/0.8192). Gemma REFUSED (9 over
+  cap, 8 D6, 38/46), secondary 0.2615/0.4655/0.5629 (46) and
+  0.2612/0.4638/0.5643 (41).
+- OpenRouter balance before any request: usage $0, limit $10, remaining $10.
+- Smoke tests (dummy prompt, no evaluation text; `logs/smoke_tests.jsonl`):
+  gpt-oss-20b CoreWeave, reasoning 98 tokens; gpt-oss-120b CoreWeave, reasoning
+  264; llama-4-maverick Parasail; deepseek-v3.2 GMICloud, reasoning 41; gpt-4.1
+  tier `default`, reported model `gpt-4.1` (no version string; the version pin
+  rests on the deployment's settings); gpt-5.6-sol tier `flex`, echoed reasoning
+  `{effort: max, mode: standard, context: all_turns}`, `max_output_tokens`
+  128000, `truncation` disabled; 0 reasoning tokens on the trivial prompt. All
+  checks pass. Kimi not smoke-tested (no Kimi request before its decision).
+- Two runner fixes found by the smoke tests, neither a protocol change: the
+  Azure endpoint already carries `/openai/v1` (first gpt-4.1 smoke request got
+  HTTP 404, no tokens billed); Azure responses now also checked for the echoed
+  reasoning effort, `max_output_tokens` and `truncation` (a mismatch halts).

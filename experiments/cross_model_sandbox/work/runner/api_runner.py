@@ -247,7 +247,10 @@ def call_openrouter(cfg, body, key):
 
 def call_azure(cfg, body, endpoint, key):
     deadline = time.time() + cfg["timeout_s"]
-    url = endpoint.rstrip("/") + "/openai/v1/responses"
+    base = endpoint.rstrip("/")
+    if base.endswith("/openai/v1"):          # the endpoint may already carry the v1 path
+        base = base[: -len("/openai/v1")]
+    url = base + "/openai/v1/responses"
     final, t0 = None, time.time()
     try:
         with httpx.stream("POST", url, json=body,
@@ -299,7 +302,8 @@ def call_azure(cfg, body, endpoint, key):
             "cached_tokens": (u.get("input_tokens_details") or {}).get("cached_tokens"),
             "cost": None, "usage_raw": u, "provider": "azure", "reported_model": final.get("model"),
             "service_tier": final.get("service_tier"), "response_id": final.get("id"),
-            "wall_s": round(time.time() - t0, 1)}
+            "echo_reasoning": final.get("reasoning"), "echo_max_output_tokens": final.get("max_output_tokens"),
+            "echo_truncation": final.get("truncation"), "wall_s": round(time.time() - t0, 1)}
 
 
 # ── rows: the format batch_submit.fetch wrote for Sonnet ─────────────────────
@@ -325,7 +329,8 @@ def row_from_result(cid, res, attempts):
         row["text"] = text
     row["reasoning"] = res.get("reasoning") or ""
     for k in ("provider", "service_tier", "reported_model", "cost", "generation_id", "response_id",
-              "native_finish_reason", "refusal", "cached_tokens", "wall_s"):
+              "native_finish_reason", "refusal", "cached_tokens", "echo_reasoning",
+              "echo_max_output_tokens", "wall_s"):
         if res.get(k) is not None:
             row[k] = res[k]
     row["finish_reason"] = res["finish"]
@@ -482,6 +487,13 @@ class ApiRunner:
                 raise Halt(f"service_tier mismatch: reported {res.get('service_tier')!r}, pinned {cfg['tier']!r}")
             if res.get("reported_model") not in PINNED_REPORTED_MODEL[cfg["slug"]]:
                 raise Halt(f"model mismatch: reported {res.get('reported_model')!r}")
+            if res.get("echo_max_output_tokens") != cfg["budget"]:
+                raise Halt(f"max_output_tokens echoed {res.get('echo_max_output_tokens')!r} != {cfg['budget']}")
+            if res.get("echo_truncation") != "disabled":
+                raise Halt(f"truncation echoed {res.get('echo_truncation')!r}")
+            want = (cfg["extra"].get("reasoning") or {}).get("effort")
+            if want and (res.get("echo_reasoning") or {}).get("effort") != want:
+                raise Halt(f"reasoning effort echoed {res.get('echo_reasoning')!r} != {want!r}")
         if side is not None:
             ref = self.sonnet_in.get(side["unit"])
             n = res.get("input_tokens") or 0
