@@ -1391,6 +1391,59 @@ chosen from evaluation data. Name in tables: **T3-crossenc**.
 - Files: adversaries/crossenc_t3.py, runs/t3_train.py, runs/t3_dev.py,
   notebooks/t3_colab.ipynb, runs/t3_make_bundle.py.
 
+### D19 addendum — 2026-11-13: tier 3 tuning, fixed before the evaluation run
+
+Written after training and dev tuning finished on Colab and before any
+evaluation pool has been scored by the tier 3 model.
+
+- **Training run.** One run, 36,600 steps, no interruption or resume. Bundle
+  commit 03d9de15c8c970b7f21b2ddd38ed8824ad82e463. Dev pair check (20,000 dev
+  pairs, training pair mix) after epoch 1 / 2: same-document accuracy
+  0.833 / 0.841, precedes accuracy 0.767 / 0.771, position RMSE 0.224 / 0.223.
+  PyTorch warned that the scheduler stepped before the optimizer on the first
+  step (a mixed-precision overflow step skipped by the gradient scaler), so
+  warm-up began one step late. Disclosed; no effect worth a re-run.
+- **Hashes (SHA-256).** Weights pair_model.safetensors
+  de081db6893e57ebc69b2cbb202851558f49b7d41eea38dc2c77ba73e947582a; ONNX
+  model.onnx 4ff3940ca3d99d4105edddf538e593ce718df3cb939388277a052421a3024d88;
+  tokenizer.json
+  65809d83aaf2d4270a0f24740da74c9c0f09ac67f1401708367697b57fb03df9;
+  tokenizer_config.json
+  9f0c2c65a70ea18113ffa2e717103e7210ea826e7acc3442b69b346686b55a48.
+  ONNX parity with torch: max |diff| 9.3e-06 (batch 256, length 96),
+  4.3e-06 (batch 7), 6.0e-06 (batch 16, length 32).
+- **Dev tuning (46 dev pools, 10,892 fragments).** Orderer by mean dev τ:
+  borda 0.6292, position 0.5716, path1 0.2241 → **borda**. Cluster-rank,
+  F1_L / F1_J / q: agglomerative 0.6968 / 0.5378 / 0.7589, agglomerative +
+  refine 0.6968 / 0.5422 / 0.7647, spectral 0.6516 / 0.5077 / 0.7632,
+  spectral + refine 0.7093 / 0.5524 / 0.7639 → **spectral + refine**.
+  Path-cover 0.2788 / 0.1745 / 0.6138, not higher than cluster-rank.
+  **Evaluation decoder: cluster-rank, spectral grouping, refine on, borda
+  ordering; Game O uses borda.** Dev T3: F1_J 0.5524, F1_L 0.7093, q micro
+  0.7639, one-bucket baseline 0.1441, exact records 0.
+- **Change of where and how evaluation pairs are scored (amends the design
+  addendum's "Where it runs").** The design said ONNX FP32 on the desktop
+  (DirectML). That GPU is occupied by the cross-model sandbox run, so
+  evaluation pairs are scored on Google Colab instead, with the same weights
+  (hash above, checked by runs/t3_score_eval.py before it starts) and the
+  same code dev tuning used: crossenc_t3.score_texts with torch CUDA mixed
+  precision. The evaluation scores are therefore computed exactly as the
+  scores the decoder was tuned on, not by ONNX. The ONNX file stays the
+  portable artifact (parity above). The GPU model and torch version are
+  recorded in SCORE_DONE.json. Evaluation pools go to Colab only for
+  scoring, after training and tuning are finished and hashed; nothing is
+  trained or tuned there. Decoding and scoring of reconstructions run on CPU
+  locally from the saved pair scores.
+- **Units.** runs/t3_units.py lists every unit once and is used by both the
+  scorer and the decoder: Game J headline 46, grid 216, identifier 20,
+  gradient 60, single-token edge 40 (382 pools); Game O headline 100, grid 270
+  (370 documents); 20.8 million distinct ordered pairs. Same pools, shown
+  order, masking seeds and Game O presentation as tier 0.
+- Files: results/final_t3/RECORD.json (as the Colab run printed it;
+  dev_tuning.json and train_log.json are added from the same output folder
+  unchanged), runs/t3_units.py, runs/t3_score_eval.py,
+  runs/t3_make_eval_bundle.py, notebooks/t3_eval_colab.ipynb.
+
 ## Development history — 2026-09-10: headline documents used before frame A existed
 
 Development work done before D2 was taken used documents that frame A later
