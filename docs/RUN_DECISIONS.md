@@ -1200,6 +1200,43 @@ relaxed, with the user's approval, and it is recorded here.
   retry ladder; other errors keep the original backoff and rate limit.
 - pull_prose.py is not edited; both changes live in pull_disjoint_train.py.
 
+### D19 addendum — 2026-11-12: tier 0 tuning, fixed before the evaluation run
+
+Written after runs/t0_dev.py finished and before runs/final_t0_attacker.py
+touched any evaluation pool. Nothing below was chosen from evaluation data.
+
+- **Corpus.** 20,000 documents kept from 91,467 candidates (2024/01–2025/12),
+  pull time 5 h 53 min. Checked independently after the pull: 20,000 unique
+  PMCIDs, 0 overlap with the 500 PMCIDs found under data/. Median 29
+  sentences (evaluation headline median 28), max 570. Split by
+  sha256(pmcid) % 10: 17,962 train, 2,038 dev. Text is not committed
+  (data/disjoint_train/ is gitignored); manifest.json records the query,
+  window, licence rule and counts.
+- **Position model.** Vectorizer fit on 585,581 train sentences, 266,747
+  features. Mean dev Kendall τ by alpha: 0.3 → 0.4298, 1 → 0.4688,
+  3 → 0.4921, **10 → 0.5007 (chosen)**.
+- **Grouping.** Dev F1_L over 46 dev pools (10,892 fragments), k × c:
+  k 5: 0.3029 / 0.3070 / 0.3102; k 10: 0.3091 / 0.3125 / 0.3143;
+  k 15: 0.3047 / 0.3111 / **0.3153 (chosen, c = 2)** (c = 0.5 / 1 / 2).
+  The grid's spread is 0.012 F1_L.
+- **Edge of grid, disclosed.** All three chosen values (alpha 10, k 15, c 2)
+  are the largest in their committed grid. The grids are not extended: D19
+  fixed them before any tuning, and widening them after seeing the edge would
+  be a second, unregistered search. The paper should say the values sit at
+  the grid edge, so a wider search might do slightly better on ordering
+  (τ was still rising, +0.009 from 3 to 10) and negligibly on grouping.
+- **Dev reference (nothing chosen from it).** T0-classical F1_J 0.2174,
+  F1_L 0.3153, q 0.6795; T0-PUP F1_J 0.1010, F1_L 0.2015, q 0.5047; one-bucket
+  baseline 0.1441; exact records 0 for both.
+- **Frozen artefact.** results/final_t0/position_model.pkl,
+  SHA-256 31da55096a2e31bcd5a8f85687d75efd8526acff7aa4787bdd0c029bd2ea0ccf.
+  final_t0_attacker.py refuses to run if the hash does not match
+  dev_tuning.json.
+- **Implementation detail not stated above.** knn_affinity adds a 1e-6 floor
+  to every off-diagonal affinity so the kNN graph is connected and spectral
+  clustering is defined on every pool; it was in the code before tuning and
+  is the same on dev and evaluation.
+
 ## Development history — 2026-09-10: headline documents used before frame A existed
 
 Development work done before D2 was taken used documents that frame A later

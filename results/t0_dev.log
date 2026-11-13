@@ -1,0 +1,18 @@
+20000 documents: 17962 train, 2038 dev
+vectorizer: 585581 sentences, 266747 features (22s)
+  alpha   0.3: mean dev tau 0.4298
+  alpha   1.0: mean dev tau 0.4688
+  alpha   3.0: mean dev tau 0.4921
+  alpha  10.0: mean dev tau 0.5007
+46 dev pools, 10892 fragments
+  k  5 c 0.5: F1_L 0.3029  F1_J 0.2116  q 0.6878
+  k  5 c 1.0: F1_L 0.3070  F1_J 0.2146  q 0.6877
+  k  5 c 2.0: F1_L 0.3102  F1_J 0.2163  q 0.6853
+  k 10 c 0.5: F1_L 0.3091  F1_J 0.2152  q 0.6854
+  k 10 c 1.0: F1_L 0.3125  F1_J 0.2167  q 0.6829
+  k 10 c 2.0: F1_L 0.3143  F1_J 0.2177  q 0.6822
+  k 15 c 0.5: F1_L 0.3047  F1_J 0.2109  q 0.6832
+  k 15 c 1.0: F1_L 0.3111  F1_J 0.2154  q 0.6818
+  k 15 c 2.0: F1_L 0.3153  F1_J 0.2174  q 0.6795
+  T0-PUP dev: F1_L 0.2015  F1_J 0.1010  q 0.5047
+chosen: alpha 10.0, k 15, c 2.0; wrote results\final_t0
