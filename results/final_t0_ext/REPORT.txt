@@ -1,0 +1,52 @@
+TIER 0 EXTENDED (RUN_DECISIONS D19 addendum) -- first complete result, kept as is
+frozen T0-classical: k=15 c=2.0 alpha=10.0, position model SHA-256 31da55096a2e31bcd5a8f85687d75efd8526acff7aa4787bdd0c029bd2ea0ccf
+rows: Game J 436 pools, Game O 740 documents
+
+GAME J
+attacker      game              cell                            pools    F1_J    base    F1_L   q_mic    exact
+T0-PUP        gradientJ         edge__w2                           20  0.0850  0.1289  0.1688  0.5004    0/140
+T0-classical  gradientJ         edge__w2                           20  0.1150  0.1289  0.2217  0.5190    0/140
+T0-PUP        gradientJ         edge__w3                           20  0.0811  0.1275  0.1640  0.4936    0/140
+T0-classical  gradientJ         edge__w3                           20  0.1050  0.1275  0.2037  0.5170    0/140
+T0-PUP        gradientJ         edge__w4                           20  0.0802  0.1264  0.1595  0.4986    0/140
+T0-classical  gradientJ         edge__w4                           20  0.1041  0.1264  0.1995  0.5198    0/140
+T0-classical  gridJ             coherence-sever__clause            24  0.1843  0.1311  0.2599  0.7060    0/168
+T0-classical  gridJ             coherence-sever__token-window      24  0.1942  0.1320  0.2815  0.6880    0/168
+T0-classical  gridJ             random__clause                     24  0.1942  0.1302  0.2840  0.6833    0/168
+T0-classical  gridJ             random__sentence                   24  0.2135  0.1282  0.3067  0.6941    0/168
+T0-classical  gridJ             random__token-window               24  0.1733  0.1318  0.2609  0.6644    0/168
+T0-classical  gridJ             semantic__clause                   24  0.1834  0.1302  0.2613  0.6997    0/168
+T0-classical  gridJ             semantic__sentence                 24  0.2109  0.1282  0.2940  0.7166    0/168
+T0-classical  gridJ             subject-verb__clause               24  0.1614  0.1309  0.2377  0.6776    0/168
+T0-classical  gridJ             subject-verb__sentence             24  0.1673  0.1299  0.2415  0.6922    0/168
+T0-classical  identifierJ       identifier__field                  20  0.0879  0.1000  0.1935  0.4535    0/140
+T0-PUP        singleTokenEdgeJ  edge__sentence                     20  0.0846  0.1000  0.1765  0.4813    0/140
+T0-classical  singleTokenEdgeJ  edge__sentence                     20  0.2037  0.1000  0.3635  0.5606    0/140
+T0-PUP        singleTokenEdgeJ  edge__token                        20  0.1269  0.1302  0.2580  0.4916    0/140
+T0-classical  singleTokenEdgeJ  edge__token                        20  0.1285  0.1302  0.2541  0.5059    0/140
+
+GAME O (membership given; random tau = 0)
+attacker        game       cell                            docs     tau     med  exact   disp
+T0-PUP-O        gridO      coherence-sever__clause           30 -0.0280 -0.0475      0   7.71
+T0-classical-O  gridO      coherence-sever__clause           30  0.5191  0.4897      0   4.04
+T0-PUP-O        gridO      coherence-sever__token-window     30 -0.0240 -0.0415      0  14.45
+T0-classical-O  gridO      coherence-sever__token-window     30  0.4595  0.4621      0   8.44
+T0-PUP-O        gridO      random__clause                    30 -0.0078 -0.0208      0  10.72
+T0-classical-O  gridO      random__clause                    30  0.4587  0.4571      0   6.30
+T0-PUP-O        gridO      random__sentence                  30 -0.0065 -0.0393      0   8.44
+T0-classical-O  gridO      random__sentence                  30  0.4819  0.4810      0   4.76
+T0-PUP-O        gridO      random__token-window              30  0.0056 -0.0025      0  14.06
+T0-classical-O  gridO      random__token-window              30  0.4024  0.4020      0   9.11
+T0-PUP-O        gridO      semantic__clause                  30  0.0051 -0.0044      0  10.51
+T0-classical-O  gridO      semantic__clause                  30  0.4953  0.4740      0   5.96
+T0-PUP-O        gridO      semantic__sentence                30 -0.0508 -0.0473      0   8.74
+T0-classical-O  gridO      semantic__sentence                30  0.5468  0.5355      1   4.31
+T0-PUP-O        gridO      subject-verb__clause              30 -0.0221 -0.0178      0  16.70
+T0-classical-O  gridO      subject-verb__clause              30  0.4063  0.4074      0  10.34
+T0-PUP-O        gridO      subject-verb__sentence            30 -0.0217 -0.0216      0  14.29
+T0-classical-O  gridO      subject-verb__sentence            30  0.4478  0.4313      0   8.26
+T0-PUP-O        headlineO  prose                            100  0.0159  0.0195      0  11.09
+T0-classical-O  headlineO  prose                            100  0.5043  0.5252      0   6.30
+
+deterministic on re-run (first unit of each attacker x game): True
+wall time 0.8 min
