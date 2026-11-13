@@ -1,0 +1,22 @@
+{
+ "model_sha256": "de081db6893e57ebc69b2cbb202851558f49b7d41eea38dc2c77ba73e947582a",
+ "onnx_sha256": "4ff3940ca3d99d4105edddf538e593ce718df3cb939388277a052421a3024d88",
+ "tokenizer_sha256": {
+  "tokenizer.json": "65809d83aaf2d4270a0f24740da74c9c0f09ac67f1401708367697b57fb03df9",
+  "tokenizer_config.json": "9f0c2c65a70ea18113ffa2e717103e7210ea826e7acc3442b69b346686b55a48"
+ },
+ "chosen": {
+  "decoder": "cluster-rank",
+  "grouper": "spectral",
+  "refine": true,
+  "orderer": "borda"
+ },
+ "dev_T3": {
+  "F1_J": 0.5523744158939742,
+  "F1_L": 0.7092645486245759,
+  "q_micro": 0.763855329267825,
+  "base": 0.14406620356052602,
+  "exact_records": 0
+ },
+ "bundle_commit": "03d9de15c8c970b7f21b2ddd38ed8824ad82e463"
+}

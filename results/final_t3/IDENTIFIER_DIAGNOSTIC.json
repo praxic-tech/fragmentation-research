@@ -1,0 +1,522 @@
+{
+  "label": "post hoc, exploratory",
+  "pools": 20,
+  "within_group_pairs": 1167,
+  "share_same_record_within_groups": 0.005141388174807198,
+  "share_same_record_all_pairs_chance": 0.1111111111111111,
+  "share_same_field_within_groups": 0.9717223650385605,
+  "share_same_field_all_pairs_chance": 0.2222222222222222,
+  "groups_size_gt1": 120,
+  "groups_single_field": 112,
+  "groups_all_distinct_records": 115,
+  "mean_group_size": 4.0,
+  "example_pool": {
+    "pool": "idpool_000",
+    "groups": [
+      [
+        "Melissa Sandoval",
+        "Barbara Gilbert",
+        "Karen Carpenter",
+        "Stephanie Curtis",
+        "Matthew Smith",
+        "Christian Solis",
+        "Shaun Lane"
+      ],
+      [
+        "7292774233",
+        "7579145211",
+        "4386490810",
+        "2144773244",
+        "6986407905"
+      ],
+      [
+        "193-20-8476",
+        "308-20-2094"
+      ],
+      [
+        "659 Lindsey Courts Apt. 578",
+        "6099 Matthew Station Apt. 875",
+        "70758 Ellis Creek Apt. 151",
+        "059 Erika Walks",
+        "42138 Anthony Canyon",
+        "661 Guerrero Port",
+        "79312 Jensen Mountains"
+      ],
+      [
+        "102-45-4667",
+        "026-51-3803"
+      ],
+      [
+        "334-05-7552",
+        "818-57-0872",
+        "825-07-4982"
+      ],
+      [
+        "3203207427",
+        "3096520744"
+      ]
+    ]
+  },
+  "per_pool": [
+    {
+      "pool": "idpool_000",
+      "n_fragments": 28,
+      "n_docs": 7,
+      "group_sizes": [
+        7,
+        7,
+        5,
+        3,
+        2,
+        2,
+        2
+      ],
+      "within_pairs": 58,
+      "within_same_record": 0,
+      "within_same_field": 58,
+      "all_pairs": 378,
+      "all_same_record": 42,
+      "all_same_field": 84,
+      "groups_one_field": 7,
+      "groups_all_distinct_records": 7,
+      "groups_size_gt1": 7
+    },
+    {
+      "pool": "idpool_001",
+      "n_fragments": 28,
+      "n_docs": 7,
+      "group_sizes": [
+        7,
+        4,
+        4,
+        4,
+        3,
+        3,
+        3
+      ],
+      "within_pairs": 48,
+      "within_same_record": 0,
+      "within_same_field": 48,
+      "all_pairs": 378,
+      "all_same_record": 42,
+      "all_same_field": 84,
+      "groups_one_field": 7,
+      "groups_all_distinct_records": 7,
+      "groups_size_gt1": 7
+    },
+    {
+      "pool": "idpool_002",
+      "n_fragments": 28,
+      "n_docs": 7,
+      "group_sizes": [
+        7,
+        6,
+        6,
+        4,
+        3,
+        1,
+        1
+      ],
+      "within_pairs": 60,
+      "within_same_record": 0,
+      "within_same_field": 60,
+      "all_pairs": 378,
+      "all_same_record": 42,
+      "all_same_field": 84,
+      "groups_one_field": 5,
+      "groups_all_distinct_records": 5,
+      "groups_size_gt1": 5
+    },
+    {
+      "pool": "idpool_003",
+      "n_fragments": 28,
+      "n_docs": 7,
+      "group_sizes": [
+        6,
+        6,
+        5,
+        5,
+        3,
+        2,
+        1
+      ],
+      "within_pairs": 54,
+      "within_same_record": 0,
+      "within_same_field": 52,
+      "all_pairs": 378,
+      "all_same_record": 42,
+      "all_same_field": 84,
+      "groups_one_field": 5,
+      "groups_all_distinct_records": 6,
+      "groups_size_gt1": 6
+    },
+    {
+      "pool": "idpool_004",
+      "n_fragments": 28,
+      "n_docs": 7,
+      "group_sizes": [
+        7,
+        6,
+        5,
+        4,
+        3,
+        2,
+        1
+      ],
+      "within_pairs": 56,
+      "within_same_record": 0,
+      "within_same_field": 56,
+      "all_pairs": 378,
+      "all_same_record": 42,
+      "all_same_field": 84,
+      "groups_one_field": 6,
+      "groups_all_distinct_records": 6,
+      "groups_size_gt1": 6
+    },
+    {
+      "pool": "idpool_005",
+      "n_fragments": 28,
+      "n_docs": 7,
+      "group_sizes": [
+        7,
+        6,
+        5,
+        5,
+        2,
+        2,
+        1
+      ],
+      "within_pairs": 58,
+      "within_same_record": 0,
+      "within_same_field": 57,
+      "all_pairs": 378,
+      "all_same_record": 42,
+      "all_same_field": 84,
+      "groups_one_field": 5,
+      "groups_all_distinct_records": 6,
+      "groups_size_gt1": 6
+    },
+    {
+      "pool": "idpool_006",
+      "n_fragments": 28,
+      "n_docs": 7,
+      "group_sizes": [
+        6,
+        5,
+        5,
+        5,
+        3,
+        2,
+        2
+      ],
+      "within_pairs": 50,
+      "within_same_record": 1,
+      "within_same_field": 48,
+      "all_pairs": 378,
+      "all_same_record": 42,
+      "all_same_field": 84,
+      "groups_one_field": 6,
+      "groups_all_distinct_records": 6,
+      "groups_size_gt1": 7
+    },
+    {
+      "pool": "idpool_007",
+      "n_fragments": 28,
+      "n_docs": 7,
+      "group_sizes": [
+        7,
+        5,
+        5,
+        5,
+        2,
+        2,
+        2
+      ],
+      "within_pairs": 54,
+      "within_same_record": 0,
+      "within_same_field": 54,
+      "all_pairs": 378,
+      "all_same_record": 42,
+      "all_same_field": 84,
+      "groups_one_field": 7,
+      "groups_all_distinct_records": 7,
+      "groups_size_gt1": 7
+    },
+    {
+      "pool": "idpool_008",
+      "n_fragments": 28,
+      "n_docs": 7,
+      "group_sizes": [
+        7,
+        5,
+        5,
+        4,
+        3,
+        2,
+        2
+      ],
+      "within_pairs": 52,
+      "within_same_record": 0,
+      "within_same_field": 52,
+      "all_pairs": 378,
+      "all_same_record": 42,
+      "all_same_field": 84,
+      "groups_one_field": 7,
+      "groups_all_distinct_records": 7,
+      "groups_size_gt1": 7
+    },
+    {
+      "pool": "idpool_009",
+      "n_fragments": 28,
+      "n_docs": 7,
+      "group_sizes": [
+        7,
+        6,
+        5,
+        4,
+        3,
+        2,
+        1
+      ],
+      "within_pairs": 56,
+      "within_same_record": 0,
+      "within_same_field": 52,
+      "all_pairs": 378,
+      "all_same_record": 42,
+      "all_same_field": 84,
+      "groups_one_field": 5,
+      "groups_all_distinct_records": 6,
+      "groups_size_gt1": 6
+    },
+    {
+      "pool": "idpool_010",
+      "n_fragments": 28,
+      "n_docs": 7,
+      "group_sizes": [
+        7,
+        7,
+        5,
+        3,
+        2,
+        2,
+        2
+      ],
+      "within_pairs": 58,
+      "within_same_record": 0,
+      "within_same_field": 58,
+      "all_pairs": 378,
+      "all_same_record": 42,
+      "all_same_field": 84,
+      "groups_one_field": 7,
+      "groups_all_distinct_records": 7,
+      "groups_size_gt1": 7
+    },
+    {
+      "pool": "idpool_011",
+      "n_fragments": 28,
+      "n_docs": 7,
+      "group_sizes": [
+        7,
+        6,
+        5,
+        5,
+        2,
+        2,
+        1
+      ],
+      "within_pairs": 58,
+      "within_same_record": 1,
+      "within_same_field": 52,
+      "all_pairs": 378,
+      "all_same_record": 42,
+      "all_same_field": 84,
+      "groups_one_field": 5,
+      "groups_all_distinct_records": 5,
+      "groups_size_gt1": 6
+    },
+    {
+      "pool": "idpool_012",
+      "n_fragments": 28,
+      "n_docs": 7,
+      "group_sizes": [
+        7,
+        6,
+        5,
+        4,
+        3,
+        2,
+        1
+      ],
+      "within_pairs": 56,
+      "within_same_record": 0,
+      "within_same_field": 56,
+      "all_pairs": 378,
+      "all_same_record": 42,
+      "all_same_field": 84,
+      "groups_one_field": 6,
+      "groups_all_distinct_records": 6,
+      "groups_size_gt1": 6
+    },
+    {
+      "pool": "idpool_013",
+      "n_fragments": 28,
+      "n_docs": 7,
+      "group_sizes": [
+        9,
+        7,
+        7,
+        2,
+        1,
+        1,
+        1
+      ],
+      "within_pairs": 79,
+      "within_same_record": 2,
+      "within_same_field": 65,
+      "all_pairs": 378,
+      "all_same_record": 42,
+      "all_same_field": 84,
+      "groups_one_field": 3,
+      "groups_all_distinct_records": 3,
+      "groups_size_gt1": 4
+    },
+    {
+      "pool": "idpool_014",
+      "n_fragments": 28,
+      "n_docs": 7,
+      "group_sizes": [
+        7,
+        6,
+        6,
+        5,
+        2,
+        1,
+        1
+      ],
+      "within_pairs": 62,
+      "within_same_record": 0,
+      "within_same_field": 62,
+      "all_pairs": 378,
+      "all_same_record": 42,
+      "all_same_field": 84,
+      "groups_one_field": 5,
+      "groups_all_distinct_records": 5,
+      "groups_size_gt1": 5
+    },
+    {
+      "pool": "idpool_015",
+      "n_fragments": 28,
+      "n_docs": 7,
+      "group_sizes": [
+        7,
+        7,
+        5,
+        4,
+        2,
+        2,
+        1
+      ],
+      "within_pairs": 60,
+      "within_same_record": 2,
+      "within_same_field": 56,
+      "all_pairs": 378,
+      "all_same_record": 42,
+      "all_same_field": 84,
+      "groups_one_field": 4,
+      "groups_all_distinct_records": 4,
+      "groups_size_gt1": 6
+    },
+    {
+      "pool": "idpool_016",
+      "n_fragments": 28,
+      "n_docs": 7,
+      "group_sizes": [
+        7,
+        6,
+        5,
+        5,
+        2,
+        2,
+        1
+      ],
+      "within_pairs": 58,
+      "within_same_record": 0,
+      "within_same_field": 58,
+      "all_pairs": 378,
+      "all_same_record": 42,
+      "all_same_field": 84,
+      "groups_one_field": 6,
+      "groups_all_distinct_records": 6,
+      "groups_size_gt1": 6
+    },
+    {
+      "pool": "idpool_017",
+      "n_fragments": 28,
+      "n_docs": 7,
+      "group_sizes": [
+        7,
+        7,
+        7,
+        3,
+        2,
+        1,
+        1
+      ],
+      "within_pairs": 67,
+      "within_same_record": 0,
+      "within_same_field": 67,
+      "all_pairs": 378,
+      "all_same_record": 42,
+      "all_same_field": 84,
+      "groups_one_field": 5,
+      "groups_all_distinct_records": 5,
+      "groups_size_gt1": 5
+    },
+    {
+      "pool": "idpool_018",
+      "n_fragments": 28,
+      "n_docs": 7,
+      "group_sizes": [
+        7,
+        6,
+        5,
+        4,
+        3,
+        2,
+        1
+      ],
+      "within_pairs": 56,
+      "within_same_record": 0,
+      "within_same_field": 56,
+      "all_pairs": 378,
+      "all_same_record": 42,
+      "all_same_field": 84,
+      "groups_one_field": 6,
+      "groups_all_distinct_records": 6,
+      "groups_size_gt1": 6
+    },
+    {
+      "pool": "idpool_019",
+      "n_fragments": 28,
+      "n_docs": 7,
+      "group_sizes": [
+        7,
+        7,
+        7,
+        3,
+        2,
+        1,
+        1
+      ],
+      "within_pairs": 67,
+      "within_same_record": 0,
+      "within_same_field": 67,
+      "all_pairs": 378,
+      "all_same_record": 42,
+      "all_same_field": 84,
+      "groups_one_field": 5,
+      "groups_all_distinct_records": 5,
+      "groups_size_gt1": 5
+    }
+  ]
+}
