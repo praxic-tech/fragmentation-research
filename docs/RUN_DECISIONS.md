@@ -1270,6 +1270,38 @@ touched any evaluation pool. Nothing below was chosen from evaluation data.
   built for; as D16 says for the other local attackers, a weak result there
   is not evidence of security.
 
+### D19 addendum — 2026-11-12: tier 0 leak checks (after the extended run)
+
+Not results; checks that the tier 0 numbers come from the fragment text only.
+Scripts: analysis/t0_leak_audit.py, analysis/t0_unmasked_control.py.
+Output: results/final_t0_ext/LEAK_AUDIT.json, UNMASKED_CONTROL.json.
+
+- **Masked vs unmasked, with a positive control.** Unmasked = raw fragment
+  ids (which encode the true order), sorted, fragments presented in true
+  order: the D1 worst case. Game O, 370 documents:
+  T0-classical-O τ +0.4783 masked vs +0.4785 unmasked (348/370 orders
+  identical; the rest differ only where predicted positions tie).
+  Positive control under the same two conditions: Jaccard-Greedy −0.020 →
+  +0.395, Jaccard-MST −0.004 → +0.739 (0 and 2 of 370 orders identical), so
+  the test detects an id leak when one exists. Game J headline,
+  T0-classical: F1_J 0.2340 masked vs 0.2340 unmasked, q 0.6603 vs 0.6604,
+  F1_L identical.
+- **Text-blind control** (all texts replaced by one string, same code and
+  presentation): Game O τ −0.004; Game J equals the one-bucket baseline
+  (F1_J 0.151 vs 0.149), q 0.504.
+- **Order-blind control** (J; position model replaced by a constant): q 0.499.
+- **Presentation invariance** over 10 other shuffle/mask seeds: Game O τ
+  0.5042 on every seed (97–99/100 orders identical); Game J F1_J 0.2340 on
+  every seed.
+- **Ties:** 76 of 255,732 within-document pairs (0.03%); Jaccard's similarity
+  was 0 for 86.7% of pairs (D1).
+- **Ids in text:** 0 hits for prose_####, frag_, PMCIDs, m_#######, item_# in
+  104,927 fragments.
+- **Contamination beyond PMCID:** word 8-gram containment of each evaluation
+  document in the 20k corpus: median 1.2%, max 10.0%; best single training
+  document ≤ 2.8% of any evaluation document. No duplicates.
+- Dev τ (raw documents, no masking pipeline) 0.501 vs evaluation τ 0.504.
+
 ## Development history — 2026-09-10: headline documents used before frame A existed
 
 Development work done before D2 was taken used documents that frame A later

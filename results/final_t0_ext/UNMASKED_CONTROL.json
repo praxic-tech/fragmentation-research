@@ -1,0 +1,39 @@
+{
+  "gameO": {
+    "T0-classical-O": {
+      "docs": 370,
+      "tau_masked": 0.478272452428667,
+      "tau_unmasked": 0.47847605840264,
+      "difference": 0.00020360597397300895,
+      "orders_identical": 348
+    },
+    "Jaccard-Greedy": {
+      "docs": 370,
+      "tau_masked": -0.020344483410677995,
+      "tau_unmasked": 0.39498877223855516,
+      "difference": 0.4153332556492332,
+      "orders_identical": 2
+    },
+    "Jaccard-MST": {
+      "docs": 370,
+      "tau_masked": -0.004280534557793059,
+      "tau_unmasked": 0.73853426039915,
+      "difference": 0.7428147949569431,
+      "orders_identical": 0
+    }
+  },
+  "gameJ_headline": {
+    "T0-classical": {
+      "masked": {
+        "F1_J": 0.23397094074742028,
+        "F1_L": 0.33845534501706614,
+        "q": 0.6602832871518156
+      },
+      "unmasked": {
+        "F1_J": 0.2340020051346515,
+        "F1_L": 0.33845534501706614,
+        "q": 0.6603835496572845
+      }
+    }
+  }
+}
