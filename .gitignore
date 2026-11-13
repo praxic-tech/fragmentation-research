@@ -42,3 +42,6 @@ venv/
 
 # Disjoint training corpus (D19) - regenerate with datagen/pull_disjoint_train.py
 data/disjoint_train/
+
+# Tier 3 model weights, ONNX and tokenizer (D19) - ~880 MB, never committed; SHA-256 hashes are in RUN_DECISIONS
+models/
