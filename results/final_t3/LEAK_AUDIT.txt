@@ -1,0 +1,23 @@
+TIER 3 LEAK AUDIT (RUN_DECISIONS D19) -- T3-crossenc, frozen decoder, verified evaluation scores
+0 machinery: reported run reproduced  J 382/382  O 370/370
+  as reported        J all  F1_J 0.3871  base 0.1290  F1_L 0.5188  q 0.6942   O tau +0.5944
+1 text-blind         J all  F1_J 0.0887  base 0.1290  F1_L 0.1774  q 0.4990   O tau -0.0041
+2 unmasked (raw ids) J all  F1_J 0.3869  base 0.1290  F1_L 0.5182  q 0.6964   O tau +0.5946
+  identical to masked: J 111/382  O 349/370
+  + control: T3 text-blind unmasked  J all  F1_J 0.1798  base 0.1290  F1_L 0.1798  q 1.0000   O tau +1.0000
+  + control: Jaccard (tier 0 run)  Jaccard-Greedy -0.0203 -> +0.3950  Jaccard-MST -0.0043 -> +0.7385
+3 invariance, 10 seeds: J F1_J 0.3867-0.3886 (sd 0.0006),  O tau +0.5943-+0.5944 (sd 0.0000)
+4 ties: 24,761 of 12,227,480 pairs with zero before-logit (2.03e-03); 21,202 identical-text pairs
+5 markers: 98,148 texts scanned, hits none
+6 contamination: training corpus is the tier-0-audited corpus: True; 8-gram share in train median 0.0119, max 0.0996, docs over 20% 0
+
+per game (J F1_J / q; O tau):
+  headlineJ          reported 0.5442/0.7559  blind 0.0998/0.5056 (base 0.1493)  unmasked 0.5415/0.7552  blind+unmasked 0.1986/1.0000
+  gridJ              reported 0.4497/0.7552  blind 0.0915/0.4978 (base 0.1303)  unmasked 0.4497/0.7559  blind+unmasked 0.1876/1.0000
+  identifierJ        reported 0.0020/0.3333  blind 0.0598/0.5179 (base 0.1000)  unmasked 0.0073/0.7273  blind+unmasked 0.1031/1.0000
+  gradientJ          reported 0.2078/0.5643  blind 0.0876/0.4969 (base 0.1276)  unmasked 0.2038/0.5628  blind+unmasked 0.1815/1.0000
+  singleTokenEdgeJ   reported 0.3300/0.5044  blind 0.0770/0.4986 (base 0.1151)  unmasked 0.3342/0.5174  blind+unmasked 0.1516/1.0000
+  headlineO          reported +0.6388  blind +0.0162  unmasked +0.6389  blind+unmasked +1.0000
+  gridO              reported +0.5780  blind -0.0117  unmasked +0.5782  blind+unmasked +1.0000
+
+wall time 10.9 min
