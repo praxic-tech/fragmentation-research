@@ -1,0 +1,48 @@
+inputs verified: 749 score files, weights de081db6893e, scored on NVIDIA A100-SXM4-40GB; decoder {'decoder': 'cluster-rank', 'grouper': 'spectral', 'refine': True, 'orderer': 'borda'}
+  J 50/382  0.2 min
+  J 100/382  0.3 min
+  J 150/382  0.4 min
+  J 200/382  0.6 min
+  J 250/382  0.7 min
+  J 300/382  0.8 min
+  J 350/382  0.9 min
+  O 370 documents done
+TIER 3 T3-crossenc (RUN_DECISIONS D19) -- first complete result, kept as is
+weights SHA-256 de081db6893e57ebc69b2cbb202851558f49b7d41eea38dc2c77ba73e947582a; decoder {'decoder': 'cluster-rank', 'grouper': 'spectral', 'refine': True, 'orderer': 'borda'}
+pair scores: NVIDIA A100-SXM4-40GB, torch CUDA autocast (fp16), as dev tuning; 749 score files verified
+rows: Game J 382 pools, Game O 370 documents
+
+GAME J
+game              cell                            pools    F1_J    base    F1_L   q_mic    exact
+gradientJ         edge__w2                           20  0.1537  0.1289  0.2790  0.5488    0/140
+gradientJ         edge__w3                           20  0.2049  0.1275  0.3567  0.5698    0/140
+gradientJ         edge__w4                           20  0.2647  0.1264  0.4311  0.6043    0/140
+gridJ             coherence-sever__clause            24  0.5398  0.1311  0.6679  0.8060    0/168
+gridJ             coherence-sever__token-window      24  0.4796  0.1320  0.6332  0.7548    0/168
+gridJ             random__clause                     24  0.4075  0.1302  0.5361  0.7596    0/168
+gridJ             random__sentence                   24  0.4675  0.1282  0.5934  0.7865    0/168
+gridJ             random__token-window               24  0.3445  0.1318  0.4739  0.7252    0/168
+gridJ             semantic__clause                   24  0.5209  0.1302  0.6578  0.7910    0/168
+gridJ             semantic__sentence                 24  0.5823  0.1282  0.7150  0.8137    0/168
+gridJ             subject-verb__clause               24  0.3358  0.1309  0.4667  0.7189    0/168
+gridJ             subject-verb__sentence             24  0.3692  0.1299  0.4992  0.7392    0/168
+headlineJ         prose                              46  0.5442  0.1493  0.6891  0.7559    0/322
+identifierJ       identifier__field                  20  0.0020  0.1000  0.0057  0.3333    0/140
+singleTokenEdgeJ  edge__sentence                     20  0.5426  0.1000  0.7273  0.7465   16/140
+singleTokenEdgeJ  edge__token                        20  0.1173  0.1302  0.2332  0.5036    0/140
+
+GAME O (membership given; random tau = 0)
+game       cell                            docs     tau     med  exact   disp
+gridO      coherence-sever__clause           30  0.6681  0.6726      1   2.87
+gridO      coherence-sever__token-window     30  0.5743  0.5708      1   6.95
+gridO      random__clause                    30  0.5568  0.5647      1   5.22
+gridO      random__sentence                  30  0.6021  0.6109      1   3.75
+gridO      random__token-window              30  0.4806  0.5286      0   8.14
+gridO      semantic__clause                  30  0.6314  0.6582      1   4.46
+gridO      semantic__sentence                30  0.6836  0.7134      1   3.07
+gridO      subject-verb__clause              30  0.4769  0.5061      0   9.31
+gridO      subject-verb__sentence            30  0.5279  0.5287      0   7.17
+headlineO  prose                            100  0.6388  0.6703      0   4.82
+
+deterministic on re-run (first unit of each game): True
+wall time 1.2 min
