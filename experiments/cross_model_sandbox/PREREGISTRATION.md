@@ -308,3 +308,197 @@ works; it only has to be fixed and recorded.
 - Specs to run, in order:
 - Resend, repair and non-completion rules (D4, D6 as applied here):
 - Comparison planned, and the post-hoc exploratory label:
+
+## 2026-11-13: Sonnet-dependence sweep on headline J (seven hosted models)
+
+Post-hoc exploratory. Written, committed and pushed before any API request for
+these models (the commit time is the record). Smoke tests (dummy prompt, no
+evaluation text) come after this commit and count toward nothing.
+
+**Supersedes** the 2026-11-12 local llama.cpp gpt-oss-20b entry: gpt-oss-20b
+now runs on OpenRouter (model 4 below). No gpt-oss-20b study request was ever
+sent locally, and the Colab idea is dropped. Reason: local compute time (the
+Gemma run took ~24 h). The Gemma 4 12B entry and its result (REFUSED,
+`results/gemma-4-12b/PRIMARY_RESULT.md`) are unchanged.
+
+**Question.** The frozen prompts were tuned on Sonnet. Does another model, on
+the same prompts and the same answer-key scoring, reach Sonnet's headline
+(F1_J 0.7225, F1_L 0.8817, q 0.8206)?
+
+**Interpretation (fixed now).** A model at or above Sonnet is evidence against
+Sonnet dependence of the headline. A lower score is NOT evidence that
+fragmentation protects, because it may reflect fit to a Sonnet-tuned prompt.
+
+**Scope.** `frozen/runs/final_headlineJ.json` only (46 pools): base wave, the
+frozen D4 resend of transport holes (`-rs1`), one repair round (`-r1`, and its
+`-rs1`), nothing else. Frozen prompts sent verbatim, never rebuilt; repair
+prompts from the frozen `build_repair_spec`. Same answer-key scoring as Sonnet.
+
+### Models (list fixed now)
+
+| # | slug | role | lab | where | settings | output budget | training cutoff (source) |
+|---|---|---|---|---|---|---|---|
+| 1 | `gpt-5.6-sol` | frontier reasoning | OpenAI | Azure OpenAI deployment `$AZURE_DEPLOYMENT_GPT56`: Global Standard, model version 2026-07-09, version upgrade NoAutoUpgrade, 250k TPM, content filter DefaultV2. Responses API (`/openai/v1/responses`). | `service_tier: "flex"` on every request (Microsoft Learn, "Use Flex processing with Azure OpenAI"); no Standard fallback, ever. `reasoning: {"effort": "max"}`, the highest effort available: Microsoft Learn (Azure OpenAI reasoning models, API and feature support) lists `none, minimal, low, medium, high, xhigh, max` and states that `max` works only with GPT-6 or GPT-5.6 models and the Responses API. `reasoning.mode` not sent (Azure default `standard`; `pro` is a separate execution mode, not an effort level). | `max_output_tokens` 128000 | 2026-02-16 (OpenAI model page) |
+| 2 | `gpt-4.1` | non-reasoning flagship | OpenAI | Azure deployment `$AZURE_DEPLOYMENT_GPT41`: Global Standard, version 2025-04-14, auto-upgrade off, 1M TPM, DefaultV2. Responses API. | no `service_tier` sent (Standard); pinned tier = `default` | `max_output_tokens` 32768 | May/June 2024 (Microsoft Learn models table / Azure pricing page) |
+| 3 | `gpt-oss-120b` | open reasoning, mid-size | OpenAI | OpenRouter `openai/gpt-oss-120b`, provider CoreWeave only, quantization fp4 only, `allow_fallbacks: false` | `reasoning: {"effort": "high"}`, temperature 1.0, top_p 1.0 (as the 2026-11-12 gpt-oss-20b entry) | `max_tokens` 117964 = the provider's cap; BELOW Sonnet's 128,000 | June 2024 (gpt-oss model card) |
+| 4 | `gpt-oss-20b` | open reasoning, small | OpenAI | OpenRouter `openai/gpt-oss-20b`, CoreWeave only, fp4 only, `allow_fallbacks: false` | as model 3 | `max_tokens` 117964 (provider cap; below Sonnet's 128,000) | June 2024 (gpt-oss model card) |
+| 5 | `llama-4-maverick` | open, non-reasoning | Meta | OpenRouter `meta-llama/llama-4-maverick`, Parasail only, fp8 only, `allow_fallbacks: false` | provider defaults | `max_tokens` 32768 | August 2024 (Meta model card) |
+| 6 | `deepseek-v3.2` | open reasoning, frontier-class | DeepSeek | OpenRouter `deepseek/deepseek-v3.2`, GMICloud only, fp8 only, `allow_fallbacks: false`. GMICloud may retain prompts but does not train on them; recorded. | `reasoning: {"enabled": true}` | `max_tokens` 128000 | none published; released 2025-12-01 |
+| 7 | `kimi-k2.5` | open reasoning, frontier-class | Moonshot | OpenRouter `moonshotai/kimi-k2.5`, SiliconFlow only, int4 only (Moonshot's released format), `allow_fallbacks: false` | `reasoning: {"enabled": true}` (thinking on) | `max_tokens` 128000 | none published; released 2026-01-27 |
+
+- **Disclosure (Kimi):** Kimi K3 was used earlier as a fragment cutter (D3/D5)
+  on development data only.
+- **Sampling:** provider defaults for every model (no temperature, top_p or
+  other sampling field sent) except gpt-oss (temperature 1.0, top_p 1.0).
+  Every request body is logged exactly as sent.
+- **Messages:** one user message, `request["prompt"]` verbatim (Responses API:
+  `input` = `[{"role": "user", "content": prompt}]`). No system or developer
+  message, no tools.
+- **OpenRouter request fields (models 3-7):** `provider: {"only": [p],
+  "order": [p], "quantizations": [q], "allow_fallbacks": false,
+  "require_parameters": true}`, `transforms: []` (middle-out compression off:
+  no prompt is ever shortened), `usage: {"include": true}`, streaming.
+- **Azure request fields:** `model` = deployment name, `input`,
+  `max_output_tokens`, `truncation: "disabled"` (an over-long input errors
+  instead of being cut), plus model 1's `reasoning` and `service_tier`;
+  streaming.
+
+**Models not run, recorded with reasons:** Azure-hosted gpt-oss-120b,
+DeepSeek-V3.2, Kimi-K2.5, grok-4-1-fast-reasoning and Llama 4 (not deployable,
+or zero quota on the student subscription); gpt-6.x and gpt-5.6-terra/luna
+(training cutoffs after the documents, or the same family as gpt-5.6-sol);
+gpt-5.5 (cost).
+
+### Eligibility
+
+A model is eligible if its training cutoff, or its release date when no cutoff
+is published, is before the earliest document's first online date (2026-02-17
+for the corpus, 2026-02-26 for the headline pools). All seven are eligible:
+gpt-5.6-sol 2026-02-16; gpt-4.1 mid-2024; gpt-oss June 2024; Llama 4 Maverick
+August 2024; DeepSeek-V3.2 released 2025-12-01; Kimi-K2.5 released 2026-01-27.
+
+**Exception, reported for every model:** 5 headline pools (`pool_009`,
+`pool_011`, `pool_041`, `pool_056`, `pool_062`) each hold one document first
+online in 2025 by its epub date (`verify_postcutoff.py` read `sortdate`, which
+for these is the later print-issue date). Every model, Sonnet and Gemma
+included, is reported on all 46 pools and on the 41 without those 5. The
+41-pool figure is the frozen `batch_game.score` on the same rows with those 5
+pools removed from the spec's `build.pools` and sidecar (nothing re-run, no
+second scorer).
+
+### Run order
+
+gpt-oss-20b, gpt-oss-120b, llama-4-maverick, deepseek-v3.2, gpt-4.1,
+gpt-5.6-sol; then the Kimi decision (below). Each model: base wave, `-rs1`,
+repair wave, its `-rs1`, scored before the next model starts.
+
+### Transport
+
+- **Runner:** `work/runner/api_runner.py`, committed after this entry and
+  before the smoke tests; it implements this entry. Threads; pacing as fast as
+  each provider's limits allow: Azure requests admitted under a token bucket at
+  the deployment's TPM, counting each request as its estimated prompt tokens +
+  its `max_output_tokens`; at most 16 requests in flight per model; every
+  admission also passes the cost cap (below).
+- **Timeouts:** 30 min per request on Azure, 2 h on OpenRouter (wall clock
+  from send to the final event). Every timeout is logged before the resend.
+- **Transport errors:** HTTP 408, 429, 5xx, connection errors, timeouts, and a
+  stream that ends without a final response. Retried in the same wave with
+  exponential backoff and jitter (Retry-After honoured when present; else
+  min(30 x 2^k, 900) s), at most **6 attempts** per request per wave. Every
+  attempt is logged. Never scored. A request still failing after 6 attempts is
+  written as an `errored` row; the frozen D4 resend (`build_resubmit_spec`,
+  `-rs1`) then sends it once more, again with up to 6 attempts. A unit still
+  failing after that is reported as **not completed**.
+- **Content-filter blocks** (Azure HTTP 400 `content_filter`, or a response
+  `incomplete` with reason `content_filter`; OpenRouter `finish_reason`
+  `content_filter` or an error naming moderation) are their own outcome: logged
+  in `<tag>.content_filter.jsonl`, never written as a results row, never
+  resent, never repaired, never scored.
+- **Provider and tier check, every response:** OpenRouter's reported
+  `provider` must equal the pinned provider; Azure's reported `service_tier`
+  must equal the pinned tier (`flex` for model 1, `default` for model 2) and
+  its reported `model` must be the pinned model. Any mismatch is a **halt**.
+- **Auth failures** (401/403), and 400/404 that are not content filters, are
+  **halts**, never retried.
+- **Prompt integrity:** truncation is off by configuration
+  (`truncation: "disabled"`, `transforms: []`). In addition, every response's
+  reported prompt tokens must be at least 0.5 x Sonnet's `input_tokens` for the
+  same pool (`frozen/results/batches/final-headlineJ*.results.jsonl`); all
+  ratios are recorded; after each wave the spread of (prompt tokens / prompt
+  characters) across its requests must be within a factor 1.25. A failure is
+  a halt.
+- **Stop reasons:** OpenRouter `finish_reason` "stop" -> `end_turn`, "length"
+  -> `max_tokens`; Azure `status` "completed" -> `end_turn`, `incomplete` with
+  reason `max_output_tokens` -> `max_tokens`. `usage.output_tokens` = reported
+  output tokens including reasoning (OpenRouter `completion_tokens`; Azure
+  `output_tokens`). A `max_tokens` stop below the full budget is a halt (not
+  covered by D6). `text` = the final answer only; reasoning text, when a
+  provider returns it, goes in `reasoning`, never in `text`.
+
+### Cost caps
+
+The runner counts each response's reported cost plus the worst case of every
+in-flight request (its prompt at the input rate + its full output budget at the
+output rate), and never sends a request that could take the total past the cap.
+Units not sent are reported as **not run**.
+
+| model | cap (USD) | how cost is counted |
+|---|---|---|
+| gpt-5.6-sol | 50.00 | reported usage x Azure Flex rates = 50% of Standard Global short-context: input $2.00/M, output $10.00/M (Azure retail price meters "5.6 sol ShortCo Inp/Opt Std Gl": $4/$20 per M); no cache discount applied (an upper bound) |
+| gpt-4.1 | 10.00 | reported usage x Azure Global Standard: input $2.00/M, output $8.00/M (meters "gpt 4.1 Inp/Outp glbl") |
+| gpt-oss-20b | 1.00 | OpenRouter `usage.cost` as reported; worst case from the pinned endpoint's listed prices |
+| gpt-oss-120b | 1.50 | as above |
+| llama-4-maverick | 1.50 | as above |
+| deepseek-v3.2 | 3.00 | as above |
+
+OpenRouter holds $10.00 of credit, key limit $10.00.
+
+- A cap reached **before a model's base wave finishes** is a halt. A cap
+  reached later (resend or repair wave) stops sending; the requests not sent
+  are reported as not run, and those units are scored on the attempts they
+  have. A cap stop is reported as incomplete (gate verdict plus units not run),
+  never dropped silently.
+- **Kimi rule:** Kimi runs only if the remaining OpenRouter balance after
+  models 3-6 is at least $7.50 (read from OpenRouter's key endpoint). Otherwise
+  it is dropped and reported as "planned; dropped for budget under a rule fixed
+  before any Kimi request". If it runs, its cap is the remaining balance minus
+  $0.25. The decision is budget-only and cannot depend on any model's results.
+  No Kimi request, smoke test included, is sent before the decision.
+
+### Scoring
+
+- The frozen `batch_game.score` / `joint_game.score_row`, unchanged, with
+  `batch_game.MODEL_MAX_OUTPUT` = the model's output budget (D6: a call that
+  stops at `max_tokens` having used the whole budget is a resource-bounded
+  non-completion, recorded and never re-asked). Path as in the README: results
+  rows -> one resend -> one repair round -> `batch_game.score`.
+- **PRIMARY verdict: the preregistered rule applied as written.** The cell is
+  REFUSED if any unit has no answer after repair, or if any unit's recorded
+  `repair.policy_share` exceeds `joint_game.POLICY_CAP` (0.25). Policy share is
+  computed from the scored rows themselves (`repair.policy_share` in
+  `J.jsonl`), because the frozen gate reads `1 - coverage_frac` for Game J and
+  misses this (logged in the Gemma run, `logs/RUNLOG.md` 2026-11-13). A unit
+  not completed (transport), content-filtered or not run (cap) has no answer,
+  so its cell is REFUSED.
+- The frozen gate's own output is kept too, labelled "frozen gate output".
+  Units that cannot enter the frozen `score` (content-filtered, not completed,
+  not run) are removed from the spec passed to it, and listed.
+- If REFUSED, the answered-units-only mean (`score(..., allow_partial=True)`)
+  is the SECONDARY figure, labelled "answered units only", never in place of
+  the verdict.
+- **Beside every score:** completion rate, D6 rate, transport-error rate
+  (requests with at least one transport error, and units not completed),
+  content-filter count, invalid-after-repair rate, mean `policy_share`, the
+  units over the cap, tokens (input, output, reasoning where reported), and
+  actual cost. On 46 and on 41 pools.
+- **Output:** `raw/<slug>/` (rows, specs, attempt logs), `results/<slug>/`
+  (`final_headlineJ/`, `final_headlineJ_41pools/`, secondary dirs if refused,
+  `PRIMARY_RESULT.md`), committed per model with the small logs; full request
+  bodies with prompt text are not committed.
+
+### Final report
+
+One table: every model plus Sonnet and Gemma 4 12B: verdict, F1_J, F1_L, q,
+their 41-pool versions, all the rates above, and cost. Descriptive only;
+labelled post-hoc exploratory wherever reported.
