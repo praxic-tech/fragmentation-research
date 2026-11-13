@@ -1,0 +1,19 @@
+TIER 0 ATTACKERS (RUN_DECISIONS D19) -- main comparisons; first complete result, kept as is
+T0-classical: k=15 c=2.0 alpha=10.0, position model SHA-256 31da55096a2e31bcd5a8f85687d75efd8526acff7aa4787bdd0c029bd2ea0ccf
+
+attacker      game        cell                            pools    F1_J    base    F1_L   q_mic   exact
+T0-PUP        gridJ       coherence-sever__clause            24  0.0928  0.1311  0.1805  0.5109   0/168
+T0-PUP        gridJ       coherence-sever__token-window      24  0.0837  0.1320  0.1708  0.4914   0/168
+T0-PUP        gridJ       random__clause                     24  0.0853  0.1302  0.1726  0.4960   0/168
+T0-PUP        gridJ       random__sentence                   24  0.0821  0.1282  0.1667  0.4901   0/168
+T0-PUP        gridJ       random__token-window               24  0.0906  0.1318  0.1832  0.4935   0/168
+T0-PUP        gridJ       semantic__clause                   24  0.0891  0.1302  0.1790  0.4984   0/168
+T0-PUP        gridJ       semantic__sentence                 24  0.0937  0.1282  0.1914  0.4932   0/168
+T0-PUP        gridJ       subject-verb__clause               24  0.0843  0.1309  0.1718  0.4919   0/168
+T0-PUP        gridJ       subject-verb__sentence             24  0.0863  0.1299  0.1750  0.4931   0/168
+T0-PUP        headlineJ   prose                              46  0.1088  0.1493  0.2148  0.5054   0/322
+T0-PUP        identifierJ identifier__field                  20  0.0804  0.1000  0.1395  0.5676   0/140
+T0-classical  headlineJ   prose                              46  0.2340  0.1493  0.3385  0.6603   0/322
+
+deterministic on re-run (first pool of each attacker x game): True
+total attack seconds 15
