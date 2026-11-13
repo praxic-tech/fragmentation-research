@@ -1237,6 +1237,39 @@ touched any evaluation pool. Nothing below was chosen from evaluation data.
   clustering is defined on every pool; it was in the code before tuning and
   is the same on dev and evaluation.
 
+### D19 addendum — 2026-11-12: tier 0 extended to every condition the one-shot model ran
+
+- **Why, and when.** Aiden asked for tier 0 to be run on every condition
+  Sonnet was run on, Game O included, so the attackers compare cell for cell.
+  This was decided **after** the headline tier 0 result (results/final_t0/,
+  commit 70a7a8c) was seen. The extension is fixed here before any extended
+  row exists.
+- **Nothing is re-tuned.** T0-classical keeps alpha 10, k 15, c 2 and the
+  position model with SHA-256 31da5509...; T0-PUP keeps n = d = 2. The first
+  complete result is kept and every cell is reported, whichever way it goes.
+  The existing results/final_t0/ rows are not touched; extended rows go to
+  results/final_t0_ext/.
+- **Game J, same pools, shown order and masking seeds as every J attacker.**
+  T0-classical: grid (9 cells × 24 pools), identifier (20), gradient
+  (edge__w2/w3/w4, 20 pools each, runs/gradient_J.json) and single-token edge
+  (edge__sentence, edge__token, 20 each, runs/single_token_edge_J.json).
+  T0-PUP: gradient and single-token edge (it already ran on headline, grid
+  and identifier).
+- **Game O, same documents and presentation as the Jaccard floors**
+  (harness._masked_shuffled_order, seed 42: masked labels, seeded shuffle),
+  headline O (100 documents) and grid O (9 cells × 30). Membership is given,
+  so only the ordering half of each attacker runs:
+  T0-classical-O sorts the document's fragments by the frozen position
+  model's predicted relative position (ties to the lower masked label);
+  T0-PUP-O is PUP with one path over the document's own boundary matrix
+  (n = d = 2), started at the fragment with the lowest best-incoming score.
+  Scored by joint_game.score_row (Kendall τ etc.), as the floors are.
+- **Out-of-domain cells, stated in advance.** The position model was trained
+  on case-report sentences. On the identifier arm (synthetic field values),
+  the single-token cells and the short word windows it is outside what it was
+  built for; as D16 says for the other local attackers, a weak result there
+  is not evidence of security.
+
 ## Development history — 2026-09-10: headline documents used before frame A existed
 
 Development work done before D2 was taken used documents that frame A later
