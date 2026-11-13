@@ -1302,6 +1302,95 @@ Output: results/final_t0_ext/LEAK_AUDIT.json, UNMASKED_CONTROL.json.
   document ≤ 2.8% of any evaluation document. No duplicates.
 - Dev τ (raw documents, no masking pipeline) 0.501 vs evaluation τ 0.504.
 
+### D19 addendum — 2026-11-12: tier 3 design (fine-tuned cross-encoder), frozen before training
+
+Written before any tier 3 training step and before tier 3 code has read an
+evaluation pool. Written **after** the tier 0 results were seen (tier 0 orders
+well, τ 0.50, and groups no better than the earlier attackers, F1_L 0.34);
+the tier 3 design below was fixed with that knowledge, and nothing in it is
+chosen from evaluation data. Name in tables: **T3-crossenc**.
+
+- **Model.** `microsoft/BiomedNLP-BiomedBERT-base-uncased-abstract-fulltext`
+  at revision e1354b7a3a09615f6aba48dfad4b7a613eef7062 (MIT; ~110M
+  parameters; pretrained by its authors on PubMed abstracts and PMC full text
+  as of its 2020–2021 release, so before the 2026/02+ evaluation documents
+  existed). Input is one pair of fragments, `[CLS] A [SEP] B [SEP]`, each
+  fragment cut to its first 80 word pieces. One linear layer on the [CLS]
+  vector gives five outputs: same-document logit; A-before-B logit (trained
+  on same-document pairs only); B-immediately-follows-A logit; and the
+  relative position of A and of B in their own documents (sigmoid, MSE).
+  The model sees two texts and nothing else: no ids, labels or pool.
+- **Training data.** The D19 disjoint corpus, train split only (17,962
+  documents, 585,581 sentences), file SHA-256
+  47a35e0c3c620bf13faca112d93c84c9bbaafe477231802eab809420ddba0110, checked by
+  the training script. Sentence fragments only (the headline condition).
+- **Pairs.** Per epoch, four per train sentence A: a same-document sentence 1
+  away (p = 1/2) or 2–4 away; a uniformly random other sentence of the same
+  document; two uniformly random sentences of other train documents. Each
+  pair is presented in a random order. Regenerated per epoch from
+  seed 42 + epoch.
+- **Training.** One run, no model selection: 2 epochs (36,600 steps), batch
+  128, AdamW 2e-5, weight decay 0.01, 6% linear warm-up then linear decay,
+  gradient clip 1.0, mixed precision, seed 42. Loss = BCE(same) +
+  BCE(before | same document) + BCE(adjacent) + 4·MSE(positions). The model
+  after the last step is the model. A crashed run resumes from its last
+  checkpoint (not bit-identical to an uninterrupted run; the number of
+  resumes is recorded). A completed run is kept: no retraining for a better
+  score.
+- **Decoder, chosen on the dev split only** (the same 46 dev pools of 7 dev
+  documents tier 0 used; masked and shuffled as at evaluation; every ordered
+  pair scored). Indices are in masked-alias order, so every tie rule is
+  neutral.
+  - Orderer ∈ {borda: sort by Σ tanh(before-logit/2) within the group;
+    position: sort by mean predicted position; path1: a single path over the
+    adjacency scores}, chosen by mean within-document Kendall τ on the dev
+    pools' documents (true membership).
+  - Cluster-rank: grouper ∈ {average-linkage agglomerative on 1 − p(same),
+    spectral clustering (cluster_qr) on p(same)} × refine ∈ {off, on}
+    (refine: move each fragment to the cluster with the highest mean p(same),
+    sequentially, never emptying a cluster), to exactly N groups, chosen by
+    mean dev F1_L; each group ordered by the chosen orderer.
+  - Path-cover: N vertex-disjoint paths maximising Σ log p(adjacent): greedy
+    best-first edge selection, then one-edge exchange local search. (The
+    planning notes said LKH-3; it is not used. It is an external solver
+    binary, and this pure-Python decoder is what is run and reported.)
+  - The evaluation decoder is cluster-rank unless path-cover has strictly
+    higher mean dev F1_J. Ties go to the first value listed.
+  - p(same) is the sigmoid of the mean of the two directions' logits; the
+    before-logit is half the difference of the two directions.
+- **Export and hashes.** The trained weights (safetensors) are exported to
+  ONNX (opset 17, FP32); the export must reproduce the torch outputs to
+  1e-3 on dev pairs at three batch/length shapes. RECORD.json holds the
+  SHA-256 of the weights, the ONNX file and the tokenizer files, the chosen
+  decoder and the dev scores. Weights are not committed (≈440 MB); the
+  hashes are, in a tuning addendum written **before** the evaluation run.
+- **Where it runs.** Training, dev scoring, decoder tuning and export: Google
+  Colab (GPU), from a bundle of this repository's code at a recorded commit.
+  The bundle contains no evaluation pool. Evaluation pair scores: computed
+  once, from the ONNX file whose hash is recorded, on the user's desktop
+  (RX 9070 XT, ONNX Runtime DirectML, FP32); those scores are the official
+  ones. Dev scores used torch mixed precision, so they differ from ONNX FP32
+  in low-order digits. If the desktop route fails, the fallback (same ONNX
+  file or the same weights in torch, on another machine) is recorded in an
+  addendum before any evaluation score exists. Decoding from saved scores is
+  CPU-only and deterministic.
+- **Evaluation.** Every condition tier 0 ran: Game J headline (46), grid
+  (9 × 24), identifier (20), gradient (3 × 20), single-token edge (2 × 20);
+  Game O headline (100) and grid (9 × 30). Same units, shown order, masking
+  seeds and scorer as every other attacker. Game O: the chosen orderer over
+  the document's own pair scores. One run; first complete result kept; every
+  cell reported. Then the tier 0 leak checks (text-blind, masked vs unmasked
+  with the Jaccard positive control, presentation invariance, contamination).
+- **Out of domain, stated in advance.** Trained on sentence fragments of
+  case reports. Clause, token-window, word-window, single-token and
+  identifier cells are outside its training distribution; as D16 says, a
+  weak result there is not evidence of security.
+- **Outcome rule** (D19, unchanged): tier 3 far below Sonnet → "LLMs open a
+  new regime" stands; tier 3 F1_J well above 0.5 → "fragmentation fails
+  against modern NLP generally; LLMs widen the margin". Reported either way.
+- Files: adversaries/crossenc_t3.py, runs/t3_train.py, runs/t3_dev.py,
+  notebooks/t3_colab.ipynb, runs/t3_make_bundle.py.
+
 ## Development history — 2026-09-10: headline documents used before frame A existed
 
 Development work done before D2 was taken used documents that frame A later
