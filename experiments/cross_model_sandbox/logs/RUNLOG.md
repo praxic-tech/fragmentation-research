@@ -583,3 +583,22 @@ Install (user granted install permission, asked to keep it small):
   Azure endpoint already carries `/openai/v1` (first gpt-4.1 smoke request got
   HTTP 404, no tokens billed); Azure responses now also checked for the echoed
   reasoning effort, `max_output_tokens` and `truncation` (a mismatch halts).
+
+## 2026-11-13 — gpt-oss-20b: HALT in the base wave (provider output limit)
+
+- Started 21:55 UTC. Halted 22:06 UTC under the entry's halt rules; no new
+  request sent after the first halt; in-flight requests finished.
+- 11 base rows written (all `end_turn`, 48k-98k output tokens), cost $0.1064;
+  OpenRouter balance after: $9.8644 remaining.
+- 5 halts (`raw/gpt-oss-20b/final-headlineJ.check_failures.jsonl`):
+  - pool_018, pool_007: HTTP 400 from OpenRouter before generation: prompt +
+    117,964 > the endpoint's 131,072 context (14,748 + 117,964; 13,552 +
+    117,964). Not a transport error or content filter.
+  - pool_008, pool_006, pool_005: `finish_reason length` at 107,549 / 112,188 /
+    111,621 output tokens, below the 117,964 budget, all reasoning and no answer.
+    Prompt + output = 117,752 / 117,759 / ~117.8k: CoreWeave appears to stop at
+    about 117,760 total tokens, not at the listed 131,072 context.
+- Cause: the preregistered budget (117,964 = the listed max_completion_tokens)
+  cannot be reached for any headline prompt on this endpoint; the entry's D6
+  rule (stop at the full budget) cannot apply. Applies equally to gpt-oss-120b
+  (same provider, same listing). Waiting for the user's decision.
