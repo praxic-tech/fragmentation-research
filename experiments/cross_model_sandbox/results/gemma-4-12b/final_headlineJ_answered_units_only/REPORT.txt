@@ -1,0 +1,32 @@
+SECONDARY: answered units only (allow_partial=True). The integrity gate refused this game; that refusal is the primary result.
+(Refused under the preregistered rule: units over joint_game.POLICY_CAP by their recorded repair.policy_share. The frozen gate's own check missed them; see logs/RUNLOG.md, 2026-11-13, and ../PRIMARY_RESULT.md.)
+
+
+==========================================================================
+ CELL prose
+
+INTEGRITY
+  game J: ok   model answered 38/46   non-completions 8   fragments placed by policy 0.0%
+    resource-bounded, 128k exhausted (D6, not scored): pool_003, pool_017, pool_018, pool_024, pool_037, pool_053, pool_054, pool_066
+
+==========================================================================
+ THREE ATTACK CONDITIONS, SAME CORPUS, SAME MODEL
+==========================================================================
+
+GAME J  (joint: membership AND order, nothing given)
+  pools scored 38
+  COMPLETION   38/46 (83%)   resource-bounded non-completions 8
+  linkage F1   mean 0.4655   baseline 0.2938   advantage +0.2418
+               precision 0.5976   recall 0.3922   (of guessed / of true same-record pairs)
+  groups       guessed 51.8 vs 7.0 asked   exact count 0/38
+  partition    valid 38/38   (after repairing dropped fragments to singletons)
+  COVERAGE     model placed 100.0% of fragments   dropped 0 total, worst pool 0
+  JOINT ordered-pair F1   mean 0.2615   baseline 0.1469   advantage +0.1338
+  F1 BREAKDOWN  (pairs summed over 38 pools;  F1_J = linkage F1 x q)
+    pairs      guessed 109,308 same-record pairs   true 176,746
+    linkage    65,562 guessed pairs really share a record   precision 0.5998  recall 0.3709  F1 0.4584
+    order      36,102 of those 65,562 point the right way   q = C/K 0.5507
+    joint      precision C/guessed 0.3303  recall C/true 0.2043  F1 0.2524 = 0.4584 x 0.5507
+  direction accuracy      q_micro 0.5507   (K=0 in 0/38 pools)
+  tau in matched groups   mean +0.1338  (n=38 pools)
+  records recovered EXACTLY (membership and order): 0/266  (0.0%)

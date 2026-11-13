@@ -527,3 +527,33 @@ Install (user granted install permission, asked to keep it small):
   23:41 UTC, i.e. from a system-Python 3.14 import on 2026-11-11, not from
   this run, whose Python calls set PYTHONDONTWRITEBYTECODE). Left for the
   user to decide.
+
+## 2026-11-13 — Gemma 4 12B headline J: primary result is REFUSED (rule applied as written)
+
+- Gate bug: for Game J, `joint_game.integrity_gate` sets a unit's policy share
+  to 1 - `score_row`'s `coverage_frac` and never reads the row's recorded
+  `repair.policy_share`. On the batch path `batch_game.finalise_row` has
+  already completed `raw_response` with singletons, so `coverage_frac` is
+  always 1.0 and the gate always sees 0% placed by policy. The gate therefore
+  printed "ok" / "refused: none" for this cell.
+- 9 units are over `joint_game.POLICY_CAP` (0.25) by their recorded
+  `repair.policy_share`: pool_061 0.412, pool_005 0.393, pool_031 0.385,
+  pool_064 0.382, pool_007 0.352, pool_008 0.310, pool_065 0.309,
+  pool_038 0.290, pool_070 0.251.
+- PREREGISTRATION.md ("Primary result and the integrity gate") says a unit
+  over `joint_game.POLICY_CAP` makes the refusal the primary result. Applying
+  that rule as written, the Gemma 4 12B headline J cell is REFUSED. This is
+  the preregistered rule, not a post hoc change; the gate's printed verdict is
+  the error. Nothing in frozen/ or the scorer was edited; the gate is to be
+  fixed separately in the main session.
+- Primary result: REFUSED; 9 units over the cap; 0 units without an answer;
+  8 D6 non-completions; 0 transport errors; 38/38 invalid after repair;
+  completion 38/46. Recorded in results/gemma-4-12b/PRIMARY_RESULT.md.
+- Secondary, as the refusal path writes it: `work/runner/score_secondary.py`
+  runs the frozen `batch_game.score(waves, ..., allow_partial=True)` on the
+  same waves (base + -r1) into results/gemma-4-12b/final_headlineJ_answered_units_only/,
+  labelled SECONDARY, "answered units only". Its J.jsonl and report body are
+  identical to final_headlineJ/. Per-pool means over 38 pools: F1_J 0.2615,
+  F1_L 0.4655, q 0.5629.
+- No new model run until the gate fix is in and a new preregistration entry
+  for the next models is written (user's instruction).
