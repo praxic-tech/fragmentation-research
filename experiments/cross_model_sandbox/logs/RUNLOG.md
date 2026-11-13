@@ -468,3 +468,62 @@ Install (user granted install permission, asked to keep it small):
   server_ctl.py identical to commit 6a08a87). Memory sampled every 5 s to
   `logs/gemma-4-12b/mem.<stamp>.csv`. Runtime: llama.cpp build b12110 + Vulkan,
   zip SHA-256 9732a5e48887ca54d0bfe4af4324dc85fd56cd8cda19b52df3542fa6ebe6874f.
+
+## 2026-11-12/13 — Gemma run: memory-logging gap, Windows Update restart, resume
+
+- Memory sampler gap: the launcher's sampler filters the GPU adapter by LUID
+  (`*15c57*`, the 2026-11-11 value); the adapter's LUID was 0x15da4 on
+  2026-11-12, so `mem.20261112T163025Z.csv` holds zeros for the adapter columns.
+  `memsample.ps1` gained an `-Adapter` parameter; a second sampler with
+  `-Adapter '*15da4*'` wrote `mem.20261112T163025Z.luid15da4.b.csv` from about
+  17:20 UTC (a first attempt, `...luid15da4.csv`, died with its shell).
+  Process memory: 10,194-10,202 MiB dedicated, 197 MiB shared, throughout.
+  Another program briefly took whole-GPU dedicated use to 16,066 MiB
+  (2026-11-13 ~04:49-05:03 UTC); the server's own memory did not change.
+- Base wave complete 2026-11-13 05:36 UTC: 46 rows, 38 end_turn, 8 D6
+  (pool_003, 017, 018, 024, 037, 053, 054, 066), 0 transport errors, 0 empty
+  answers, 0 check failures. -rs1 built empty. -r1 built with 38 requests:
+  every end_turn answer failed validation (23 missing+duplicated labels,
+  14 missing only, 1 duplicated only).
+- 2026-11-13 09:12 UTC: Windows Update (MoUsoCoreWorker, then TrustedInstaller;
+  "Operating System: ... (Planned)", KB5132061) restarted the machine twice
+  (boots 09:13:57 and 09:15:30 UTC). The server and runner were killed during
+  the 15th repair (pool_025-r1, server log ends at n_gen 36,398). No row was
+  written for it. All 46 base rows and 14 -r1 rows parse intact. GPU driver
+  unchanged (32.0.32015.7029); OS patch level changed by KB5132061.
+- Resumed 2026-11-13 13:44 UTC on the user's instruction, under the
+  preregistered restart rule, with the same command (`run_headline.sh
+  gemma-run gemma-4-12b`, no runner flags; no check failure was outstanding).
+  Server pid 39808. Run log: "RESTART final-headlineJ-r1: 14 rows already
+  present, 24 requests to send"; pool_025-r1 is resent as its first attempt.
+  Rebuilt specs matched the saved ones. The adapter LUID is now 0x15cee, so a
+  second sampler writes `mem.20261113T134400Z.luid15cee.csv`; the launcher's
+  own sampler file for this start records zeros for the adapter columns.
+
+## 2026-11-13 — Gemma 4 12B headline J run complete
+
+- Runner exited 0 at 18:01:15 UTC; server stopped by the launcher.
+  -r1: 38 rows, 35 end_turn, 3 D6 (pool_020, 022, 025), 0 transport errors;
+  -r1-rs1 built empty. 0 check failures over the whole run. 0 of 38 repaired
+  answers valid.
+- Frozen score (results/gemma-4-12b/final_headlineJ/): gate verdict "refused:
+  none"; game J ok, answered 38/46, 8 D6 non-completions. Per-pool means over
+  the 38 scored pools: F1_J 0.2615, F1_L 0.4655, q 0.5629 (q_micro 0.5507).
+  Records recovered exactly 0/266. No answered-units-only copy was written
+  (the gate did not refuse).
+- Observation, not a re-score: the gate printed "fragments placed by policy
+  0.0%" and COVERAGE 100%, but the scored rows' own `repair.policy_share`
+  (written by frozen batch_game.finalise_row) is > 0 for all 38 units, mean
+  0.188, and > POLICY_CAP 0.25 for 9 (pool_061 0.412, 005 0.393, 031 0.385,
+  064 0.382, 007 0.352, 008 0.310, 065 0.309, 038 0.290, 070 0.251). Cause:
+  for game J, integrity_gate takes policy_share = 1 - score_row's
+  coverage_frac, and coverage_frac is computed on raw_response, which
+  finalise_row has already completed with singletons, so it is always 1.0 on
+  the batch path. Sonnet's headline rows all have policy_share 0.0, so its
+  result is unaffected. Scorer left unchanged.
+- verify_frozen at session end: PASS, 185 files byte-identical. Found, not
+  touched: untracked, gitignored `__pycache__` dirs in frozen/adversaries,
+  frozen/analysis and frozen/harness (cpython-314 .pyc, dated 2026-11-11
+  23:41 UTC, i.e. from a system-Python 3.14 import on 2026-11-11, not from
+  this run, whose Python calls set PYTHONDONTWRITEBYTECODE). Left for the
+  user to decide.

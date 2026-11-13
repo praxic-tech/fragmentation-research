@@ -2,9 +2,11 @@
 # appears or the process exits. Appends one CSV row per sample (flushes each row,
 # so the file can be read while sampling runs). Sends nothing to any server.
 #
-# usage: powershell -File memsample.ps1 -ProcId <pid> -OutCsv <file> -StopFile <file> [-IntervalMs 500]
-param([int]$ProcId, [string]$OutCsv, [string]$StopFile, [int]$IntervalMs = 500)
-$adapter = '*15c57*'   # RX 9070 XT LUID on this machine (see logs/RUNLOG.md)
+# usage: powershell -File memsample.ps1 -ProcId <pid> -OutCsv <file> -StopFile <file> [-IntervalMs 500] [-Adapter '*15da4*']
+# The adapter LUID can change across reboots/driver resets: check the instance names of
+# \GPU Adapter Memory(*) first (2026-11-11: 0x15c57; 2026-11-12: 0x15da4).
+param([int]$ProcId, [string]$OutCsv, [string]$StopFile, [int]$IntervalMs = 500, [string]$Adapter = '*15c57*')
+$adapter = $Adapter
 "t,ad_ded_mib,ad_sh_mib,p_ded_mib,p_sh_mib" | Set-Content -Encoding ascii $OutCsv
 while (-not (Test-Path $StopFile)) {
   $alive = Get-Process -Id $ProcId -ErrorAction SilentlyContinue
