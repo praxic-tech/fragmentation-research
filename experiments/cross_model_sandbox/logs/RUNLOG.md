@@ -739,3 +739,13 @@ Install (user granted install permission, asked to keep it small):
 - The amendment's "first confirm Parasail reaches 110,000" is not met, and no
   test shows it stopping short. Not covered by the entry: stopped, waiting for
   the user. The gpt-oss-120b run has not started.
+
+## 2026-11-14 — User decision: gpt-oss-120b runs on Parasail; in-run check replaces the test
+
+- The long-generation pre-run check is replaced by the in-run check (user
+  decision): if any call stops below 110,000 output tokens without an answer,
+  gpt-oss-120b halts and is reported as "not completed: no pinned provider
+  delivered the 110,000 budget". Cap $3.00.
+- The 5 pre-run tests were inconclusive: the model chose to stop each time
+  (refusal or decline after 351-92,945 tokens); none was cut off by the
+  provider. Their cost: $0.19 ($0.1874), reported in gpt-oss-120b's totals.
