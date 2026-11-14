@@ -1444,6 +1444,64 @@ evaluation pool has been scored by the tier 3 model.
   unchanged), runs/t3_units.py, runs/t3_score_eval.py,
   runs/t3_make_eval_bundle.py, notebooks/t3_eval_colab.ipynb.
 
+### D19 addendum — 2026-11-14: tiers 1 and 2 design (zero-shot language-model scores), frozen before scoring
+
+Written before any tier 1 or 2 score exists, dev or evaluation. Written
+**after** the tier 0 and tier 3 results and the one-shot results were seen;
+nothing below is chosen from evaluation data. Tiers 1 and 2 are main
+comparisons (D19). Names in tables: **T1-pythia160m**, **T2-pythia1.4b**.
+
+- **Models.** One family at two sizes, so the pair is also a size contrast:
+  tier 1 `EleutherAI/pythia-160m-deduped` at revision
+  582159a2dfe3e712a8d47ae83dec95ae3bde8e7e; tier 2
+  `EleutherAI/pythia-1.4b-deduped` at revision
+  554d9c1bae3877f740aece41feb90f912cf9fedc. Apache-2.0, released February
+  2023, base models (no instruction tuning), trained on the deduplicated Pile
+  (assembled 2020; includes PubMed Central and PubMed abstracts), so neither
+  can have seen the 2026/02+ evaluation documents. No training or fine-tuning
+  of any kind.
+- **Scores** (`adversaries/lm_pmi_t12.py`). Each fragment is tokenised once as
+  " " + text, cut to its first 64 tokens. For every ordered pair (a, b) the
+  model reads [BOS] a b; cond[a, b] = summed log-probability of b's tokens.
+  For every fragment alone it reads [BOS] b; marg[b]. Then
+  pmi[a, b] = (cond[a, b] − marg[b]) / len(b) (per-token PMI), z-scored over
+  the unit's off-diagonal entries; that z-PMI is used as tier 3's
+  same-document and adjacency logits, and log p(a then b) = marg[a] + cond[a, b]
+  as its precedes logit, so tier 3's decoder code runs unchanged:
+  p(same) = sigmoid of the symmetrised z-PMI; before-logit =
+  (log p(a b) − log p(b a)) / 2. There is no position output.
+- **Decoder, chosen on the dev split only**, by tier 3's procedure
+  (runs/t3_dev.stage_tune) on the same 46 dev pools: orderer ∈ {borda, path1}
+  by mean dev Kendall τ (position is not offered: no position output);
+  grouper ∈ {agglo, spectral} × refine ∈ {off, on} by mean dev F1_L;
+  path-cover only if strictly higher mean dev F1_J. Ties go to the first value
+  listed. Chosen separately for each tier. (The planning notes named LKH-3 for
+  the path cover; as for tier 3, the pure-Python path cover is the candidate.)
+- **Scope, fixed now, before any score, because of the results freeze
+  (2026-11-15).** Headline Game J (46 pools) and headline Game O (100
+  documents) only. The grid, identifier, gradient and single-token cells are
+  not run for tiers 1 and 2. Game O: the chosen orderer over the document's
+  own pair scores.
+- **Where it runs.** Google Colab GPU, bfloat16 weights, float32
+  log-softmax (runs/t12_score.py), from a bundle (runs/t12_make_bundle.py)
+  holding the scoring code and texts.jsonl: each unit's texts in masked-alias
+  order, with no id, label or truth. Dev and evaluation pairs are scored in
+  the same session by a frozen pretrained model; the decoder is chosen on CPU
+  from the dev scores alone, and the chosen decoder plus every score file's
+  SHA-256 go into a tuning addendum **before** any evaluation reconstruction is
+  decoded or scored.
+- **Leak checks.** Text-blind: not applicable (the model reads only the two
+  texts). Contamination: excluded by dates (Pile 2020, documents 2026).
+  Presentation invariance: each headline Game J pool decoded under 10 random
+  permutations of the alias order (equivalent to re-masking, since every pair
+  is scored independently and the z-score is permutation-invariant); the
+  F1_J range is reported.
+- **Reported** with the same scorer (joint_game.score_row), units, shown
+  order and masking seeds as every other attacker; one run, first complete
+  result kept, every number reported whichever way it goes.
+- Files: adversaries/lm_pmi_t12.py, runs/t12_score.py, runs/t12_make_bundle.py,
+  notebooks/t12_colab.ipynb.
+
 ## Development history — 2026-09-10: headline documents used before frame A existed
 
 Development work done before D2 was taken used documents that frame A later
