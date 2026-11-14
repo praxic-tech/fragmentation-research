@@ -86,14 +86,25 @@ def model_setup(slug):
     return budget, raw, spec, files(TAG), rp, files(f"{TAG}-r1"), sweep
 
 
-def exclusions(raw, spec, files, tag):
-    """custom_ids of a wave that cannot enter the frozen score, by reason."""
+def api_runner_cfg(slug):
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import api_runner
+    return api_runner.CONFIGS.get(slug, {})
+
+
+def exclusions(raw, spec, files, tag, cf_is_platform=False):
+    """custom_ids of a wave that cannot enter the frozen score, by reason.
+    cf_is_platform (amendment 2, Azure): a content-filter block is a platform error; a unit
+    blocked and never answered (base and its one resend) is "not completed", not "content_filter"."""
     cf = _ids(os.path.join(raw, f"{tag}.content_filter.jsonl")) | \
         _ids(os.path.join(raw, f"{tag}-rs1.content_filter.jsonl"))
     nr = _ids(os.path.join(raw, f"{tag}.not_run.jsonl")) | _ids(os.path.join(raw, f"{tag}-rs1.not_run.jsonl"))
     rows = _latest_rows(files) if files else {}
     side = set(spec["sidecar"])
     holes = {c for c in failed_ids(files) if c in side and not batch_game.at_ceiling(rows[c])} if files else set()
+    if cf_is_platform:
+        holes |= (cf & side) - set(rows)
+        cf = set()
     missing = side - set(rows) - cf - nr
     return {"content_filter": sorted(cf & side), "not_run": sorted((nr & side) | missing),
             "not_completed": sorted(holes - cf - nr)}
@@ -246,12 +257,13 @@ def score_model(slug):
     budget, raw, spec, bfiles, rp, rfiles, sweep = model_setup(slug)
     res_dir = os.path.join(SB, "results", slug)
     os.makedirs(res_dir, exist_ok=True)
-    bex = exclusions(raw, spec, bfiles, TAG)
+    platform = sweep and api_runner_cfg(slug).get("api") == "azure"     # amendment 2
+    bex = exclusions(raw, spec, bfiles, TAG, cf_is_platform=platform)
     bdrop = set(sum(bex.values(), []))
     waves = [(subset(spec, drop_cids=bdrop), bfiles)]
     rex = {"content_filter": [], "not_run": [], "not_completed": []}
     if rp is not None and rp["requests"]:
-        rex = exclusions(raw, rp, rfiles, f"{TAG}-r1")
+        rex = exclusions(raw, rp, rfiles, f"{TAG}-r1", cf_is_platform=platform)
         waves.append((subset(rp, drop_cids=set(sum(rex.values(), []))), rfiles))
     excl_units = {k: sorted(spec["sidecar"][c]["unit"] for c in v) for k, v in bex.items()}
     excl_units["repair_not_sent_or_not_completed"] = sorted(

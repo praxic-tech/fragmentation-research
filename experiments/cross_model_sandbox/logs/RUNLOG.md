@@ -667,3 +667,40 @@ Install (user granted install permission, asked to keep it small):
 - OpenRouter key 01:49 UTC: usage $1.1697, limit_remaining $8.9806 (the key's
   remaining does not equal limit - usage; see the 00:09 reading, to settle
   before the Kimi decision).
+
+## 2026-11-14 — Amendment 2 applied
+
+- Amendment 2 committed and pushed (69c3d8c) with all earlier local commits,
+  before any further request.
+- Original gpt-5.6-sol blocks (sent under DefaultV2): pool_005 and pool_037,
+  both HTTP 200 streams ended `response.incomplete` / `content_filter` after
+  102 s and 133 s -> fired on the **completion**. Category and severity:
+  **unknown** (the runner kept only `incomplete_details.reason`; the response
+  ids were not logged, so the stored responses cannot be fetched).
+- Runner: Azure content-filter blocks now keep the full final response, every
+  filter field seen in the stream (`response.content_filters`: source_type
+  prompt/completion, per-category `filtered`/`severity`), and the time to the
+  block, in the attempt log and `<tag>.content_filter.jsonl`. Azure rows
+  record the guardrail (row field `guardrail` + `raw/<slug>/guardrail.jsonl`;
+  rows sent before amendment 2 backfilled as DefaultV2: gpt-4.1 92,
+  gpt-5.6-sol 44). Azure base-wave blocks go to the one `-rs1` resend; a unit
+  still blocked there is "not completed". gpt-oss-120b on Parasail fp4,
+  pinned by endpoint tag `parasail/fp4` (Parasail lists two fp4 endpoints,
+  fp4 and fast), cap $3.00. Offline tests 6/6 (new test 6: Azure block ->
+  resent once; answered -> PASS; blocked again -> not completed, REFUSED).
+- Default guardrail check (gpt-5.6-sol smoke, 03:45 UTC): `content_filters`
+  for prompt and completion list only hate/sexual/violence/self_harm (all
+  safe); no jailbreak / prompt-shield / protected-material entries -> Default
+  is active. Tier flex, model gpt-5.6-sol.
+- gpt-5.6-sol: the saved `-rs1` and `-r1` specs (both empty, built under the
+  old rule) differ from the rebuilt ones by design; the runner's spec guard
+  halted the first restart. Moved to `raw/gpt-5.6-sol/specs_before_amendment2/`
+  and restarted: `-rs1` = pool_005, pool_037 under Default (03:49 UTC).
+- gpt-oss-120b: the 27 AkashML rows and logs moved to
+  `logs/gpt-oss-120b/superseded_akashml_110000/` (never scored; $0.4498).
+  Parasail smoke with the pool_037-length dummy: PASS (provider Parasail,
+  answer OK). Long-generation test (dummy counting prompt, max 110,000)
+  running.
+- llama-4-maverick and deepseek-v3.2 started 03:45 UTC in parallel.
+- Kimi balance (amendment 2 definition) at 03:48 UTC: $10.00 - usage $1.5403
+  = $8.4597.

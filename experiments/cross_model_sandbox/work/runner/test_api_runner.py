@@ -10,6 +10,8 @@
 3. Provider mismatch: halts the wave; a check_failures record; rerun without the flag refuses.
 4. Cost cap during the base wave: halts.
 5. A max_tokens stop below the budget: halts.
+6. Amendment 2, Azure: a content-filter block is resent once in -rs1 (answered there -> scored,
+   PASS); blocked again -> "not completed", REFUSED.
 Writes only raw/_t*/, results/_t*/, logs/_t*/ and removes them.
 """
 import json
@@ -48,7 +50,7 @@ class Fake:
         self.mode, self.calls, self.errs = mode, [], {}
 
     def __call__(self, body):
-        prompt = body["messages"][0]["content"]
+        prompt = (body.get("messages") or body.get("input"))[0]["content"]
         unit = PROMPT_UNIT.get(prompt)
         rep = unit is None
         if rep:
@@ -65,12 +67,22 @@ class Fake:
                 raise A.Transport("HTTP 503: down", retry_after=0)
         if self.mode == "cf" and unit == "pool_010" and not rep:
             raise A.ContentFilter("finish_reason content_filter")
+        if self.mode in ("azcf1", "azcf2") and unit == "pool_010" and not rep:
+            self.errs["cf"] = self.errs.get("cf", 0) + 1
+            if self.mode == "azcf2" or self.errs["cf"] == 1:
+                raise A.ContentFilter("response incomplete: content_filter", detail={"x": 1})
         r = REP[slug + "-r1"] if rep else BASE[slug]
         provider = "Other" if (self.mode == "provider" and unit == "pool_005") else "TestProv"
         n_out = r["usage"]["output_tokens"]
         finish = "stop"
         if self.mode == "short" and unit == "pool_006":
             finish, n_out = "length", 100
+        if self.mode in ("azcf1", "azcf2"):
+            return {"text": r["text"], "reasoning": "", "finish": finish, "input_tokens": r["usage"]["input_tokens"],
+                    "output_tokens": n_out, "reasoning_tokens": None, "cost": 0.001, "usage_raw": r["usage"],
+                    "provider": "azure", "reported_model": "gpt-4.1", "service_tier": "default",
+                    "echo_max_output_tokens": 128000, "echo_truncation": "disabled", "echo_reasoning": None,
+                    "wall_s": 0.0}
         return {"text": r["text"], "reasoning": "", "finish": finish, "input_tokens": r["usage"]["input_tokens"],
                 "output_tokens": n_out, "reasoning_tokens": None, "cost": 0.001, "usage_raw": r["usage"],
                 "provider": provider, "reported_model": "test/model", "service_tier": None, "wall_s": 0.0}
@@ -84,8 +96,17 @@ def cfg(slug, cap=10.0):
     return c
 
 
-def runner(slug, fake, cap=10.0, **kw):
-    r = A.ApiRunner(cfg(slug, cap), out=lambda *_: None, **kw)
+def azcfg(slug):
+    c = {"slug": slug, "api": "azure", "deployment_env": "AZURE_DEPLOYMENT_GPT41", "budget": 128000, "cap": 10.0,
+         "tier": "default", "send_tier": None, "extra": {}, "price_in": 1e-7, "price_out": 1e-7,
+         "tpm": 10**9, "timeout_s": 60, "model_prefix": "gpt-4.1", "guardrail": "Default"}
+    A.CONFIGS[slug] = c
+    A.PINNED_REPORTED_MODEL[slug] = {"gpt-4.1"}
+    return c
+
+
+def runner(slug, fake, cap=10.0, c=None, **kw):
+    r = A.ApiRunner(c or cfg(slug, cap), out=lambda *_: None, **kw)
     r.key = "x"
     r.send = fake
     return r
@@ -173,7 +194,29 @@ def main():
         ok += 1
     finally:
         clean(slug)
-    print(f"{ok}/5 passed")
+    # 6 amendment 2: Azure content filter resent once
+    for mode, want in (("azcf1", "PASS"), ("azcf2", "REFUSED")):
+        slug = "_t6"
+        clean(slug)
+        try:
+            f = Fake(mode)
+            r = runner(slug, f, c=azcfg(slug))
+            r.bucket = None   # no rate limit offline
+            s = r.run()
+            r46 = s["pools46"]
+            assert f.calls.count("pool_010") == 2, f.calls.count("pool_010")
+            assert r46["PRIMARY_verdict"] == want, (mode, r46["PRIMARY_verdict"], r46.get("refusal_reasons"))
+            if want == "REFUSED":
+                assert r46["excluded_units"]["not_completed"] == ["pool_010"], r46["excluded_units"]
+                assert r46["excluded_units"]["content_filter"] == []
+            g = [json.loads(x) for x in open(os.path.join(A.SB, "raw", slug, "guardrail.jsonl"), encoding="utf-8")]
+            assert g and all(x["guardrail"] == "Default" for x in g)
+        finally:
+            clean(slug)
+    print("6. Azure content filter (amendment 2) PASS: resent once in -rs1; answered -> PASS; "
+          "blocked twice -> not completed, REFUSED; guardrail recorded per row")
+    ok += 1
+    print(f"{ok}/6 passed")
 
 
 if __name__ == "__main__":

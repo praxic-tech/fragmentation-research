@@ -105,6 +105,11 @@ CONFIGS = {
                     "price_out": 10.00e-6, "tpm": 250_000, "timeout_s": 30 * 60,
                     "model_prefix": "gpt-5.6-sol"},
 }
+# Amendment 2 (2026-11-14): Azure rows from now on are sent under the Default guardrail
+# (rows before it: DefaultV2); gpt-oss-120b on Parasail fp4, cap $3.00.
+CONFIGS["gpt-4.1"]["guardrail"] = "Default"
+CONFIGS["gpt-5.6-sol"]["guardrail"] = "Default"
+CONFIGS["gpt-oss-120b"] = {**PARASAIL_FALLBACK["gpt-oss-120b"](), "provider": "parasail/fp4"}   # endpoint tag: Parasail lists two fp4 endpoints (fp4, fast)
 # Reported model ids that pass the pinned-model check; filled from the smoke tests (RUNLOG).
 PINNED_REPORTED_MODEL = {"gpt-4.1": {"gpt-4.1-2025-04-14", "gpt-4.1"},
                          "gpt-5.6-sol": {"gpt-5.6-sol-2026-07-09", "gpt-5.6-sol"}}
@@ -126,7 +131,25 @@ class Transport(RuntimeError):
 
 
 class ContentFilter(RuntimeError):
-    pass
+    def __init__(self, msg, detail=None):
+        super().__init__(msg)
+        self.detail = detail          # amendment 2: the full block (category, severity, prompt/completion)
+
+
+def _filter_fields(obj, path="", out=None):
+    """Every field whose key mentions a filter / content safety, with its path (amendment 2)."""
+    out = [] if out is None else out
+    if isinstance(obj, dict):
+        for k, v in obj.items():
+            kp = f"{path}.{k}" if path else k
+            if any(w in k.lower() for w in ("filter", "content_safety", "jailbreak", "protected_material")):
+                out.append({"path": kp, "value": v})
+            else:
+                _filter_fields(v, kp, out)
+    elif isinstance(obj, list):
+        for i, v in enumerate(obj):
+            _filter_fields(v, f"{path}[{i}]", out)
+    return out
 
 
 class Halt(RuntimeError):
@@ -148,7 +171,11 @@ def _http_error(status, body_text, headers):
     low = body_text.lower()
     if status == 400 and ("content_filter" in low or "content management policy" in low
                           or "responsibleaipolicyviolation" in low):
-        raise ContentFilter(f"HTTP 400 content filter: {body_text[:400]}")
+        try:
+            det = json.loads(body_text)
+        except ValueError:
+            det = {"body": body_text[:4000]}
+        raise ContentFilter(f"HTTP 400 content filter: {body_text[:400]}", detail={"http_400": det})
     if status in (401, 403):
         raise Halt(f"auth failure HTTP {status}: {body_text[:300]}")
     if status == 408 or status == 429 or status >= 500:
@@ -263,7 +290,7 @@ def call_azure(cfg, body, endpoint, key):
     if base.endswith("/openai/v1"):          # the endpoint may already carry the v1 path
         base = base[: -len("/openai/v1")]
     url = base + "/openai/v1/responses"
-    final, t0 = None, time.time()
+    final, t0, ffields = None, time.time(), []
     try:
         with httpx.stream("POST", url, json=body,
                           headers={"api-key": key, "Content-Type": "application/json"},
@@ -273,12 +300,16 @@ def call_azure(cfg, body, endpoint, key):
                 _http_error(r.status_code, r.text, r.headers)
             for ev, d in _sse(r, deadline):
                 typ = d.get("type") or ev
+                for f in _filter_fields(d):
+                    if len(ffields) < 200:
+                        ffields.append({"event": typ, **f})
                 if typ in ("response.completed", "response.incomplete", "response.failed"):
                     final = d.get("response")
                 elif typ == "error":
                     msg = json.dumps(d)[:400]
                     if "content_filter" in msg.lower():
-                        raise ContentFilter(f"in-stream: {msg}")
+                        raise ContentFilter(f"in-stream: {msg}", detail={
+                            "error_event": d, "filter_fields": ffields, "after_s": round(time.time() - t0, 1)})
                     raise Transport(f"error in stream: {msg}")
     except (Transport, ContentFilter, Halt):
         raise
@@ -291,12 +322,14 @@ def call_azure(cfg, body, endpoint, key):
     if status == "failed":
         err = json.dumps(final.get("error"))[:400]
         if "content_filter" in err.lower():
-            raise ContentFilter(f"response failed: {err}")
+            raise ContentFilter(f"response failed: {err}", detail={
+                "response": final, "filter_fields": ffields, "after_s": round(time.time() - t0, 1)})
         if "server_error" in err.lower() or "rate_limit" in err.lower():
             raise Transport(f"response failed: {err}")
         raise Halt(f"response failed (not covered): {err}")
     if status == "incomplete" and reason == "content_filter":
-        raise ContentFilter("response incomplete: content_filter")
+        raise ContentFilter("response incomplete: content_filter", detail={
+            "response": final, "filter_fields": ffields, "after_s": round(time.time() - t0, 1)})
     if status == "completed":
         finish = "stop"
     elif status == "incomplete" and reason == "max_output_tokens":
@@ -315,7 +348,8 @@ def call_azure(cfg, body, endpoint, key):
             "cost": None, "usage_raw": u, "provider": "azure", "reported_model": final.get("model"),
             "service_tier": final.get("service_tier"), "response_id": final.get("id"),
             "echo_reasoning": final.get("reasoning"), "echo_max_output_tokens": final.get("max_output_tokens"),
-            "echo_truncation": final.get("truncation"), "wall_s": round(time.time() - t0, 1)}
+            "echo_truncation": final.get("truncation"), "filter_fields": ffields,
+            "wall_s": round(time.time() - t0, 1)}
 
 
 # ── rows: the format batch_submit.fetch wrote for Sonnet ─────────────────────
@@ -554,7 +588,8 @@ class ApiRunner:
                     return ("stopped", None)
                 continue
             except ContentFilter as e:
-                rec.update({"outcome": "content_filter", "error": str(e), "cost_usd": 0.0})
+                rec.update({"outcome": "content_filter", "error": str(e), "cost_usd": 0.0,
+                            "guardrail": self.cfg.get("guardrail"), "detail": e.detail})
                 self.append(self.path(tag, "attempts.jsonl"), rec)
                 return ("content_filter", e, attempts)
             except Halt as e:
@@ -642,6 +677,11 @@ class ApiRunner:
                         row = row_from_result(cid, res, atts)
                         row["sonnet_input_tokens"] = self.sonnet_in.get(side["unit"])
                         row["prompt_chars"] = len(r["prompt"])
+                        if self.cfg["api"] == "azure":
+                            row["guardrail"] = self.cfg.get("guardrail")
+                            self.append(os.path.join(os.path.dirname(self.path(tag)), "guardrail.jsonl"),
+                                        {"tag": tag, "custom_id": cid, "guardrail": self.cfg.get("guardrail"),
+                                         "at": now()})
                         self.append(self.path(tag), row)
                         self.log(f"{tag} {cid}: {row['stop_reason']} in {row['usage']['input_tokens']} "
                                  f"out {row['usage']['output_tokens']} ${cost:.4f} {row.get('error', '')} "
@@ -653,8 +693,11 @@ class ApiRunner:
                     elif kind == "content_filter":
                         self.ledger.settle(cid, 0.0)
                         self.append(self.path(tag, "content_filter.jsonl"),
-                                    {"custom_id": cid, "at": now(), "error": str(out[1])})
-                        self.log(f"{tag} {cid}: CONTENT FILTER (own outcome; never resent): {str(out[1])[:150]}")
+                                    {"custom_id": cid, "at": now(), "error": str(out[1]),
+                                     "guardrail": self.cfg.get("guardrail"), "detail": out[1].detail})
+                        how = ("platform error; resent once in -rs1" if self.cfg["api"] == "azure"
+                               and not tag.endswith("-rs1") else "own outcome; not resent again")
+                        self.log(f"{tag} {cid}: CONTENT FILTER ({how}): {str(out[1])[:150]}")
                     elif kind == "halt":
                         cost = out[4] if len(out) > 4 else 0.0
                         self.ledger.settle(cid, cost)
@@ -722,6 +765,10 @@ class ApiRunner:
         tag = spec["tag"]
         files = [self.run_wave(spec, base_wave=True)]
         cf = self.ids_in(tag, "content_filter.jsonl")
+        if cfg["api"] == "azure":          # amendment 2: a block is a platform error, resent once in -rs1
+            if cf:
+                self.log(f"{tag}: {len(cf)} content-filtered unit(s) go to the one resend: {sorted(cf)}")
+            cf = set()
         spec_s = score_api.subset(spec, drop_cids=cf)
         rs = batch_game.build_resubmit_spec(spec_s, files, tag + "-rs1")
         self.save_spec(rs)
@@ -733,6 +780,9 @@ class ApiRunner:
         nr = self.ids_in(tag + "-rs1", "not_run.jsonl")
         holes = {c for c in failed_ids(files) if c in spec["sidecar"]
                  and not batch_game.at_ceiling(_latest_rows(files)[c])}
+        if cfg["api"] == "azure":          # still blocked after the resend -> not completed
+            holes |= cf - set(_latest_rows(files))
+            cf = set()
         if holes:
             self.log(f"{tag}: {len(holes)} units not completed after the resend: {sorted(holes)}")
         spec_s = score_api.subset(spec, drop_cids=cf | nr | holes)
@@ -766,12 +816,17 @@ def long_dummy_prompt(target_chars=76000):
     return "\n".join(lines) + "\n\nIgnore the list above. Reply with exactly the word OK and nothing else."
 
 
-def smoke(cfg, long=False):
+LONGGEN_PROMPT = ("Write out every integer from 1 to 60000 in increasing order, separated by single spaces, "
+                  "with no other text. Do not skip, abbreviate, summarize or stop early.")
+
+
+def smoke(cfg, long=False, longgen=False):
     r = ApiRunner(cfg)
-    prompt = long_dummy_prompt() if long else SMOKE_PROMPT
+    prompt = long_dummy_prompt() if long else (LONGGEN_PROMPT if longgen else SMOKE_PROMPT)
     body = r.body(prompt)
     t0 = time.time()
     rec = {"slug": cfg["slug"], "at": now(), "long_prompt_chars": len(prompt) if long else None,
+           "longgen": longgen,
            "provider_pinned": cfg.get("provider_name"), "budget": cfg["budget"],
            "body_sent": {k: (v if k not in ("messages", "input") else "<dummy prompt>")
                          for k, v in body.items() if k not in ("model",) or cfg["api"] != "azure"}}
@@ -795,6 +850,9 @@ def smoke(cfg, long=False):
                                                        "input_tokens", "output_tokens", "reasoning_tokens")})
         show["text"] = (rec["result"].get("text") or "")[:120]
         show["reasoning_chars"] = len(rec["result"].get("reasoning") or "")
+        if cfg["api"] == "azure":
+            show["guardrail_config"] = cfg.get("guardrail")
+            show["filter_fields"] = rec["result"].get("filter_fields")
     print(json.dumps(show, indent=1))
 
 
@@ -815,6 +873,7 @@ def main():
     ap.add_argument("model", nargs="?", choices=sorted(CONFIGS))
     ap.add_argument("--smoke", action="store_true")
     ap.add_argument("--smoke-long", action="store_true", help="amendment smoke test: ~76k-char dummy prompt")
+    ap.add_argument("--longgen", action="store_true", help="amendment 2: long-generation test (reaches the budget?)")
     ap.add_argument("--parasail-fallback", action="store_true", help="gpt-oss only: the amendment's fallback")
     ap.add_argument("--score", action="store_true")
     ap.add_argument("--balance", action="store_true")
@@ -830,8 +889,8 @@ def main():
         cfg["cap"] = a.cap
     if a.parasail_fallback:
         cfg = PARASAIL_FALLBACK[a.model]()
-    if a.smoke or a.smoke_long:
-        smoke(cfg, long=a.smoke_long)
+    if a.smoke or a.smoke_long or a.longgen:
+        smoke(cfg, long=a.smoke_long, longgen=a.longgen)
     elif a.score:
         import score_api
         score_api.score_model(a.model)
