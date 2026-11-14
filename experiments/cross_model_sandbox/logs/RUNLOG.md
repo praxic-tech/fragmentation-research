@@ -749,3 +749,17 @@ Install (user granted install permission, asked to keep it small):
 - The 5 pre-run tests were inconclusive: the model chose to stop each time
   (refusal or decline after 351-92,945 tokens); none was cut off by the
   provider. Their cost: $0.19 ($0.1874), reported in gpt-oss-120b's totals.
+
+## 2026-11-14 — gpt-oss-120b: NOT COMPLETED (Parasail length stop)
+
+- Parasail run started 04:2x UTC. 04:42 UTC: pool_007 stopped at length
+  after 104,412 output tokens (prompt 12,690; total 117,102), no answer ->
+  in-run check -> **not completed: no pinned provider delivered the 110,000
+  budget** (user decision). 13 base rows completed before it ($0.8444).
+- I ended the gpt-oss-120b process right after the halt instead of letting
+  in-flight requests drain (no row would be scored). Requests in flight then
+  may still be billed; they are not in the attempt log.
+- `results/gpt-oss-120b/STATUS.md` records the status and costs.
+- OpenRouter key 04:42 UTC: usage $4.2325 -> remaining (amendment 2
+  definition) $5.7675, already below the $7.50 Kimi threshold; deepseek-v3.2
+  still running.

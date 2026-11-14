@@ -1,0 +1,17 @@
+2026-11-14T04:24:02.718582+00:00 === start gpt-oss-120b headline J: budget 110000, cap $3.0, MODEL_MAX_OUTPUT 110000
+2026-11-14T04:24:02.730134+00:00 final-headlineJ: 46 requests, 46 to send; spent $0.0000 of cap $3.00
+2026-11-14T04:33:26.069572+00:00 final-headlineJ prose__J__pool-010: end_turn in 9532 out 60570 $0.0464  (563.3 s) total $0.0464
+2026-11-14T04:33:32.365412+00:00 final-headlineJ prose__J__pool-009: end_turn in 7257 out 61110 $0.0466  (569.6 s) total $0.0929
+2026-11-14T04:35:33.575550+00:00 final-headlineJ prose__J__pool-001: end_turn in 6979 out 71801 $0.0545  (690.8 s) total $0.1475
+2026-11-14T04:35:55.161690+00:00 final-headlineJ prose__J__pool-022: end_turn in 7351 out 73694 $0.0560  (712.4 s) total $0.2035
+2026-11-14T04:35:57.883091+00:00 final-headlineJ prose__J__pool-006: end_turn in 5573 out 73893 $0.0560  (715.1 s) total $0.2595
+2026-11-14T04:36:08.125841+00:00 final-headlineJ prose__J__pool-018: end_turn in 14144 out 74721 $0.0575  (725.4 s) total $0.3169
+2026-11-14T04:36:12.328189+00:00 final-headlineJ prose__J__pool-017: end_turn in 8410 out 75167 $0.0572  (729.6 s) total $0.3741
+2026-11-14T04:36:23.893607+00:00 final-headlineJ prose__J__pool-008: end_turn in 10205 out 76169 $0.0581  (741.2 s) total $0.4323
+2026-11-14T04:36:24.119252+00:00 final-headlineJ prose__J__pool-031 attempt 1 transport error: HTTP 429: {"error":{"message":"Provider returned error","code":429,"metadata":{"raw":"openai/gpt-oss-120b is temporarily; retry in 37 s
+2026-11-14T04:36:37.288998+00:00 final-headlineJ prose__J__pool-015: end_turn in 7338 out 77370 $0.0588  (754.5 s) total $0.4910
+2026-11-14T04:36:50.024107+00:00 final-headlineJ prose__J__pool-011: end_turn in 10244 out 78482 $0.0599  (767.3 s) total $0.5509
+2026-11-14T04:38:07.835495+00:00 final-headlineJ prose__J__pool-019: end_turn in 7535 out 85126 $0.0646  (845.1 s) total $0.6155
+2026-11-14T04:39:20.719141+00:00 final-headlineJ prose__J__pool-020: end_turn in 7025 out 91106 $0.0690  (918.0 s) total $0.6845
+2026-11-14T04:42:08.942779+00:00 HALT final-headlineJ prose__J__pool-007: stopped at length after 104412 tokens, below the budget 110000 (not covered by D6)
+2026-11-14T04:42:28.181565+00:00 final-headlineJ prose__J__pool-003: end_turn in 8352 out 105924 $0.0803  (1105.4 s) total $0.8444
