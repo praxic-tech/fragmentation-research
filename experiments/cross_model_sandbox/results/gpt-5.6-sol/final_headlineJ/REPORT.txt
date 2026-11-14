@@ -1,0 +1,13 @@
+FROZEN GATE OUTPUT (the frozen batch_game.score report, unchanged). The primary verdict is the preregistered rule applied to the rows: REFUSED. See ../PRIMARY_RESULT.md.
+
+
+==========================================================================
+ CELL prose
+
+INTEGRITY
+  game J: REFUSED   model answered 44/46   non-completions 0   fragments placed by policy 0.0%
+    no model answer: pool_005, pool_037
+
+==========================================================================
+ THREE ATTACK CONDITIONS, SAME CORPUS, SAME MODEL
+==========================================================================

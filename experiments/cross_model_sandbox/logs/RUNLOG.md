@@ -643,3 +643,12 @@ Install (user granted install permission, asked to keep it small):
   tests 5/5. OpenRouter line restarted at gpt-oss-120b (01:08 UTC).
 - gpt-oss-20b: REFUSED (46 and 41): 6 units without an answer, 32 over the cap.
   Secondary F1_J 0.0759, F1_L 0.1396, q 0.5477 (defined on 21 of 40).
+- gpt-5.6-sol (Azure flex, effort max): waves done 01:11 UTC, $24.19 of $50.
+  REFUSED (46 and 41): pool_005 and pool_037 ended `response.incomplete`
+  with reason `content_filter` (after ~100 s and ~130 s of streaming), never
+  resent per the entry. The other 44 were all valid on the first pass (no
+  repair needed, policy_share 0 everywhere, 0 D6). Secondary (answered units
+  only, 44): F1_J 0.8470, F1_L 0.9515, q 0.8906; 41 pools (39): 0.8461 /
+  0.9532 / 0.8880. Note: the runner records $0 for the two filtered
+  responses; any tokens Azure billed for them before the filter are not in the
+  $24.19 (usage was not captured on the incomplete path).

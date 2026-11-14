@@ -1,0 +1,93 @@
+{
+ "slug": "gpt-5.6-sol",
+ "budget": 128000,
+ "post_hoc_exploratory": true,
+ "usage": {
+  "input_tokens": 369393,
+  "output_tokens": 2345428,
+  "reasoning_tokens": 2263050,
+  "cost_usd": 24.19306600000001,
+  "responses": 44,
+  "transport_attempts": 2,
+  "requests_with_transport_error": 2
+ },
+ "requests_sent": 44,
+ "pools46": {
+  "scope": "46",
+  "units": 46,
+  "PRIMARY_verdict": "REFUSED",
+  "refusal_reasons": {
+   "units_without_answer": [
+    "pool_005",
+    "pool_037"
+   ],
+   "units_over_policy_cap": []
+  },
+  "frozen_gate_output": {
+   "prose": [
+    "J"
+   ]
+  },
+  "answered_units": 44,
+  "completion_rate": 0.9565217391304348,
+  "d6_units": 0,
+  "d6_rate": 0.0,
+  "excluded_units": {
+   "content_filter": [
+    "pool_005",
+    "pool_037"
+   ],
+   "not_run": [],
+   "not_completed": [],
+   "repair_not_sent_or_not_completed": []
+  },
+  "invalid_after_repair": 0,
+  "invalid_after_repair_rate": 0.0,
+  "mean_policy_share": 0.0,
+  "units_over_cap": 0,
+  "SECONDARY_answered_units_only": {
+   "F1_J": 0.8470380806313519,
+   "F1_L": 0.9514527237056238,
+   "q": 0.8905877970538151
+  }
+ },
+ "pools41": {
+  "scope": "41",
+  "units": 41,
+  "PRIMARY_verdict": "REFUSED",
+  "refusal_reasons": {
+   "units_without_answer": [
+    "pool_005",
+    "pool_037"
+   ],
+   "units_over_policy_cap": []
+  },
+  "frozen_gate_output": {
+   "prose": [
+    "J"
+   ]
+  },
+  "answered_units": 39,
+  "completion_rate": 0.9512195121951219,
+  "d6_units": 0,
+  "d6_rate": 0.0,
+  "excluded_units": {
+   "content_filter": [
+    "pool_005",
+    "pool_037"
+   ],
+   "not_run": [],
+   "not_completed": [],
+   "repair_not_sent_or_not_completed": []
+  },
+  "invalid_after_repair": 0,
+  "invalid_after_repair_rate": 0.0,
+  "mean_policy_share": 0.0,
+  "units_over_cap": 0,
+  "SECONDARY_answered_units_only": {
+   "F1_J": 0.8461031095799912,
+   "F1_L": 0.9531921187468131,
+   "q": 0.887972595874377
+  }
+ }
+}
