@@ -1,0 +1,415 @@
+{
+ "slug": "gpt-4.1",
+ "budget": 32768,
+ "post_hoc_exploratory": true,
+ "usage": {
+  "input_tokens": 797425,
+  "output_tokens": 103295,
+  "reasoning_tokens": 0,
+  "cost_usd": 2.421210000000001,
+  "responses": 92,
+  "transport_attempts": 0,
+  "requests_with_transport_error": 0
+ },
+ "requests_sent": 92,
+ "pools46": {
+  "scope": "46",
+  "units": 46,
+  "PRIMARY_verdict": "REFUSED",
+  "refusal_reasons": {
+   "units_without_answer": [],
+   "units_over_policy_cap": [
+    {
+     "unit": "pool_006",
+     "policy_share": 0.6713
+    },
+    {
+     "unit": "pool_058",
+     "policy_share": 0.6407
+    },
+    {
+     "unit": "pool_024",
+     "policy_share": 0.6174
+    },
+    {
+     "unit": "pool_018",
+     "policy_share": 0.5643
+    },
+    {
+     "unit": "pool_065",
+     "policy_share": 0.5493
+    },
+    {
+     "unit": "pool_048",
+     "policy_share": 0.5253
+    },
+    {
+     "unit": "pool_054",
+     "policy_share": 0.5124
+    },
+    {
+     "unit": "pool_026",
+     "policy_share": 0.4983
+    },
+    {
+     "unit": "pool_007",
+     "policy_share": 0.4957
+    },
+    {
+     "unit": "pool_017",
+     "policy_share": 0.4911
+    },
+    {
+     "unit": "pool_069",
+     "policy_share": 0.4732
+    },
+    {
+     "unit": "pool_032",
+     "policy_share": 0.4638
+    },
+    {
+     "unit": "pool_037",
+     "policy_share": 0.4376
+    },
+    {
+     "unit": "pool_059",
+     "policy_share": 0.4104
+    },
+    {
+     "unit": "pool_021",
+     "policy_share": 0.4059
+    },
+    {
+     "unit": "pool_067",
+     "policy_share": 0.395
+    },
+    {
+     "unit": "pool_023",
+     "policy_share": 0.3945
+    },
+    {
+     "unit": "pool_029",
+     "policy_share": 0.3944
+    },
+    {
+     "unit": "pool_039",
+     "policy_share": 0.3926
+    },
+    {
+     "unit": "pool_011",
+     "policy_share": 0.3918
+    },
+    {
+     "unit": "pool_019",
+     "policy_share": 0.3909
+    },
+    {
+     "unit": "pool_009",
+     "policy_share": 0.3865
+    },
+    {
+     "unit": "pool_062",
+     "policy_share": 0.3788
+    },
+    {
+     "unit": "pool_061",
+     "policy_share": 0.3725
+    },
+    {
+     "unit": "pool_050",
+     "policy_share": 0.367
+    },
+    {
+     "unit": "pool_020",
+     "policy_share": 0.3583
+    },
+    {
+     "unit": "pool_005",
+     "policy_share": 0.3483
+    },
+    {
+     "unit": "pool_035",
+     "policy_share": 0.3444
+    },
+    {
+     "unit": "pool_031",
+     "policy_share": 0.336
+    },
+    {
+     "unit": "pool_008",
+     "policy_share": 0.3347
+    },
+    {
+     "unit": "pool_070",
+     "policy_share": 0.332
+    },
+    {
+     "unit": "pool_052",
+     "policy_share": 0.3308
+    },
+    {
+     "unit": "pool_003",
+     "policy_share": 0.3233
+    },
+    {
+     "unit": "pool_038",
+     "policy_share": 0.32
+    },
+    {
+     "unit": "pool_022",
+     "policy_share": 0.3192
+    },
+    {
+     "unit": "pool_053",
+     "policy_share": 0.3174
+    },
+    {
+     "unit": "pool_064",
+     "policy_share": 0.3088
+    },
+    {
+     "unit": "pool_066",
+     "policy_share": 0.3077
+    },
+    {
+     "unit": "pool_028",
+     "policy_share": 0.2929
+    },
+    {
+     "unit": "pool_001",
+     "policy_share": 0.2923
+    },
+    {
+     "unit": "pool_056",
+     "policy_share": 0.2888
+    },
+    {
+     "unit": "pool_015",
+     "policy_share": 0.2857
+    },
+    {
+     "unit": "pool_025",
+     "policy_share": 0.2817
+    },
+    {
+     "unit": "pool_010",
+     "policy_share": 0.2643
+    }
+   ]
+  },
+  "frozen_gate_output": {
+   "prose": []
+  },
+  "answered_units": 46,
+  "completion_rate": 1.0,
+  "d6_units": 0,
+  "d6_rate": 0.0,
+  "excluded_units": {
+   "content_filter": [],
+   "not_run": [],
+   "not_completed": [],
+   "repair_not_sent_or_not_completed": []
+  },
+  "invalid_after_repair": 46,
+  "invalid_after_repair_rate": 1.0,
+  "mean_policy_share": 0.3925649107595501,
+  "units_over_cap": 44,
+  "SECONDARY_answered_units_only": {
+   "F1_J": 0.2362617377708921,
+   "F1_L": 0.332035709197049,
+   "q": 0.6993947151063614
+  }
+ },
+ "pools41": {
+  "scope": "41",
+  "units": 41,
+  "PRIMARY_verdict": "REFUSED",
+  "refusal_reasons": {
+   "units_without_answer": [],
+   "units_over_policy_cap": [
+    {
+     "unit": "pool_006",
+     "policy_share": 0.6713
+    },
+    {
+     "unit": "pool_058",
+     "policy_share": 0.6407
+    },
+    {
+     "unit": "pool_024",
+     "policy_share": 0.6174
+    },
+    {
+     "unit": "pool_018",
+     "policy_share": 0.5643
+    },
+    {
+     "unit": "pool_065",
+     "policy_share": 0.5493
+    },
+    {
+     "unit": "pool_048",
+     "policy_share": 0.5253
+    },
+    {
+     "unit": "pool_054",
+     "policy_share": 0.5124
+    },
+    {
+     "unit": "pool_026",
+     "policy_share": 0.4983
+    },
+    {
+     "unit": "pool_007",
+     "policy_share": 0.4957
+    },
+    {
+     "unit": "pool_017",
+     "policy_share": 0.4911
+    },
+    {
+     "unit": "pool_069",
+     "policy_share": 0.4732
+    },
+    {
+     "unit": "pool_032",
+     "policy_share": 0.4638
+    },
+    {
+     "unit": "pool_037",
+     "policy_share": 0.4376
+    },
+    {
+     "unit": "pool_059",
+     "policy_share": 0.4104
+    },
+    {
+     "unit": "pool_021",
+     "policy_share": 0.4059
+    },
+    {
+     "unit": "pool_067",
+     "policy_share": 0.395
+    },
+    {
+     "unit": "pool_023",
+     "policy_share": 0.3945
+    },
+    {
+     "unit": "pool_029",
+     "policy_share": 0.3944
+    },
+    {
+     "unit": "pool_039",
+     "policy_share": 0.3926
+    },
+    {
+     "unit": "pool_019",
+     "policy_share": 0.3909
+    },
+    {
+     "unit": "pool_061",
+     "policy_share": 0.3725
+    },
+    {
+     "unit": "pool_050",
+     "policy_share": 0.367
+    },
+    {
+     "unit": "pool_020",
+     "policy_share": 0.3583
+    },
+    {
+     "unit": "pool_005",
+     "policy_share": 0.3483
+    },
+    {
+     "unit": "pool_035",
+     "policy_share": 0.3444
+    },
+    {
+     "unit": "pool_031",
+     "policy_share": 0.336
+    },
+    {
+     "unit": "pool_008",
+     "policy_share": 0.3347
+    },
+    {
+     "unit": "pool_070",
+     "policy_share": 0.332
+    },
+    {
+     "unit": "pool_052",
+     "policy_share": 0.3308
+    },
+    {
+     "unit": "pool_003",
+     "policy_share": 0.3233
+    },
+    {
+     "unit": "pool_038",
+     "policy_share": 0.32
+    },
+    {
+     "unit": "pool_022",
+     "policy_share": 0.3192
+    },
+    {
+     "unit": "pool_053",
+     "policy_share": 0.3174
+    },
+    {
+     "unit": "pool_064",
+     "policy_share": 0.3088
+    },
+    {
+     "unit": "pool_066",
+     "policy_share": 0.3077
+    },
+    {
+     "unit": "pool_028",
+     "policy_share": 0.2929
+    },
+    {
+     "unit": "pool_001",
+     "policy_share": 0.2923
+    },
+    {
+     "unit": "pool_015",
+     "policy_share": 0.2857
+    },
+    {
+     "unit": "pool_025",
+     "policy_share": 0.2817
+    },
+    {
+     "unit": "pool_010",
+     "policy_share": 0.2643
+    }
+   ]
+  },
+  "frozen_gate_output": {
+   "prose": []
+  },
+  "answered_units": 41,
+  "completion_rate": 1.0,
+  "d6_units": 0,
+  "d6_rate": 0.0,
+  "excluded_units": {
+   "content_filter": [],
+   "not_run": [],
+   "not_completed": [],
+   "repair_not_sent_or_not_completed": []
+  },
+  "invalid_after_repair": 41,
+  "invalid_after_repair_rate": 1.0,
+  "mean_policy_share": 0.39955674169014616,
+  "units_over_cap": 40,
+  "SECONDARY_answered_units_only": {
+   "F1_J": 0.23012426462567087,
+   "F1_L": 0.3220202439389668,
+   "q": 0.6998641874995981
+  }
+ }
+}
