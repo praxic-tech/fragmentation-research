@@ -21,7 +21,7 @@ group_of <- function(kind) ifelse(grepl("sweep", kind), "Other LLMs\n(post hoc)"
 est <- L[L$kind != "baseline", ]
 bas <- L[L$kind == "baseline", ]
 
-display <- c("T0-PUP" = "Tier 0, PUP", "Memon-inspired" = "Memon-inspired",
+display <- c("T0-PUP" = "Tier 0, parallel path", "Memon-inspired" = "Memon-inspired",
              "Embedding (post-hoc exploratory)" = "Embedding (post hoc)",
              "T0-classical" = "Tier 0, classical", "T3-crossenc" = "Tier 3, cross-encoder",
              "One-shot Sonnet" = "One-shot Sonnet 5",

@@ -170,7 +170,7 @@ def table2_headline():
                      ci(r.A_J, r.A_J_lo, r.A_J_hi), f"{int(r.exact)}/322", f"{int(r.answered)}/46"])
 
     master_row(ATT["base"], "Analytic one-bucket baseline")
-    ladder_row("T0-PUP", "Tier 0, PUP‡")
+    ladder_row("T0-PUP", "Tier 0, parallel path‡")
     master_row(ATT["memon"], "Memon-inspired")
     master_row(ATT["embed"], "Embedding (post hoc)†")
     ladder_row("T0-classical", "Tier 0, classical‡")

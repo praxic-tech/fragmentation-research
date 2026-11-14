@@ -163,16 +163,20 @@ supplies membership and asks only for order. Game~J is scored with an
 ordered-pair F1 that decomposes exactly into a linkage component and a
 conditional ordering component, so a failure can be attributed to one half.
 
-On clinical case reports published after the attacker model's training cutoff,
-a one-shot large language model reached $\FJ = 0.723$ on 46 full-length pools,
+On recent clinical case reports, nearly all first published after the
+attacker model's training cutoff, a one-shot large language model reached
+$\FJ = 0.723$ on 46 full-length pools,
 recovering most membership ($\FL = 0.882$) and most relative order
 ($q = 0.792$), against an analytic one-bucket reference of $0.149$ and a legal
 random seven-group answer of $0.077$. That score measures precedence, not
 contiguity: on the same pools immediate-adjacency F1 was $0.287$ and the mean
 longest intact run was $4.53$ fragments. The attacker recovers source
 association and broad relative order strongly; contiguous plaintext recovery
-is much weaker. Tested statistical and embedding attackers stayed near their
-references.
+is much weaker. The leak is not specific to large language models: a
+cross-encoder fine-tuned on disjoint public case reports reached
+$\FJ = 0.544$, and the generative attacker exceeded it by $0.178$ in every
+pool. In a post-hoc check, two other large language models given the unchanged
+prompt matched or exceeded the main one.
 
 Resistance depended on what the fragments retained. Synthetic identifier
 records behaved qualitatively differently: the record template was recovered
@@ -222,17 +226,22 @@ into seven ordered groups---both secrets at once, which is the situation a
 compromised fragment store actually presents. Game~O supplies membership and
 asks only for order, as a reference point for the ordering half alone.
 
-We evaluate on 500 open-access clinical case reports published after the
-attacker model's training cutoff, cut nine ways across four cutting strategies
-and three granularities, together with a synthetic structured-identifier
-corpus. Attackers range from analytic and random baselines through lexical and
-embedding methods to a one-shot large language model. The design was
-pre-registered in a dated decision log; analyses designed after results were
-seen are labelled post hoc throughout.
+We evaluate on 500 open-access clinical case reports, 493 of them first
+published after the attacker model's training cutoff, cut nine ways across
+four cutting strategies and three granularities, together with a synthetic
+structured-identifier corpus. Attackers range from analytic and random
+baselines through lexical and embedding methods and a ladder of classical and
+trained non-LLM attackers, the strongest a fine-tuned cross-encoder, to a
+one-shot large language model. The design was pre-registered in a dated
+decision log; analyses designed after results were seen are labelled post hoc
+throughout.
 
 Four findings follow. On ordinary prose cuts the generative attacker recovers
-most membership and most relative order, while the tested similarity-based
-attackers stay near their references. That score is a precedence score, and the
+most membership and most relative order. A fine-tuned non-LLM attacker also
+recovers much of it, so the leak does not depend on a large language model;
+the generative attacker widens the margin in every pool, and untrained
+similarity-based attackers stay near their references. That score is a
+precedence score, and the
 same answers recover far less \emph{contiguous} text---a distinction we make
 explicit at the point of first reporting. The cutting strategy matters, with
 subject--verb cuts the most resistant of those tested. And resistance depends
@@ -251,10 +260,10 @@ withheld. The joint score factors exactly as $\FJ = \FL \cdot q$, linkage times
 conditional ordering, with closed-form references.
 
 \item \textbf{An empirical privacy characterisation.} Substantial linkage and
-broad ordering recovery for clinical prose, with much weaker immediate
-adjacency and contiguous reconstruction; strong dependence on the fragmentation
-regime and the data type; and a controlled monotone decline with fragment
-width.
+broad ordering recovery for clinical prose, by a trained non-LLM attacker as
+well as a generative one, with much weaker immediate adjacency and contiguous
+reconstruction; strong dependence on the fragmentation regime and the data
+type; and a controlled monotone decline with fragment width.
 \end{enumerate}
 
 The attacker comparison is evidence supporting both contributions rather than a
@@ -555,13 +564,19 @@ efficient adversaries. Plaintext fragments; closed world; $N=7$; complete pools.
 
 \subsection{Corpora}
 \label{sec:corpora}
-\textbf{Clinical prose.} 500 PMC Open Access case reports published from
-February 2026, after the attacker model's January 2026 training cutoff, with
-all 500 verified post-cutoff; commercial-use Creative Commons licences only;
-case-narrative paragraphs only. Sentence segmentation gives 16{,}524 reference
-fragments. A fidelity gate confirms no invented tokens. Post-cutoff publication
-is evidence against ordinary training-set contamination, not proof that no
-exposure occurred.
+\textbf{Clinical prose.} 500 PMC Open Access case reports retrieved with a
+publication-date filter of February 2026 onward; commercial-use Creative
+Commons licences only; case-narrative paragraphs only. Sentence segmentation
+gives 16{,}524 reference fragments. A fidelity gate confirms no invented
+tokens. By first online (electronic publication) date, 493 documents appeared
+after the attacker model's January 2026 training cutoff, the earliest on
+17 February 2026. Seven had appeared online first in 2025 and carried a 2026
+issue date, which our original post-cutoff check read; they fall in five of the
+46 headline pools. Every headline result in Appendix~\ref{app:crossmodel} is
+also reported without those five pools; dropping them moves the one-shot
+attacker's headline \FJ{} from $0.723$ to $0.722$.
+Post-cutoff publication is evidence against ordinary training-set
+contamination, not proof that no exposure occurred.
 
 \textbf{Synthetic identifiers.} Seeded generator records with name, SSN,
 account and address fields, one fragment per field, using records
@@ -571,44 +586,6 @@ external-validity limits are stated in \S\ref{sec:synthetic}.
 
 \subsection{Pools and provenance}
 \label{sec:pools}
-% ---- RESULTS EXHIBITS --------------------------------------------------------
-% All nine are declared HERE, a section before the results, on purpose. A
-% spanning float cannot print on the page it is declared on; declared here
-% they start at the top of the page the results begin on and keep pace with
-% the text (every one lands within a page of its subsection; check with
-% tools/page_map.py). Their order here is the order they print in. Do not move
-% them back under their own headings: that puts each one two to three pages
-% behind its text.
-\input{table2_headline_attackers}
-\input{table9_adjacency}
-\input{table3_grid}
-\begin{figure*}[t]
-  \centering
-  
-  \includegraphics{fig3_linkage_vs_ordering.pdf}
-  \caption{Decomposition of Game~J into (a) the linkage component \FL{} and
-  (b) direction accuracy $q$ on the attacker's own correctly linked pairs;
-  $\FJ=\FL\times q$ holds exactly per pool. The dotted line is chance for $q$.}
-  \label{fig:decomp}
-\end{figure*}
-\input{table4_gameO}
-\input{table5_identifiers}
-\begin{figure*}[t]
-  \centering
-  
-  \includegraphics{fig6_granularity_gradient.pdf}
-  \caption{Post-hoc exploratory granularity series: five cuts of identical
-  text on the same 20 pools. (a) Observed \VJ{} against the random-shuffle
-  reference for the same arm, which is not constant across arms; \AVJ{} is
-  printed at each point. (b) Share of the 76-word excerpt recovered as one
-  contiguous stretch, against the floor leaked by the cut alone. Join recall,
-  which supports the two-regime reading, is $0.464$, $0.476$, $0.315$, $0.153$
-  and $0.022$ from the sentence cut to one word.}
-  \label{fig:gradient}
-\end{figure*}
-\input{table8_gradient}
-\input{table6_single_token}
-% ---- end of results exhibits -------------------------------------------------
 
 Seventy-one pools of seven documents, fixed before any pool-level attack:
 25 development pools forming the grid and 46 headline pools. Grid documents are
@@ -649,6 +626,51 @@ exploratory, frozen before its own evaluation. The \textbf{one-shot} attacker is
 \sonnet{} via the Message Batches API, with the prompt in
 Appendix~\ref{app:prompts}.
 
+\paragraph{Non-LLM attacker ladder.} The attackers above order at chance, so
+they cannot show whether the one-shot attacker's lead reflects large language
+models or weak baselines. We therefore added a ladder of stronger non-LLM
+attackers. They were added after the one-shot results were known, which we
+disclose here; to keep that knowledge out of them, every design was written
+down, and every tuned value chosen, on a disjoint corpus before the attacker
+saw an evaluation pool, and the first complete evaluation run of each is the
+one reported. They are main comparisons. The disjoint corpus is PMC Open Access
+case reports published 2024--2025, drawn with the same query, licence filter,
+extraction and sentence splitter as the evaluation corpus, with every
+evaluation document excluded by PMC identifier; it is split by identifier hash
+into 17{,}962 training and 2{,}038 development documents. Tuning used
+46 development pools of seven documents, masked and shuffled as at evaluation.
+
+\textbf{Tier 0, parallel path} is an untrained path decoder on the
+Memon-inspired pair statistic: $N$ paths grow at once from the $N$ fragments
+with the weakest best predecessor, each proposes its best unused successor, and
+the globally best proposal is committed until every fragment is placed.
+\textbf{Tier 0, classical} groups by content-term TF--IDF on a symmetric
+nearest-neighbour graph cut into exactly $N$ clusters by spectral clustering,
+and orders each cluster with a ridge regressor trained on the disjoint corpus
+to predict a sentence's relative position in its document; the neighbour
+count, term-frequency cut-off and ridge penalty were tuned on development
+pools. \textbf{Tier 3, fine-tuned cross-encoder} is
+\textsf{BiomedBERT-base} (pretrained by its authors on PubMed and PMC text
+released before 2022) fine-tuned in one run of two epochs on fragment pairs
+from the disjoint training split, with four outputs: same document, precedes,
+immediately follows, and each fragment's relative position. It sees the two
+fragment texts and nothing else. Its decoder was chosen on the development
+pools before evaluation: spectral clustering of the pairwise same-document
+probabilities into exactly $N$ groups, a refinement pass that moves each
+fragment to the group it fits best, and Borda ordering by the pairwise
+precedence scores. The ladder's outcome rule was also fixed before any tier
+had an evaluation score: if tier 3 came out far below the one-shot attacker,
+the reading that large language models open a new regime would stand; if its
+\FJ{} came out well above $0.5$, the reading would become that fragmentation
+fails against modern NLP generally and large language models widen the margin.
+\TODO{tiers 1--2 (zero-shot language-model scores): the decision log commits
+to reporting every tier finished by the results freeze; report them here or
+state their status}
+
+\textbf{Other large language models}\posthoc{} were run on the headline pools
+after the one-shot result was seen, under their own preregistration entry, with
+the frozen prompt unchanged (Appendix~\ref{app:crossmodel}).
+
 Two cautions apply to every comparison that follows. The Memon-inspired
 attacker \emph{is not a faithful reproduction} of the original
 algorithm~\cite{shanmugasundaram2003}: it substitutes a fixed-order smoothed
@@ -658,15 +680,57 @@ Hamiltonian-path procedure; the original is also rooted at a known first
 fragment, which Game~J does not supply. And the Jaccard orderers' word-bigram
 similarity is zero for a large majority of within-document pairs on this
 corpus, so their results reflect a sparse signal. We therefore write
-\emph{tested} statistical, lexical and embedding attackers throughout, and make
-no claim about the frontier any of those families could reach.
+\emph{tested} statistical, lexical and embedding attackers throughout. The
+ladder is a stronger test than those attackers, but it is still a sample of
+non-LLM methods, not a frontier.
 
+% ---- RESULTS EXHIBITS --------------------------------------------------------
+% All nine are declared HERE, a section before the results, on purpose. A
+% spanning float cannot print on the page it is declared on; declared here
+% they start at the top of the page the results begin on and keep pace with
+% the text (every one lands within a page of its subsection; check with
+% tools/page_map.py). Their order here is the order they print in. Do not move
+% them back under their own headings: that puts each one two to three pages
+% behind its text.
+\input{table2_headline_attackers}
+\input{table9_adjacency}
+\input{table3_grid}
+\begin{figure*}[t]
+  \centering
+  
+  \includegraphics{fig3_linkage_vs_ordering.pdf}
+  \caption{Decomposition of Game~J into (a) the linkage component \FL{} and
+  (b) direction accuracy $q$ on the attacker's own correctly linked pairs;
+  $\FJ=\FL\times q$ holds exactly per pool. The dotted line is chance for $q$.}
+  \label{fig:decomp}
+\end{figure*}
+\input{table4_gameO}
+\input{table5_identifiers}
+\begin{figure*}[t]
+  \centering
+  
+  \includegraphics{fig6_granularity_gradient.pdf}
+  \caption{Post-hoc exploratory granularity series: five cuts of identical
+  text on the same 20 pools. (a) Observed \VJ{} against the random-shuffle
+  reference for the same arm, which is not constant across arms; \AVJ{} is
+  printed at each point. (b) Share of the 76-word excerpt recovered as one
+  contiguous stretch, against the floor leaked by the cut alone. Join recall,
+  which supports the two-regime reading, is $0.464$, $0.476$, $0.315$, $0.153$
+  and $0.022$ from the sentence cut to one word.}
+  \label{fig:gradient}
+\end{figure*}
+\input{table8_gradient}
+\input{table6_single_token}
+% ---- end of results exhibits -------------------------------------------------
 \subsection{Query protocol}
 \label{sec:protocol}
 Collision-free masked aliases, with a preflight that refuses raw identifiers; a
 per-unit seeded presentation order; one structural repair round with
 bookkeeping-only feedback; one transport resend; the budget and non-completion
-rule of \S\ref{sec:rbnc}. A positive control supplying raw identifiers in true
+rule of \S\ref{sec:rbnc}. Fragments an answer leaves out are placed by a fixed
+completion policy so that every answer can be scored; a cell fails its
+integrity check if any unit is unanswered or has more than $25\%$ of its
+fragments placed by that policy. A positive control supplying raw identifiers in true
 order confirms the scorer detects the leak it is designed to detect; under
 masking no side channel is present. Request specifications are frozen with
 SHA-256 manifests.
@@ -691,18 +755,61 @@ headings, captions and table notes.
 \label{sec:results}
 % ===========================================================================
 
-\subsection{A generative attacker operates in a different regime}
+\subsection{Strong attackers reconstruct; the generative one most}
 \label{sec:res-attackers}
 
 On the 46 headline pools---full-length case reports under the sentence
 cut---the one-shot attacker reached $\FJ = 0.723$ $[0.702, 0.743]$, recovering
 most membership, $\FL = 0.882$ $[0.861, 0.901]$, and most relative order,
-$q = 0.792$. The analytic one-bucket reference is $0.149$ and a legal
-size-blind random seven-group answer scores $0.077$. The tested statistical and
-embedding attackers stayed near those references: Memon-inspired $0.168$
-$[0.156, 0.183]$ and the post-hoc embedding attacker $0.182$ $[0.167, 0.198]$.
-The paired difference between the one-shot attacker and Memon-inspired is
-$+0.554$ $[0.529, 0.579]$, positive in all 46 pools.
+$q = 0.792$ (Table~\ref{tab:headline}). The analytic one-bucket reference is
+$0.149$ and a legal size-blind random seven-group answer scores $0.077$. The
+untrained statistical and embedding attackers stayed near those references:
+Memon-inspired $0.168$ $[0.156, 0.183]$, the post-hoc embedding attacker
+$0.182$ $[0.167, 0.198]$, and the tier~0 parallel-path decoder $0.109$
+$[0.102, 0.116]$. The paired difference between the one-shot attacker and
+Memon-inspired is $+0.554$ $[0.529, 0.579]$, positive in all 46 pools.
+
+\paragraph{Trained non-LLM attackers.} Training moved the non-LLM attackers off
+the reference, and most of all when the training reached the grouping. Tier~0
+classical, which learns only position, ordered well ($q = 0.660$) but grouped
+no better than the untrained attackers ($\FL = 0.338$), for
+$\FJ = 0.234$ $[0.219, 0.251]$. The fine-tuned cross-encoder reached
+$\FJ = 0.544$ $[0.521, 0.567]$, with $\FL = 0.689$ $[0.658, 0.721]$,
+$q = 0.756$ and $\AJ = 0.464$: well above the reference, and recovering much
+of what the one-shot attacker recovers. The one-shot attacker still led it by
+$0.178$ $[0.157, 0.199]$ in \FJ{}, in all 46 pools, and by $0.193$
+$[0.166, 0.220]$ in \FL{}; on ordering alone the two were close ($q = 0.792$
+against $0.756$). The gap between them is mostly a grouping gap. Neither
+reconstructed a whole document exactly more than once (1 and 0 of 322).
+
+Under the outcome rule fixed before the ladder had any evaluation score
+(\S\ref{sec:attackers}), this is the second branch: tier~3 is well above $0.5$,
+so the reading is not that only large language models can reassemble these
+fragments, but that fragmentation of clinical prose fails against modern NLP
+generally and the generative attacker widens the margin. A model of about
+110 million parameters, fine-tuned for two epochs on public case reports,
+already recovers most of the source association.
+
+Four checks make it unlikely that the cross-encoder's score comes from a leak
+rather than the text. With every pair score set to a constant, which is what a
+model that cannot read the fragments would produce, the same decoder and
+presentation fall to $\FJ = 0.100$ on the headline pools, below the reference.
+Given the raw fragment identifiers instead of
+masked aliases, it scores the same ($0.542$ against $0.544$), while a lexical
+positive control under the same change jumps from chance to $\tau = 0.395$ and
+$0.739$, so the check can detect a side channel. Ten other presentation seeds
+move its overall \FJ{} by at most $0.002$. And its training corpus shares no
+document with the evaluation corpus: the median evaluation document has
+$1.2\%$ of its word 8-grams anywhere in the training and development text,
+and the most-overlapping has $10.0\%$.
+
+Other large language models run post hoc with the unchanged prompt
+(Appendix~\ref{app:crossmodel}, Figure~\ref{fig:ladder}) bear on a different
+question: whether the one-shot result is specific to the model the prompt was
+written for. Two did as well or better---\FJ{} $0.846$ $[0.830, 0.862]$ and
+$0.759$ $[0.735, 0.782]$, paired differences from the one-shot attacker of
+$+0.124$ $[0.107, 0.141]$ and $+0.037$ $[0.015, 0.057]$---and four smaller,
+older or non-reasoning models failed the integrity check.
 
 \paragraph{What that score means, immediately.}
 Because the primary metric scores precedence rather than adjacency
@@ -733,15 +840,21 @@ above the analytic reference, the smallest advantage being $\AJ = 0.422$.
 Subject--verb cuts were the most resistant at both granularities. Finer cuts
 lowered \FJ{} modestly within three of the four strategies. At matched mean
 fragment length the cutting strategy moved the result more than the granularity
-label did.
+label did. The cross-encoder, trained on sentence fragments only, scored
+between $0.336$ (subject--verb $\times$ clause) and $0.582$
+(semantic $\times$ sentence), below the one-shot attacker in every cell by
+$0.156$ to $0.347$, with the three random-cut cells showing the largest gaps.
 
 \subsection{Linkage versus ordering}
 \label{sec:res-decomp}
 
 The decomposition separates which half each condition attacks. Subject--verb
 cuts and random token windows act mainly on linkage; semantic-style boundaries
-act mainly on ordering. The tested statistical attackers order at chance
-throughout.
+act mainly on ordering. The untrained statistical attackers order at chance
+throughout ($q \approx 0.50$). The trained ones do not: on the headline pools
+tier~0 classical reaches $q = 0.660$ and the cross-encoder $0.756$, against
+$0.792$ for the one-shot attacker, so what separates them from the one-shot
+attacker is mostly linkage.
 
 \subsection{Ordering when membership is given}
 \label{sec:res-gameO}
@@ -749,7 +862,10 @@ throughout.
 With membership supplied, the one-shot attacker ordered the 100 full-length
 headline documents at $\tau = 0.769$, i.e.\ $88.5\%$ of pairs correctly
 ordered, with $\tau$ ranging from $0.724$ to $0.943$ across the grid cells. The
-tested lexical orderers sat at chance. Contiguity on the same headline
+lexical orderers and the tier~0 parallel-path decoder sat at chance. The
+trained orderers did not: tier~0 classical reached $\tau = 0.504$
+$[0.468, 0.539]$ and the cross-encoder $0.639$ $[0.602, 0.673]$, the latter
+$0.130$ $[0.100, 0.161]$ below the one-shot attacker. Contiguity on the same headline
 documents was again much lower than the pairwise figure suggests: $32.5\%$ of
 fragments in their exact position, a mean longest intact run of $6.31$
 fragments, and a run fraction of $0.237$. Headline and grid results are
@@ -765,7 +881,13 @@ reference of $0.10$ and well below the truth-free schema-order baseline of
 $0.20$. Its advantage over that baseline has a $90\%$ CI of
 $[-0.162, -0.129]$: by the frozen rule this is not near the baseline, it is
 below it. Every tested content-based attacker scored at or below the analytic
-reference: Memon-inspired $0.054$, embedding $0.054$, random $0.056$.
+reference: Memon-inspired $0.054$, embedding $0.054$, random $0.056$, tier~0
+parallel path $0.080$, tier~0 classical $0.088$, and the cross-encoder
+$0.002$. The cross-encoder, which never saw identifier fragments in training,
+scored below every other attacker. A post-hoc diagnostic shows why: $97\%$ of
+the fragment pairs it put in one group share a field type (chance $22\%$) and
+$0.5\%$ share a record (chance $11\%$). It grouped names with names and SSNs
+with SSNs---the template again, read the other way.
 
 What the attacker did recover was the template. All 140 groups contained
 exactly one name, one SSN, one account number and one address, and $q = 0.631$
@@ -824,7 +946,11 @@ The two endpoints were run first, as a separate post-hoc experiment on the same
 pools and excerpts. Cutting at single tokens rather than sentences moved \AVJ{}
 from $0.588$ to $0.016$: a paired difference of $0.572$ $[0.539, 0.607]$,
 positive in all 20 pools, exact two-sided sign test $p = 1.9\times10^{-6}$, and
-robust to the predicted-structure null. In raw terms \VJ{} was $0.762$ against
+robust to the predicted-structure null. One token-arm pool fails the
+integrity check of \S\ref{sec:protocol}: its repair answer returned 150 of 465
+fragments, so the completion policy placed $68\%$ of them. Without that pool
+the token arm's \AVJ{} is $0.023$ and the paired difference $0.570$, positive
+in all 19 pools; the conclusion does not depend on it. In raw terms \VJ{} was $0.762$ against
 a null of $0.423$ at the sentence cut and $0.155$ against $0.141$ at the token
 cut. Linkage degraded less than joint structure: \AVL{} fell from $0.777$ to
 $0.159$, so some membership signal survived where ordering did not. Being
@@ -841,7 +967,11 @@ to $-0.067$ (paired difference $0.110$ $[0.047, 0.178]$, 17 of 20 pools) and
 the embedding attacker from $0.104$ to $-0.090$ ($0.194$ $[0.155, 0.233]$, 20
 of 20). Raw and normalized scores agree in sign for the one-shot attacker in
 every pool; for Memon-inspired they disagree in three, which is a further
-reason to quote the normalized value.
+reason to quote the normalized value. The cross-encoder, trained on sentence
+fragments and outside its training distribution at one token, follows the same
+collapse: $\FJ = 0.543$ at the sentence cut and $0.117$ at the token cut,
+against a one-bucket reference of $0.130$ there. As stated before it ran, a
+weak result outside its training distribution is not evidence of security.
 
 \subsection{Completion}
 \label{sec:res-resources}
@@ -857,13 +987,17 @@ Appendix~\ref{app:resources}.
 \label{sec:discussion}
 % ===========================================================================
 
-\subsection{Why the generative attacker succeeds}
-Similarity-based grouping reaches $\FL \approx 0.34$--$0.36$ on the same pools
-where the one-shot attacker reaches $0.88$. The results are consistent with
-fragment content providing a strong reconstruction channel---one that pairwise
-lexical or embedding similarity does not capture. We did not run an experiment
-that isolates which properties of the content carry that signal, so we do not
-claim that entity continuity or chronology specifically were measured.
+\subsection{Why the attackers succeed}
+On the same headline pools, untrained similarity-based grouping reaches
+$\FL \approx 0.34$--$0.36$, a cross-encoder fine-tuned on public case reports
+reaches $0.69$, and the one-shot attacker $0.88$. The results are consistent
+with fragment content providing a strong reconstruction channel that pairwise
+lexical or embedding similarity misses but that a model trained on the same
+kind of text partly learns. The generative attacker's further lead is mostly in
+grouping, where it sees the whole pool at once; the cross-encoder scores pairs
+and its decoder assembles them afterwards. We did not run an experiment that
+isolates which properties of the content carry the signal, so we do not claim
+that entity continuity or chronology specifically were measured.
 
 \subsection{Data-type dependence}
 Prose fragments carry both linkage and ordering signal. Identifier fragments
@@ -878,7 +1012,10 @@ setting we tested.
 \subsection{Implications for fragmentation as a privacy mechanism}
 These results do not support treating plaintext fragmentation as a sole
 confidentiality control for narrative text. They are consistent with it being,
-at most, a data-dependent compromise-containment measure. For a practitioner
+at most, a data-dependent compromise-containment measure. The threat does not
+require access to a frontier model: a small domain model fine-tuned on public
+text of the same kind recovered most of the source association, and a
+large language model available as an inexpensive API recovered more. For a practitioner
 the two-regime finding of \S\ref{sec:res-gradient} is the usable part: in the
 coarse range, finer cutting helps mainly by exposing less text per fragment,
 because a sentence-sized fragment is a sentence of readable text whatever the
@@ -896,18 +1033,31 @@ parameter---pool size and match prior in~\cite{lermen2026}, the number of mixed
 documents in~\cite{paixao2020}---and we do not. How the result moves with $N$
 is open, and results from a visual channel do not transfer to a semantic one.
 
-\textbf{One corpus, one domain, one generative model.} English clinical case
-reports and a single attacker model, with one embedding model.
+\textbf{One corpus, one domain, one prespecified generative model.} English
+clinical case reports and a single prespecified attacker model, with one
+embedding model. Other large language models were run only post hoc and only
+on the headline pools.
 
 \textbf{Tested attackers are not a frontier.} The Memon-inspired attacker is
 not a faithful reproduction of the original algorithm, and the lexical
-orderers run on a sparse similarity signal. Their results bound nothing about
-what a stronger classical attacker could achieve.
+orderers run on a sparse similarity signal. The non-LLM ladder is stronger but
+is one architecture per tier, one training run and one decoder family; it was
+added after the one-shot results were known, although every design and tuned
+value was fixed on disjoint data before evaluation. Its results bound nothing
+about what a better-engineered non-LLM attacker could achieve; they show only
+that one is not needed for substantial leakage.
 
-\textbf{Post-hoc analyses.} The granularity series and the embedding attacker
-were designed after results were seen and are labelled throughout. The series
-uses four-sentence excerpts and fixed-width cuts, and locates no universal
-threshold.
+\textbf{Post-hoc analyses.} The granularity series, the embedding attacker and
+the cross-model runs were designed after results were seen and are labelled
+throughout. The series uses four-sentence excerpts and fixed-width cuts, and
+locates no universal threshold. The cross-model runs reuse a prompt written for
+one model, so a model that scores lower is not evidence that fragmentation
+protects against it.
+
+\textbf{Publication dates.} Seven of the 500 documents were first published
+online in 2025, before the attacker model's cutoff; the headline results are
+reported with and without the five pools that contain them
+(\S\ref{sec:corpora}).
 
 \textbf{References.} The analytic one-bucket benchmark is not a legal answer
 and is roughly twice the legal random score, so advantages normalized against
@@ -953,7 +1103,10 @@ Fragmentation removes explicit membership and order, but it does not
 necessarily remove the relationships encoded in plaintext content. In a
 closed-world clinical-prose setting, a modern generative attacker strongly
 recovered source association and broad relative order, while immediate
-adjacency and contiguous recovery remained much weaker. Reconstruction changed
+adjacency and contiguous recovery remained much weaker. A fine-tuned non-LLM
+attacker recovered much of the same structure, so the leak is a property of the
+text rather than of one model family; the generative attacker widened the
+margin. Reconstruction changed
 sharply with the fragmentation regime and the data type, and in a controlled
 post-hoc arm sufficiently fine fixed-width fragmentation drove the tested
 attacker toward its random-shuffle reference. Resistance to reassembly is
@@ -1003,7 +1156,12 @@ retrieval scripts; redistribution of article text is subject to each article's
 licence. The synthetic identifier corpus is reproducible from its seed. The
 attacker is a proprietary API model, so responses are stored and every score
 can be recomputed without re-querying; the embedding model is pinned by
-revision and file hash.
+revision and file hash. The fine-tuned tier~3 weights are identified by
+SHA-256 in the decision log, and their pair scores on every evaluation unit are
+stored, so its results can be re-decoded without the model.
+\TODO{archive the tier~3 weights (about 440\,MB) and give the DOI} The
+post-hoc cross-model runs ship with their preregistration, amendments, raw
+responses and run log.
 
 \TODO{anonymized artifact URL for review; confirm the release licence and
 whether fragment redistribution is permitted for every source article}
@@ -1020,8 +1178,11 @@ API) and a sentence-embedding model
 (\textsf{sentence-transformers/all-mpnet-base-v2}, pinned to a fixed revision).
 Their configuration, prompts and query protocol are described in
 \S\ref{sec:attackers}, \S\ref{sec:protocol} and Appendix~\ref{app:prompts}.
+The tier~3 attacker is a \textsf{BiomedBERT-base} model that we fine-tuned on
+a disjoint public corpus (\S\ref{sec:attackers}). Further language models were
+run post hoc on the headline pools (Appendix~\ref{app:crossmodel}).
 During development we also queried other language models on development data
-only; none contributes to a reported result. No model was fine-tuned.
+only; none of those queries contributes to a reported result.
 
 \emph{AI assistance in conducting the research.} The authors used an AI coding
 assistant throughout the project to write, test and debug the experiment and
@@ -1035,8 +1196,9 @@ complete reference draft, which the authors used to see one possible shape of
 the argument before writing their own. The submitted manuscript is the authors'
 own prose. The same assistant was used to check drafts for consistency with the
 recorded design decisions and results and to flag passages needing
-clarification. \TODO{authors: name any section that retains drafted text, or
-state that none does}
+clarification. \TODO{authors: this file is AI-drafted text, including the
+sections on the non-LLM attacker ladder and Appendix~\ref{app:crossmodel};
+this paragraph must describe the version actually submitted}
 
 \emph{Human oversight.} Every design decision, prespecification and
 authorization of paid model queries was made by the authors and recorded in a
@@ -1093,8 +1255,54 @@ budget, and fragment count does not predict which one.
 
 \section{Other LLMs on the Headline Pools\posthoc}
 \label{app:crossmodel}
-\TODO{author text: the post-hoc cross-model sweep (Figure~\ref{fig:ladder},
-Table~\ref{tab:crossmodel})}
+\textbf{This appendix is post-hoc exploratory.} The Game~J prompt was written
+and frozen with the one-shot attacker, so the headline result could in
+principle depend on that model rather than on what the fragments carry. After
+the headline result was seen, we ran other large language models on the same
+46 pools with the prompt unchanged, one repair round, the same scorer and the
+same integrity check (\S\ref{sec:protocol}). The models, their settings, the
+verdict rule and the reading below were committed to a preregistration entry
+before the first request. Dated amendments, each committed before the requests
+it governed, changed providers and output budgets where a provider could not
+deliver the registered budget. Each model's training cutoff, or its release
+date where no cutoff is published, precedes the earliest document's first
+online date. Each model ran at the largest output budget its provider
+delivered.
+
+The reading was fixed in advance and runs in one direction. A model at or
+above the one-shot attacker is evidence that the headline does not depend on
+it. A model below it is \emph{not} evidence that fragmentation protects against
+that model, because the prompt was written for another.
+
+Two models did as well or better (Table~\ref{tab:crossmodel},
+Figure~\ref{fig:ladder}). GPT-5.6 sol reached $\FJ = 0.846$ $[0.830, 0.862]$
+and $\FL = 0.951$, above the one-shot attacker in 45 of 46 pools, a paired
+difference of $+0.124$ $[0.107, 0.141]$. DeepSeek-V3.2, an open-weights model,
+reached $\FJ = 0.759$ $[0.735, 0.782]$ and $\FL = 0.907$, a paired difference
+of $+0.037$ $[0.015, 0.057]$, higher in 36 of 46 pools, for \$1.85 in total. Its
+micro-averaged $q$, $0.768$ $[0.686, 0.844]$, was below the one-shot
+attacker's $0.792$, with a wide interval; its lead is in grouping. Five of its
+responses ran past the registered 128{,}000-token budget because the provider
+caps reasoning at 131{,}072 tokens, a deviation that can only have helped it.
+Without the five pools that contain a 2025 document, both scores move by less
+than $0.001$.
+
+Four models failed the integrity check: GPT-4.1 and Llama~4 Maverick, both
+non-reasoning models limited to 32{,}768 output tokens, answered every pool but
+left more than $25\%$ of the fragments to the completion policy in 44 and 10
+pools; Gemma~4 12B, run locally, and gpt-oss-20b left pools without an answer
+(8 and 6, eleven of them by exhausting the output budget) and others over the
+cap (9 and 32). Their
+scores over the pools they answered, $0.08$ to $0.26$, are secondary and, by
+the rule above, say nothing about protection. gpt-oss-120b was not completed:
+both providers we pinned stopped long calls below its output budget. Kimi~K2.5
+was registered but not run, dropped by a budget rule fixed before any request
+to it.
+
+Together with the non-LLM ladder, the pattern is consistent. Frontier-class
+models from three developers, one of them open-weights, reconstruct the
+headline pools at least as well as the model the prompt was written for, and
+none of the smaller or older models we ran passed the integrity check.
 \begin{figure*}[tp]
   \centering
   \includegraphics{fig7_headline_ladder.pdf}

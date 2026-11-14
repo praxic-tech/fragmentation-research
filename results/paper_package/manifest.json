@@ -92,10 +92,10 @@
    "status": "Attackers prespecified (tiers 0 and 3: D19); embedding and other-LLM rows POST-HOC EXPLORATORY",
    "shows": "Every attacker and every other LLM on the headline pools, F1_J with 95% CIs",
    "files": {
-    "pdf": "2bc9e36576f3",
-    "png": "a327c20de116",
-    "svg": "6188239bf866",
-    "csv": "db16df9b4f0b"
+    "pdf": "d994511ddb99",
+    "png": "cbf0bb78f2c9",
+    "svg": "4c361b22408a",
+    "csv": "c1a54f269426"
    }
   },
   {
@@ -158,8 +158,8 @@
    "status": "Prespecified (tiers 0 and 3: D19); embedding row post hoc",
    "shows": "Headline attacker comparison with 95% CIs",
    "files": {
-    "tex": "47190ac7f943",
-    "md": "7db500562034"
+    "tex": "ae61a14bd17a",
+    "md": "171d330017bd"
    }
   },
   {

@@ -48,7 +48,7 @@ for n in range(1, npages + 1):
     txt = subprocess.run(["pdftotext", "-f", str(n), "-l", str(n), PDF, "-"],
                          capture_output=True, text=True, encoding="utf-8",
                          errors="replace").stdout
-    if re.search(r"(?m)^A\s+Design Summary", txt):
+    if re.search(r"(?m)^(\d+\s+)?A\s+Design Summary", txt):   # review line numbers may precede it
         appendix_from = n
         break
 body_bare = [p for p in re.findall(r"\d+", bare)

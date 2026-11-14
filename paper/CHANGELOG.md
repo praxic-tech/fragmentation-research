@@ -12,6 +12,37 @@ acknowledgments, bibliography and appendices follow and do not count).
 
 ---
 
+## Revision 6 (2026-11-14): non-LLM ladder, integrity gate, cross-model appendix
+
+AI-drafted at the user's request; the user has not read it.
+
+- **Outcome rule applied as fixed in D19.** Tier 3 reached F1_J 0.544, well
+  above 0.5, so the framing is the rule's second branch: fragmentation of
+  clinical prose fails against modern NLP generally and the generative
+  attacker widens the margin (by 0.178 [0.157, 0.199], all 46 pools). Abstract,
+  introduction, contributions, §5.1 (retitled), discussion, limitations and
+  conclusion follow it; "tested statistical and embedding attackers stayed near
+  their references" is now said only of the untrained attackers.
+- **§4.4** describes the ladder (tier 0 parallel path, tier 0 classical,
+  tier 3 cross-encoder), the disjoint corpus, the disclosure that it was added
+  after the one-shot results, and the outcome rule. Tiers 1–2: TODO.
+- **§5.1** adds the trained attackers and the tier 3 leak checks; §5.2–5.5 add
+  the tier 3 grid, ordering, Game O and identifier results (identifier
+  diagnostic labelled post hoc); §5.6 adds the integrity-gate result for the
+  single-token arm (one pool over the 25% cap; conclusion unchanged).
+- **Corpora:** "all 500 verified post-cutoff" corrected: 493 by first online
+  date; seven appeared online first in 2025, in five headline pools.
+- **Appendix D (new, post hoc):** the cross-model runs, Figure 4 and Table 11.
+- **Query protocol** states the integrity rule (25% completion-policy cap).
+- **AI use:** no longer says no model was fine-tuned or that no other model
+  contributes to a reported result; TODO says this file is AI-drafted.
+- Table 2 and Figure 4 call tier 0's decoder "parallel path", not "PUP": the
+  bibliography audit forbids attributing PUP's mechanism to the cited paper
+  until its primary text is read.
+- The exhibit block moved to the end of §4.4 so the exhibits keep pace with the
+  longer setup; tools/check_layout.py now finds the appendix heading when a
+  review line number precedes it.
+
 ## Framing edits
 
 - **Abstract rewritten to the eight-point order** (problem → games → metric

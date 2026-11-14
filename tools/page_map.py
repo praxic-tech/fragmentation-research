@@ -23,8 +23,8 @@ tabdir = os.path.join(os.path.dirname(os.path.abspath(tex)), "..", "results",
 
 # exhibit -> the subsection that discusses it
 HOME = [
-    ("table2_headline_attackers", "A generative attacker operates in a different regime"),
-    ("table9_adjacency",          "A generative attacker operates in a different regime"),
+    ("table2_headline_attackers", "Strong attackers reconstruct; the generative one most"),
+    ("table9_adjacency",          "Strong attackers reconstruct; the generative one most"),
     ("table3_grid",               "Fragmentation strategy and granularity"),
     ("fig3_linkage_vs_ordering",  "Linkage versus ordering"),
     ("table4_gameO",              "Ordering when membership is given"),
@@ -69,7 +69,7 @@ def caption_of(name):
 
 
 # headings also appear in running text, so anchor on the first results page
-start = where("A generative attacker operates in a different regime", 6) or 1
+start = where("Strong attackers reconstruct; the generative one most", 6) or 1
 start = max(1, start - 1)
 
 lags, rows = [], []

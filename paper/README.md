@@ -16,8 +16,11 @@ cd paper
 pdflatex main && bibtex main && pdflatex main && pdflatex main
 ```
 
-Current state: **0 errors, 0 undefined citations or references, 0 overfull or
-underfull boxes, 12 pages total, main body pages 1–10.** Figures
+Current state: **0 errors, 0 undefined citations or references, 0 overfull
+boxes, 15 pages total, main body pages 1–11** (Conclusion on page 11; the
+appendix holds two float pages). Numbers quoted about the non-LLM ladder, the
+integrity gate and the cross-model runs are checked against their sources by
+`python analysis/audit_ladder_numbers.py`. Figures
 resolve from `../results/paper_package/figures/` and tables from
 `../results/paper_package/tables/`, so rebuilding the package updates the paper
 with no edits here.
