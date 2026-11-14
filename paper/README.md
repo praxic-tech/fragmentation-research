@@ -17,8 +17,9 @@ pdflatex main && bibtex main && pdflatex main && pdflatex main
 ```
 
 Current state: **0 errors, 0 undefined citations or references, 0 overfull
-boxes, 15 pages total, main body pages 1–11** (Conclusion on page 11; the
-appendix holds two float pages). Numbers quoted about the non-LLM ladder, the
+boxes, 15 pages total, main body pages 1–12** (§7 ends in the left column of
+page 12, so the 12-page budget is nearly used; the appendix holds two float
+pages). Numbers quoted about the non-LLM ladder, the
 integrity gate and the cross-model runs are checked against their sources by
 `python analysis/audit_ladder_numbers.py`. Figures
 resolve from `../results/paper_package/figures/` and tables from

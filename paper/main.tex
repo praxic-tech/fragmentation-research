@@ -175,7 +175,7 @@ association and broad relative order strongly; contiguous plaintext recovery
 is much weaker. The leak is not specific to large language models: a
 cross-encoder fine-tuned on disjoint public case reports reached
 $\FJ = 0.544$, and the generative attacker exceeded it by $0.178$ in every
-pool. In a post-hoc check, two other large language models given the unchanged
+pool. In a post-hoc exploratory check, two other large language models given the unchanged
 prompt matched or exceeded the main one.
 
 Resistance depended on what the fragments retained. Synthetic identifier
@@ -633,7 +633,10 @@ attackers. They were added after the one-shot results were known, which we
 disclose here; to keep that knowledge out of them, every design was written
 down, and every tuned value chosen, on a disjoint corpus before the attacker
 saw an evaluation pool, and the first complete evaluation run of each is the
-one reported. They are main comparisons. The disjoint corpus is PMC Open Access
+one reported. They are main comparisons. Tier~0 was first specified for the
+headline pools; running it on every other condition, Game~O included, was
+decided after its headline result was seen, with no setting changed, and every
+cell is reported. The disjoint corpus is PMC Open Access
 case reports published 2024--2025, drawn with the same query, licence filter,
 extraction and sentence splitter as the evaluation corpus, with every
 evaluation document excluded by PMC identifier; it is split by identifier hash
@@ -778,9 +781,12 @@ $\FJ = 0.544$ $[0.521, 0.567]$, with $\FL = 0.689$ $[0.658, 0.721]$,
 $q = 0.756$ and $\AJ = 0.464$: well above the reference, and recovering much
 of what the one-shot attacker recovers. The one-shot attacker still led it by
 $0.178$ $[0.157, 0.199]$ in \FJ{}, in all 46 pools, and by $0.193$
-$[0.166, 0.220]$ in \FL{}; on ordering alone the two were close ($q = 0.792$
-against $0.756$). The gap between them is mostly a grouping gap. Neither
-reconstructed a whole document exactly more than once (1 and 0 of 322).
+$[0.166, 0.220]$ in \FL{}. Because $q$ is conditional on each attacker's own
+correct links, it is not strictly comparable between attackers; Game~O, where
+membership is given, is the like-for-like ordering test, and there the gap is
+$0.130$ in $\tau$ (\S\ref{sec:res-gameO}). Most of the distance to the one-shot
+attacker is in grouping. Neither reconstructed a whole document exactly more
+than once (1 and 0 of 322).
 
 Under the outcome rule fixed before the ladder had any evaluation score
 (\S\ref{sec:attackers}), this is the second branch: tier~3 is well above $0.5$,
@@ -803,8 +809,9 @@ document with the evaluation corpus: the median evaluation document has
 $1.2\%$ of its word 8-grams anywhere in the training and development text,
 and the most-overlapping has $10.0\%$.
 
-Other large language models run post hoc with the unchanged prompt
-(Appendix~\ref{app:crossmodel}, Figure~\ref{fig:ladder}) bear on a different
+Other large language models, run with the unchanged prompt in a post-hoc
+exploratory check (Appendix~\ref{app:crossmodel}, Figure~\ref{fig:ladder}),
+bear on a different
 question: whether the one-shot result is specific to the model the prompt was
 written for. Two did as well or better---\FJ{} $0.846$ $[0.830, 0.862]$ and
 $0.759$ $[0.735, 0.782]$, paired differences from the one-shot attacker of
@@ -853,8 +860,11 @@ cuts and random token windows act mainly on linkage; semantic-style boundaries
 act mainly on ordering. The untrained statistical attackers order at chance
 throughout ($q \approx 0.50$). The trained ones do not: on the headline pools
 tier~0 classical reaches $q = 0.660$ and the cross-encoder $0.756$, against
-$0.792$ for the one-shot attacker, so what separates them from the one-shot
-attacker is mostly linkage.
+$0.792$ for the one-shot attacker. Since $q$ is measured on each attacker's
+own correct links, these are not strictly comparable; Game~O below is the
+like-for-like ordering test. With linkage at $\FL = 0.338$ and $0.689$ against
+$0.882$, what separates the trained attackers from the one-shot attacker is
+mostly linkage.
 
 \subsection{Ordering when membership is given}
 \label{sec:res-gameO}
@@ -1043,7 +1053,9 @@ not a faithful reproduction of the original algorithm, and the lexical
 orderers run on a sparse similarity signal. The non-LLM ladder is stronger but
 is one architecture per tier, one training run and one decoder family; it was
 added after the one-shot results were known, although every design and tuned
-value was fixed on disjoint data before evaluation. Its results bound nothing
+value was fixed on disjoint data before evaluation. All three of tier~0's
+tuned values lie at the edge of their committed grids; the grids were not
+widened, so a wider search might do slightly better. Its results bound nothing
 about what a better-engineered non-LLM attacker could achieve; they show only
 that one is not needed for substantial leakage.
 
@@ -1082,9 +1094,14 @@ particular names or numbers, which is why synthetic values are adequate for
 this purpose.
 
 The arm does \emph{not} support any quantitative claim about real identifier
-databases. Real records carry correlations between fields that a seeded
-generator does not reproduce, and such correlations are precisely the kind of
-dependency this paper shows can be exploited elsewhere. We therefore read this
+databases. The generator draws each field independently, so by construction no
+field carries information about another field of the same record, and no
+content-based attacker could have linked them. The arm shows that
+fragmentation holds in that easy case and that the scorer reports it; it does
+not show that real structured data is safe. Real records carry correlations
+between fields that a seeded generator does not reproduce, and such
+correlations are precisely the kind of dependency this paper shows can be
+exploited elsewhere~\cite{decapitani2014}. We therefore read this
 result only as evidence that the tested attackers' advantage on prose does not
 transfer to schema-dominated fragments. \TODO{authors: confirm this argument
 satisfies the venue's synthetic-data requirement}
@@ -1191,14 +1208,14 @@ draft internal documentation. \TODO{co-authors: state any AI assistance used in
 your components; confirm assistant and model versions}
 
 \emph{AI assistance in preparing the manuscript.} An AI assistant with access
-to the project's decision log, frozen results and figure package produced a
-complete reference draft, which the authors used to see one possible shape of
-the argument before writing their own. The submitted manuscript is the authors'
-own prose. The same assistant was used to check drafts for consistency with the
-recorded design decisions and results and to flag passages needing
-clarification. \TODO{authors: this file is AI-drafted text, including the
-sections on the non-LLM attacker ladder and Appendix~\ref{app:crossmodel};
-this paragraph must describe the version actually submitted}
+to the project's decision log, frozen results and figure package drafted the
+text of this version of the manuscript, including the sections on the non-LLM
+attacker ladder (\S\ref{sec:attackers}, \S\ref{sec:res-attackers}) and
+Appendix~\ref{app:crossmodel}, at the authors' request. The same assistant was
+used to check drafts for consistency with the recorded design decisions and
+results and to flag passages needing clarification. \TODO{authors: rewrite this
+paragraph to describe the version actually submitted, naming every section
+that retains drafted text}
 
 \emph{Human oversight.} Every design decision, prespecification and
 authorization of paid model queries was made by the authors and recorded in a
@@ -1207,7 +1224,8 @@ were seen are labelled post hoc throughout. Every reported number is
 regenerated by released scripts from the stored raw model outputs, and an
 automated check verifies each quoted value against its source file. The authors
 reviewed all code and text and take full responsibility for the content of this
-paper. No AI system is listed as an author.
+paper. No AI system is listed as an author. \TODO{true only once the authors
+have reviewed the drafted text; this version has not been reviewed}
 \end{ai}
 
 \bibliographystyle{ACM-Reference-Format}

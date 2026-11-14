@@ -39,6 +39,18 @@ AI-drafted at the user's request; the user has not read it.
 - Table 2 and Figure 4 call tier 0's decoder "parallel path", not "PUP": the
   bibliography audit forbids attributing PUP's mechanism to the cited paper
   until its primary text is read.
+- **Checked against Notion (Wording Rules, Closing the Reviewer Gaps, Tier 0
+  Methods and Results), then fixed:** "post-hoc exploratory" on every
+  cross-model mention; q no longer compared across attackers as if
+  like-for-like (Game O τ is the ordering comparison); disclosure that tier 0
+  was extended beyond the headline after its headline result; tier 0's tuned
+  values at the edge of their grids (limitations); identifier fields
+  independent by construction (Gap 1 limitation); the AI-use statement no
+  longer calls drafted text author-written, and flags that this version is
+  unreviewed.
+- Known conflict, not resolved: the Tier 0 Notion page says to call T0-PUP
+  "Pal & Memon's PUP"; refs.bib forbids attributing PUP's mechanism to the
+  cited paper until its primary text is read. The draft follows refs.bib.
 - The exhibit block moved to the end of §4.4 so the exhibits keep pace with the
   longer setup; tools/check_layout.py now finds the appendix heading when a
   review line number precedes it.
