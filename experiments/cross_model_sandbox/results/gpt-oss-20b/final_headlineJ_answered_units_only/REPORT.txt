@@ -1,0 +1,32 @@
+SECONDARY: answered units only (allow_partial=True). The cell is REFUSED under the preregistered rule (units without an answer, or a unit's recorded repair.policy_share over joint_game.POLICY_CAP); that refusal is the primary result. See ../PRIMARY_RESULT.md.
+
+
+==========================================================================
+ CELL prose
+
+INTEGRITY
+  game J: REFUSED   model answered 40/46   non-completions 3   fragments placed by policy 0.0%
+    resource-bounded, 128k exhausted (D6, not scored): pool_001, pool_006, pool_015
+    no model answer: pool_039, pool_059, pool_067
+
+==========================================================================
+ THREE ATTACK CONDITIONS, SAME CORPUS, SAME MODEL
+==========================================================================
+
+GAME J  (joint: membership AND order, nothing given)
+  pools scored 40
+  COMPLETION   40/43 (93%)   resource-bounded non-completions 3
+  linkage F1   mean 0.1396   baseline 0.3018   advantage -0.2447
+               precision 0.2611   recall 0.1065   (of guessed / of true same-record pairs)
+  groups       guessed 163.6 vs 7.0 asked   exact count 4/40
+  partition    valid 40/40   (after repairing dropped fragments to singletons)
+  COVERAGE     model placed 100.0% of fragments   dropped 0 total, worst pool 0
+  JOINT ordered-pair F1   mean 0.0759   baseline 0.1509   advantage -0.0902
+  F1 BREAKDOWN  (pairs summed over 40 pools;  F1_J = linkage F1 x q)
+    pairs      guessed 55,583 same-record pairs   true 251,098
+    linkage    20,026 guessed pairs really share a record   precision 0.3603  recall 0.0798  F1 0.1306
+    order      10,470 of those 20,026 point the right way   q = C/K 0.5228
+    joint      precision C/guessed 0.1884  recall C/true 0.0417  F1 0.0683 = 0.1306 x 0.5228
+  direction accuracy      q_micro 0.5228   (K=0 in 19/40 pools)
+  tau in matched groups   mean +0.1434  (n=21 pools)
+  records recovered EXACTLY (membership and order): 0/280  (0.0%)

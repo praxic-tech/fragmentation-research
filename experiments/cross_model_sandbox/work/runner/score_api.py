@@ -115,9 +115,12 @@ def means(jpath, pools):
         _o, _u, key, truth = build_units(os.path.join(FROZEN, "data", "prose"), 0, len(members), 42,
                                          pools=[(pid, members)], o_docs=[])
         s = score_row(rows[pid], key, truth)
-        f1.append(s["joint_f1"]); fl.append(s["j_linkage_f1"]); q.append(s["q"])
+        f1.append(s["joint_f1"]); fl.append(s["j_linkage_f1"])
+        if s["q"] is not None:          # frozen convention: K == 0 -> q undefined, left out of the q mean
+            q.append(s["q"])            # (game_j_adjacency.py, build_master.py)
         per[pid] = {"F1_J": s["joint_f1"], "F1_L": s["j_linkage_f1"], "q": s["q"]}
-    m = {"F1_J": st.fmean(f1), "F1_L": st.fmean(fl), "q": st.fmean(q)} if f1 else {}
+    m = {"F1_J": st.fmean(f1), "F1_L": st.fmean(fl), "q": st.fmean(q) if q else None,
+         "n": len(f1), "n_q_defined": len(q)} if f1 else {}
     return rows, m, per
 
 
@@ -289,6 +292,14 @@ def score_model(slug):
     return summary
 
 
+def _q(m):
+    """q mean over rows where q is defined (K > 0), with the count."""
+    if m.get("q") is None:
+        return f"undefined (q defined on 0 of {m.get('n')})"
+    return f"{m['q']:.4f}" + (f" (defined on {m['n_q_defined']} of {m['n']})"
+                              if m.get("n_q_defined") is not None and m["n_q_defined"] != m["n"] else "")
+
+
 def write_primary_md(slug, s):
     L = [f"# {slug}: headline Game J, primary result", "",
          "Post-hoc exploratory (PREREGISTRATION.md, 2026-11-13). Primary verdict = the preregistered rule "
@@ -306,10 +317,10 @@ def write_primary_md(slug, s):
             m = r["SECONDARY_answered_units_only"]
             if m:
                 L.append(f"- SECONDARY, answered units only: F1_J {m['F1_J']:.4f}, F1_L {m['F1_L']:.4f}, "
-                         f"q {m['q']:.4f}")
+                         f"q {_q(m)}")
         else:
             m = r["PRIMARY_means"]
-            L.append(f"- F1_J {m['F1_J']:.4f}, F1_L {m['F1_L']:.4f}, q {m['q']:.4f}")
+            L.append(f"- F1_J {m['F1_J']:.4f}, F1_L {m['F1_L']:.4f}, q {_q(m)}")
         L += [f"- completion {r['answered_units']}/{r['units']}; D6 units {r['d6_units']}; "
               f"invalid after repair {r['invalid_after_repair']}/{r['answered_units']}; mean policy_share "
               f"{(r['mean_policy_share'] or 0):.4f}; units over cap {r['units_over_cap']}",

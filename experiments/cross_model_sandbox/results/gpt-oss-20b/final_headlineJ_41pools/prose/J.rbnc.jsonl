@@ -1,0 +1,3 @@
+{"game": "J", "unit": "pool_001", "n_fragments": 195, "custom_ids": ["prose__J__pool-001"], "why": "exhausted the model's 128k output ceiling; not re-asked (RUN_DECISIONS D6)"}
+{"game": "J", "unit": "pool_006", "n_fragments": 143, "custom_ids": ["prose__J__pool-006"], "why": "exhausted the model's 128k output ceiling; not re-asked (RUN_DECISIONS D6)"}
+{"game": "J", "unit": "pool_015", "n_fragments": 210, "custom_ids": ["prose__J__pool-015", "prose__J__pool-015-r1"], "why": "exhausted the model's 128k output ceiling; not re-asked (RUN_DECISIONS D6)"}

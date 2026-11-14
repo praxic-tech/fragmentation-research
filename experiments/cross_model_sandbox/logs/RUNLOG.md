@@ -625,3 +625,21 @@ Install (user granted install permission, asked to keep it small):
   dummy was longer than any headline prompt (my overshoot, not a provider
   failure). By the same estimate pool_037 is 19,142 + 110,000 = 129,142, which
   fits. No fallback taken.
+
+## 2026-11-14 — Lines started; gpt-4.1 and gpt-oss-20b done
+
+- 00:09 UTC both lines started (Azure: gpt-4.1 -> gpt-5.6-sol; OpenRouter:
+  gpt-oss-20b -> gpt-oss-120b -> llama-4-maverick -> deepseek-v3.2).
+- gpt-4.1: REFUSED (46 and 41 pools): all 46 answered, 44 over the policy cap
+  (it omits fragments; mean policy_share 0.39). Secondary F1_J 0.2363. $2.42.
+- gpt-oss-20b (AkashML): all waves done, $0.5688 (+ $0.1501 superseded =
+  $0.7189). AkashML does reach the full 110,000 (3 D6 units). The runner then
+  crashed in my scoring wrapper, not in a protocol check: `means()` averaged
+  `q`, which the frozen `score_row` returns as None when K = 0 (no guessed
+  linked pairs). Fixed to the frozen convention (q undefined -> left out of the
+  q mean, as in `game_j_adjacency.py` / `build_master.py`), with the count of
+  rows where q is defined reported beside it. F1_J/F1_L unaffected; Sonnet,
+  Gemma and gpt-4.1 re-scored with identical means (all q defined). Offline
+  tests 5/5. OpenRouter line restarted at gpt-oss-120b (01:08 UTC).
+- gpt-oss-20b: REFUSED (46 and 41): 6 units without an answer, 32 over the cap.
+  Secondary F1_J 0.0759, F1_L 0.1396, q 0.5477 (defined on 21 of 40).
