@@ -502,3 +502,59 @@ OpenRouter holds $10.00 of credit, key limit $10.00.
 One table: every model plus Sonnet and Gemma 4 12B: verdict, F1_J, F1_L, q,
 their 41-pool versions, all the rates above, and cost. Descriptive only;
 labelled post-hoc exploratory wherever reported.
+
+
+## 2026-11-13 (amendment): gpt-oss provider and budget; run order
+
+Post hoc exploratory, like the entry it amends ("Sonnet-dependence sweep on
+headline J", above). Written after the gpt-oss-20b base-wave halt
+(`logs/RUNLOG.md`, "gpt-oss-20b: HALT in the base wave") and before any
+further request. The settings below were chosen from the endpoint limits and
+prompt lengths only. No row of this sweep has been scored.
+
+### Run order
+
+- The Azure line (gpt-4.1, then gpt-5.6-sol) runs now, concurrently with the
+  OpenRouter line (gpt-oss-20b, gpt-oss-120b, llama-4-maverick, deepseek-v3.2).
+  The two lines use separate endpoints, keys, rate limits and caps, and the
+  order affects no result.
+- The Kimi decision comes after all six models finish. The Kimi rule is
+  unchanged.
+
+### gpt-oss-20b and gpt-oss-120b
+
+- **Provider: AkashML, fp4 only, `allow_fallbacks: false`**, replacing
+  CoreWeave. Reason: CoreWeave's effective limit is about 117.7k total tokens,
+  below its listed 131,072 (3 length stops at 107,549 / 112,188 / 111,621
+  output tokens; see RUNLOG).
+- **Max output: 110,000 tokens**, replacing 117,964. Reason: gpt-oss holds
+  131,072 tokens in total on every provider, so 117,964 cannot fit prompts
+  over about 13.1k tokens (2 HTTP 400s: pool_018 at 14,748 prompt tokens,
+  pool_007 at 13,552). The longest headline prompt, pool_037 (75,956 chars),
+  is about 19.1k gpt-oss tokens (at most about 19.9k at the highest observed
+  0.262 tokens/char); 110,000 fits it with margin.
+- **D6 = a call that reaches 110,000 output tokens.** This is below Sonnet's
+  128k. Each model runs at its own feasible maximum: gpt-4.1 and
+  llama-4-maverick 32,768; deepseek-v3.2, kimi-k2.5 and gpt-5.6-sol 128,000;
+  gpt-oss 110,000.
+- All other gpt-oss settings unchanged: reasoning effort high, temperature
+  1.0, top_p 1.0.
+- **The 11 CoreWeave rows are superseded**: kept in the logs, never scored.
+  gpt-oss-20b reruns all 46 pools from the start. The $0.1064 already spent is
+  reported in its cost totals.
+- Caps unchanged: gpt-oss-20b $1.00, gpt-oss-120b $1.50.
+
+### Halt conditions added
+
+- Any HTTP 400 on context length.
+- Any length stop below 110,000 output tokens (gpt-oss).
+- A halt on one line (Azure or OpenRouter) does not stop the other.
+
+### Fallback
+
+- If AkashML fails its smoke test (auth, provider, quantization, or rejecting
+  a ~19-20k-token prompt with max output 110,000), use Parasail fp4 under the
+  same settings, record it in RUNLOG and continue. For gpt-oss-120b on
+  Parasail the cap is raised to $3.00.
+- Smoke test: a dummy prompt of the length of the longest headline prompt
+  (not a headline prompt), with max output 110,000.
