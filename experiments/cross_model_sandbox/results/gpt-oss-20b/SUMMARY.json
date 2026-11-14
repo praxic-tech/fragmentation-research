@@ -1,0 +1,347 @@
+{
+ "slug": "gpt-oss-20b",
+ "budget": 110000,
+ "post_hoc_exploratory": true,
+ "usage": {
+  "input_tokens": 787610,
+  "output_tokens": 6164374,
+  "reasoning_tokens": 0,
+  "cost_usd": 0.5688336960000002,
+  "responses": 90,
+  "transport_attempts": 4,
+  "requests_with_transport_error": 4
+ },
+ "requests_sent": 90,
+ "pools46": {
+  "scope": "46",
+  "units": 46,
+  "PRIMARY_verdict": "REFUSED",
+  "refusal_reasons": {
+   "units_without_answer": [
+    "pool_001",
+    "pool_006",
+    "pool_015",
+    "pool_039",
+    "pool_059",
+    "pool_067"
+   ],
+   "units_over_policy_cap": [
+    {
+     "unit": "pool_009",
+     "policy_share": 1.0
+    },
+    {
+     "unit": "pool_017",
+     "policy_share": 1.0
+    },
+    {
+     "unit": "pool_018",
+     "policy_share": 1.0
+    },
+    {
+     "unit": "pool_019",
+     "policy_share": 1.0
+    },
+    {
+     "unit": "pool_021",
+     "policy_share": 1.0
+    },
+    {
+     "unit": "pool_023",
+     "policy_share": 1.0
+    },
+    {
+     "unit": "pool_024",
+     "policy_share": 1.0
+    },
+    {
+     "unit": "pool_028",
+     "policy_share": 1.0
+    },
+    {
+     "unit": "pool_029",
+     "policy_share": 1.0
+    },
+    {
+     "unit": "pool_031",
+     "policy_share": 1.0
+    },
+    {
+     "unit": "pool_032",
+     "policy_share": 1.0
+    },
+    {
+     "unit": "pool_035",
+     "policy_share": 1.0
+    },
+    {
+     "unit": "pool_037",
+     "policy_share": 1.0
+    },
+    {
+     "unit": "pool_050",
+     "policy_share": 1.0
+    },
+    {
+     "unit": "pool_053",
+     "policy_share": 1.0
+    },
+    {
+     "unit": "pool_058",
+     "policy_share": 1.0
+    },
+    {
+     "unit": "pool_061",
+     "policy_share": 1.0
+    },
+    {
+     "unit": "pool_065",
+     "policy_share": 1.0
+    },
+    {
+     "unit": "pool_069",
+     "policy_share": 1.0
+    },
+    {
+     "unit": "pool_056",
+     "policy_share": 0.9198
+    },
+    {
+     "unit": "pool_070",
+     "policy_share": 0.7004
+    },
+    {
+     "unit": "pool_066",
+     "policy_share": 0.6123
+    },
+    {
+     "unit": "pool_054",
+     "policy_share": 0.5771
+    },
+    {
+     "unit": "pool_026",
+     "policy_share": 0.5349
+    },
+    {
+     "unit": "pool_020",
+     "policy_share": 0.4866
+    },
+    {
+     "unit": "pool_048",
+     "policy_share": 0.4747
+    },
+    {
+     "unit": "pool_038",
+     "policy_share": 0.425
+    },
+    {
+     "unit": "pool_011",
+     "policy_share": 0.4179
+    },
+    {
+     "unit": "pool_030",
+     "policy_share": 0.4068
+    },
+    {
+     "unit": "pool_041",
+     "policy_share": 0.3764
+    },
+    {
+     "unit": "pool_003",
+     "policy_share": 0.3621
+    },
+    {
+     "unit": "pool_005",
+     "policy_share": 0.2978
+    }
+   ]
+  },
+  "frozen_gate_output": {
+   "prose": [
+    "J"
+   ]
+  },
+  "answered_units": 40,
+  "completion_rate": 0.8695652173913043,
+  "d6_units": 3,
+  "d6_rate": 0.06521739130434782,
+  "excluded_units": {
+   "content_filter": [],
+   "not_run": [],
+   "not_completed": [],
+   "repair_not_sent_or_not_completed": []
+  },
+  "invalid_after_repair": 35,
+  "invalid_after_repair_rate": 0.875,
+  "mean_policy_share": 0.6501737563652683,
+  "units_over_cap": 32,
+  "SECONDARY_answered_units_only": {
+   "F1_J": 0.07586587746465857,
+   "F1_L": 0.13962775035297031,
+   "q": 0.5476697607632004,
+   "n": 40,
+   "n_q_defined": 21
+  }
+ },
+ "pools41": {
+  "scope": "41",
+  "units": 41,
+  "PRIMARY_verdict": "REFUSED",
+  "refusal_reasons": {
+   "units_without_answer": [
+    "pool_001",
+    "pool_006",
+    "pool_015",
+    "pool_039",
+    "pool_059",
+    "pool_067"
+   ],
+   "units_over_policy_cap": [
+    {
+     "unit": "pool_017",
+     "policy_share": 1.0
+    },
+    {
+     "unit": "pool_018",
+     "policy_share": 1.0
+    },
+    {
+     "unit": "pool_019",
+     "policy_share": 1.0
+    },
+    {
+     "unit": "pool_021",
+     "policy_share": 1.0
+    },
+    {
+     "unit": "pool_023",
+     "policy_share": 1.0
+    },
+    {
+     "unit": "pool_024",
+     "policy_share": 1.0
+    },
+    {
+     "unit": "pool_028",
+     "policy_share": 1.0
+    },
+    {
+     "unit": "pool_029",
+     "policy_share": 1.0
+    },
+    {
+     "unit": "pool_031",
+     "policy_share": 1.0
+    },
+    {
+     "unit": "pool_032",
+     "policy_share": 1.0
+    },
+    {
+     "unit": "pool_035",
+     "policy_share": 1.0
+    },
+    {
+     "unit": "pool_037",
+     "policy_share": 1.0
+    },
+    {
+     "unit": "pool_050",
+     "policy_share": 1.0
+    },
+    {
+     "unit": "pool_053",
+     "policy_share": 1.0
+    },
+    {
+     "unit": "pool_058",
+     "policy_share": 1.0
+    },
+    {
+     "unit": "pool_061",
+     "policy_share": 1.0
+    },
+    {
+     "unit": "pool_065",
+     "policy_share": 1.0
+    },
+    {
+     "unit": "pool_069",
+     "policy_share": 1.0
+    },
+    {
+     "unit": "pool_070",
+     "policy_share": 0.7004
+    },
+    {
+     "unit": "pool_066",
+     "policy_share": 0.6123
+    },
+    {
+     "unit": "pool_054",
+     "policy_share": 0.5771
+    },
+    {
+     "unit": "pool_026",
+     "policy_share": 0.5349
+    },
+    {
+     "unit": "pool_020",
+     "policy_share": 0.4866
+    },
+    {
+     "unit": "pool_048",
+     "policy_share": 0.4747
+    },
+    {
+     "unit": "pool_038",
+     "policy_share": 0.425
+    },
+    {
+     "unit": "pool_030",
+     "policy_share": 0.4068
+    },
+    {
+     "unit": "pool_003",
+     "policy_share": 0.3621
+    },
+    {
+     "unit": "pool_005",
+     "policy_share": 0.2978
+    }
+   ]
+  },
+  "frozen_gate_output": {
+   "prose": [
+    "J"
+   ]
+  },
+  "answered_units": 35,
+  "completion_rate": 0.8536585365853658,
+  "d6_units": 3,
+  "d6_rate": 0.07317073170731707,
+  "excluded_units": {
+   "content_filter": [],
+   "not_run": [],
+   "not_completed": [],
+   "repair_not_sent_or_not_completed": []
+  },
+  "invalid_after_repair": 31,
+  "invalid_after_repair_rate": 0.8857142857142857,
+  "mean_policy_share": 0.6655099776060238,
+  "units_over_cap": 28,
+  "SECONDARY_answered_units_only": {
+   "F1_J": 0.07134992424647543,
+   "F1_L": 0.13244858409734184,
+   "q": 0.5361568693129277,
+   "n": 35,
+   "n_q_defined": 17
+  }
+ },
+ "superseded_attempts": {
+  "dir": "logs/gpt-oss-20b/superseded_coreweave_117964",
+  "responses": 14,
+  "cost_usd": 0.150116
+ },
+ "total_cost_usd_incl_superseded": 0.71895
+}

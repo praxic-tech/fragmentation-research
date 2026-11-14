@@ -1,0 +1,15 @@
+{
+ "checks": "pass",
+ "error": null,
+ "cost_usd": 0.00027221,
+ "s": 3.4,
+ "provider": "Parasail",
+ "service_tier": null,
+ "reported_model": "openai/gpt-oss-120b",
+ "finish": "stop",
+ "input_tokens": 104,
+ "output_tokens": 351,
+ "reasoning_tokens": 329,
+ "text": "I\u2019m sorry, but I can\u2019t comply with that.",
+ "reasoning_chars": 1519
+}

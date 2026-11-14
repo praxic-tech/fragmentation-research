@@ -1,0 +1,155 @@
+{
+ "slug": "llama-4-maverick",
+ "budget": 32768,
+ "post_hoc_exploratory": true,
+ "usage": {
+  "input_tokens": 776710,
+  "output_tokens": 182481,
+  "reasoning_tokens": 0,
+  "cost_usd": 0.4511010200000001,
+  "responses": 91,
+  "transport_attempts": 1,
+  "requests_with_transport_error": 1
+ },
+ "requests_sent": 91,
+ "pools46": {
+  "scope": "46",
+  "units": 46,
+  "PRIMARY_verdict": "REFUSED",
+  "refusal_reasons": {
+   "units_without_answer": [],
+   "units_over_policy_cap": [
+    {
+     "unit": "pool_009",
+     "policy_share": 0.6667
+    },
+    {
+     "unit": "pool_069",
+     "policy_share": 0.6339
+    },
+    {
+     "unit": "pool_007",
+     "policy_share": 0.6081
+    },
+    {
+     "unit": "pool_020",
+     "policy_share": 0.5348
+    },
+    {
+     "unit": "pool_056",
+     "policy_share": 0.4866
+    },
+    {
+     "unit": "pool_019",
+     "policy_share": 0.4864
+    },
+    {
+     "unit": "pool_021",
+     "policy_share": 0.4703
+    },
+    {
+     "unit": "pool_048",
+     "policy_share": 0.4495
+    },
+    {
+     "unit": "pool_058",
+     "policy_share": 0.3473
+    },
+    {
+     "unit": "pool_038",
+     "policy_share": 0.305
+    }
+   ]
+  },
+  "frozen_gate_output": {
+   "prose": []
+  },
+  "answered_units": 46,
+  "completion_rate": 1.0,
+  "d6_units": 0,
+  "d6_rate": 0.0,
+  "excluded_units": {
+   "content_filter": [],
+   "not_run": [],
+   "not_completed": [],
+   "repair_not_sent_or_not_completed": []
+  },
+  "invalid_after_repair": 45,
+  "invalid_after_repair_rate": 0.9782608695652174,
+  "mean_policy_share": 0.15863144021603032,
+  "units_over_cap": 10,
+  "SECONDARY_answered_units_only": {
+   "F1_J": 0.21335177645036865,
+   "F1_L": 0.3347656824689077,
+   "q": 0.6375603871093672,
+   "n": 46,
+   "n_q_defined": 46
+  }
+ },
+ "pools41": {
+  "scope": "41",
+  "units": 41,
+  "PRIMARY_verdict": "REFUSED",
+  "refusal_reasons": {
+   "units_without_answer": [],
+   "units_over_policy_cap": [
+    {
+     "unit": "pool_069",
+     "policy_share": 0.6339
+    },
+    {
+     "unit": "pool_007",
+     "policy_share": 0.6081
+    },
+    {
+     "unit": "pool_020",
+     "policy_share": 0.5348
+    },
+    {
+     "unit": "pool_019",
+     "policy_share": 0.4864
+    },
+    {
+     "unit": "pool_021",
+     "policy_share": 0.4703
+    },
+    {
+     "unit": "pool_048",
+     "policy_share": 0.4495
+    },
+    {
+     "unit": "pool_058",
+     "policy_share": 0.3473
+    },
+    {
+     "unit": "pool_038",
+     "policy_share": 0.305
+    }
+   ]
+  },
+  "frozen_gate_output": {
+   "prose": []
+  },
+  "answered_units": 41,
+  "completion_rate": 1.0,
+  "d6_units": 0,
+  "d6_rate": 0.0,
+  "excluded_units": {
+   "content_filter": [],
+   "not_run": [],
+   "not_completed": [],
+   "repair_not_sent_or_not_completed": []
+  },
+  "invalid_after_repair": 40,
+  "invalid_after_repair_rate": 0.975609756097561,
+  "mean_policy_share": 0.14509281110213504,
+  "units_over_cap": 8,
+  "SECONDARY_answered_units_only": {
+   "F1_J": 0.21444695822178825,
+   "F1_L": 0.3368628351491277,
+   "q": 0.6382747567586725,
+   "n": 41,
+   "n_q_defined": 41
+  }
+ }
+}

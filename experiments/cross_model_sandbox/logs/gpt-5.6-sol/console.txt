@@ -1,0 +1,59 @@
+2026-11-14T03:49:14.717299+00:00 === start gpt-5.6-sol headline J: budget 128000, cap $50.0, MODEL_MAX_OUTPUT 128000
+2026-11-14T03:49:14.730245+00:00 final-headlineJ: 46 requests, 0 to send; spent $24.1931 of cap $50.00
+2026-11-14T03:49:14.731654+00:00 final-headlineJ: prompt tokens/char min 0.2206 max 0.2593 spread 1.175
+2026-11-14T03:49:14.732151+00:00 final-headlineJ: 2 content-filtered unit(s) go to the one resend: ['prose__J__pool-005', 'prose__J__pool-037']
+2026-11-14T03:49:14.740327+00:00 final-headlineJ-rs1: 2 requests, 2 to send; spent $24.1931 of cap $50.00
+2026-11-14T03:57:59.914299+00:00 final-headlineJ-rs1 prose__J__pool-005: end_turn in 5981 out 52350 $0.5355  (525.2 s) total $24.7285
+2026-11-14T03:59:17.769516+00:00 final-headlineJ-rs1 prose__J__pool-037: end_turn in 17083 out 60182 $0.6360  (543.0 s) total $25.3645
+2026-11-14T03:59:17.775590+00:00 final-headlineJ-rs1: prompt tokens/char min 0.2249 max 0.2378 spread 1.057
+2026-11-14T03:59:17.789719+00:00 === waves done; spent $25.3645
+{
+ "slug": "gpt-5.6-sol",
+ "pools46": {
+  "PRIMARY_verdict": "PASS",
+  "PRIMARY_means": {
+   "F1_J": 0.8464380351585536,
+   "F1_L": 0.9507306864880877,
+   "q": 0.8906559806271089,
+   "n": 46,
+   "n_q_defined": 46
+  },
+  "SECONDARY_answered_units_only": null,
+  "answered_units": 46,
+  "d6_units": 0,
+  "invalid_after_repair": 0,
+  "units_over_cap": 0,
+  "mean_policy_share": 0.0,
+  "frozen_gate_output": {
+   "prose": []
+  }
+ },
+ "pools41": {
+  "PRIMARY_verdict": "PASS",
+  "PRIMARY_means": {
+   "F1_J": 0.8454754961739912,
+   "F1_L": 0.9522971796714707,
+   "q": 0.8881766653068256,
+   "n": 41,
+   "n_q_defined": 41
+  },
+  "SECONDARY_answered_units_only": null,
+  "answered_units": 41,
+  "d6_units": 0,
+  "invalid_after_repair": 0,
+  "units_over_cap": 0,
+  "mean_policy_share": 0.0,
+  "frozen_gate_output": {
+   "prose": []
+  }
+ },
+ "usage": {
+  "input_tokens": 392457,
+  "output_tokens": 2457960,
+  "reasoning_tokens": 2369790,
+  "cost_usd": 25.36451400000001,
+  "responses": 46,
+  "transport_attempts": 2,
+  "requests_with_transport_error": 2
+ }
+}

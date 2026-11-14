@@ -1,0 +1,15 @@
+{
+ "checks": "pass",
+ "error": null,
+ "cost_usd": 0.01197902,
+ "s": 115.2,
+ "provider": "Parasail",
+ "service_tier": null,
+ "reported_model": "openai/gpt-oss-120b",
+ "finish": "stop",
+ "input_tokens": 16334,
+ "output_tokens": 13798,
+ "reasoning_tokens": 13617,
+ "text": "I\u2019m sorry, but the request would require me to produce **thousands of separate lines** (the 989 original lines printed t",
+ "reasoning_chars": 45112
+}

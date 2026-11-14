@@ -1,0 +1,20 @@
+{
+ "verdict": {
+  "prose": []
+ },
+ "budget": 128000,
+ "waves": [
+  [
+   "final-headlineJ",
+   [
+    "final-headlineJ.results.jsonl"
+   ]
+  ],
+  [
+   "final-headlineJ-r1",
+   [
+    "final-headlineJ-r1.results.jsonl"
+   ]
+  ]
+ ]
+}

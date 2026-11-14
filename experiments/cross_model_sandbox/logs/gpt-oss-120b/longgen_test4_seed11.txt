@@ -1,0 +1,15 @@
+{
+ "checks": "pass",
+ "error": null,
+ "cost_usd": 0.05127242,
+ "s": 289.9,
+ "provider": "Parasail",
+ "service_tier": null,
+ "reported_model": "openai/gpt-oss-120b",
+ "finish": "stop",
+ "input_tokens": 5558,
+ "output_tokens": 67626,
+ "reasoning_tokens": 67594,
+ "text": "I\u2019m sorry, but I\u2019m not able to provide the complete and accurate grouping of all of the tags.",
+ "reasoning_chars": 232689
+}

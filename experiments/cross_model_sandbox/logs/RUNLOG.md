@@ -468,3 +468,284 @@ Install (user granted install permission, asked to keep it small):
   server_ctl.py identical to commit 6a08a87). Memory sampled every 5 s to
   `logs/gemma-4-12b/mem.<stamp>.csv`. Runtime: llama.cpp build b12110 + Vulkan,
   zip SHA-256 9732a5e48887ca54d0bfe4af4324dc85fd56cd8cda19b52df3542fa6ebe6874f.
+
+## 2026-11-12/13 — Gemma run: memory-logging gap, Windows Update restart, resume
+
+- Memory sampler gap: the launcher's sampler filters the GPU adapter by LUID
+  (`*15c57*`, the 2026-11-11 value); the adapter's LUID was 0x15da4 on
+  2026-11-12, so `mem.20261112T163025Z.csv` holds zeros for the adapter columns.
+  `memsample.ps1` gained an `-Adapter` parameter; a second sampler with
+  `-Adapter '*15da4*'` wrote `mem.20261112T163025Z.luid15da4.b.csv` from about
+  17:20 UTC (a first attempt, `...luid15da4.csv`, died with its shell).
+  Process memory: 10,194-10,202 MiB dedicated, 197 MiB shared, throughout.
+  Another program briefly took whole-GPU dedicated use to 16,066 MiB
+  (2026-11-13 ~04:49-05:03 UTC); the server's own memory did not change.
+- Base wave complete 2026-11-13 05:36 UTC: 46 rows, 38 end_turn, 8 D6
+  (pool_003, 017, 018, 024, 037, 053, 054, 066), 0 transport errors, 0 empty
+  answers, 0 check failures. -rs1 built empty. -r1 built with 38 requests:
+  every end_turn answer failed validation (23 missing+duplicated labels,
+  14 missing only, 1 duplicated only).
+- 2026-11-13 09:12 UTC: Windows Update (MoUsoCoreWorker, then TrustedInstaller;
+  "Operating System: ... (Planned)", KB5132061) restarted the machine twice
+  (boots 09:13:57 and 09:15:30 UTC). The server and runner were killed during
+  the 15th repair (pool_025-r1, server log ends at n_gen 36,398). No row was
+  written for it. All 46 base rows and 14 -r1 rows parse intact. GPU driver
+  unchanged (32.0.32015.7029); OS patch level changed by KB5132061.
+- Resumed 2026-11-13 13:44 UTC on the user's instruction, under the
+  preregistered restart rule, with the same command (`run_headline.sh
+  gemma-run gemma-4-12b`, no runner flags; no check failure was outstanding).
+  Server pid 39808. Run log: "RESTART final-headlineJ-r1: 14 rows already
+  present, 24 requests to send"; pool_025-r1 is resent as its first attempt.
+  Rebuilt specs matched the saved ones. The adapter LUID is now 0x15cee, so a
+  second sampler writes `mem.20261113T134400Z.luid15cee.csv`; the launcher's
+  own sampler file for this start records zeros for the adapter columns.
+
+## 2026-11-13 — Gemma 4 12B headline J run complete
+
+- Runner exited 0 at 18:01:15 UTC; server stopped by the launcher.
+  -r1: 38 rows, 35 end_turn, 3 D6 (pool_020, 022, 025), 0 transport errors;
+  -r1-rs1 built empty. 0 check failures over the whole run. 0 of 38 repaired
+  answers valid.
+- Frozen score (results/gemma-4-12b/final_headlineJ/): gate verdict "refused:
+  none"; game J ok, answered 38/46, 8 D6 non-completions. Per-pool means over
+  the 38 scored pools: F1_J 0.2615, F1_L 0.4655, q 0.5629 (q_micro 0.5507).
+  Records recovered exactly 0/266. No answered-units-only copy was written
+  (the gate did not refuse).
+- Observation, not a re-score: the gate printed "fragments placed by policy
+  0.0%" and COVERAGE 100%, but the scored rows' own `repair.policy_share`
+  (written by frozen batch_game.finalise_row) is > 0 for all 38 units, mean
+  0.188, and > POLICY_CAP 0.25 for 9 (pool_061 0.412, 005 0.393, 031 0.385,
+  064 0.382, 007 0.352, 008 0.310, 065 0.309, 038 0.290, 070 0.251). Cause:
+  for game J, integrity_gate takes policy_share = 1 - score_row's
+  coverage_frac, and coverage_frac is computed on raw_response, which
+  finalise_row has already completed with singletons, so it is always 1.0 on
+  the batch path. Sonnet's headline rows all have policy_share 0.0, so its
+  result is unaffected. Scorer left unchanged.
+- verify_frozen at session end: PASS, 185 files byte-identical. Found, not
+  touched: untracked, gitignored `__pycache__` dirs in frozen/adversaries,
+  frozen/analysis and frozen/harness (cpython-314 .pyc, dated 2026-11-11
+  23:41 UTC, i.e. from a system-Python 3.14 import on 2026-11-11, not from
+  this run, whose Python calls set PYTHONDONTWRITEBYTECODE). Left for the
+  user to decide.
+
+## 2026-11-13 — Gemma 4 12B headline J: primary result is REFUSED (rule applied as written)
+
+- Gate bug: for Game J, `joint_game.integrity_gate` sets a unit's policy share
+  to 1 - `score_row`'s `coverage_frac` and never reads the row's recorded
+  `repair.policy_share`. On the batch path `batch_game.finalise_row` has
+  already completed `raw_response` with singletons, so `coverage_frac` is
+  always 1.0 and the gate always sees 0% placed by policy. The gate therefore
+  printed "ok" / "refused: none" for this cell.
+- 9 units are over `joint_game.POLICY_CAP` (0.25) by their recorded
+  `repair.policy_share`: pool_061 0.412, pool_005 0.393, pool_031 0.385,
+  pool_064 0.382, pool_007 0.352, pool_008 0.310, pool_065 0.309,
+  pool_038 0.290, pool_070 0.251.
+- PREREGISTRATION.md ("Primary result and the integrity gate") says a unit
+  over `joint_game.POLICY_CAP` makes the refusal the primary result. Applying
+  that rule as written, the Gemma 4 12B headline J cell is REFUSED. This is
+  the preregistered rule, not a post hoc change; the gate's printed verdict is
+  the error. Nothing in frozen/ or the scorer was edited; the gate is to be
+  fixed separately in the main session.
+- Primary result: REFUSED; 9 units over the cap; 0 units without an answer;
+  8 D6 non-completions; 0 transport errors; 38/38 invalid after repair;
+  completion 38/46. Recorded in results/gemma-4-12b/PRIMARY_RESULT.md.
+- Secondary, as the refusal path writes it: `work/runner/score_secondary.py`
+  runs the frozen `batch_game.score(waves, ..., allow_partial=True)` on the
+  same waves (base + -r1) into results/gemma-4-12b/final_headlineJ_answered_units_only/,
+  labelled SECONDARY, "answered units only". Its J.jsonl and report body are
+  identical to final_headlineJ/. Per-pool means over 38 pools: F1_J 0.2615,
+  F1_L 0.4655, q 0.5629.
+- No new model run until the gate fix is in and a new preregistration entry
+  for the next models is written (user's instruction).
+
+## 2026-11-13 — Sonnet-dependence sweep: runner, offline tests, smoke tests
+
+- Preregistration entry committed and pushed (515571f, merged with origin as
+  561ca0d) before any API request. Runner committed (d78ada1) before the smoke
+  tests: `work/runner/api_runner.py`, `score_api.py`, `test_api_runner.py`
+  (5/5 offline: Sonnet replay reproduces 0.7225/0.8817/0.8206 with identical
+  final answers; content filter, provider mismatch, base-wave cap and a
+  below-budget length stop behave as preregistered).
+- `score_api.py` offline on the references: Sonnet PASS (46 pools
+  0.7225/0.8817/0.8206; 41 pools 0.7218/0.8825/0.8192). Gemma REFUSED (9 over
+  cap, 8 D6, 38/46), secondary 0.2615/0.4655/0.5629 (46) and
+  0.2612/0.4638/0.5643 (41).
+- OpenRouter balance before any request: usage $0, limit $10, remaining $10.
+- Smoke tests (dummy prompt, no evaluation text; `logs/smoke_tests.jsonl`):
+  gpt-oss-20b CoreWeave, reasoning 98 tokens; gpt-oss-120b CoreWeave, reasoning
+  264; llama-4-maverick Parasail; deepseek-v3.2 GMICloud, reasoning 41; gpt-4.1
+  tier `default`, reported model `gpt-4.1` (no version string; the version pin
+  rests on the deployment's settings); gpt-5.6-sol tier `flex`, echoed reasoning
+  `{effort: max, mode: standard, context: all_turns}`, `max_output_tokens`
+  128000, `truncation` disabled; 0 reasoning tokens on the trivial prompt. All
+  checks pass. Kimi not smoke-tested (no Kimi request before its decision).
+- Two runner fixes found by the smoke tests, neither a protocol change: the
+  Azure endpoint already carries `/openai/v1` (first gpt-4.1 smoke request got
+  HTTP 404, no tokens billed); Azure responses now also checked for the echoed
+  reasoning effort, `max_output_tokens` and `truncation` (a mismatch halts).
+
+## 2026-11-13 — gpt-oss-20b: HALT in the base wave (provider output limit)
+
+- Started 21:55 UTC. Halted 22:06 UTC under the entry's halt rules; no new
+  request sent after the first halt; in-flight requests finished.
+- 11 base rows written (all `end_turn`, 48k-98k output tokens), cost $0.1064;
+  OpenRouter balance after: $9.8644 remaining.
+- 5 halts (`raw/gpt-oss-20b/final-headlineJ.check_failures.jsonl`):
+  - pool_018, pool_007: HTTP 400 from OpenRouter before generation: prompt +
+    117,964 > the endpoint's 131,072 context (14,748 + 117,964; 13,552 +
+    117,964). Not a transport error or content filter.
+  - pool_008, pool_006, pool_005: `finish_reason length` at 107,549 / 112,188 /
+    111,621 output tokens, below the 117,964 budget, all reasoning and no answer.
+    Prompt + output = 117,752 / 117,759 / ~117.8k: CoreWeave appears to stop at
+    about 117,760 total tokens, not at the listed 131,072 context.
+- Cause: the preregistered budget (117,964 = the listed max_completion_tokens)
+  cannot be reached for any headline prompt on this endpoint; the entry's D6
+  rule (stop at the full budget) cannot apply. Applies equally to gpt-oss-120b
+  (same provider, same listing). Waiting for the user's decision.
+
+## 2026-11-13 — Amendment applied: gpt-oss on AkashML fp4, 110,000 budget
+
+- Amendment committed and pushed before any further request (a4ef6ca).
+- Runner: gpt-oss-20b/120b pinned to AkashML fp4 (`only`/`order` akashml,
+  `allow_fallbacks: false`), `max_tokens` 110,000 (D6 at 110,000); HTTP 400 on
+  context length is now an explicit halt; Parasail fp4 fallback wired
+  (`--parasail-fallback`, 120b cap $3.00), not used.
+- The 11 CoreWeave rows and the run's attempt/check-failure logs moved to
+  `logs/gpt-oss-20b/superseded_coreweave_117964/` (never scored).
+  Correction: the superseded spend is **$0.1501**, not $0.1064. $0.1064 was
+  the 11 written rows only; the 3 length-stopped calls (pool_008/006/005) were
+  billed too (OpenRouter `usage.cost`, $0.0437). Reported in gpt-oss-20b's totals.
+- Smoke tests (`logs/smoke_tests.jsonl`), neutral dummy prompt of 76,124 chars
+  (pool_037, the longest headline prompt, is 75,956), max 110,000:
+  gpt-oss-20b and gpt-oss-120b both PASS — provider AkashML, model as pinned,
+  `finish stop`, answer "OK", 16,252 prompt tokens reported; cost $0.0008.
+- A second smoke attempt with a longer 93.5k-char dummy got HTTP 400 from
+  OpenRouter's own pre-routing check (`provider_name: null`): OpenRouter sizes
+  prompts at ~3.97 chars/token (23,701 estimated + 110,000 > 131,072). That
+  dummy was longer than any headline prompt (my overshoot, not a provider
+  failure). By the same estimate pool_037 is 19,142 + 110,000 = 129,142, which
+  fits. No fallback taken.
+
+## 2026-11-14 — Lines started; gpt-4.1 and gpt-oss-20b done
+
+- 00:09 UTC both lines started (Azure: gpt-4.1 -> gpt-5.6-sol; OpenRouter:
+  gpt-oss-20b -> gpt-oss-120b -> llama-4-maverick -> deepseek-v3.2).
+- gpt-4.1: REFUSED (46 and 41 pools): all 46 answered, 44 over the policy cap
+  (it omits fragments; mean policy_share 0.39). Secondary F1_J 0.2363. $2.42.
+- gpt-oss-20b (AkashML): all waves done, $0.5688 (+ $0.1501 superseded =
+  $0.7189). AkashML does reach the full 110,000 (3 D6 units). The runner then
+  crashed in my scoring wrapper, not in a protocol check: `means()` averaged
+  `q`, which the frozen `score_row` returns as None when K = 0 (no guessed
+  linked pairs). Fixed to the frozen convention (q undefined -> left out of the
+  q mean, as in `game_j_adjacency.py` / `build_master.py`), with the count of
+  rows where q is defined reported beside it. F1_J/F1_L unaffected; Sonnet,
+  Gemma and gpt-4.1 re-scored with identical means (all q defined). Offline
+  tests 5/5. OpenRouter line restarted at gpt-oss-120b (01:08 UTC).
+- gpt-oss-20b: REFUSED (46 and 41): 6 units without an answer, 32 over the cap.
+  Secondary F1_J 0.0759, F1_L 0.1396, q 0.5477 (defined on 21 of 40).
+- gpt-5.6-sol (Azure flex, effort max): waves done 01:11 UTC, $24.19 of $50.
+  REFUSED (46 and 41): pool_005 and pool_037 ended `response.incomplete`
+  with reason `content_filter` (after ~100 s and ~130 s of streaming), never
+  resent per the entry. The other 44 were all valid on the first pass (no
+  repair needed, policy_share 0 everywhere, 0 D6). Secondary (answered units
+  only, 44): F1_J 0.8470, F1_L 0.9515, q 0.8906; 41 pools (39): 0.8461 /
+  0.9532 / 0.8880. Note: the runner records $0 for the two filtered
+  responses; any tokens Azure billed for them before the filter are not in the
+  $24.19 (usage was not captured on the incomplete path).
+
+## 2026-11-14 — gpt-oss-120b: HALT in the base wave (AkashML length stops)
+
+- Started 01:08 UTC; halted 01:28 UTC (amendment halt: a length stop below
+  110,000); in-flight requests drained, line stopped 01:49 UTC. llama-4-maverick
+  and deepseek-v3.2 not started.
+- 27 base rows written, cost $0.4498 (cap $1.50).
+- 2 halts (`raw/gpt-oss-120b/final-headlineJ.check_failures.jsonl`), both
+  reasoning with no answer: pool_019 at 109,837 output tokens (prompt 7,535;
+  total 117,372); pool_035 at 108,089 (prompt 9,958; total 118,047). Not a fixed
+  total limit (the totals differ; gpt-oss-20b on AkashML reached the full
+  110,000 with totals up to 117,812). Waiting for the user's decision.
+- OpenRouter key 01:49 UTC: usage $1.1697, limit_remaining $8.9806 (the key's
+  remaining does not equal limit - usage; see the 00:09 reading, to settle
+  before the Kimi decision).
+
+## 2026-11-14 — Amendment 2 applied
+
+- Amendment 2 committed and pushed (69c3d8c) with all earlier local commits,
+  before any further request.
+- Original gpt-5.6-sol blocks (sent under DefaultV2): pool_005 and pool_037,
+  both HTTP 200 streams ended `response.incomplete` / `content_filter` after
+  102 s and 133 s -> fired on the **completion**. Category and severity:
+  **unknown** (the runner kept only `incomplete_details.reason`; the response
+  ids were not logged, so the stored responses cannot be fetched).
+- Runner: Azure content-filter blocks now keep the full final response, every
+  filter field seen in the stream (`response.content_filters`: source_type
+  prompt/completion, per-category `filtered`/`severity`), and the time to the
+  block, in the attempt log and `<tag>.content_filter.jsonl`. Azure rows
+  record the guardrail (row field `guardrail` + `raw/<slug>/guardrail.jsonl`;
+  rows sent before amendment 2 backfilled as DefaultV2: gpt-4.1 92,
+  gpt-5.6-sol 44). Azure base-wave blocks go to the one `-rs1` resend; a unit
+  still blocked there is "not completed". gpt-oss-120b on Parasail fp4,
+  pinned by endpoint tag `parasail/fp4` (Parasail lists two fp4 endpoints,
+  fp4 and fast), cap $3.00. Offline tests 6/6 (new test 6: Azure block ->
+  resent once; answered -> PASS; blocked again -> not completed, REFUSED).
+- Default guardrail check (gpt-5.6-sol smoke, 03:45 UTC): `content_filters`
+  for prompt and completion list only hate/sexual/violence/self_harm (all
+  safe); no jailbreak / prompt-shield / protected-material entries -> Default
+  is active. Tier flex, model gpt-5.6-sol.
+- gpt-5.6-sol: the saved `-rs1` and `-r1` specs (both empty, built under the
+  old rule) differ from the rebuilt ones by design; the runner's spec guard
+  halted the first restart. Moved to `raw/gpt-5.6-sol/specs_before_amendment2/`
+  and restarted: `-rs1` = pool_005, pool_037 under Default (03:49 UTC).
+- gpt-oss-120b: the 27 AkashML rows and logs moved to
+  `logs/gpt-oss-120b/superseded_akashml_110000/` (never scored; $0.4498).
+  Parasail smoke with the pool_037-length dummy: PASS (provider Parasail,
+  answer OK). Long-generation test (dummy counting prompt, max 110,000)
+  running.
+- llama-4-maverick and deepseek-v3.2 started 03:45 UTC in parallel.
+- Kimi balance (amendment 2 definition) at 03:48 UTC: $10.00 - usage $1.5403
+  = $8.4597.
+
+## 2026-11-14 — gpt-5.6-sol resend under Default; llama-4-maverick done
+
+- gpt-5.6-sol `-rs1` (guardrail Default): pool_005 answered (end_turn, 52,350
+  output tokens, $0.5355), pool_037 answered (end_turn, 60,182, $0.6360).
+  Both valid, no repair needed. **PASS** on 46 and 41 pools: F1_J 0.8464 /
+  F1_L 0.9507 / q 0.8907 (46); 0.8455 / 0.9523 / 0.8882 (41). Cost $25.3645.
+- Why the originals were blocked (inference, not recorded): Default and
+  DefaultV2 apply the same hate/sexual/violence/self-harm filters at the same
+  thresholds, and both units passed under Default; the checks only DefaultV2
+  adds are prompt shields (jailbreak, prompt side) and protected material
+  (text/code, completion side). Both blocks fired on the completion, so
+  protected material is the likely trigger. Not proof: the resent completions
+  are new generations. The runner did not keep filter results for successful
+  responses; it now does (attempt-log field `content_filters`).
+- llama-4-maverick (Parasail fp8): REFUSED on 46 and 41: all answered, 10 (46)
+  / 8 (41) units over the policy cap. Secondary F1_J 0.2134, F1_L 0.3348,
+  q 0.6376. $0.4511.
+
+## 2026-11-14 — gpt-oss-120b on Parasail: long-generation test inconclusive (stop)
+
+- Parasail smoke with the pool_037-length dummy: PASS. Long-generation tests
+  (max 110,000), all `finish stop` by the model, none a provider cut-off,
+  none reaching 110,000:
+  1. counting 1..60000: refused after 351 tokens ($0.0003).
+  2. sort/rewrite ~990 dummy lines three times: declined after 13,798 ($0.0120).
+  3. invented grouping task (headline shape, synthetic), seed 7: declined
+     after 70,324 reasoning tokens ($0.0533).
+  4. same with "always give your best answer, never decline", seeds 11 and
+     23: declined after 67,626 and 92,945 ($0.0513, $0.0703).
+  Total test cost $0.1874. Logs: `logs/gpt-oss-120b/longgen_test*.txt`,
+  `logs/smoke_tests.jsonl`.
+- The amendment's "first confirm Parasail reaches 110,000" is not met, and no
+  test shows it stopping short. Not covered by the entry: stopped, waiting for
+  the user. The gpt-oss-120b run has not started.
+
+## 2026-11-14 — User decision: gpt-oss-120b runs on Parasail; in-run check replaces the test
+
+- The long-generation pre-run check is replaced by the in-run check (user
+  decision): if any call stops below 110,000 output tokens without an answer,
+  gpt-oss-120b halts and is reported as "not completed: no pinned provider
+  delivered the 110,000 budget". Cap $3.00.
+- The 5 pre-run tests were inconclusive: the model chose to stop each time
+  (refusal or decline after 351-92,945 tokens); none was cut off by the
+  provider. Their cost: $0.19 ($0.1874), reported in gpt-oss-120b's totals.

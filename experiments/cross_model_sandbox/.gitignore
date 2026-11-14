@@ -19,3 +19,6 @@ venv/
 
 # Local runtimes (llama.cpp binaries): provenance in logs/RUNLOG.md
 runtime/
+
+# Full request bodies (prompt text) of the API sweep: not committed
+logs/*/requests/
