@@ -779,3 +779,10 @@ Install (user granted install permission, asked to keep it small):
   these units had ~5-6% more output than the preregistered budget.
 - Halted 08:07 UTC: I ended the deepseek-v3.2 process (pool_065's `-rs1`
   attempt in flight; resumable). Not scored. Waiting for the user.
+
+## 2026-11-14 — User decision: deepseek-v3.2 resumes; the 5 over-budget rows are accepted
+
+- The 5 rows above 128,000 output tokens (GMICloud reasoning capped at 131,072
+  then answered) are accepted and scored as rows, recorded as a provider
+  deviation from the pinned budget (+5-6% on those units). Resumed: the
+  `-rs1` wave continues for pool_065, then the repair round and scoring.
