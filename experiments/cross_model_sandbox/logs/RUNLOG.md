@@ -704,3 +704,21 @@ Install (user granted install permission, asked to keep it small):
 - llama-4-maverick and deepseek-v3.2 started 03:45 UTC in parallel.
 - Kimi balance (amendment 2 definition) at 03:48 UTC: $10.00 - usage $1.5403
   = $8.4597.
+
+## 2026-11-14 — gpt-5.6-sol resend under Default; llama-4-maverick done
+
+- gpt-5.6-sol `-rs1` (guardrail Default): pool_005 answered (end_turn, 52,350
+  output tokens, $0.5355), pool_037 answered (end_turn, 60,182, $0.6360).
+  Both valid, no repair needed. **PASS** on 46 and 41 pools: F1_J 0.8464 /
+  F1_L 0.9507 / q 0.8907 (46); 0.8455 / 0.9523 / 0.8882 (41). Cost $25.3645.
+- Why the originals were blocked (inference, not recorded): Default and
+  DefaultV2 apply the same hate/sexual/violence/self-harm filters at the same
+  thresholds, and both units passed under Default; the checks only DefaultV2
+  adds are prompt shields (jailbreak, prompt side) and protected material
+  (text/code, completion side). Both blocks fired on the completion, so
+  protected material is the likely trigger. Not proof: the resent completions
+  are new generations. The runner did not keep filter results for successful
+  responses; it now does (attempt-log field `content_filters`).
+- llama-4-maverick (Parasail fp8): REFUSED on 46 and 41: all answered, 10 (46)
+  / 8 (41) units over the policy cap. Secondary F1_J 0.2134, F1_L 0.3348,
+  q 0.6376. $0.4511.

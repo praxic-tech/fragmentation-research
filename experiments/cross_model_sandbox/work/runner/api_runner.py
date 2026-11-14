@@ -602,6 +602,9 @@ class ApiRunner:
                         "reported_model": res.get("reported_model"), "finish": res["finish"],
                         "input_tokens": res.get("input_tokens"), "output_tokens": res.get("output_tokens"),
                         "reasoning_tokens": res.get("reasoning_tokens")})
+            if res.get("filter_fields"):        # Azure: keep the final per-category filter results
+                rec["content_filters"] = [f["value"] for f in res["filter_fields"]
+                                          if f.get("event") in ("response.completed", "response.incomplete")]
             self.append(self.path(tag, "attempts.jsonl"), rec)
             attempts.append({"attempt": k, "outcome": "response"})
             try:
@@ -816,13 +819,64 @@ def long_dummy_prompt(target_chars=76000):
     return "\n".join(lines) + "\n\nIgnore the list above. Reply with exactly the word OK and nothing else."
 
 
-LONGGEN_PROMPT = ("Write out every integer from 1 to 60000 in increasing order, separated by single spaces, "
-                  "with no other text. Do not skip, abbreviate, summarize or stop early.")
+LONGGEN_PROMPT_V1 = ("Write out every integer from 1 to 60000 in increasing order, separated by single spaces, "
+                     "with no other text. Do not skip, abbreviate, summarize or stop early.")   # refused (RUNLOG)
+
+
+def longgen_prompt_v3(seed=7, n_records=8, per=32):
+    """Amendment 2 long-generation test, v3: an invented grouping task of the headline's shape (shuffled
+    sentences from invented records, group and order them; short JSON answer, long reasoning).
+    All content is synthetic; no headline prompt or data is used."""
+    rnd = random.Random(seed)
+    first = "Ardel Brisa Corvin Dalia Emrys Fenna Galt Hesper Ilka Joren Kestrel Liora".split()
+    towns = "Quillmere Ostrava-Vale Pennick Sorrow-on-Tees Umber Wexley Yarrow Zennor".split()
+    trades = "cooper glazier tanner cartographer luthier chandler weaver assayer".split()
+    sents, gid = [], 0
+    for i in range(n_records):
+        who, town, trade = first[i], towns[i], trades[i]
+        year = 1750 + rnd.randint(0, 8)         # overlapping years: ordering and grouping are hard
+        for k in range(per):
+            y = year + k * rnd.randint(1, 2)
+            if rnd.random() < 0.7:               # most sentences carry no identifying name, town or trade
+                s = rnd.choice([
+                    f"In {y} the debt rose to {rnd.randint(2, 90)} shillings.",
+                    f"By {y} there were {rnd.randint(1, 6)} apprentices in the workshop.",
+                    f"That year ({y}) a letter mentioned the flooding again.",
+                    f"A ledger from {y} notes {rnd.randint(3, 40)} pieces sold at the fair.",
+                    f"In the winter of {y} illness kept the workshop closed for {rnd.randint(2, 9)} weeks.",
+                ])
+                sents.append((f"s_{gid:05d}", s))
+                gid += 1
+                continue
+            s = rnd.choice([
+                f"In {y} {who} the {trade} of {town} recorded a debt of {rnd.randint(2, 90)} shillings.",
+                f"By {y} the {trade}'s workshop in {town} had taken on {rnd.randint(1, 6)} apprentices.",
+                f"That year ({y}) {who} wrote to a cousin about the flooding near {town}.",
+                f"A ledger from {y} notes that {who} sold {rnd.randint(3, 40)} pieces at the {town} fair.",
+                f"In the winter of {y} the {trade} was ill for {rnd.randint(2, 9)} weeks.",
+            ])
+            sents.append((f"s_{gid:05d}", s))
+            gid += 1
+    rnd.shuffle(sents)
+    lines = "\n".join(f"[{t}] {s}" for t, s in sents)
+    return ("Below are sentences cut from several separate invented biographies and shuffled. Each tag "
+            "identifies one sentence.\n\n" + lines + "\n\nGroup the tags by biography and put each group "
+            "in chronological order. Reply with only a JSON array of arrays of tags.")
+
+
+def longgen_prompt():
+    """Amendment 2 long-generation test, v2: a dummy task whose full answer is far longer than 110,000 tokens."""
+    body = long_dummy_prompt().rsplit("\n\n", 1)[0]
+    return (body + "\n\nTask: for every line above, count the letters in its words (not digits, spaces or "
+            "punctuation). Then write out ALL the lines, sorted by that count from smallest to largest, each "
+            "line in full followed by ' = <count>'. Then write them ALL out a second time in the reverse order, "
+            "again in full with counts. Then a third time in the original order, each followed by its count "
+            "spelled out in words. Do not skip, abbreviate or summarize any line.")
 
 
 def smoke(cfg, long=False, longgen=False):
     r = ApiRunner(cfg)
-    prompt = long_dummy_prompt() if long else (LONGGEN_PROMPT if longgen else SMOKE_PROMPT)
+    prompt = long_dummy_prompt() if long else (longgen_prompt_v3() if longgen else SMOKE_PROMPT)
     body = r.body(prompt)
     t0 = time.time()
     rec = {"slug": cfg["slug"], "at": now(), "long_prompt_chars": len(prompt) if long else None,

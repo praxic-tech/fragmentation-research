@@ -1,28 +1,20 @@
 {
  "scope": "46",
  "units": 46,
- "PRIMARY_verdict": "REFUSED",
+ "PRIMARY_verdict": "PASS",
  "refusal_reasons": {
-  "units_without_answer": [
-   "pool_005",
-   "pool_037"
-  ],
+  "units_without_answer": [],
   "units_over_policy_cap": []
  },
  "frozen_gate_output": {
-  "prose": [
-   "J"
-  ]
+  "prose": []
  },
- "answered_units": 44,
- "completion_rate": 0.9565217391304348,
+ "answered_units": 46,
+ "completion_rate": 1.0,
  "d6_units": 0,
  "d6_rate": 0.0,
  "excluded_units": {
-  "content_filter": [
-   "pool_005",
-   "pool_037"
-  ],
+  "content_filter": [],
   "not_run": [],
   "not_completed": [],
   "repair_not_sent_or_not_completed": []
@@ -31,10 +23,12 @@
  "invalid_after_repair_rate": 0.0,
  "mean_policy_share": 0.0,
  "units_over_cap": 0,
- "SECONDARY_answered_units_only": {
-  "F1_J": 0.8470380806313519,
-  "F1_L": 0.9514527237056238,
-  "q": 0.8905877970538151
+ "PRIMARY_means": {
+  "F1_J": 0.8464380351585536,
+  "F1_L": 0.9507306864880877,
+  "q": 0.8906559806271089,
+  "n": 46,
+  "n_q_defined": 46
  },
  "per_unit": {
   "pool_001": {
@@ -46,6 +40,11 @@
    "F1_J": 0.9210927424082542,
    "F1_L": 0.984640637823895,
    "q": 0.9354608240057156
+  },
+  "pool_005": {
+   "F1_J": 0.7956140350877193,
+   "F1_L": 0.8780701754385964,
+   "q": 0.906093906093906
   },
   "pool_006": {
    "F1_J": 0.8908520946138501,
@@ -162,6 +161,11 @@
    "F1_L": 0.9738805970149254,
    "q": 0.8388550822627902
   },
+  "pool_037": {
+   "F1_J": 0.8708600344262634,
+   "F1_L": 0.9916215599659886,
+   "q": 0.8782181323852347
+  },
   "pool_038": {
    "F1_J": 0.911221270842722,
    "F1_L": 0.9692053477542436,
@@ -262,7 +266,8 @@
   [
    "final-headlineJ",
    [
-    "final-headlineJ.results.jsonl"
+    "final-headlineJ.results.jsonl",
+    "final-headlineJ-rs1.results.jsonl"
    ]
   ]
  ]

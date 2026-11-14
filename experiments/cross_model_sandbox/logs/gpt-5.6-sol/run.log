@@ -50,3 +50,16 @@
 2026-11-14T01:10:55.598103+00:00 final-headlineJ prose__J__pool-059: end_turn in 8641 out 63022 $0.6475  (715.7 s) total $24.1931
 2026-11-14T01:10:55.608152+00:00 final-headlineJ: prompt tokens/char min 0.2206 max 0.2593 spread 1.175
 2026-11-14T01:10:55.627003+00:00 === waves done; spent $24.1931
+2026-11-14T03:48:56.261075+00:00 === start gpt-5.6-sol headline J: budget 128000, cap $50.0, MODEL_MAX_OUTPUT 128000
+2026-11-14T03:48:56.278750+00:00 final-headlineJ: 46 requests, 0 to send; spent $24.1931 of cap $50.00
+2026-11-14T03:48:56.280266+00:00 final-headlineJ: prompt tokens/char min 0.2206 max 0.2593 spread 1.175
+2026-11-14T03:48:56.280769+00:00 final-headlineJ: 2 content-filtered unit(s) go to the one resend: ['prose__J__pool-005', 'prose__J__pool-037']
+2026-11-14T03:49:14.717299+00:00 === start gpt-5.6-sol headline J: budget 128000, cap $50.0, MODEL_MAX_OUTPUT 128000
+2026-11-14T03:49:14.730245+00:00 final-headlineJ: 46 requests, 0 to send; spent $24.1931 of cap $50.00
+2026-11-14T03:49:14.731654+00:00 final-headlineJ: prompt tokens/char min 0.2206 max 0.2593 spread 1.175
+2026-11-14T03:49:14.732151+00:00 final-headlineJ: 2 content-filtered unit(s) go to the one resend: ['prose__J__pool-005', 'prose__J__pool-037']
+2026-11-14T03:49:14.740327+00:00 final-headlineJ-rs1: 2 requests, 2 to send; spent $24.1931 of cap $50.00
+2026-11-14T03:57:59.914299+00:00 final-headlineJ-rs1 prose__J__pool-005: end_turn in 5981 out 52350 $0.5355  (525.2 s) total $24.7285
+2026-11-14T03:59:17.769516+00:00 final-headlineJ-rs1 prose__J__pool-037: end_turn in 17083 out 60182 $0.6360  (543.0 s) total $25.3645
+2026-11-14T03:59:17.775590+00:00 final-headlineJ-rs1: prompt tokens/char min 0.2249 max 0.2378 spread 1.057
+2026-11-14T03:59:17.789719+00:00 === waves done; spent $25.3645

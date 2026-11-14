@@ -1,13 +1,30 @@
-FROZEN GATE OUTPUT (the frozen batch_game.score report, unchanged). The primary verdict is the preregistered rule applied to the rows: REFUSED. See ../PRIMARY_RESULT.md.
+FROZEN GATE OUTPUT (the frozen batch_game.score report, unchanged). The primary verdict is the preregistered rule applied to the rows: PASS. See ../PRIMARY_RESULT.md.
 
 
 ==========================================================================
  CELL prose
 
 INTEGRITY
-  game J: REFUSED   model answered 39/41   non-completions 0   fragments placed by policy 0.0%
-    no model answer: pool_005, pool_037
+  game J: ok   model answered 41/41   non-completions 0   fragments placed by policy 0.0%
 
 ==========================================================================
  THREE ATTACK CONDITIONS, SAME CORPUS, SAME MODEL
 ==========================================================================
+
+GAME J  (joint: membership AND order, nothing given)
+  pools scored 41
+  COMPLETION   41/41 (100%)   resource-bounded non-completions 0
+  linkage F1   mean 0.9523   baseline 0.3005   advantage +0.9327
+               precision 0.9546   recall 0.9501   (of guessed / of true same-record pairs)
+  groups       guessed 7.0 vs 7.0 asked   exact count 41/41
+  partition    valid 41/41   (after repairing dropped fragments to singletons)
+  COVERAGE     model placed 100.0% of fragments   dropped 0 total, worst pool 0
+  JOINT ordered-pair F1   mean 0.8455   baseline 0.1502   advantage +0.8178
+  F1 BREAKDOWN  (pairs summed over 41 pools;  F1_J = linkage F1 x q)
+    pairs      guessed 252,413 same-record pairs   true 253,902
+    linkage    242,903 guessed pairs really share a record   precision 0.9623  recall 0.9567  F1 0.9595
+    order      211,580 of those 242,903 point the right way   q = C/K 0.8710
+    joint      precision C/guessed 0.8382  recall C/true 0.8333  F1 0.8358 = 0.9595 x 0.8710
+  direction accuracy      q_micro 0.8710   (K=0 in 0/41 pools)
+  tau in matched groups   mean +0.8249  (n=41 pools)
+  records recovered EXACTLY (membership and order): 7/287  (2.4%)
