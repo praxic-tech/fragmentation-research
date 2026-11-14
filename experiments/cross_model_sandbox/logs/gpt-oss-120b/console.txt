@@ -1,0 +1,37 @@
+2026-11-14T01:08:17.354901+00:00 === start gpt-oss-120b headline J: budget 110000, cap $1.5, MODEL_MAX_OUTPUT 110000
+2026-11-14T01:08:17.366421+00:00 final-headlineJ: 46 requests, 46 to send; spent $0.0000 of cap $1.50
+2026-11-14T01:15:00.569750+00:00 final-headlineJ prose__J__pool-018: end_turn in 14144 out 43887 $0.0086  (403.2 s) total $0.0086
+2026-11-14T01:19:24.612934+00:00 final-headlineJ prose__J__pool-010: end_turn in 9532 out 53241 $0.0102  (667.2 s) total $0.0189
+2026-11-14T01:20:43.765203+00:00 final-headlineJ prose__J__pool-009: end_turn in 7257 out 56987 $0.0109  (746.4 s) total $0.0297
+2026-11-14T01:20:45.323570+00:00 final-headlineJ prose__J__pool-021: end_turn in 7542 out 89770 $0.0170  (747.9 s) total $0.0468
+2026-11-14T01:21:40.040069+00:00 final-headlineJ prose__J__pool-005: end_turn in 6042 out 73912 $0.0140  (802.7 s) total $0.0608
+2026-11-14T01:22:04.630598+00:00 final-headlineJ prose__J__pool-011: end_turn in 10244 out 71754 $0.0137  (827.3 s) total $0.0745
+2026-11-14T01:22:07.974521+00:00 final-headlineJ prose__J__pool-008: end_turn in 10205 out 82208 $0.0157  (830.6 s) total $0.0902
+2026-11-14T01:22:17.020288+00:00 final-headlineJ prose__J__pool-022: end_turn in 7351 out 70167 $0.0133  (839.6 s) total $0.1035
+2026-11-14T01:22:27.940375+00:00 final-headlineJ prose__J__pool-017: end_turn in 8410 out 77539 $0.0148  (850.6 s) total $0.1183
+2026-11-14T01:23:28.172525+00:00 final-headlineJ prose__J__pool-023: end_turn in 8281 out 67842 $0.0129  (507.6 s) total $0.1312
+2026-11-14T01:24:32.666931+00:00 final-headlineJ prose__J__pool-007: end_turn in 12690 out 81456 $0.0156  (975.3 s) total $0.1468
+2026-11-14T01:24:59.823753+00:00 final-headlineJ prose__J__pool-001: end_turn in 6979 out 102956 $0.0195  (1002.5 s) total $0.1663
+2026-11-14T01:25:08.273087+00:00 final-headlineJ prose__J__pool-026: end_turn in 10752 out 41389 $0.0081  (262.9 s) total $0.1743
+2026-11-14T01:25:57.011870+00:00 final-headlineJ prose__J__pool-020 attempt 1 transport error: error in stream: {"code": 502, "message": "Upstream error from AkashML: Unknown role: final", "metadata": {"error_type":; retry in 34 s
+2026-11-14T01:25:59.605927+00:00 final-headlineJ prose__J__pool-003: end_turn in 8352 out 85073 $0.0162  (1062.2 s) total $0.1905
+2026-11-14T01:27:15.152426+00:00 final-headlineJ prose__J__pool-006: end_turn in 5573 out 95865 $0.0181  (1137.8 s) total $0.2086
+2026-11-14T01:27:47.266983+00:00 final-headlineJ prose__J__pool-024 attempt 1 transport error: error in stream: {"code": 502, "message": "Network connection lost.", "metadata": {"error_type": "provider_unavailable"}; retry in 35 s
+2026-11-14T01:27:47.269289+00:00 final-headlineJ prose__J__pool-030 attempt 1 transport error: error in stream: {"code": 502, "message": "Network connection lost.", "metadata": {"error_type": "provider_unavailable"}; retry in 32 s
+2026-11-14T01:28:29.875427+00:00 HALT final-headlineJ prose__J__pool-019: stopped at length after 109837 tokens, below the budget 110000 (not covered by D6)
+2026-11-14T01:29:56.042818+00:00 final-headlineJ prose__J__pool-048 attempt 1 transport error: error in stream: {"code": 502, "message": "Network connection lost.", "metadata": {"error_type": "provider_unavailable"}; retry in 31 s
+2026-11-14T01:29:56.044384+00:00 final-headlineJ prose__J__pool-031 attempt 1 transport error: error in stream: {"code": 502, "message": "Network connection lost.", "metadata": {"error_type": "provider_unavailable"}; retry in 38 s
+2026-11-14T01:30:01.946329+00:00 final-headlineJ prose__J__pool-015: max_tokens in 7338 out 110000 $0.0208 TruncatedAnswerError (1304.6 s) total $0.2501
+2026-11-14T01:31:24.439305+00:00 final-headlineJ prose__J__pool-039: end_turn in 8589 out 55278 $0.0106  (376.2 s) total $0.2607
+2026-11-14T01:31:42.688497+00:00 final-headlineJ prose__J__pool-025: end_turn in 9499 out 64426 $0.0123  (658.9 s) total $0.2731
+2026-11-14T01:31:54.601116+00:00 final-headlineJ prose__J__pool-029: end_turn in 6199 out 83950 $0.0159  (590.0 s) total $0.2890
+2026-11-14T01:34:49.845611+00:00 final-headlineJ prose__J__pool-037: end_turn in 17144 out 86303 $0.0167  (617.2 s) total $0.3056
+2026-11-14T01:36:06.057733+00:00 final-headlineJ prose__J__pool-038: end_turn in 6958 out 92159 $0.0174  (666.2 s) total $0.3231
+2026-11-14T01:37:08.145898+00:00 final-headlineJ prose__J__pool-028: end_turn in 7095 out 80176 $0.0152  (928.1 s) total $0.3383
+2026-11-14T01:41:01.377862+00:00 final-headlineJ prose__J__pool-024: end_turn in 11302 out 104695 $0.0199  (759.4 s) total $0.3582
+2026-11-14T01:41:51.726317+00:00 final-headlineJ prose__J__pool-032: end_turn in 7687 out 105225 $0.0199  (1163.8 s) total $0.3781
+2026-11-14T01:43:23.032231+00:00 final-headlineJ prose__J__pool-030: end_turn in 7705 out 75678 $0.0144  (903.7 s) total $0.3925
+2026-11-14T01:44:45.132649+00:00 final-headlineJ prose__J__pool-020: end_turn in 7025 out 87527 $0.0166  (1094.3 s) total $0.4090
+2026-11-14T01:47:16.279515+00:00 HALT final-headlineJ prose__J__pool-035: stopped at length after 108089 tokens, below the budget 110000 (not covered by D6)
+2026-11-14T01:48:59.784344+00:00 final-headlineJ prose__J__pool-041: end_turn in 6288 out 107129 $0.0202  (1380.2 s) total $0.4498
+HALT in final-headlineJ: prose__J__pool-019: stopped at length after 109837 tokens, below the budget 110000 (not covered by D6)

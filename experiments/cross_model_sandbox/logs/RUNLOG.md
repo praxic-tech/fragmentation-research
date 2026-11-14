@@ -652,3 +652,18 @@ Install (user granted install permission, asked to keep it small):
   0.9532 / 0.8880. Note: the runner records $0 for the two filtered
   responses; any tokens Azure billed for them before the filter are not in the
   $24.19 (usage was not captured on the incomplete path).
+
+## 2026-11-14 — gpt-oss-120b: HALT in the base wave (AkashML length stops)
+
+- Started 01:08 UTC; halted 01:28 UTC (amendment halt: a length stop below
+  110,000); in-flight requests drained, line stopped 01:49 UTC. llama-4-maverick
+  and deepseek-v3.2 not started.
+- 27 base rows written, cost $0.4498 (cap $1.50).
+- 2 halts (`raw/gpt-oss-120b/final-headlineJ.check_failures.jsonl`), both
+  reasoning with no answer: pool_019 at 109,837 output tokens (prompt 7,535;
+  total 117,372); pool_035 at 108,089 (prompt 9,958; total 118,047). Not a fixed
+  total limit (the totals differ; gpt-oss-20b on AkashML reached the full
+  110,000 with totals up to 117,812). Waiting for the user's decision.
+- OpenRouter key 01:49 UTC: usage $1.1697, limit_remaining $8.9806 (the key's
+  remaining does not equal limit - usage; see the 00:09 reading, to settle
+  before the Kimi decision).
