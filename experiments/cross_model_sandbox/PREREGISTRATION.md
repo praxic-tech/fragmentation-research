@@ -558,3 +558,69 @@ prompt lengths only. No row of this sweep has been scored.
   Parasail the cap is raised to $3.00.
 - Smoke test: a dummy prompt of the length of the longest headline prompt
   (not a headline prompt), with max output 110,000.
+
+
+## 2026-11-14 (amendment 2): Azure content filters, gpt-oss-120b provider, parallel runs, Kimi balance
+
+Post hoc exploratory, like the entries it amends. Written after the
+gpt-oss-120b base-wave halt (AkashML length stops) and the two gpt-5.6-sol
+content-filter blocks (`logs/RUNLOG.md`, 2026-11-14), before any further
+request. Decided by the user. Rows scored so far: gpt-4.1, gpt-oss-20b and
+gpt-5.6-sol (all committed); this amendment was chosen after those results
+were seen, which is recorded here plainly.
+
+### 1. Content filter (Azure models)
+
+- Content-filter blocks on Azure are platform errors, the same class as
+  429/408/5xx. This replaces "content filter: its own outcome, never resent"
+  for the Azure models.
+- Every content-filtered unit on an Azure model (the 2 gpt-5.6-sol pools,
+  pool_005 and pool_037; gpt-4.1 had none) is resent once, unchanged (same
+  frozen prompt), with the deployment guardrail set to **Default** instead of
+  **DefaultV2**. Same deployment, model version, Flex tier, reasoning effort
+  and max output. This resend is the unit's one frozen resend (`-rs1`).
+- The guardrail is recorded per row (`raw/<slug>/guardrail.jsonl`): rows sent
+  before the switch under DefaultV2, the resends under Default.
+- Before resending: one dummy smoke request; its response is checked for
+  prompt/content filter results. If the jailbreak / prompt-shield or
+  protected-material checks still appear (they belong to DefaultV2), the
+  guardrail has not been switched: halt that line and report.
+- Each original block's category, severity, and whether it fired on the prompt
+  or the completion is logged in RUNLOG. For the two original blocks only the
+  reason was recorded (the runner kept `incomplete_details.reason` and dropped
+  the rest); both were HTTP 200 streams cut off after 102 s and 133 s, so they
+  fired on the completion; category and severity are unknown. From now on the
+  runner keeps the full final response and every filter field of a block.
+- A unit still blocked under Default is "not completed", like a transport
+  error at the retry limit.
+- One verdict per model under this rule. No separate content-filter verdict,
+  no zero-filled bound.
+
+### 2. gpt-oss-120b
+
+- Provider: **Parasail fp4** (endpoint `parasail/fp4`), `allow_fallbacks:
+  false`, max output 110,000, cap $3.00. All other settings unchanged
+  (reasoning effort high, temperature 1.0, top_p 1.0; D6 at 110,000).
+- First, one long-generation test on a dummy prompt to confirm Parasail
+  reaches 110,000 output tokens.
+- If Parasail stops short of 110,000, in the test or in the run, gpt-oss-120b
+  is reported as "not completed: no pinned provider delivered the 110,000
+  budget". No further providers.
+- The 27 AkashML rows are superseded: kept in logs, never scored, their cost
+  ($0.4498) reported in the totals. All 46 pools rerun on Parasail.
+
+### 3. Parallel
+
+- llama-4-maverick and deepseek-v3.2 start now, in parallel with
+  gpt-oss-120b. Order affects no result.
+
+### 4. Kimi
+
+- "Remaining balance" = $10.00 key limit minus the total usage reported on
+  the key (`/api/v1/key` `usage`), not the key's `limit_remaining` field.
+- Any top-up the user adds only covers overruns on gpt-oss-120b, llama and
+  deepseek, and does not count toward the $7.50 threshold.
+
+Everything else is unchanged: halt conditions, scoring, the 41-pool
+sensitivity, committing per model. The only planned stop is still the Kimi
+decision.
