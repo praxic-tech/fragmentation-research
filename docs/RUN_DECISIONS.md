@@ -1502,6 +1502,51 @@ comparisons (D19). Names in tables: **T1-pythia160m**, **T2-pythia1.4b**.
 - Files: adversaries/lm_pmi_t12.py, runs/t12_score.py, runs/t12_make_bundle.py,
   notebooks/t12_colab.ipynb.
 
+## D20 — 2026-11-14: POST-HOC EXPLORATORY — SIMILAR POOLS, design frozen before any pool is built
+
+- **Why.** Each headline pool's seven documents were drawn at random, so they
+  usually concern different conditions and grouping by content is relatively
+  easy. The worrying deployment is several similar records together. This
+  asks whether pools of similar documents are harder to reconstruct.
+  Added after every main result was known: exploratory, not a headline claim.
+- **Documents and fragments.** Exactly the 322 documents of the 46 headline
+  pools (data/pools/pools.json minus the grid pools,
+  batch_game.headline_docs()), with the headline fragments (cell data/prose,
+  semantic × sentence). Same shape: 46 pools of 7. Only which documents share
+  a pool changes.
+- **Similarity.** TF-IDF over each document's full text (its sentences joined
+  with spaces), fitted on the 322 documents: lower-cased word tokens, English
+  stop words removed, min_df 2, sublinear tf, smoothed idf, L2 norm; cosine
+  similarity.
+- **Pool rule (greedy, deterministic).** While documents remain: for every
+  unused document d, the candidate pool is d plus its 6 most similar unused
+  documents (ties to the lower document id); its score is the mean pairwise
+  cosine within the candidate; the highest-scoring candidate becomes the next
+  pool (ties to the lower seed id) and its documents are removed. Pools are
+  named sim_001 … sim_046 in creation order. Late pools are made of what is
+  left and will be less similar; that is reported, not corrected.
+- **Manipulation check (reported, not a gate).** Mean within-pool pairwise
+  cosine for every similar pool and every headline pool, and the two means.
+- **Attackers.** The one-shot Sonnet attacker exactly as in the headline run
+  (claude-sonnet-5, frozen J prompt, max_tokens sizing, masking seed 42,
+  per-unit seeds, batch, one repair round, the corrected integrity gate);
+  T0-PUP and T0-classical (CPU, frozen settings); T3 (frozen weights and
+  decoder; pair scores on Colab); T1 and T2 with their frozen decoders if
+  their tuning addendum exists before the similar-pool scoring pass. No other
+  LLM unless approved separately.
+- **Spend.** Sonnet expected ≈ $13 (the headline run of the same 322
+  documents cost $12.68 settled). Not submitted until the user approves the
+  spend and the ledger cap.
+- **Analysis.** Per attacker: F1_J, F1_L, q (micro), A_J on similar pools and
+  on headline pools; similar − headline with a 95% bootstrap CI (10,000
+  resamples of pools within each set, seed 42). Reading, stated now: a CI for
+  F1_J entirely below 0 → similarity helps the defence; otherwise →
+  similarity of this kind does not protect. Reported either way.
+- **Stated limit.** Lexical similarity within a corpus of mixed case reports;
+  the 322 documents contain no records from the same clinic or patient, so
+  this is a weaker version of the worrying case.
+- Files: runs/similar_pools.py, data/pools/similar_pools.json.
+
 ## Development history — 2026-09-10: headline documents used before frame A existed
 
 Development work done before D2 was taken used documents that frame A later
