@@ -33,7 +33,7 @@ sys.path.insert(0, os.path.join(ROOT, "adversaries"))
 
 from batch_submit import IncompleteBatchError, failed_ids, require_complete
 from joint_game import (POLICY_CAP, _no_model_answer, _policy_share,
-                        cell_integrity)
+                        cell_integrity, gate_policy_share)
 
 _failures = []
 
@@ -138,6 +138,28 @@ def test_cell_gate():
     check("exactly at the cap is allowed; only above it is refused", v["ok"])
 
 
+def test_game_j_policy_share():
+    print("\ngame J gate: the recorded policy share is read, not 1 - coverage")
+    # Game J rows are scored after the completion policy has filled every
+    # missing fragment, so coverage_frac is 1.0 and 1 - coverage is 0.
+    raw = {"game": "J", "n_fragments": 465,
+           "repair": {"policy_share": 315 / 465, "singletons_added": 315}}
+    s = {"coverage_frac": 1.0}
+    check("the fixed gate reads the recorded share",
+          abs(gate_policy_share(s, raw) - 315 / 465) < 1e-12,
+          f"{gate_policy_share(s, raw):.1%}")
+    check("the legacy gate (audit only) reproduces the miss",
+          gate_policy_share(s, raw, legacy=True) == 0.0)
+    check("a unit the gate used to pass is now refused",
+          not cell_integrity([{"unit": "p", "policy_share": gate_policy_share(s, raw),
+                               "no_model_answer": False}], ["p"])["ok"])
+    s2 = {"coverage_frac": 0.6}
+    check("coverage still counts when it is the larger share",
+          abs(gate_policy_share(s2, {"repair": {"policy_share": 0.1}}) - 0.4) < 1e-12)
+    check("a score row that already carries policy_share is taken as is",
+          gate_policy_share({"policy_share": 0.2, "coverage_frac": 1.0}, raw) == 0.2)
+
+
 def test_quarantined_fixture():
     print("\nthe real regression: the quarantined free-tier cells")
     qdir = os.path.join(ROOT, "results", "o_probe",
@@ -167,6 +189,7 @@ def main():
     print("=" * 70)
     test_batch_gate()
     test_cell_gate()
+    test_game_j_policy_share()
     test_quarantined_fixture()
     print("\n" + "=" * 70)
     if _failures:

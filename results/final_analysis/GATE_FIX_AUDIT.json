@@ -1,0 +1,56 @@
+{
+  "rule": "a unit is policy-heavy if its recorded policy share exceeds 0.25",
+  "why_only_these_can_change": "the fixed share is max(recorded, 1 - coverage) >= the old share",
+  "raw_j_files": 57,
+  "raw_j_rows": 433,
+  "units_over_cap": [
+    {
+      "file": "results/final/singleTokenEdgeJ/edge__token/J.jsonl",
+      "unit": "pool_017",
+      "n_fragments": 465,
+      "recorded_policy_share": 0.6774193548387096,
+      "attempts": [
+        {
+          "attempt": 0,
+          "n_returned": 442,
+          "n_expected": 465,
+          "n_missing": 23,
+          "valid": false
+        },
+        {
+          "attempt": 1,
+          "n_returned": 150,
+          "n_expected": 465,
+          "n_missing": 315,
+          "valid": false
+        }
+      ],
+      "forced_finalise": true
+    }
+  ],
+  "largest_share_among_the_rest": 0.08430232558139535,
+  "single_token_sensitivity": {
+    "refused_cell": "singleTokenEdgeJ / edge__token (one-shot Sonnet)",
+    "over_cap_pools": [
+      "pool_017"
+    ],
+    "all_pools": {
+      "pools": 20,
+      "token_F1_J": 0.11580102155999968,
+      "token_F1_L": 0.22312405726171836,
+      "token_A_VJ": 0.016095638165538557,
+      "sentence_A_VJ": 0.5884292162967452,
+      "paired_A_VJ_sentence_minus_token": 0.5723335781312067,
+      "pools_sentence_higher": 20
+    },
+    "without_over_cap_pools": {
+      "pools": 19,
+      "token_F1_J": 0.11865731301783049,
+      "token_F1_L": 0.2285973124049852,
+      "token_A_VJ": 0.023203988764772334,
+      "sentence_A_VJ": 0.5930315639813238,
+      "paired_A_VJ_sentence_minus_token": 0.5698275752165515,
+      "pools_sentence_higher": 19
+    }
+  }
+}

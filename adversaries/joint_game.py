@@ -559,8 +559,32 @@ def cell_integrity(scored, expected_units, cap=POLICY_CAP, rbnc=()):
             "policy_share": (sum(shares) / len(shares)) if shares else 0.0}
 
 
-def integrity_gate(out_dir, key, pool_truth, expected):
-    """Per game: may a mean be printed? Returns the set of refused games."""
+def gate_policy_share(s_row, raw_row, legacy=False):
+    """Share of a unit's fragments placed by our completion policy, for the gate.
+
+    Game J rows are scored after the completion policy has already filled in
+    every missing fragment, so 1 - coverage_frac is 0 for them by
+    construction. The share the policy actually placed is the one recorded in
+    repair.policy_share; the gate takes the larger of the two.
+
+    legacy=True reproduces the pre-fix gate (1 - coverage_frac only), which
+    missed policy-heavy Game J units. It exists solely to audit verdicts
+    printed before the fix.
+    """
+    if "policy_share" in s_row:
+        return s_row["policy_share"]
+    recorded = _policy_share(raw_row)
+    if "coverage_frac" not in s_row:
+        return recorded
+    from_coverage = 1.0 - s_row["coverage_frac"]
+    return from_coverage if legacy else max(recorded, from_coverage)
+
+
+def integrity_gate(out_dir, key, pool_truth, expected, legacy=False):
+    """Per game: may a mean be printed? Returns the set of refused games.
+
+    legacy=True: pre-fix policy share, for auditing old verdicts only.
+    """
     refused = set()
     print()
     print("INTEGRITY")
@@ -571,10 +595,7 @@ def integrity_gate(out_dir, key, pool_truth, expected):
             for raw_row in load_jsonl(p):
                 s_row = score_row(raw_row, key, pool_truth)
                 s_row["no_model_answer"] = _no_model_answer(raw_row)
-                if "policy_share" not in s_row:
-                    s_row["policy_share"] = (1.0 - s_row["coverage_frac"]
-                                             if "coverage_frac" in s_row
-                                             else _policy_share(raw_row))
+                s_row["policy_share"] = gate_policy_share(s_row, raw_row, legacy)
                 scored.append(s_row)
         v = cell_integrity(scored, exp,
                            rbnc=[r["unit"] for r in load_rbnc(out_dir, gname)])
@@ -743,6 +764,11 @@ def parse_args():
                     help="print means for a game that failed the integrity "
                          "gate, as DIAGNOSTICS. Never for a reported result.")
     ap.add_argument("--score-only", action="store_true")
+    ap.add_argument("--audit-legacy-gate", action="store_true",
+                    help="AUDIT ONLY: reproduce the pre-fix integrity gate, which "
+                         "read Game J policy share as 1 - coverage_frac (always 0 "
+                         "after completion) and missed policy-heavy units. Exists "
+                         "solely to reproduce verdicts printed before the fix.")
     return ap.parse_args()
 
 
@@ -789,7 +815,8 @@ def main():
                       if os.path.exists(os.path.join(a.out_dir, f"{g}.jsonl"))])
     expected = {g: [u[0] for u in (o_units if g == "O" else pools)]
                 for g in games_checked}
-    refused = integrity_gate(a.out_dir, key, pool_truth, expected)
+    refused = integrity_gate(a.out_dir, key, pool_truth, expected,
+                             legacy=a.audit_legacy_gate)
     report(a.out_dir, key, pool_truth,
            withhold=frozenset() if a.allow_partial else refused)
     if refused and not a.allow_partial:
