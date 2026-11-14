@@ -1,0 +1,77 @@
+{
+ "slug": "claude-sonnet-5",
+ "budget": 128000,
+ "post_hoc_exploratory": true,
+ "usage": {
+  "input_tokens": 656644,
+  "output_tokens": 2405026,
+  "reasoning_tokens": 0,
+  "cost_usd": null,
+  "responses": 48,
+  "transport_attempts": 6,
+  "requests_with_transport_error": 6
+ },
+ "requests_sent": 54,
+ "pools46": {
+  "scope": "46",
+  "units": 46,
+  "PRIMARY_verdict": "PASS",
+  "refusal_reasons": {
+   "units_without_answer": [],
+   "units_over_policy_cap": []
+  },
+  "frozen_gate_output": {
+   "prose": []
+  },
+  "answered_units": 46,
+  "completion_rate": 1.0,
+  "d6_units": 0,
+  "d6_rate": 0.0,
+  "excluded_units": {
+   "content_filter": [],
+   "not_run": [],
+   "not_completed": [],
+   "repair_not_sent_or_not_completed": []
+  },
+  "invalid_after_repair": 0,
+  "invalid_after_repair_rate": 0.0,
+  "mean_policy_share": 0.0,
+  "units_over_cap": 0,
+  "PRIMARY_means": {
+   "F1_J": 0.722507073822915,
+   "F1_L": 0.8816973894376096,
+   "q": 0.8206481242345987
+  }
+ },
+ "pools41": {
+  "scope": "41",
+  "units": 41,
+  "PRIMARY_verdict": "PASS",
+  "refusal_reasons": {
+   "units_without_answer": [],
+   "units_over_policy_cap": []
+  },
+  "frozen_gate_output": {
+   "prose": []
+  },
+  "answered_units": 41,
+  "completion_rate": 1.0,
+  "d6_units": 0,
+  "d6_rate": 0.0,
+  "excluded_units": {
+   "content_filter": [],
+   "not_run": [],
+   "not_completed": [],
+   "repair_not_sent_or_not_completed": []
+  },
+  "invalid_after_repair": 0,
+  "invalid_after_repair_rate": 0.0,
+  "mean_policy_share": 0.0,
+  "units_over_cap": 0,
+  "PRIMARY_means": {
+   "F1_J": 0.7218447249425738,
+   "F1_L": 0.8825194858087821,
+   "q": 0.8191773817563964
+  }
+ }
+}
