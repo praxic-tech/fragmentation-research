@@ -777,5 +777,5 @@ Install (user granted install permission, asked to keep it small):
   and 130,316 in one, all `finish stop` with an answer. GMICloud appears to
   cap reasoning at 131,072 independently of `max_tokens` and then answer, so
   these units had ~5-6% more output than the preregistered budget.
-- Halted 08:10 UTC: I ended the deepseek-v3.2 process (pool_065's `-rs1`
+- Halted 08:07 UTC: I ended the deepseek-v3.2 process (pool_065's `-rs1`
   attempt in flight; resumable). Not scored. Waiting for the user.
