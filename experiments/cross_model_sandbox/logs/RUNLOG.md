@@ -763,3 +763,19 @@ Install (user granted install permission, asked to keep it small):
 - OpenRouter key 04:42 UTC: usage $4.2325 -> remaining (amendment 2
   definition) $5.7675, already below the $7.50 Kimi threshold; deepseek-v3.2
   still running.
+
+## 2026-11-14 — deepseek-v3.2: HALT (provider output above max_tokens)
+
+- Base wave done 07:47 UTC: 44/46 answered; pool_065 and pool_066 ERRORED
+  after 6 attempts, every failure at ~1,802 s (`finish_reason error`): the
+  GMICloud/OpenRouter stream is cut at 30 minutes (the entry's OpenRouter
+  timeout is 2 h). pool_052 and pool_059 got through on retry under 30 min.
+  `-rs1` started 07:47: pool_066 answered (1,194 s).
+- Not covered by the entry: 5 rows report more output than the 128,000
+  `max_tokens` sent: pool_018 136,099, pool_037 136,399, pool_031 134,331,
+  pool_007 134,142, pool_066 (-rs1) 134,329; reasoning tokens 131,072 in four
+  and 130,316 in one, all `finish stop` with an answer. GMICloud appears to
+  cap reasoning at 131,072 independently of `max_tokens` and then answer, so
+  these units had ~5-6% more output than the preregistered budget.
+- Halted 08:10 UTC: I ended the deepseek-v3.2 process (pool_065's `-rs1`
+  attempt in flight; resumable). Not scored. Waiting for the user.

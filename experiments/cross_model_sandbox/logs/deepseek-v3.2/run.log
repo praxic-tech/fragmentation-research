@@ -1,0 +1,65 @@
+2026-11-14T03:45:08.585712+00:00 === start deepseek-v3.2 headline J: budget 128000, cap $3.0, MODEL_MAX_OUTPUT 128000
+2026-11-14T03:45:08.602135+00:00 final-headlineJ: 46 requests, 46 to send; spent $0.0000 of cap $3.00
+2026-11-14T03:48:50.796301+00:00 final-headlineJ prose__J__pool-011: end_turn in 11913 out 33098 $0.0127  (222.2 s) total $0.0127
+2026-11-14T03:57:49.539371+00:00 final-headlineJ prose__J__pool-006: end_turn in 6433 out 69628 $0.0229  (760.9 s) total $0.0356
+2026-11-14T03:57:59.342710+00:00 final-headlineJ prose__J__pool-017: end_turn in 9736 out 83909 $0.0280  (770.7 s) total $0.0636
+2026-11-14T04:02:20.655583+00:00 final-headlineJ prose__J__pool-010: end_turn in 11406 out 109861 $0.0364  (1032.0 s) total $0.1000
+2026-11-14T04:04:12.156095+00:00 final-headlineJ prose__J__pool-020: end_turn in 8300 out 89254 $0.0294  (1143.5 s) total $0.1294
+2026-11-14T04:05:16.680026+00:00 final-headlineJ prose__J__pool-018: end_turn in 16482 out 136099 $0.0456  (1208.1 s) total $0.1750
+2026-11-14T04:05:39.591404+00:00 final-headlineJ prose__J__pool-015: end_turn in 8645 out 106135 $0.0347  (1231.0 s) total $0.2096
+2026-11-14T04:05:40.292200+00:00 final-headlineJ prose__J__pool-023: end_turn in 9714 out 115329 $0.0377  (1009.5 s) total $0.2474
+2026-11-14T04:07:16.392647+00:00 final-headlineJ prose__J__pool-005: end_turn in 7110 out 87581 $0.0286  (1327.8 s) total $0.2760
+2026-11-14T04:07:23.771049+00:00 final-headlineJ prose__J__pool-021: end_turn in 8771 out 106924 $0.0349  (1335.2 s) total $0.3109
+2026-11-14T04:08:28.074377+00:00 final-headlineJ prose__J__pool-007: end_turn in 14937 out 134142 $0.0446  (1399.5 s) total $0.3556
+2026-11-14T04:09:36.771984+00:00 final-headlineJ prose__J__pool-019: end_turn in 8847 out 91276 $0.0301  (1468.2 s) total $0.3857
+2026-11-14T04:11:40.301613+00:00 final-headlineJ prose__J__pool-022: end_turn in 8664 out 104978 $0.0343  (1591.7 s) total $0.4200
+2026-11-14T04:11:50.503123+00:00 final-headlineJ prose__J__pool-001: end_turn in 8199 out 110930 $0.0361  (1601.9 s) total $0.4560
+2026-11-14T04:12:20.254761+00:00 final-headlineJ prose__J__pool-008: end_turn in 11839 out 113403 $0.0376  (1631.6 s) total $0.4936
+2026-11-14T04:13:09.476077+00:00 final-headlineJ prose__J__pool-024: end_turn in 13270 out 86907 $0.0297  (919.9 s) total $0.5233
+2026-11-14T04:14:09.768927+00:00 final-headlineJ prose__J__pool-009: end_turn in 8510 out 117187 $0.0381  (1741.2 s) total $0.5614
+2026-11-14T04:15:07.103376+00:00 final-headlineJ prose__J__pool-003: end_turn in 9812 out 117450 $0.0384  (1798.5 s) total $0.5998
+2026-11-14T04:20:45.064867+00:00 final-headlineJ prose__J__pool-025: end_turn in 11160 out 93658 $0.0313  (1365.7 s) total $0.6311
+2026-11-14T04:21:16.698607+00:00 final-headlineJ prose__J__pool-029: end_turn in 7316 out 59759 $0.0200  (960.0 s) total $0.6511
+2026-11-14T04:24:20.045544+00:00 final-headlineJ prose__J__pool-028: end_turn in 8380 out 104740 $0.0342  (1207.9 s) total $0.6853
+2026-11-14T04:24:55.762380+00:00 final-headlineJ prose__J__pool-030: end_turn in 8919 out 98541 $0.0324  (1156.2 s) total $0.7177
+2026-11-14T04:26:09.988946+00:00 final-headlineJ prose__J__pool-026: end_turn in 12623 out 92851 $0.0314  (1429.3 s) total $0.7491
+2026-11-14T04:26:30.672363+00:00 final-headlineJ prose__J__pool-050: end_turn in 10324 out 100801 $0.0334  (801.2 s) total $0.7824
+2026-11-14T04:26:37.689032+00:00 final-headlineJ prose__J__pool-035: end_turn in 11654 out 103897 $0.0346  (1153.9 s) total $0.8170
+2026-11-14T04:28:21.032994+00:00 final-headlineJ prose__J__pool-038: end_turn in 8178 out 94026 $0.0308  (1124.3 s) total $0.8478
+2026-11-14T04:28:22.353485+00:00 final-headlineJ prose__J__pool-039: end_turn in 10067 out 93731 $0.0311  (1002.0 s) total $0.8790
+2026-11-14T04:28:55.048491+00:00 final-headlineJ prose__J__pool-032: end_turn in 8914 out 90627 $0.0299  (1298.7 s) total $0.9089
+2026-11-14T04:30:22.747647+00:00 final-headlineJ prose__J__pool-037: end_turn in 20104 out 136399 $0.0464  (1314.7 s) total $0.9553
+2026-11-14T04:31:42.934811+00:00 final-headlineJ prose__J__pool-031: end_turn in 9908 out 134331 $0.0437  (1562.6 s) total $0.9990
+2026-11-14T04:34:17.913783+00:00 final-headlineJ prose__J__pool-048: end_turn in 8234 out 88509 $0.0291  (1317.7 s) total $1.0281
+2026-11-14T04:36:00.093757+00:00 final-headlineJ prose__J__pool-054: end_turn in 8357 out 107931 $0.0352  (915.0 s) total $1.0632
+2026-11-14T04:36:53.278436+00:00 final-headlineJ prose__J__pool-041: end_turn in 7387 out 96973 $0.0316  (1502.8 s) total $1.0948
+2026-11-14T04:38:09.361983+00:00 final-headlineJ prose__J__pool-053: end_turn in 6690 out 89009 $0.0290  (1382.3 s) total $1.1238
+2026-11-14T04:38:44.719159+00:00 final-headlineJ prose__J__pool-058: end_turn in 7728 out 92398 $0.0302  (864.7 s) total $1.1540
+2026-11-14T04:43:02.155030+00:00 final-headlineJ prose__J__pool-056: end_turn in 8155 out 84102 $0.0277  (1305.5 s) total $1.1817
+2026-11-14T04:44:11.859016+00:00 final-headlineJ prose__J__pool-052 attempt 1 transport error: finish_reason error (native error); retry in 30 s
+2026-11-14T04:45:09.117863+00:00 final-headlineJ prose__J__pool-067: end_turn in 8099 out 101453 $0.0331  (974.1 s) total $1.2148
+2026-11-14T04:49:24.770431+00:00 final-headlineJ prose__J__pool-070: end_turn in 11351 out 84925 $0.0287  (1061.8 s) total $1.2435
+2026-11-14T04:49:49.667193+00:00 final-headlineJ prose__J__pool-061: end_turn in 12745 out 122673 $0.0406  (1419.7 s) total $1.2841
+2026-11-14T04:51:09.059201+00:00 final-headlineJ prose__J__pool-064: end_turn in 8797 out 88298 $0.0292  (1471.4 s) total $1.3133
+2026-11-14T04:51:55.102141+00:00 final-headlineJ prose__J__pool-062: end_turn in 8714 out 99656 $0.0327  (1524.4 s) total $1.3460
+2026-11-14T04:54:57.826496+00:00 final-headlineJ prose__J__pool-059 attempt 1 transport error: finish_reason error (native error); retry in 33 s
+2026-11-14T04:57:00.159278+00:00 final-headlineJ prose__J__pool-069: end_turn in 9085 out 114554 $0.0374  (1597.4 s) total $1.3833
+2026-11-14T04:58:23.132520+00:00 final-headlineJ prose__J__pool-065 attempt 1 transport error: finish_reason error (native error); retry in 31 s
+2026-11-14T04:58:24.759518+00:00 final-headlineJ prose__J__pool-066 attempt 1 transport error: finish_reason error (native error); retry in 33 s
+2026-11-14T05:14:43.935583+00:00 final-headlineJ prose__J__pool-052 attempt 2 transport error: finish_reason error (native error); retry in 67 s
+2026-11-14T05:22:35.524267+00:00 final-headlineJ prose__J__pool-059: end_turn in 10208 out 102576 $0.0322  (1624.5 s) total $1.4155
+2026-11-14T05:28:57.257560+00:00 final-headlineJ prose__J__pool-065 attempt 2 transport error: finish_reason error (native error); retry in 68 s
+2026-11-14T05:29:00.751483+00:00 final-headlineJ prose__J__pool-066 attempt 2 transport error: finish_reason error (native error); retry in 69 s
+2026-11-14T05:45:52.987959+00:00 final-headlineJ prose__J__pool-052 attempt 3 transport error: finish_reason error (native error); retry in 125 s
+2026-11-14T06:00:08.215225+00:00 final-headlineJ prose__J__pool-065 attempt 3 transport error: finish_reason error (native error); retry in 136 s
+2026-11-14T06:00:11.907128+00:00 final-headlineJ prose__J__pool-066 attempt 3 transport error: finish_reason error (native error); retry in 140 s
+2026-11-14T06:15:33.790382+00:00 final-headlineJ prose__J__pool-052: end_turn in 10664 out 102292 $0.0339  (1655.7 s) total $1.4494
+2026-11-14T06:32:27.218274+00:00 final-headlineJ prose__J__pool-065 attempt 4 transport error: finish_reason error (native error); retry in 281 s
+2026-11-14T06:32:34.962320+00:00 final-headlineJ prose__J__pool-066 attempt 4 transport error: finish_reason error (native error); retry in 249 s
+2026-11-14T07:06:46.968130+00:00 final-headlineJ prose__J__pool-066 attempt 5 transport error: finish_reason error (native error); retry in 559 s
+2026-11-14T07:07:10.245416+00:00 final-headlineJ prose__J__pool-065 attempt 5 transport error: finish_reason error (native error); retry in 596 s
+2026-11-14T07:46:08.012475+00:00 final-headlineJ prose__J__pool-066: ERRORED after 6 attempts: finish_reason error (native error)
+2026-11-14T07:47:08.529329+00:00 final-headlineJ prose__J__pool-065: ERRORED after 6 attempts: finish_reason error (native error)
+2026-11-14T07:47:08.566687+00:00 final-headlineJ: prompt tokens/char min 0.2578 max 0.3090 spread 1.198
+2026-11-14T07:47:08.637512+00:00 final-headlineJ-rs1: 2 requests, 2 to send; spent $1.4494 of cap $3.00
+2026-11-14T08:07:02.419241+00:00 final-headlineJ-rs1 prose__J__pool-066: end_turn in 12903 out 134329 $0.0443  (1193.8 s) total $1.4937
