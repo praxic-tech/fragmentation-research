@@ -786,3 +786,19 @@ Install (user granted install permission, asked to keep it small):
   then answered) are accepted and scored as rows, recorded as a provider
   deviation from the pinned budget (+5-6% on those units). Resumed: the
   `-rs1` wave continues for pool_065, then the repair round and scoring.
+
+## 2026-11-14 — deepseek-v3.2 done; all six models finished; Kimi decision
+
+- deepseek-v3.2 (GMICloud fp8): pool_065 answered in `-rs1` (120,616 output);
+  repair round 9 units, 3 of them cut at 30 min once or twice, all answered.
+  **PASS** on 46 and 41 pools: F1_J 0.7593 / F1_L 0.9074 / q 0.8368 (46);
+  0.7586 / 0.9087 / 0.8349 (41). Invalid after repair 1/46, policy_share 0
+  everywhere. Cost $1.8482 recorded; 22 transport attempts (7 requests), all
+  30-min stream cut-offs. Provider deviation (accepted by the user): 5 rows
+  above the 128,000 max_tokens (134,142-136,399; reasoning capped at
+  131,072); no repair row exceeded it.
+- **Kimi decision (amendment 2 definition):** key usage $4.9483 at 14:29 UTC
+  -> remaining $10.00 - $4.9483 = **$5.0517 < $7.50 -> Kimi is not run.**
+  (Usage includes ~$0.5 billed for requests not in the attempt logs: the
+  gpt-oss-120b requests in flight when it was stopped, and the cut-off
+  deepseek streams.)

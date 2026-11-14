@@ -63,3 +63,28 @@
 2026-11-14T07:47:08.566687+00:00 final-headlineJ: prompt tokens/char min 0.2578 max 0.3090 spread 1.198
 2026-11-14T07:47:08.637512+00:00 final-headlineJ-rs1: 2 requests, 2 to send; spent $1.4494 of cap $3.00
 2026-11-14T08:07:02.419241+00:00 final-headlineJ-rs1 prose__J__pool-066: end_turn in 12903 out 134329 $0.0443  (1193.8 s) total $1.4937
+2026-11-14T12:32:01.462926+00:00 === start deepseek-v3.2 headline J: budget 128000, cap $3.0, MODEL_MAX_OUTPUT 128000
+2026-11-14T12:32:01.526811+00:00 final-headlineJ: 46 requests, 0 to send; spent $1.4937 of cap $3.00
+2026-11-14T12:32:01.559518+00:00 final-headlineJ: prompt tokens/char min 0.2578 max 0.3090 spread 1.198
+2026-11-14T12:32:01.649496+00:00 RESTART final-headlineJ-rs1: 1 done, 1 to send
+2026-11-14T12:32:01.649750+00:00 final-headlineJ-rs1: 2 requests, 1 to send; spent $1.4937 of cap $3.00
+2026-11-14T12:58:51.601544+00:00 final-headlineJ-rs1 prose__J__pool-065: end_turn in 14920 out 120616 $0.0405  (1609.9 s) total $1.5342
+2026-11-14T12:58:51.608891+00:00 final-headlineJ-rs1: prompt tokens/char min 0.2744 max 0.2855 spread 1.040
+2026-11-14T12:58:51.721575+00:00 final-headlineJ-r1: 9 requests, 9 to send; spent $1.5342 of cap $3.00
+2026-11-14T13:12:12.104810+00:00 final-headlineJ-r1 prose__J__pool-026-r1: end_turn in 12676 out 76471 $0.0263  (800.4 s) total $1.5605
+2026-11-14T13:12:27.422640+00:00 final-headlineJ-r1 prose__J__pool-001-r1: end_turn in 8631 out 73110 $0.0244  (815.7 s) total $1.5849
+2026-11-14T13:16:35.542171+00:00 final-headlineJ-r1 prose__J__pool-032-r1: end_turn in 8950 out 102519 $0.0336  (1063.8 s) total $1.6186
+2026-11-14T13:18:55.560061+00:00 final-headlineJ-r1 prose__J__pool-065-r1: end_turn in 14956 out 109270 $0.0370  (1203.8 s) total $1.6555
+2026-11-14T13:22:56.005773+00:00 final-headlineJ-r1 prose__J__pool-011-r1: end_turn in 12269 out 122957 $0.0406  (1444.3 s) total $1.6961
+2026-11-14T13:25:59.143313+00:00 final-headlineJ-r1 prose__J__pool-037-r1: end_turn in 20200 out 117230 $0.0405  (1627.4 s) total $1.7366
+2026-11-14T13:28:53.727072+00:00 final-headlineJ-r1 prose__J__pool-066-r1 attempt 1 transport error: finish_reason error (native error); retry in 33 s
+2026-11-14T13:28:54.303067+00:00 final-headlineJ-r1 prose__J__pool-018-r1 attempt 1 transport error: finish_reason error (native error); retry in 37 s
+2026-11-14T13:28:54.891703+00:00 final-headlineJ-r1 prose__J__pool-007-r1 attempt 1 transport error: finish_reason error (native error); retry in 37 s
+2026-11-14T13:59:28.715134+00:00 final-headlineJ-r1 prose__J__pool-066-r1 attempt 2 transport error: finish_reason error (native error); retry in 71 s
+2026-11-14T13:59:33.407178+00:00 final-headlineJ-r1 prose__J__pool-018-r1 attempt 2 transport error: finish_reason error (native error); retry in 63 s
+2026-11-14T13:59:34.864767+00:00 final-headlineJ-r1 prose__J__pool-007-r1 attempt 2 transport error: finish_reason error (native error); retry in 68 s
+2026-11-14T14:25:33.832050+00:00 final-headlineJ-r1 prose__J__pool-007-r1: end_turn in 14973 out 110542 $0.0374  (1490.7 s) total $1.7740
+2026-11-14T14:27:12.733634+00:00 final-headlineJ-r1 prose__J__pool-066-r1: end_turn in 12949 out 102799 $0.0345  (1592.5 s) total $1.8085
+2026-11-14T14:29:26.012007+00:00 final-headlineJ-r1 prose__J__pool-018-r1: end_turn in 16526 out 117004 $0.0397  (1729.5 s) total $1.8482
+2026-11-14T14:29:26.024583+00:00 final-headlineJ-r1: prompt tokens/char min 0.2578 max 0.2854 spread 1.107
+2026-11-14T14:29:26.039364+00:00 === waves done; spent $1.8482
