@@ -1,0 +1,19 @@
+2026-11-13T21:54:44.601131+00:00 === start gpt-oss-20b headline J: budget 117964, cap $1.0, MODEL_MAX_OUTPUT 117964
+2026-11-13T21:54:44.612846+00:00 final-headlineJ: 46 requests, 46 to send; spent $0.0000 of cap $1.00
+2026-11-13T21:54:44.854699+00:00 HALT final-headlineJ prose__J__pool-018: HTTP 400 (not covered): {"error":{"message":"This endpoint's maximum context length is 131072 tokens. However, you requested about 132712 tokens (14748 of text input, 117964 in the output). Please reduce the length of either one, or use the context-compression plugin to compress your prompt automatically.","code":400,"metadata":{"provider_name":null}}}
+2026-11-13T21:54:44.888853+00:00 HALT final-headlineJ prose__J__pool-007: HTTP 400 (not covered): {"error":{"message":"This endpoint's maximum context length is 131072 tokens. However, you requested about 131516 tokens (13552 of text input, 117964 in the output). Please reduce the length of either one, or use the context-compression plugin to compress your prompt automatically.","code":400,"metadata":{"provider_name":null}}}
+2026-11-13T21:59:58.704379+00:00 final-headlineJ prose__J__pool-010: end_turn in 9530 out 48109 $0.0065  (314.1 s) total $0.0065
+2026-11-13T22:00:34.430621+00:00 final-headlineJ prose__J__pool-019: end_turn in 7533 out 48784 $0.0066  (349.8 s) total $0.0131
+2026-11-13T22:01:18.496454+00:00 final-headlineJ prose__J__pool-011: end_turn in 10242 out 64103 $0.0086  (393.9 s) total $0.0217
+2026-11-13T22:01:53.261785+00:00 final-headlineJ prose__J__pool-015: end_turn in 7336 out 69745 $0.0093  (428.6 s) total $0.0310
+2026-11-13T22:01:53.723040+00:00 final-headlineJ prose__J__pool-001: end_turn in 6977 out 70361 $0.0094  (429.1 s) total $0.0404
+2026-11-13T22:01:58.912756+00:00 final-headlineJ prose__J__pool-009: end_turn in 7255 out 69524 $0.0093  (434.3 s) total $0.0496
+2026-11-13T22:01:59.584689+00:00 final-headlineJ prose__J__pool-003: end_turn in 8350 out 67296 $0.0090  (435.0 s) total $0.0586
+2026-11-13T22:02:34.889366+00:00 final-headlineJ prose__J__pool-021: end_turn in 7540 out 77290 $0.0103  (470.3 s) total $0.0689
+2026-11-13T22:04:26.811783+00:00 final-headlineJ prose__J__pool-020: end_turn in 7023 out 86692 $0.0115  (582.2 s) total $0.0804
+2026-11-13T22:04:33.593803+00:00 final-headlineJ prose__J__pool-017: end_turn in 8408 out 98051 $0.0130  (589.0 s) total $0.0934
+2026-11-13T22:04:47.517226+00:00 final-headlineJ prose__J__pool-022: end_turn in 7349 out 98192 $0.0130  (602.9 s) total $0.1064
+2026-11-13T22:05:42.777573+00:00 HALT final-headlineJ prose__J__pool-008: stopped at length after 107549 tokens, below the budget 117964 (not covered by D6)
+2026-11-13T22:05:49.786508+00:00 HALT final-headlineJ prose__J__pool-006: stopped at length after 112188 tokens, below the budget 117964 (not covered by D6)
+2026-11-13T22:06:14.267591+00:00 HALT final-headlineJ prose__J__pool-005: stopped at length after 111621 tokens, below the budget 117964 (not covered by D6)
+HALT in final-headlineJ: prose__J__pool-018: HTTP 400 (not covered): {"error":{"message":"This endpoint's maximum context length is 131072 tokens. However, you requested about 132712 tokens (14748 of text input, 117964 in the output). Please reduce the length of either one, or use the context-compression plugin to compress your prompt automatically.","code":400,"metadata":{"provider_name":null}}}

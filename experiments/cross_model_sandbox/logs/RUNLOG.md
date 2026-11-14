@@ -602,3 +602,26 @@ Install (user granted install permission, asked to keep it small):
   cannot be reached for any headline prompt on this endpoint; the entry's D6
   rule (stop at the full budget) cannot apply. Applies equally to gpt-oss-120b
   (same provider, same listing). Waiting for the user's decision.
+
+## 2026-11-13 — Amendment applied: gpt-oss on AkashML fp4, 110,000 budget
+
+- Amendment committed and pushed before any further request (a4ef6ca).
+- Runner: gpt-oss-20b/120b pinned to AkashML fp4 (`only`/`order` akashml,
+  `allow_fallbacks: false`), `max_tokens` 110,000 (D6 at 110,000); HTTP 400 on
+  context length is now an explicit halt; Parasail fp4 fallback wired
+  (`--parasail-fallback`, 120b cap $3.00), not used.
+- The 11 CoreWeave rows and the run's attempt/check-failure logs moved to
+  `logs/gpt-oss-20b/superseded_coreweave_117964/` (never scored).
+  Correction: the superseded spend is **$0.1501**, not $0.1064. $0.1064 was
+  the 11 written rows only; the 3 length-stopped calls (pool_008/006/005) were
+  billed too (OpenRouter `usage.cost`, $0.0437). Reported in gpt-oss-20b's totals.
+- Smoke tests (`logs/smoke_tests.jsonl`), neutral dummy prompt of 76,124 chars
+  (pool_037, the longest headline prompt, is 75,956), max 110,000:
+  gpt-oss-20b and gpt-oss-120b both PASS — provider AkashML, model as pinned,
+  `finish stop`, answer "OK", 16,252 prompt tokens reported; cost $0.0008.
+- A second smoke attempt with a longer 93.5k-char dummy got HTTP 400 from
+  OpenRouter's own pre-routing check (`provider_name: null`): OpenRouter sizes
+  prompts at ~3.97 chars/token (23,701 estimated + 110,000 > 131,072). That
+  dummy was longer than any headline prompt (my overshoot, not a provider
+  failure). By the same estimate pool_037 is 19,142 + 110,000 = 129,142, which
+  fits. No fallback taken.

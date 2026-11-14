@@ -158,6 +158,28 @@ def usage_totals(raw, slug, sweep):
     return tot
 
 
+def superseded_cost(slug):
+    """Cost of superseded attempts kept under logs/<slug>/superseded_*/ (never scored)."""
+    base = os.path.join(SB, "logs", slug)
+    out = None
+    for d in sorted(os.listdir(base)) if os.path.isdir(base) else []:
+        if not d.startswith("superseded_"):
+            continue
+        out = out or {"dir": [], "responses": 0, "cost_usd": 0.0}
+        out["dir"].append(f"logs/{slug}/{d}")
+        for f in os.listdir(os.path.join(base, d)):
+            if f.endswith(".attempts.jsonl"):
+                for ln in open(os.path.join(base, d, f), encoding="utf-8"):
+                    a = json.loads(ln)
+                    if a["outcome"] == "response":
+                        out["responses"] += 1
+                        out["cost_usd"] += a.get("cost_usd") or 0.0
+    if out:
+        out["dir"] = ", ".join(out["dir"])
+        out["cost_usd"] = round(out["cost_usd"], 6)
+    return out
+
+
 def one_scope(name, n_units, pools, waves, out_dir, excl_units, keep_dirs):
     """Frozen score + primary rule + secondary for one unit set (46 or 41 pools)."""
     tmp = None
@@ -251,6 +273,10 @@ def score_model(slug):
     summary = {"slug": slug, "budget": budget, "post_hoc_exploratory": True,
                "usage": usage_totals(raw, slug, sweep), "requests_sent": sum(
                    len(_latest_rows(f)) for _s, fs in waves for f in fs), "pools46": r46, "pools41": r41}
+    sup = superseded_cost(slug) if sweep else None
+    if sup:
+        summary["superseded_attempts"] = sup
+        summary["total_cost_usd_incl_superseded"] = round(summary["usage"]["cost_usd"] + sup["cost_usd"], 6)
     with open(os.path.join(res_dir, "SUMMARY.json"), "w", encoding="utf-8") as fh:
         json.dump(summary, fh, indent=1)
     if sweep:
@@ -294,6 +320,10 @@ def write_primary_md(slug, s):
           f"{u['output_tokens']} (reasoning {u['reasoning_tokens']}), cost ${u['cost_usd']:.4f}",
           f"- transport attempts {u['transport_attempts']}, requests with a transport error "
           f"{u['requests_with_transport_error']} of {s['requests_sent']} rows", ""]
+    if s.get("superseded_attempts"):
+        x = s["superseded_attempts"]
+        L += [f"- superseded attempts ({x['dir']}, never scored): {x['responses']} responses, "
+              f"cost ${x['cost_usd']:.4f}; total cost including them ${s['total_cost_usd_incl_superseded']:.4f}", ""]
     with open(os.path.join(SB, "results", slug, "PRIMARY_RESULT.md"), "w", encoding="utf-8") as fh:
         fh.write("\n".join(L))
 

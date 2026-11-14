@@ -58,10 +58,11 @@ SMOKE_PROMPT = ('Return exactly this JSON array and nothing else: [["x1", "x2"],
 OR_META = os.path.join(SB, "work", "runner", "meta")
 
 
-def _or(slug, model, provider, provider_name, quant, budget, cap, extra):
+def _or(slug, model, provider, provider_name, quant, budget, cap, extra, tag=None):
     meta = json.load(open(os.path.join(OR_META, model.replace("/", "_") + ".endpoints.json"),
                           encoding="utf-8"))["data"]["endpoints"]
-    ep = [e for e in meta if e["provider_name"] == provider_name and e["quantization"] == quant]
+    ep = [e for e in meta if e["provider_name"] == provider_name and e["quantization"] == quant
+          and (tag is None or e.get("tag") == tag)]
     assert len(ep) == 1, (slug, provider_name, quant, len(ep))
     ep = ep[0]
     assert budget <= ep["max_completion_tokens"], (slug, budget, ep["max_completion_tokens"])
@@ -73,12 +74,21 @@ def _or(slug, model, provider, provider_name, quant, budget, cap, extra):
 
 
 GPTOSS_EXTRA = {"reasoning": {"effort": "high"}, "temperature": 1.0, "top_p": 1.0}
+GPTOSS_BUDGET = 110000
+# Fallback under the amendment (used only if AkashML fails its smoke test).
+PARASAIL_FALLBACK = {
+    "gpt-oss-20b": lambda: _or("gpt-oss-20b", "openai/gpt-oss-20b", "parasail", "Parasail", "fp4",
+                               GPTOSS_BUDGET, 1.00, GPTOSS_EXTRA),
+    "gpt-oss-120b": lambda: _or("gpt-oss-120b", "openai/gpt-oss-120b", "parasail", "Parasail", "fp4",
+                                GPTOSS_BUDGET, 3.00, GPTOSS_EXTRA, tag="parasail/fp4"),
+}
 
 CONFIGS = {
-    "gpt-oss-20b": _or("gpt-oss-20b", "openai/gpt-oss-20b", "coreweave", "CoreWeave", "fp4",
-                       117964, 1.00, GPTOSS_EXTRA),
-    "gpt-oss-120b": _or("gpt-oss-120b", "openai/gpt-oss-120b", "coreweave", "CoreWeave", "fp4",
-                        117964, 1.50, GPTOSS_EXTRA),
+    # Amendment 2026-11-13: AkashML fp4, fixed 110,000 output budget (CoreWeave superseded).
+    "gpt-oss-20b": _or("gpt-oss-20b", "openai/gpt-oss-20b", "akashml", "AkashML", "fp4",
+                       GPTOSS_BUDGET, 1.00, GPTOSS_EXTRA),
+    "gpt-oss-120b": _or("gpt-oss-120b", "openai/gpt-oss-120b", "akashml", "AkashML", "fp4",
+                        GPTOSS_BUDGET, 1.50, GPTOSS_EXTRA),
     "llama-4-maverick": _or("llama-4-maverick", "meta-llama/llama-4-maverick", "parasail",
                             "Parasail", "fp8", 32768, 1.50, {}),
     "deepseek-v3.2": _or("deepseek-v3.2", "deepseek/deepseek-v3.2", "gmicloud", "GMICloud", "fp8",
@@ -145,6 +155,8 @@ def _http_error(status, body_text, headers):
         raise Transport(f"HTTP {status}: {body_text[:300]}", _retry_after(headers))
     if status == 403 and "moderation" in low:
         raise ContentFilter(f"HTTP 403 moderation: {body_text[:400]}")
+    if status == 400 and ("context length" in low or "context_length" in low):
+        raise Halt(f"HTTP 400 context length (halt per the amendment): {body_text[:400]}")
     raise Halt(f"HTTP {status} (not covered): {body_text[:400]}")
 
 
@@ -742,17 +754,32 @@ class ApiRunner:
 
 # ── smoke test and balance ───────────────────────────────────────────────────
 
-def smoke(cfg):
+def long_dummy_prompt(target_chars=76000):
+    """A neutral dummy prompt as long (in chars) as the longest headline prompt, pool_037 (75,956 chars); OpenRouter sizes prompts by chars (~3.97 chars/token) before routing.
+    Not a headline prompt; used only for the amendment's provider smoke test."""
+    words = ("river stone lantern meadow copper harbor violet thunder orchard ember canyon willow "
+             "glacier saffron pebble falcon marble cedar drizzle quartz").split()
+    lines, i = [], 0
+    while sum(len(x) + 1 for x in lines) < target_chars:
+        lines.append(f"Line {i:05d}: " + " ".join(words[(i * 7 + k) % len(words)] for k in range(9)) + ".")
+        i += 1
+    return "\n".join(lines) + "\n\nIgnore the list above. Reply with exactly the word OK and nothing else."
+
+
+def smoke(cfg, long=False):
     r = ApiRunner(cfg)
-    body = r.body(SMOKE_PROMPT)
+    prompt = long_dummy_prompt() if long else SMOKE_PROMPT
+    body = r.body(prompt)
     t0 = time.time()
-    rec = {"slug": cfg["slug"], "at": now(), "body_sent": {k: v for k, v in body.items()
-                                                          if k not in ("model",) or cfg["api"] != "azure"}}
+    rec = {"slug": cfg["slug"], "at": now(), "long_prompt_chars": len(prompt) if long else None,
+           "provider_pinned": cfg.get("provider_name"), "budget": cfg["budget"],
+           "body_sent": {k: (v if k not in ("messages", "input") else "<dummy prompt>")
+                         for k, v in body.items() if k not in ("model",) or cfg["api"] != "azure"}}
     try:
         res = r.send(body)
         rec["result"] = {k: v for k, v in res.items()}
         try:
-            r.check(res, None, SMOKE_PROMPT)
+            r.check(res, None, prompt)
             rec["checks"] = "pass"
         except Halt as e:
             rec["checks"] = f"FAIL: {e}"
@@ -787,6 +814,8 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("model", nargs="?", choices=sorted(CONFIGS))
     ap.add_argument("--smoke", action="store_true")
+    ap.add_argument("--smoke-long", action="store_true", help="amendment smoke test: ~76k-char dummy prompt")
+    ap.add_argument("--parasail-fallback", action="store_true", help="gpt-oss only: the amendment's fallback")
     ap.add_argument("--score", action="store_true")
     ap.add_argument("--balance", action="store_true")
     ap.add_argument("--cap", type=float, help="Kimi only: cap from the Kimi rule")
@@ -799,8 +828,10 @@ def main():
     if a.cap is not None:
         assert a.model == "kimi-k2.5", "--cap is only for the Kimi rule"
         cfg["cap"] = a.cap
-    if a.smoke:
-        smoke(cfg)
+    if a.parasail_fallback:
+        cfg = PARASAIL_FALLBACK[a.model]()
+    if a.smoke or a.smoke_long:
+        smoke(cfg, long=a.smoke_long)
     elif a.score:
         import score_api
         score_api.score_model(a.model)
