@@ -752,7 +752,7 @@ Install (user granted install permission, asked to keep it small):
 
 ## 2026-11-14 — gpt-oss-120b: NOT COMPLETED (Parasail length stop)
 
-- Parasail run started 04:2x UTC. 04:42 UTC: pool_007 stopped at length
+- Parasail run started 04:24 UTC. 04:42 UTC: pool_007 stopped at length
   after 104,412 output tokens (prompt 12,690; total 117,102), no answer ->
   in-run check -> **not completed: no pinned provider delivered the 110,000
   budget** (user decision). 13 base rows completed before it ($0.8444).
