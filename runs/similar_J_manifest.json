@@ -1,0 +1,24 @@
+{
+  "what": "POST-HOC EXPLORATORY \u2014 SIMILAR POOLS (RUN_DECISIONS D20), one-shot Sonnet, game J",
+  "spec": "runs/similar_J.json",
+  "spec_sha256": "4c4e654de9f953554649fb48e4e3e3b622fddd9f2149af0b9e5a319c7415efd4",
+  "model": "claude-sonnet-5",
+  "n_requests": 46,
+  "expected_usd_cost_model": 13.328155,
+  "headline_expected_usd_cost_model": 13.689822,
+  "est_cost_worst_case": 29.85,
+  "ledger_reserve": 26.66,
+  "preflight": {
+    "checked": 0,
+    "blocked": 0
+  },
+  "same_as_headline": {
+    "cells": [
+      "data/prose"
+    ],
+    "pool_size": 7,
+    "seed": 42,
+    "margin": 3.0,
+    "arm": "masked"
+  }
+}
