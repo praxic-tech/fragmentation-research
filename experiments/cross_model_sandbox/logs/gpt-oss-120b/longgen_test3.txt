@@ -1,0 +1,15 @@
+{
+ "checks": "pass",
+ "error": null,
+ "cost_usd": 0.05328472,
+ "s": 742.8,
+ "provider": "Parasail",
+ "service_tier": null,
+ "reported_model": "openai/gpt-oss-120b",
+ "finish": "stop",
+ "input_tokens": 5446,
+ "output_tokens": 70324,
+ "reasoning_tokens": 70293,
+ "text": "I\u2019m sorry, but the dataset is far too large to reliably sort and group manually within this format.",
+ "reasoning_chars": 233870
+}

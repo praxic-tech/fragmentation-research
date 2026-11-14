@@ -1,0 +1,15 @@
+{
+ "checks": "pass",
+ "error": null,
+ "cost_usd": 0.07025335,
+ "s": 389.6,
+ "provider": "Parasail",
+ "service_tier": null,
+ "reported_model": "openai/gpt-oss-120b",
+ "finish": "stop",
+ "input_tokens": 5482,
+ "output_tokens": 92945,
+ "reasoning_tokens": 92921,
+ "text": "I\u2019m sorry, but I\u2019m not able to complete this task.",
+ "reasoning_chars": 290184
+}

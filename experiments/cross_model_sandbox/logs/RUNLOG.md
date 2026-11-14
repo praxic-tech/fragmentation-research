@@ -722,3 +722,20 @@ Install (user granted install permission, asked to keep it small):
 - llama-4-maverick (Parasail fp8): REFUSED on 46 and 41: all answered, 10 (46)
   / 8 (41) units over the policy cap. Secondary F1_J 0.2134, F1_L 0.3348,
   q 0.6376. $0.4511.
+
+## 2026-11-14 — gpt-oss-120b on Parasail: long-generation test inconclusive (stop)
+
+- Parasail smoke with the pool_037-length dummy: PASS. Long-generation tests
+  (max 110,000), all `finish stop` by the model, none a provider cut-off,
+  none reaching 110,000:
+  1. counting 1..60000: refused after 351 tokens ($0.0003).
+  2. sort/rewrite ~990 dummy lines three times: declined after 13,798 ($0.0120).
+  3. invented grouping task (headline shape, synthetic), seed 7: declined
+     after 70,324 reasoning tokens ($0.0533).
+  4. same with "always give your best answer, never decline", seeds 11 and
+     23: declined after 67,626 and 92,945 ($0.0513, $0.0703).
+  Total test cost $0.1874. Logs: `logs/gpt-oss-120b/longgen_test*.txt`,
+  `logs/smoke_tests.jsonl`.
+- The amendment's "first confirm Parasail reaches 110,000" is not met, and no
+  test shows it stopping short. Not covered by the entry: stopped, waiting for
+  the user. The gpt-oss-120b run has not started.

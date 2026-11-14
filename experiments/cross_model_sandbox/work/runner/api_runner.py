@@ -861,7 +861,9 @@ def longgen_prompt_v3(seed=7, n_records=8, per=32):
     lines = "\n".join(f"[{t}] {s}" for t, s in sents)
     return ("Below are sentences cut from several separate invented biographies and shuffled. Each tag "
             "identifies one sentence.\n\n" + lines + "\n\nGroup the tags by biography and put each group "
-            "in chronological order. Reply with only a JSON array of arrays of tags.")
+            "in chronological order. Reply with only a JSON array of arrays of tags. This is solvable with "
+            "careful work; take as long as you need, and always give your best complete answer, even if "
+            "uncertain. Never decline.")
 
 
 def longgen_prompt():
@@ -874,13 +876,13 @@ def longgen_prompt():
             "spelled out in words. Do not skip, abbreviate or summarize any line.")
 
 
-def smoke(cfg, long=False, longgen=False):
+def smoke(cfg, long=False, longgen=False, seed=7):
     r = ApiRunner(cfg)
-    prompt = long_dummy_prompt() if long else (longgen_prompt_v3() if longgen else SMOKE_PROMPT)
+    prompt = long_dummy_prompt() if long else (longgen_prompt_v3(seed=seed) if longgen else SMOKE_PROMPT)
     body = r.body(prompt)
     t0 = time.time()
     rec = {"slug": cfg["slug"], "at": now(), "long_prompt_chars": len(prompt) if long else None,
-           "longgen": longgen,
+           "longgen": longgen, "longgen_seed": seed if longgen else None,
            "provider_pinned": cfg.get("provider_name"), "budget": cfg["budget"],
            "body_sent": {k: (v if k not in ("messages", "input") else "<dummy prompt>")
                          for k, v in body.items() if k not in ("model",) or cfg["api"] != "azure"}}
@@ -928,6 +930,7 @@ def main():
     ap.add_argument("--smoke", action="store_true")
     ap.add_argument("--smoke-long", action="store_true", help="amendment smoke test: ~76k-char dummy prompt")
     ap.add_argument("--longgen", action="store_true", help="amendment 2: long-generation test (reaches the budget?)")
+    ap.add_argument("--longgen-seed", type=int, default=7)
     ap.add_argument("--parasail-fallback", action="store_true", help="gpt-oss only: the amendment's fallback")
     ap.add_argument("--score", action="store_true")
     ap.add_argument("--balance", action="store_true")
@@ -944,7 +947,7 @@ def main():
     if a.parasail_fallback:
         cfg = PARASAIL_FALLBACK[a.model]()
     if a.smoke or a.smoke_long or a.longgen:
-        smoke(cfg, long=a.smoke_long, longgen=a.longgen)
+        smoke(cfg, long=a.smoke_long, longgen=a.longgen, seed=a.longgen_seed)
     elif a.score:
         import score_api
         score_api.score_model(a.model)
