@@ -1,0 +1,713 @@
+{
+ "decision": "RUN_DECISIONS D20 (post-hoc exploratory)",
+ "pool_size": 7,
+ "n_pools": 46,
+ "documents": "the 322 headline documents (batch_game.headline_docs)",
+ "similarity": "TF-IDF (english stop words, min_df 2, sublinear tf, smooth idf, l2) cosine over the full document text, fitted on the 322 documents",
+ "pools": [
+  {
+   "pool_id": "sim_001",
+   "members": [
+    "prose_0142",
+    "prose_0144",
+    "prose_0145",
+    "prose_0147",
+    "prose_0149",
+    "prose_0150",
+    "prose_0170"
+   ],
+   "seed_doc": "prose_0144",
+   "mean_within_cosine": 0.27313527330394105
+  },
+  {
+   "pool_id": "sim_002",
+   "members": [
+    "prose_0020",
+    "prose_0203",
+    "prose_0205",
+    "prose_0212",
+    "prose_0231",
+    "prose_0238",
+    "prose_0274"
+   ],
+   "seed_doc": "prose_0212",
+   "mean_within_cosine": 0.2563369855191449
+  },
+  {
+   "pool_id": "sim_003",
+   "members": [
+    "prose_0040",
+    "prose_0146",
+    "prose_0390",
+    "prose_0391",
+    "prose_0392",
+    "prose_0398",
+    "prose_0486"
+   ],
+   "seed_doc": "prose_0392",
+   "mean_within_cosine": 0.19280668677330162
+  },
+  {
+   "pool_id": "sim_004",
+   "members": [
+    "prose_0115",
+    "prose_0199",
+    "prose_0249",
+    "prose_0379",
+    "prose_0386",
+    "prose_0438",
+    "prose_0439"
+   ],
+   "seed_doc": "prose_0438",
+   "mean_within_cosine": 0.18973475509896076
+  },
+  {
+   "pool_id": "sim_005",
+   "members": [
+    "prose_0028",
+    "prose_0235",
+    "prose_0246",
+    "prose_0282",
+    "prose_0359",
+    "prose_0377",
+    "prose_0466"
+   ],
+   "seed_doc": "prose_0246",
+   "mean_within_cosine": 0.18693722163996157
+  },
+  {
+   "pool_id": "sim_006",
+   "members": [
+    "prose_0071",
+    "prose_0130",
+    "prose_0296",
+    "prose_0370",
+    "prose_0422",
+    "prose_0464",
+    "prose_0471"
+   ],
+   "seed_doc": "prose_0130",
+   "mean_within_cosine": 0.18653224614636535
+  },
+  {
+   "pool_id": "sim_007",
+   "members": [
+    "prose_0018",
+    "prose_0037",
+    "prose_0241",
+    "prose_0332",
+    "prose_0334",
+    "prose_0336",
+    "prose_0450"
+   ],
+   "seed_doc": "prose_0336",
+   "mean_within_cosine": 0.18350284966653482
+  },
+  {
+   "pool_id": "sim_008",
+   "members": [
+    "prose_0114",
+    "prose_0153",
+    "prose_0172",
+    "prose_0173",
+    "prose_0178",
+    "prose_0179",
+    "prose_0192"
+   ],
+   "seed_doc": "prose_0153",
+   "mean_within_cosine": 0.17509553069795786
+  },
+  {
+   "pool_id": "sim_009",
+   "members": [
+    "prose_0055",
+    "prose_0265",
+    "prose_0301",
+    "prose_0414",
+    "prose_0424",
+    "prose_0444",
+    "prose_0472"
+   ],
+   "seed_doc": "prose_0265",
+   "mean_within_cosine": 0.1738417435365657
+  },
+  {
+   "pool_id": "sim_010",
+   "members": [
+    "prose_0068",
+    "prose_0101",
+    "prose_0174",
+    "prose_0186",
+    "prose_0190",
+    "prose_0244",
+    "prose_0387"
+   ],
+   "seed_doc": "prose_0190",
+   "mean_within_cosine": 0.16908412212599733
+  },
+  {
+   "pool_id": "sim_011",
+   "members": [
+    "prose_0011",
+    "prose_0030",
+    "prose_0088",
+    "prose_0093",
+    "prose_0097",
+    "prose_0243",
+    "prose_0302"
+   ],
+   "seed_doc": "prose_0030",
+   "mean_within_cosine": 0.16623528659362174
+  },
+  {
+   "pool_id": "sim_012",
+   "members": [
+    "prose_0044",
+    "prose_0070",
+    "prose_0202",
+    "prose_0228",
+    "prose_0252",
+    "prose_0255",
+    "prose_0263"
+   ],
+   "seed_doc": "prose_0263",
+   "mean_within_cosine": 0.16554517013905906
+  },
+  {
+   "pool_id": "sim_013",
+   "members": [
+    "prose_0002",
+    "prose_0125",
+    "prose_0356",
+    "prose_0406",
+    "prose_0413",
+    "prose_0478",
+    "prose_0492"
+   ],
+   "seed_doc": "prose_0492",
+   "mean_within_cosine": 0.1649760123389653
+  },
+  {
+   "pool_id": "sim_014",
+   "members": [
+    "prose_0061",
+    "prose_0314",
+    "prose_0374",
+    "prose_0385",
+    "prose_0400",
+    "prose_0435",
+    "prose_0446"
+   ],
+   "seed_doc": "prose_0400",
+   "mean_within_cosine": 0.16484417242020488
+  },
+  {
+   "pool_id": "sim_015",
+   "members": [
+    "prose_0217",
+    "prose_0232",
+    "prose_0286",
+    "prose_0393",
+    "prose_0448",
+    "prose_0465",
+    "prose_0480"
+   ],
+   "seed_doc": "prose_0286",
+   "mean_within_cosine": 0.16301227874924598
+  },
+  {
+   "pool_id": "sim_016",
+   "members": [
+    "prose_0006",
+    "prose_0132",
+    "prose_0187",
+    "prose_0268",
+    "prose_0325",
+    "prose_0378",
+    "prose_0388"
+   ],
+   "seed_doc": "prose_0325",
+   "mean_within_cosine": 0.16240358033138153
+  },
+  {
+   "pool_id": "sim_017",
+   "members": [
+    "prose_0103",
+    "prose_0389",
+    "prose_0405",
+    "prose_0421",
+    "prose_0427",
+    "prose_0437",
+    "prose_0460"
+   ],
+   "seed_doc": "prose_0389",
+   "mean_within_cosine": 0.1547855086509912
+  },
+  {
+   "pool_id": "sim_018",
+   "members": [
+    "prose_0013",
+    "prose_0225",
+    "prose_0233",
+    "prose_0277",
+    "prose_0279",
+    "prose_0284",
+    "prose_0381"
+   ],
+   "seed_doc": "prose_0013",
+   "mean_within_cosine": 0.15379324280633652
+  },
+  {
+   "pool_id": "sim_019",
+   "members": [
+    "prose_0073",
+    "prose_0128",
+    "prose_0131",
+    "prose_0151",
+    "prose_0213",
+    "prose_0304",
+    "prose_0361"
+   ],
+   "seed_doc": "prose_0128",
+   "mean_within_cosine": 0.14863063469898408
+  },
+  {
+   "pool_id": "sim_020",
+   "members": [
+    "prose_0092",
+    "prose_0169",
+    "prose_0218",
+    "prose_0312",
+    "prose_0354",
+    "prose_0357",
+    "prose_0490"
+   ],
+   "seed_doc": "prose_0490",
+   "mean_within_cosine": 0.14556264674471514
+  },
+  {
+   "pool_id": "sim_021",
+   "members": [
+    "prose_0033",
+    "prose_0297",
+    "prose_0329",
+    "prose_0447",
+    "prose_0461",
+    "prose_0476",
+    "prose_0485"
+   ],
+   "seed_doc": "prose_0461",
+   "mean_within_cosine": 0.14215420618301802
+  },
+  {
+   "pool_id": "sim_022",
+   "members": [
+    "prose_0014",
+    "prose_0215",
+    "prose_0229",
+    "prose_0289",
+    "prose_0364",
+    "prose_0477",
+    "prose_0481"
+   ],
+   "seed_doc": "prose_0229",
+   "mean_within_cosine": 0.14678469199033556
+  },
+  {
+   "pool_id": "sim_023",
+   "members": [
+    "prose_0076",
+    "prose_0139",
+    "prose_0208",
+    "prose_0226",
+    "prose_0239",
+    "prose_0280",
+    "prose_0342"
+   ],
+   "seed_doc": "prose_0239",
+   "mean_within_cosine": 0.14063590578766214
+  },
+  {
+   "pool_id": "sim_024",
+   "members": [
+    "prose_0027",
+    "prose_0046",
+    "prose_0084",
+    "prose_0118",
+    "prose_0287",
+    "prose_0373",
+    "prose_0411"
+   ],
+   "seed_doc": "prose_0373",
+   "mean_within_cosine": 0.1425868923910086
+  },
+  {
+   "pool_id": "sim_025",
+   "members": [
+    "prose_0022",
+    "prose_0060",
+    "prose_0236",
+    "prose_0408",
+    "prose_0420",
+    "prose_0442",
+    "prose_0493"
+   ],
+   "seed_doc": "prose_0442",
+   "mean_within_cosine": 0.1398774152292126
+  },
+  {
+   "pool_id": "sim_026",
+   "members": [
+    "prose_0141",
+    "prose_0154",
+    "prose_0181",
+    "prose_0188",
+    "prose_0193",
+    "prose_0483",
+    "prose_0494"
+   ],
+   "seed_doc": "prose_0494",
+   "mean_within_cosine": 0.13774196311646691
+  },
+  {
+   "pool_id": "sim_027",
+   "members": [
+    "prose_0099",
+    "prose_0292",
+    "prose_0322",
+    "prose_0412",
+    "prose_0418",
+    "prose_0456",
+    "prose_0496"
+   ],
+   "seed_doc": "prose_0292",
+   "mean_within_cosine": 0.13381862317413187
+  },
+  {
+   "pool_id": "sim_028",
+   "members": [
+    "prose_0038",
+    "prose_0074",
+    "prose_0137",
+    "prose_0234",
+    "prose_0290",
+    "prose_0376",
+    "prose_0401"
+   ],
+   "seed_doc": "prose_0290",
+   "mean_within_cosine": 0.12899445271725235
+  },
+  {
+   "pool_id": "sim_029",
+   "members": [
+    "prose_0017",
+    "prose_0032",
+    "prose_0079",
+    "prose_0257",
+    "prose_0340",
+    "prose_0346",
+    "prose_0403"
+   ],
+   "seed_doc": "prose_0079",
+   "mean_within_cosine": 0.12007485296227224
+  },
+  {
+   "pool_id": "sim_030",
+   "members": [
+    "prose_0075",
+    "prose_0267",
+    "prose_0269",
+    "prose_0293",
+    "prose_0313",
+    "prose_0445",
+    "prose_0469"
+   ],
+   "seed_doc": "prose_0269",
+   "mean_within_cosine": 0.11860395868640053
+  },
+  {
+   "pool_id": "sim_031",
+   "members": [
+    "prose_0050",
+    "prose_0167",
+    "prose_0201",
+    "prose_0209",
+    "prose_0224",
+    "prose_0261",
+    "prose_0333"
+   ],
+   "seed_doc": "prose_0261",
+   "mean_within_cosine": 0.1177137947298627
+  },
+  {
+   "pool_id": "sim_032",
+   "members": [
+    "prose_0108",
+    "prose_0120",
+    "prose_0160",
+    "prose_0177",
+    "prose_0185",
+    "prose_0189",
+    "prose_0195"
+   ],
+   "seed_doc": "prose_0195",
+   "mean_within_cosine": 0.11671402607411092
+  },
+  {
+   "pool_id": "sim_033",
+   "members": [
+    "prose_0052",
+    "prose_0148",
+    "prose_0291",
+    "prose_0303",
+    "prose_0323",
+    "prose_0367",
+    "prose_0495"
+   ],
+   "seed_doc": "prose_0303",
+   "mean_within_cosine": 0.11086335623031715
+  },
+  {
+   "pool_id": "sim_034",
+   "members": [
+    "prose_0007",
+    "prose_0214",
+    "prose_0363",
+    "prose_0397",
+    "prose_0415",
+    "prose_0475",
+    "prose_0488"
+   ],
+   "seed_doc": "prose_0363",
+   "mean_within_cosine": 0.11007457171126363
+  },
+  {
+   "pool_id": "sim_035",
+   "members": [
+    "prose_0107",
+    "prose_0110",
+    "prose_0112",
+    "prose_0117",
+    "prose_0161",
+    "prose_0264",
+    "prose_0366"
+   ],
+   "seed_doc": "prose_0107",
+   "mean_within_cosine": 0.10559496700174559
+  },
+  {
+   "pool_id": "sim_036",
+   "members": [
+    "prose_0062",
+    "prose_0067",
+    "prose_0204",
+    "prose_0300",
+    "prose_0307",
+    "prose_0317",
+    "prose_0468"
+   ],
+   "seed_doc": "prose_0300",
+   "mean_within_cosine": 0.10320788417899382
+  },
+  {
+   "pool_id": "sim_037",
+   "members": [
+    "prose_0003",
+    "prose_0004",
+    "prose_0064",
+    "prose_0081",
+    "prose_0087",
+    "prose_0198",
+    "prose_0358"
+   ],
+   "seed_doc": "prose_0358",
+   "mean_within_cosine": 0.10252927849156994
+  },
+  {
+   "pool_id": "sim_038",
+   "members": [
+    "prose_0034",
+    "prose_0039",
+    "prose_0083",
+    "prose_0096",
+    "prose_0143",
+    "prose_0253",
+    "prose_0254"
+   ],
+   "seed_doc": "prose_0253",
+   "mean_within_cosine": 0.10698871606627866
+  },
+  {
+   "pool_id": "sim_039",
+   "members": [
+    "prose_0010",
+    "prose_0025",
+    "prose_0063",
+    "prose_0227",
+    "prose_0272",
+    "prose_0335",
+    "prose_0462"
+   ],
+   "seed_doc": "prose_0010",
+   "mean_within_cosine": 0.09662441072490925
+  },
+  {
+   "pool_id": "sim_040",
+   "members": [
+    "prose_0008",
+    "prose_0094",
+    "prose_0369",
+    "prose_0380",
+    "prose_0384",
+    "prose_0409",
+    "prose_0454"
+   ],
+   "seed_doc": "prose_0380",
+   "mean_within_cosine": 0.09296315345622227
+  },
+  {
+   "pool_id": "sim_041",
+   "members": [
+    "prose_0086",
+    "prose_0197",
+    "prose_0220",
+    "prose_0281",
+    "prose_0341",
+    "prose_0382",
+    "prose_0482"
+   ],
+   "seed_doc": "prose_0341",
+   "mean_within_cosine": 0.08217706991020957
+  },
+  {
+   "pool_id": "sim_042",
+   "members": [
+    "prose_0133",
+    "prose_0140",
+    "prose_0216",
+    "prose_0270",
+    "prose_0321",
+    "prose_0423",
+    "prose_0432"
+   ],
+   "seed_doc": "prose_0133",
+   "mean_within_cosine": 0.08298208545765096
+  },
+  {
+   "pool_id": "sim_043",
+   "members": [
+    "prose_0051",
+    "prose_0065",
+    "prose_0180",
+    "prose_0200",
+    "prose_0266",
+    "prose_0320",
+    "prose_0434"
+   ],
+   "seed_doc": "prose_0320",
+   "mean_within_cosine": 0.07345339074084734
+  },
+  {
+   "pool_id": "sim_044",
+   "members": [
+    "prose_0019",
+    "prose_0066",
+    "prose_0171",
+    "prose_0316",
+    "prose_0351",
+    "prose_0407",
+    "prose_0449"
+   ],
+   "seed_doc": "prose_0019",
+   "mean_within_cosine": 0.0653646505542915
+  },
+  {
+   "pool_id": "sim_045",
+   "members": [
+    "prose_0021",
+    "prose_0175",
+    "prose_0273",
+    "prose_0324",
+    "prose_0326",
+    "prose_0441",
+    "prose_0497"
+   ],
+   "seed_doc": "prose_0324",
+   "mean_within_cosine": 0.0473445679498034
+  },
+  {
+   "pool_id": "sim_046",
+   "members": [
+    "prose_0042",
+    "prose_0113",
+    "prose_0127",
+    "prose_0166",
+    "prose_0260",
+    "prose_0395",
+    "prose_0453"
+   ],
+   "seed_doc": "prose_0042",
+   "mean_within_cosine": 0.025045006980186243
+  }
+ ],
+ "manipulation_check": {
+  "similar_mean": 0.13842847479300566,
+  "similar_median": 0.14139505598534008,
+  "similar_min": 0.025045006980186243,
+  "similar_max": 0.27313527330394105,
+  "headline_mean": 0.06947208225616487,
+  "headline_median": 0.06883231471872105,
+  "headline_min": 0.046892579613910745,
+  "headline_max": 0.1231417813159529,
+  "all_pairs_mean": 0.0682001759816031,
+  "similar_pools_above_headline_max": 28,
+  "headline_per_pool": {
+   "pool_001": 0.07816289028015877,
+   "pool_003": 0.06503594139095432,
+   "pool_005": 0.07250472215701059,
+   "pool_006": 0.05844542966355145,
+   "pool_007": 0.1231417813159529,
+   "pool_008": 0.07428789918431254,
+   "pool_009": 0.07212488181572722,
+   "pool_010": 0.058441289662284956,
+   "pool_011": 0.06899787050872104,
+   "pool_015": 0.06925954777863882,
+   "pool_017": 0.08034685717870264,
+   "pool_018": 0.07413051819572523,
+   "pool_019": 0.06850134696863122,
+   "pool_020": 0.06117341795081978,
+   "pool_021": 0.0708703976062775,
+   "pool_022": 0.07131125100518829,
+   "pool_023": 0.07459622494390868,
+   "pool_024": 0.07553924845479809,
+   "pool_025": 0.07126576002056931,
+   "pool_026": 0.06257034185279495,
+   "pool_028": 0.046892579613910745,
+   "pool_029": 0.048663740730178325,
+   "pool_030": 0.07241970952330858,
+   "pool_031": 0.0810430497775451,
+   "pool_032": 0.060415909136531644,
+   "pool_035": 0.0781491464924391,
+   "pool_037": 0.07460999173560022,
+   "pool_038": 0.06006296497531802,
+   "pool_039": 0.06175576559804267,
+   "pool_041": 0.0631621213470704,
+   "pool_048": 0.06925553994994367,
+   "pool_050": 0.06658297042257455,
+   "pool_052": 0.08566040210644273,
+   "pool_053": 0.06331903112924905,
+   "pool_054": 0.06834153435135419,
+   "pool_056": 0.062173968026083895,
+   "pool_058": 0.04797111641369602,
+   "pool_059": 0.05872505774205287,
+   "pool_061": 0.0647116129231533,
+   "pool_062": 0.06209796841994156,
+   "pool_064": 0.0667760035023652,
+   "pool_065": 0.08189957135847042,
+   "pool_066": 0.06866675892872105,
+   "pool_067": 0.08535090479938404,
+   "pool_069": 0.061566273459208565,
+   "pool_070": 0.08473447338626976
+  }
+ }
+}
