@@ -50,6 +50,7 @@ embedded text with no other change.
 | 4 | `fig4_identifiers.pdf` | Main | 1 col | Prespecified; D11 baselines | Structured identifiers behave qualitatively differently from prose |
 | 5 | `fig5_single_token.pdf` | Main | 1 col | POST-HOC EXPLORATORY (D16) | Single-token cuts drive null-adjusted joint reconstruction to about its random-shuffle reference |
 | 6 | `fig6_granularity_gradient.pdf` | Main | 1 col | POST-HOC EXPLORATORY (D16, D18) | Five cuts of identical text: observed against the random-shuffle reference, and what it means in words |
+| D | `fig7_headline_ladder.pdf` | Appendix | 2 col | Attackers prespecified (tiers 0 and 3: D19); embedding and other-LLM rows POST-HOC EXPLORATORY | Every attacker and every other LLM on the headline pools, F1_J with 95% CIs |
 | A | `figA_gameO_vs_gameJ.pdf` | Appendix | 1 col | Prespecified | Ordering with membership given is much easier than joint recovery |
 | B | `figB_resource_scaling.pdf` | Appendix | 1 col | Prespecified; single-token points post hoc | Output grows with fragment count, but fragment count does not determine completion |
 | C | `figC_token_raw_vs_null.pdf` | Appendix | 1 col | POST-HOC EXPLORATORY (D16) | What A_VJ near zero means in raw terms |
@@ -62,7 +63,7 @@ and `.csv` holding exactly the data frame it was drawn from.
 | # | File | Status | Shows |
 |---|---|---|---|
 | 1 | `table1_design.tex` | Prespecified | The design: corpora, cells, pools, units |
-| 2 | `table2_headline_attackers.tex` | Prespecified; embedding row post hoc | Headline attacker comparison with 95% CIs |
+| 2 | `table2_headline_attackers.tex` | Prespecified (tiers 0 and 3: D19); embedding row post hoc | Headline attacker comparison with 95% CIs |
 | 3 | `table3_grid.tex` | Prespecified | The nine-cell grid |
 | 4 | `table4_gameO.tex` | Prespecified | Game O: ordering with membership given |
 | 5 | `table5_identifiers.tex` | Prespecified; D11 baselines | The structured-identifier arm |
@@ -70,6 +71,7 @@ and `.csv` holding exactly the data frame it was drawn from.
 | 7 | `table7_resources.tex` | Prespecified | Resources, completion and cost |
 | 8 | `table8_gradient.tex` | POST-HOC EXPLORATORY (D16, D18) | The five-point granularity gradient, with its random-shuffle reference per arm |
 | 9 | `table9_adjacency.tex` | Post hoc, free reanalysis | Precedence against adjacency, and a random attacker that is a legal answer |
+| 10 (appendix) | `table10_cross_model.tex` | POST-HOC EXPLORATORY (cross-model sweep, sandbox preregistration) | The attack run with other LLMs on the headline pools, under the preregistered verdict rule |
 
 Each table ships `.tex` (booktabs, ready to `\input`) and `.md` (the same
 content for review).

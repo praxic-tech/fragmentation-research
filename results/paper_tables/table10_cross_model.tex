@@ -1,0 +1,32 @@
+\begin{table*}[tp]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\caption{Headline prose, Game J: the attack run with other LLMs (post-hoc exploratory).}
+\label{tab:crossmodel}
+\sbox0{%
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.13\textwidth}>{\raggedright\arraybackslash}p{0.12\textwidth}rlrrrrrrrr@{}}
+\toprule
+Model (lab) & Ran on & Max output & Verdict & $\mathrm{F1}_{J}$ [95\% CI] & $\mathrm{F1}_{L}$ [95\% CI] & $q$ [95\% CI] & $\mathrm{F1}_{J}$, 41 pools & $\Delta\mathrm{F1}_{J}$ vs Sonnet & Answered & Over cap & Cost \\
+\midrule
+One-shot Sonnet 5 (Anthropic), reference & Message Batches API & 128,000 & pass & 0.723 [0.702, 0.743] & 0.882 [0.861, 0.901] & 0.792 [0.772, 0.819] & 0.722 & -- & 46/46 & 0 & -- \\
+\midrule
+GPT-5.6 sol (OpenAI) & Azure OpenAI, Flex, reasoning max & 128,000 & pass & 0.846 [0.830, 0.862] & 0.951 [0.940, 0.961] & 0.874 [0.854, 0.893] & 0.845 & 0.124 [0.107, 0.141] & 46/46 & 0 & \$25.36 \\
+DeepSeek-V3.2 (DeepSeek) & OpenRouter, GMICloud fp8, reasoning on & 128,000 & pass & 0.759 [0.735, 0.782] & 0.907 [0.894, 0.921] & 0.768 [0.686, 0.844] & 0.759 & 0.037 [0.015, 0.057] & 46/46 & 0 & \$1.85 \\
+GPT-4.1 (OpenAI) & Azure OpenAI & 32,768 & refused & 0.236 [0.210, 0.265]* & 0.332 [0.300, 0.365]* & 0.683 [0.658, 0.710]* & 0.230* & -0.486 [-0.510, -0.462]* & 46/46 & 44 & \$2.42 \\
+Llama 4 Maverick (Meta) & OpenRouter, Parasail fp8 & 32,768 & refused & 0.213 [0.197, 0.229]* & 0.335 [0.312, 0.357]* & 0.597 [0.579, 0.623]* & 0.214* & -0.509 [-0.534, -0.484]* & 46/46 & 10 & \$0.45 \\
+Gemma 4 12B (Google) & local, llama.cpp, QAT Q4\_0 & 128,000 & refused & 0.261 [0.240, 0.283]* & 0.466 [0.428, 0.503]* & 0.551 [0.536, 0.568]* & 0.261* & -0.464 [-0.489, -0.438]* & 38/46 & 9 & local \\
+gpt-oss-20b (OpenAI) & OpenRouter, AkashML fp4, reasoning high & 110,000 & refused & 0.076 [0.049, 0.105]* & 0.140 [0.090, 0.192]* & 0.523 [0.503, 0.550]* & 0.071* & -0.650 [-0.686, -0.615]* & 40/46 & 32 & \$0.72 \\
+\midrule
+gpt-oss-120b (OpenAI) & OpenRouter, AkashML then Parasail fp4 & 110,000 & not completed & -- & -- & -- & -- & -- & -- & -- & -- \\
+Kimi K2.5 (Moonshot AI) & OpenRouter, SiliconFlow int4 & 128,000 & not run & -- & -- & -- & -- & -- & -- & -- & -- \\
+\bottomrule
+\end{tabular}}
+\ifdim\wd0>\textwidth\resizebox{\textwidth}{!}{\usebox0}\else\usebox0\fi
+\begin{flushleft}\footnotesize
+Post-hoc exploratory: run after the Sonnet result was seen, under a preregistration entry committed before the first request (experiments/cross\_model\_sandbox/PREREGISTRATION.md and its dated amendments). The 46 headline pools, the frozen Game J prompt written for Sonnet, one repair round, and the same scorer. Max output is each model's largest feasible budget. Means with 95\% percentile-bootstrap CIs over pools (10,000 resamples); q is micro-averaged ($\Sigma$C/$\Sigma$K).\\
+Verdict: the preregistered rule. A model is refused if any pool has no answer after repair or if the completion policy placed more than 25\% of any pool's fragments. * Refused: means over the pools it answered, secondary. Over cap = pools above that 25\%.\\
+41 pools: without the five pools that hold a document first online in 2025 (pool\_009, 011, 041, 056, 062). $\Delta$ $\mathrm{F1}_{J}$: paired difference from Sonnet over the pools both answered.\\
+Read in one direction only, fixed in advance: a model at or above Sonnet is evidence against Sonnet dependence; a model below it is not evidence that fragmentation protects, because the prompt was written for Sonnet. gpt-oss-120b: both pinned providers stopped calls below its output budget, so it was not completed. Kimi K2.5: dropped by a budget rule fixed before any Kimi request. Transport and platform errors were retried and never scored.\\
+\end{flushleft}
+\end{table*}

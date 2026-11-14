@@ -48,7 +48,7 @@ def tex_escape(s):
             .replace("×", r"$\times$").replace("−", r"$-$").replace("≈", r"$\approx$").replace("τ", r"$\tau$")
             .replace("ρ", r"$\rho$").replace("Δ", r"$\Delta$").replace("–", "--").replace("→", r"$\rightarrow$")
             .replace("≤", r"$\leq$").replace("≥", r"$\geq$").replace("±", r"$\pm$").replace("Σ", r"$\Sigma$")
-            .replace("†", r"$^\dagger$").replace("**", "").replace("—", "--"))
+            .replace("†", r"$^\dagger$").replace("‡", r"$^\ddagger$").replace("**", "").replace("—", "--"))
 
 
 # The note and label strings are shared with the Markdown output, so they are
@@ -88,7 +88,7 @@ def tex_math(s):
 # page 6, and pushed others past the bottom margin. See paper/CHANGELOG.md.
 #
 # Appendix tables may take a float page; body tables may not (see write()).
-APPENDIX_TABLES = {"table1_design", "table7_resources"}
+APPENDIX_TABLES = {"table1_design", "table7_resources", "table10_cross_model"}
 
 
 def write(name, caption, label, header, rows, notes, align=None, tex_header=None):
@@ -154,14 +154,30 @@ def table1_design():
 def table2_headline():
     tb = pd.read_csv(f"{T}/table_B_headline_J.csv").set_index("attacker")
     tb2 = pd.read_csv(f"{T}/table_B2_headline_paired.csv") if os.path.exists(f"{T}/table_B2_headline_paired.csv") else None
+    lad = pd.read_csv(f"{T}/table_B3_headline_ladder.csv").set_index("attacker")
     rows = []
-    for a, lab in ((ATT["base"], "Analytic one-bucket baseline"), (ATT["memon"], "Memon-inspired"),
-                   (ATT["embed"], "Embedding (post hoc)†"), (ATT["sonnet"], "**One-shot Sonnet**")):
+
+    def master_row(a, lab):
         r = tb.loc[a]
         rows.append([lab, ci(r.F1_L_mean, r.F1_L_lo, r.F1_L_hi),
                      ci(r.q_micro, r.q_micro_lo, r.q_micro_hi) if not pd.isna(r.q_micro) else "0.5 (expected)",
                      ci(r.F1_J_mean, r.F1_J_lo, r.F1_J_hi), ci(r.A_J_mean, r.A_J_lo, r.A_J_hi),
                      "—" if pd.isna(r.exact_records) else f"{int(r.exact_records)}/322", f"{int(r.completed)}/{int(r.attempted)}"])
+
+    def ladder_row(a, lab):
+        r = lad.loc[a]
+        rows.append([lab, ci(r.F1_L, r.F1_L_lo, r.F1_L_hi), ci(r.q, r.q_lo, r.q_hi), ci(r.F1_J, r.F1_J_lo, r.F1_J_hi),
+                     ci(r.A_J, r.A_J_lo, r.A_J_hi), f"{int(r.exact)}/322", f"{int(r.answered)}/46"])
+
+    master_row(ATT["base"], "Analytic one-bucket baseline")
+    ladder_row("T0-PUP", "Tier 0, PUP‡")
+    master_row(ATT["memon"], "Memon-inspired")
+    master_row(ATT["embed"], "Embedding (post hoc)†")
+    ladder_row("T0-classical", "Tier 0, classical‡")
+    ladder_row("T3-crossenc", "Tier 3, fine-tuned cross-encoder‡")
+    master_row(ATT["sonnet"], "**One-shot Sonnet**")
+    t3d = json.load(open("results/final_analysis/HEADLINE_LADDER.json", encoding="utf-8"))
+    t3d = next(e for e in t3d["rows"] if e["attacker"] == "T3-crossenc")["minus_sonnet"]
     def pr(metric, a, b):
         q = tb2[(tb2.metric == metric) & (tb2.a == a) & (tb2.b == b)].iloc[0]
         return f"{q.mean_diff:.3f} [{q.mean_lo:.3f}, {q.mean_hi:.3f}] (higher on {int(round(q.frac_a_higher * q.n_pairs))}/{int(q.n_pairs)} pools)"
@@ -169,7 +185,10 @@ def table2_headline():
              "Exact = documents recovered with perfect membership and order. Completion = pools answered within the 128k output budget.",
              f"Paired (same pools): Sonnet − Memon-inspired F1_J {pr('F1_J', ATT['sonnet'], ATT['memon'])}; F1_L {pr('F1_L', ATT['sonnet'], ATT['memon'])}. "
              f"Embedding − Memon-inspired F1_L {pr('F1_L', ATT['embed'], ATT['memon'])}; Sonnet − embedding F1_L {pr('F1_L', ATT['sonnet'], ATT['embed'])}.",
-             "† Post-hoc exploratory (D14): motivated by the observed Memon-inspired / Sonnet gap; designed and frozen before evaluation; first complete result kept; F1_L is its primary comparison."]
+             f"Paired: Sonnet − tier 3 F1_J {-t3d['F1_J']:.3f} [{-t3d['F1_J_ci'][1]:.3f}, {-t3d['F1_J_ci'][0]:.3f}] "
+             f"(higher on {t3d['n'] - t3d['F1_J_higher']}/{t3d['n']} pools); F1_L {-t3d['F1_L']:.3f} [{-t3d['F1_L_ci'][1]:.3f}, {-t3d['F1_L_ci'][0]:.3f}].",
+             "† Post-hoc exploratory (D14): motivated by the observed Memon-inspired / Sonnet gap; designed and frozen before evaluation; first complete result kept; F1_L is its primary comparison.",
+             "‡ Non-LLM attacker ladder (D19): each design, its tuning and its decoder fixed on development pools before any evaluation pool was scored; first complete result kept."]
     write("table2_headline_attackers", "Table 2. Headline prose, Game J: attacker comparison on the 46 headline pools.", "tab:headline",
           ["Attacker", "F1_L [95% CI]", "q [95% CI]", "F1_J [95% CI]", "A_J [95% CI]", "Exact docs", "Completed"], rows, notes,
           tex_header=["Attacker", "$\mathrm{F1}_{L}$ [95\\% CI]", "$q$ [95\\% CI]", "$\mathrm{F1}_{J}$ [95\\% CI]", "$A_J$ [95\\% CI]", "Exact docs", "Completed"])
@@ -421,9 +440,61 @@ def table9_adjacency():
                       "Longest run (frags)", "Docs, no intact pair"])
 
 
+SWEEP_RUN = {"gpt-5.6-sol": ("GPT-5.6 sol (OpenAI)", "Azure OpenAI, Flex, reasoning max"),
+             "deepseek-v3.2": ("DeepSeek-V3.2 (DeepSeek)", "OpenRouter, GMICloud fp8, reasoning on"),
+             "gpt-4.1": ("GPT-4.1 (OpenAI)", "Azure OpenAI"),
+             "llama-4-maverick": ("Llama 4 Maverick (Meta)", "OpenRouter, Parasail fp8"),
+             "gemma-4-12b": ("Gemma 4 12B (Google)", "local, llama.cpp, QAT Q4_0"),
+             "gpt-oss-20b": ("gpt-oss-20b (OpenAI)", "OpenRouter, AkashML fp4, reasoning high")}
+
+
+def table10_cross_model():
+    lad = pd.read_csv(f"{T}/table_B3_headline_ladder.csv").set_index("attacker")
+    sb = "experiments/cross_model_sandbox/results"
+    s = lad.loc["One-shot Sonnet"]
+    rows = [["One-shot Sonnet 5 (Anthropic), reference", "Message Batches API", "128,000", "pass",
+             ci(s.F1_J, s.F1_J_lo, s.F1_J_hi), ci(s.F1_L, s.F1_L_lo, s.F1_L_hi), ci(s.q, s.q_lo, s.q_hi),
+             f3(s.F1_J_41), "—", "46/46", "0", "—"], "MIDRULE"]
+    for slug, (name, where) in SWEEP_RUN.items():
+        r = lad.loc[slug]
+        sm = json.load(open(f"{sb}/{slug}/SUMMARY.json", encoding="utf-8"))
+        cost = sm.get("total_cost_usd_incl_superseded", sm["usage"].get("cost_usd") or 0.0)
+        refused = r.verdict == "REFUSED"
+        mark = "*" if refused else ""
+        rows.append([name, where, f"{int(sm['budget']):,}", "refused" if refused else "pass",
+                     ci(r.F1_J, r.F1_J_lo, r.F1_J_hi) + mark, ci(r.F1_L, r.F1_L_lo, r.F1_L_hi) + mark,
+                     ci(r.q, r.q_lo, r.q_hi) + mark, f3(r.F1_J_41) + mark,
+                     ci(r.dF1_J_vs_sonnet, r.dF1_J_lo, r.dF1_J_hi) + mark,
+                     f"{int(r.answered)}/46", str(int(sm["pools46"]["units_over_cap"])),
+                     "local" if slug == "gemma-4-12b" else f"${cost:.2f}"])
+    rows += ["MIDRULE",
+             ["gpt-oss-120b (OpenAI)", "OpenRouter, AkashML then Parasail fp4", "110,000", "not completed",
+              "—", "—", "—", "—", "—", "—", "—", "—"],
+             ["Kimi K2.5 (Moonshot AI)", "OpenRouter, SiliconFlow int4", "128,000", "not run",
+              "—", "—", "—", "—", "—", "—", "—", "—"]]
+    notes = ["Post-hoc exploratory: run after the Sonnet result was seen, under a preregistration entry committed before the first request "
+             "(experiments/cross_model_sandbox/PREREGISTRATION.md and its dated amendments). The 46 headline pools, the frozen Game J prompt "
+             "written for Sonnet, one repair round, and the same scorer. Max output is each model's largest feasible budget. "
+             "Means with 95% percentile-bootstrap CIs over pools (10,000 resamples); q is micro-averaged (ΣC/ΣK).",
+             "Verdict: the preregistered rule. A model is refused if any pool has no answer after repair or if the completion policy placed "
+             "more than 25% of any pool's fragments. * Refused: means over the pools it answered, secondary. Over cap = pools above that 25%.",
+             "41 pools: without the five pools that hold a document first online in 2025 (pool_009, 011, 041, 056, 062). "
+             "Δ F1_J: paired difference from Sonnet over the pools both answered.",
+             "Read in one direction only, fixed in advance: a model at or above Sonnet is evidence against Sonnet dependence; a model below it "
+             "is not evidence that fragmentation protects, because the prompt was written for Sonnet. "
+             "gpt-oss-120b: both pinned providers stopped calls below its output budget, so it was not completed. "
+             "Kimi K2.5: dropped by a budget rule fixed before any Kimi request. Transport and platform errors were retried and never scored."]
+    write("table10_cross_model", "Table 10. Headline prose, Game J: the attack run with other LLMs (post-hoc exploratory).", "tab:crossmodel",
+          ["Model (lab)", "Ran on", "Max output", "Verdict", "F1_J [95% CI]", "F1_L [95% CI]", "q [95% CI]", "F1_J, 41 pools",
+           "Δ F1_J vs Sonnet [95% CI]", "Answered", "Over cap", "Cost"], rows, notes,
+          align=r"@{}>{\raggedright\arraybackslash}p{0.13\textwidth}>{\raggedright\arraybackslash}p{0.12\textwidth}rlrrrrrrrr@{}",
+          tex_header=["Model (lab)", "Ran on", "Max output", "Verdict", r"$\mathrm{F1}_{J}$ [95\% CI]", r"$\mathrm{F1}_{L}$ [95\% CI]",
+                      r"$q$ [95\% CI]", r"$\mathrm{F1}_{J}$, 41 pools", r"$\Delta\mathrm{F1}_{J}$ vs Sonnet", "Answered", "Over cap", "Cost"])
+
+
 if __name__ == "__main__":
     os.makedirs(OUT, exist_ok=True)
     for f in (table1_design, table2_headline, table3_grid, table4_gameO, table5_identifiers, table6_single_token, table7_resources,
-              table8_gradient, table9_adjacency):
+              table8_gradient, table9_adjacency, table10_cross_model):
         f()
     print("done")

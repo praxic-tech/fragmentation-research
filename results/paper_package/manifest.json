@@ -85,6 +85,20 @@
    }
   },
   {
+   "figure": "D",
+   "name": "fig7_headline_ladder",
+   "placement": "Appendix",
+   "width": "2 col",
+   "status": "Attackers prespecified (tiers 0 and 3: D19); embedding and other-LLM rows POST-HOC EXPLORATORY",
+   "shows": "Every attacker and every other LLM on the headline pools, F1_J with 95% CIs",
+   "files": {
+    "pdf": "2bc9e36576f3",
+    "png": "a327c20de116",
+    "svg": "6188239bf866",
+    "csv": "db16df9b4f0b"
+   }
+  },
+  {
    "figure": "A",
    "name": "figA_gameO_vs_gameJ",
    "placement": "Appendix",
@@ -141,11 +155,11 @@
   {
    "table": "2",
    "name": "table2_headline_attackers",
-   "status": "Prespecified; embedding row post hoc",
+   "status": "Prespecified (tiers 0 and 3: D19); embedding row post hoc",
    "shows": "Headline attacker comparison with 95% CIs",
    "files": {
-    "tex": "f615e1c8e8e5",
-    "md": "3754c12300bf"
+    "tex": "47190ac7f943",
+    "md": "7db500562034"
    }
   },
   {
@@ -216,6 +230,16 @@
    "files": {
     "tex": "7bb2144b434c",
     "md": "525e16e33415"
+   }
+  },
+  {
+   "table": "10 (appendix)",
+   "name": "table10_cross_model",
+   "status": "POST-HOC EXPLORATORY (cross-model sweep, sandbox preregistration)",
+   "shows": "The attack run with other LLMs on the headline pools, under the preregistered verdict rule",
+   "files": {
+    "tex": "602713d7be4b",
+    "md": "6cce60a6c283"
    }
   }
  ]

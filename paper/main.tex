@@ -44,6 +44,7 @@
 \acmConference[PoPETs]{Proceedings on Privacy Enhancing Technologies}{YYYY}{Issue X}
 
 \usepackage{booktabs}
+\usepackage{array}
 \usepackage{graphicx}
 
 % HOW THE EXHIBITS ARE PLACED. Every results table and figure is a spanning
@@ -1078,8 +1079,7 @@ completion, repairs and cost for every paid experiment. Together they are the
 evidence for \S\ref{sec:res-resources}: one unit in 652 exhausted the output
 budget, and fragment count does not predict which one.
 % [tbp]: with [b] alone this figure found no page bottom and LaTeX dropped
-% it silently, leaving Figure~
-ef{fig:resources} undefined.
+% it silently, leaving Figure~\ref{fig:resources} undefined.
 \begin{figure}[tbp]
   \centering
   \includegraphics{figB_resource_scaling.pdf}
@@ -1090,5 +1090,21 @@ ef{fig:resources} undefined.
   \label{fig:resources}
 \end{figure}
 \input{table7_resources}
+
+\section{Other LLMs on the Headline Pools\posthoc}
+\label{app:crossmodel}
+\TODO{author text: the post-hoc cross-model sweep (Figure~\ref{fig:ladder},
+Table~\ref{tab:crossmodel})}
+\begin{figure*}[tp]
+  \centering
+  \includegraphics{fig7_headline_ladder.pdf}
+  \caption{Headline pools: (a) \FJ{} and (b) \FL{} with 95\% CIs for the
+  prespecified attackers, including the non-LLM ladder (tiers 0 and 3), and for
+  other LLMs run with the frozen Sonnet prompt (post hoc, open markers). Grey
+  rows were refused under the preregistered rule and show the pools they
+  answered. Dashed: analytic one-bucket reference. Dotted: one-shot Sonnet.}
+  \label{fig:ladder}
+\end{figure*}
+\input{table10_cross_model}
 
 \end{document}

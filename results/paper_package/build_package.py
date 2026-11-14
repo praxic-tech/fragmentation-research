@@ -37,6 +37,8 @@ FIGURES = [
      "Single-token cuts drive null-adjusted joint reconstruction to about its random-shuffle reference"),
     ("fig6_granularity_gradient", "6", "Main", "1 col", "POST-HOC EXPLORATORY (D16, D18)",
      "Five cuts of identical text: observed against the random-shuffle reference, and what it means in words"),
+    ("fig7_headline_ladder", "D", "Appendix", "2 col", "Attackers prespecified (tiers 0 and 3: D19); embedding and other-LLM rows POST-HOC EXPLORATORY",
+     "Every attacker and every other LLM on the headline pools, F1_J with 95% CIs"),
     ("figA_gameO_vs_gameJ", "A", "Appendix", "1 col", "Prespecified",
      "Ordering with membership given is much easier than joint recovery"),
     ("figB_resource_scaling", "B", "Appendix", "1 col", "Prespecified; single-token points post hoc",
@@ -47,7 +49,7 @@ FIGURES = [
 
 TABLES = [
     ("table1_design", "1", "Prespecified", "The design: corpora, cells, pools, units"),
-    ("table2_headline_attackers", "2", "Prespecified; embedding row post hoc",
+    ("table2_headline_attackers", "2", "Prespecified (tiers 0 and 3: D19); embedding row post hoc",
      "Headline attacker comparison with 95% CIs"),
     ("table3_grid", "3", "Prespecified", "The nine-cell grid"),
     ("table4_gameO", "4", "Prespecified", "Game O: ordering with membership given"),
@@ -59,6 +61,8 @@ TABLES = [
      "The five-point granularity gradient, with its random-shuffle reference per arm"),
     ("table9_adjacency", "9", "Post hoc, free reanalysis",
      "Precedence against adjacency, and a random attacker that is a legal answer"),
+    ("table10_cross_model", "10 (appendix)", "POST-HOC EXPLORATORY (cross-model sweep, sandbox preregistration)",
+     "The attack run with other LLMs on the headline pools, under the preregistered verdict rule"),
 ]
 
 

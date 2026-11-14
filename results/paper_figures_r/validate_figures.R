@@ -227,10 +227,27 @@ check("the primary series is monotone in fragment length",
 check("mean fragment lengths match the built cells (19.01 / 3.92 / 2.96 / 1.99 / 1.00)",
       same(round(f6$frag_words, 2), c(1.00, 1.99, 2.96, 3.92, 19.01)))
 
+# ---- Figure 7: the headline ladder (attackers + cross-model sweep) --------------------------
+cat("fig7_headline_ladder\n")
+f7 <- fig("fig7_headline_ladder"); B3 <- tab("table_B3_headline_ladder.csv")
+s7 <- B3[match(f7$attacker, B3$attacker), ]
+check("every non-baseline ladder row drawn once",
+      setequal(f7$attacker, B3$attacker[B3$kind != "baseline"]) && !anyDuplicated(f7$attacker))
+check("F1_J means and 95% CIs", same(c(f7$value, f7$lo, f7$hi), c(s7$F1_J, s7$F1_J_lo, s7$F1_J_hi)))
+check("F1_L means and 95% CIs", same(c(f7$value_L, f7$lo_L, f7$hi_L), c(s7$F1_L, s7$F1_L_lo, s7$F1_L_hi)))
+check("prespecified ladder rows reproduce table B (Sonnet, Memon-inspired, embedding)",
+      same(B3$F1_J[match(c("One-shot Sonnet", "Memon-inspired", "Embedding (post-hoc exploratory)"), B3$attacker)],
+           B$F1_J_mean[match(c("One-shot Sonnet", "Memon-inspired", "Embedding (post-hoc exploratory)"), B$attacker)]))
+check("open marker exactly on the post-hoc rows (embedding and every sweep model)",
+      identical(f7$post_hoc, grepl("post hoc", s7$kind)))
+check("refused styling exactly on the models refused under the preregistered rule",
+      identical(f7$style == "refused", !is.na(s7$verdict) & s7$verdict == "REFUSED"))
+check("Sonnet answered all 46 pools", f7$n_pools[f7$attacker == "One-shot Sonnet"] == 46)
+
 # ---- Files --------------------------------------------------------------------------------
 cat("files\n")
 for (n in c("fig1_headline_attackers", "fig2_grid_reconstruction", "fig3_linkage_vs_ordering",
-            "fig4_identifiers", "fig5_single_token", "fig6_granularity_gradient",
+            "fig4_identifiers", "fig5_single_token", "fig6_granularity_gradient", "fig7_headline_ladder",
             "figA_gameO_vs_gameJ", "figB_resource_scaling", "figC_token_raw_vs_null")) {
   check(paste(n, ": pdf svg png csv R"),
         all(file.exists(file.path(dir, paste0(n, c(".pdf", ".svg", ".png", ".csv", ".R"))))))
