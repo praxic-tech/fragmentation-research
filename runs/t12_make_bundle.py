@@ -54,6 +54,12 @@ CELLS_NB = [
      "    r = json.load(open(f'{OUT}/{t}/SCORE_DONE.json'))\n"
      "    print(t, {k: v for k, v in r.items() if k != 'manifest'})\n"
      "print('T12 SCORING COMPLETE')"),
+    ("code", "# end the runtime (stops GPU billing). Runs only after both tiers finished.\n"
+     "for t in ('T1', 'T2'):\n"
+     "    assert os.path.exists(f'{OUT}/{t}/SCORE_DONE.json'), t + ' not finished: runtime left running'\n"
+     "drive.flush_and_unmount()\n"
+     "from google.colab import runtime\n"
+     "runtime.unassign()"),
 ]
 
 
