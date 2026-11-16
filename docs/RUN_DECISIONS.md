@@ -1722,6 +1722,35 @@ Disclosure, written after these two results were computed.
   0.1683. Differences and intervals: results/final_similar/COMPARISON.md.
 - **Pending.** Tier 2 (no pair scores yet); gpt-5.6-sol (addendum above).
 
+### D20 addendum — 2026-11-16: tiers 1 and 2 rescored on the headline pools on an A100 (matched hardware), fixed before it is run
+
+Asked for by the user on 2026-11-16. Written before any of these scores
+exist. Already seen when this was written: every result in the addenda above,
+including tier 1 on the similar pools (0.136 against 0.168).
+
+- **Why.** The similar pools are scored on an A100 with torch 2.14.1 and
+  transformers 5.22.1. The headline scores of tier 1 came from an L4 with
+  older versions, and those of tier 2 from an L4 over several sessions and two
+  version sets. Their similar-against-headline differences therefore carry a
+  hardware and library change.
+- **What is run.** Tier 1 and tier 2 pair scores for headline Game J only (46
+  pools), from a bundle whose 46 text lists hash to what the L4 runs scored
+  (checked: 46 of 46 against models/t12/out/T1/SCORE_DONE.json). Same pinned
+  model revisions, same scoring code (runs/t12_score.py), an A100 required by
+  the notebook. Decoders: those recorded in results/final_t{1,2}/RECORD.json.
+  Nothing is retuned; dev units and Game O are not rescored. Tier 2 on the
+  similar pools (pending above) is scored in the same notebook.
+- **Status of the numbers, fixed now.** The ladder's tier 1 and tier 2
+  headline results stay the first complete ones (L4). The A100 rescore is a
+  hardware sensitivity check: reported as A100 minus L4 on the same 46 pools
+  (F1_J, F1_L, q; pools paired, bootstrap 10,000, seed 42).
+- **Similar against headline.** D20's comparison is reported against the
+  original headline result, as frozen, and beside it against the A100 rescore
+  (matched hardware). Neither replaces the other. If the two give different
+  D20 readings for a tier, both are stated, and the matched one is named as
+  the one free of the hardware change.
+- Post-hoc exploratory wherever it appears.
+
 ## D21 — 2026-11-16: POST-HOC DIAGNOSTIC — per-document recovery on the headline pools, defined before it is computed
 
 Written before the numbers below exist. A reading aid for the headline Game J
@@ -1747,6 +1776,56 @@ say what an attacker holds for a given document.
   95% percentile bootstrap over pools (10,000 resamples, seed 42).
 - **Label.** Post-hoc diagnostic wherever it appears.
 - Files: analysis/doc_recovery.py, results/final_analysis/DOC_RECOVERY.json.
+
+## D22 — 2026-11-16: POST-HOC EXPLORATORY — POOL-SIZE SWEEP WITH TIER 3, design frozen before any score exists
+
+Asked for by the user on 2026-11-16, after a reviewer-style read noted that
+every pool in the paper holds exactly seven documents. Written before any
+sweep pool is scored. Already seen: all results above.
+
+- **Question.** How does the cross-encoder attacker's recovery change with the
+  number of documents mixed in a pool?
+- **Why tier 3 only.** It always returns a complete, legal answer, it is
+  deterministic and it costs no API money. An LLM's curve over pool size would
+  mix attack difficulty with longer outputs, repair rounds and non-completions.
+  Two limits, to be stated wherever the result appears: tier 3 is the weaker
+  attacker (F1_J 0.544 against Sonnet's 0.723 at seven documents), so the
+  curve is a floor on what an attacker recovers at each size, not a ceiling;
+  and its decoder was tuned on seven-document pools and is applied unchanged
+  (runs/final_t3.FROZEN: cluster-rank, spectral, refine, borda), so other
+  sizes may understate it. As at seven documents, the attacker is told the
+  number of documents in the pool.
+- **Pools** (runs/nsweep_frame.py -> data/pools/nsweep_pools.json), all from
+  the 46 headline pools, so the 322 documents and their fragments are the
+  headline ones:
+  - N = 2, 3, 5: part of each headline pool. Its members are shuffled by
+    `random.Random("D22:<pool id>")` and the first N taken (nested). 46 pools
+    each.
+  - N = 7: the headline pools. The existing tier 3 headline result is used;
+    nothing is re-run.
+  - N = 14, 21, 28: 2, 3 or 4 consecutive headline pools joined, in pool-id
+    order: 23, 15 and 11 pools. Left over and unused: pool_070 at N = 21;
+    pool_069 and pool_070 at N = 28.
+  Shown order and masking seeds as for every other pool (runs/t3_units
+  j_prepare / j_texts). 25,812,874 ordered pairs in the six new sizes.
+- **Scoring.** The frozen tier 3 weights (SHA-256 de081db6…), hash-checked by
+  the scoring script, on Colab; GPU and versions recorded in SCORE_DONE.json.
+- **Reported per size.** Mean over pools of F1_J, F1_L, the one-bucket
+  baseline b_J and A_J = (F1_J − b_J)/(1 − b_J); q (micro); each with a 95%
+  bootstrap CI (10,000 resamples of pools, seed 42). The D21 per-document
+  measures: mean completeness and purity, and the share of documents with both
+  at least 0.5, 0.8 and 0.9. Because b_J falls as pools grow, the curve is
+  read on A_J and on the per-document shares, not on raw F1_J.
+- **Reading, fixed now.** At N = 28 against the N = 7 value of A_J (0.464):
+  CI for A_J entirely above half of it (0.232) -> "a fourfold larger pool left
+  this attacker more than half of its above-baseline recovery"; entirely below
+  0.232 -> "less than half"; otherwise -> "not resolved with 11 pools". The
+  trend across sizes is described (Spearman correlation of per-pool A_J with
+  N); pools at different sizes share documents, so the sizes are not
+  independent samples and no test between sizes is reported.
+- **What it cannot show.** A fall for tier 3 does not show that larger pools
+  protect against LLM attackers. No LLM run is part of this design.
+- Post-hoc exploratory wherever it appears.
 
 ## Development history — 2026-09-10: headline documents used before frame A existed
 
