@@ -1706,10 +1706,13 @@ Disclosure, written after these two results were computed.
   hashes before scoring, and SCORE_DONE.json records weights SHA-256
   de081db6…, the frozen model.
 - **Hardware and versions.** Both tiers ran on an NVIDIA A100-SXM4-40GB with
-  torch 2.14.1+cu130 (tier 1: transformers 5.22.1). The headline tier 1 and
-  tier 3 scores came from an L4 (tier 1: torch 2.11.0+cu130, transformers
-  5.20.2). The similar-against-headline differences for tiers 1 and 3
-  therefore also carry a GPU and library change, whose size was not measured.
+  torch 2.14.1+cu130 (tier 1: transformers 5.22.1). Tier 3: the same GPU model
+  and torch version as its headline scoring (models/t3/SCORE_DONE.json), so
+  its similar-against-headline difference carries no hardware change. Tier 1:
+  its headline scores came from an L4 (torch 2.11.0+cu130, transformers
+  5.20.2), so its difference also carries a GPU and library change, whose
+  size was not measured. (An earlier version of this entry said both headline
+  runs were on an L4; that was wrong for tier 3 and is corrected here.)
 - **Checks on this machine** (runs/similar_attackers.py): full runs, 46 units
   each; texts match what this repository generates; every score file hashes
   to what the GPU recorded. Decoders as frozen (tier 3: runs/final_t3.FROZEN;
