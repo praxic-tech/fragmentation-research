@@ -1,0 +1,12 @@
+TIER 1 T1-pythia160m (RUN_DECISIONS D19) -- first complete result, kept as is
+model EleutherAI/pythia-160m-deduped@582159a2dfe3e712a8d47ae83dec95ae3bde8e7e; decoder {'decoder': 'cluster-rank', 'grouper': 'spectral', 'refine': False, 'orderer': 'borda'}
+pair scores: NVIDIA L4, bfloat16 weights, float32 log-softmax; 192 score files verified
+
+GAME J headline (46 pools)
+  F1_J 0.1683   base 0.1493   F1_L 0.3272   q_micro 0.5147   exact 0/322
+GAME O headline (100 documents; random tau = 0)
+  tau 0.0307   median 0.0127   exact 0
+
+presentation invariance, 10 permutations: mean F1_J 0.1683-0.1683 (max |diff| 0.0000)
+deterministic on re-run (first unit of each game): True
+wall time 2.0 min
