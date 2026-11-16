@@ -8,7 +8,8 @@ results/final_analysis/HEADLINE_LADDER.json.
 Rows
   prespecified attackers   Analytic one-bucket, Memon-inspired, One-shot Sonnet
                            (MASTER_RESULTS.csv); T0-classical, T0-PUP (D19
-                           tier 0); T3-crossenc (D19 tier 3)
+                           tier 0); T1-pythia160m, T2-pythia1.4b (D19 tiers 1
+                           and 2); T3-crossenc (D19 tier 3)
   post hoc                 Embedding (D14), and the Sonnet-dependence sweep
                            models (experiments/cross_model_sandbox), each
                            scored here from its raw rows with the frozen
@@ -55,6 +56,8 @@ MASTER = [("Analytic one-bucket", "--", "baseline"),
           (SONNET, "Anthropic", "attacker")]
 LOCAL = [("T0-PUP", os.path.join("results", "final_t0", "headlineJ", "prose.T0-PUP.jsonl")),
          ("T0-classical", os.path.join("results", "final_t0", "headlineJ", "prose.T0-classical.jsonl")),
+         ("T1-pythia160m", os.path.join("results", "final_t1", "headlineJ", "prose.T1-pythia160m.jsonl")),
+         ("T2-pythia1.4b", os.path.join("results", "final_t2", "headlineJ", "prose.T2-pythia1.4b.jsonl")),
          ("T3-crossenc", os.path.join("results", "final_t3", "headlineJ", "prose.T3-crossenc.jsonl"))]
 SWEEP = [("gpt-5.6-sol", "OpenAI"), ("deepseek-v3.2", "DeepSeek"), ("gpt-4.1", "OpenAI"),
          ("llama-4-maverick", "Meta"), ("gemma-4-12b", "Google"), ("gpt-oss-20b", "OpenAI")]
@@ -186,6 +189,9 @@ def main():
     for label, lab, kind in MASTER:
         add(label, lab, kind, master[label], verdict="PASS" if label == SONNET else None)
     for label, path in LOCAL:
+        if not os.path.exists(path):              # a D19 tier not finished by the freeze
+            print(f"NOT RUN: {label} ({path} missing)")
+            continue
         add(label, "--", "attacker", load_local(path))
     missing = []
     for slug, lab in SWEEP:
