@@ -1502,6 +1502,36 @@ comparisons (D19). Names in tables: **T1-pythia160m**, **T2-pythia1.4b**.
 - Files: adversaries/lm_pmi_t12.py, runs/t12_score.py, runs/t12_make_bundle.py,
   notebooks/t12_colab.ipynb.
 
+### D19 addendum — 2026-11-16: tier 1 tuning, fixed before the evaluation run
+
+Written after tier 1 scoring and dev tuning finished and before any tier 1
+evaluation reconstruction has been decoded or scored.
+
+- **Scoring run.** One Colab session on an **NVIDIA L4** (the design named no
+  GPU), torch 2.11.0+cu130, transformers 5.20.2, bfloat16 weights, float32
+  log-softmax, side cap 64. All 192 units (46 dev pools, 46 headline Game J
+  pools, 100 headline Game O documents): 2 scored by the smoke cell, 190 in
+  the full run, 5,473,388 pairs, 56.5 minutes. Bundle texts SHA-256
+  a2a350c35329265abb2082adf3f200e699c72a00283d76161ba817f188238dc7.
+  runs/t12_tune.py verified the model and revision, that the run was not a
+  smoke run, that every unit's texts match what the repository generates, and
+  that every one of the 192 score files hashes to what the GPU recorded.
+- **Dev tuning (46 dev pools).** Orderer by mean dev τ: borda 0.0467, path1
+  0.0393 → **borda**. Cluster-rank, F1_L / F1_J / q: agglomerative
+  0.2854 / 0.1448 / 0.5088, agglomerative + refine 0.2937 / 0.1492 / 0.5088,
+  spectral 0.3445 / 0.1781 / 0.5179, spectral + refine 0.3215 / 0.1633 /
+  0.5106 → **spectral, refine off**. Path-cover 0.2368 / 0.1203 / 0.5061, not
+  higher. **Evaluation decoder: cluster-rank, spectral grouping, refine off,
+  borda ordering; Game O uses borda.** Dev T1: F1_J 0.1781, F1_L 0.3445,
+  q micro 0.5179, one-bucket baseline 0.1441, exact records 0.
+- **Hashes.** Every score file's SHA-256 is in results/final_t1/RECORD.json
+  (192 entries), committed with this addendum; RECORD.json SHA-256
+  81ddd2503ee2958b964e8a29fa866247005c852a5cbd682afa4f6bbbabef78b3.
+  runs/final_t12.py checks the score files against it before decoding.
+- **Freeze date.** The results freeze moved from 2026-11-15 to 2026-11-16
+  17:00 (user). Recorded here because tier 1 is scored and tuned on the 16th.
+- Files: results/final_t1/RECORD.json, results/final_t1/dev_tuning.json.
+
 ## D20 — 2026-11-14: POST-HOC EXPLORATORY — SIMILAR POOLS, design frozen before any pool is built
 
 - **Why.** Each headline pool's seven documents were drawn at random, so they
