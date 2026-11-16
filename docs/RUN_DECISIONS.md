@@ -1614,6 +1614,47 @@ evaluation reconstruction has been decoded or scored.
   this is a weaker version of the worrying case.
 - Files: runs/similar_pools.py, data/pools/similar_pools.json.
 
+### D20 addendum — 2026-11-16: runs started; GPT-5.6 sol approved for the similar pools
+
+Written before any similar-pool answer from either model has been read.
+
+- **Sonnet.** The user approved the spend and raising the ledger tripwire to
+  $190 for this run on 2026-11-16. Submitted with
+  `runs/final_run_similar.py --max-spend 190`: 46 requests, frozen spec
+  runs/similar_J.json (SHA-256
+  4c4e654de9f953554649fb48e4e3e3b622fddd9f2149af0b9e5a319c7415efd4).
+- **Non-LLM attackers.** T0-PUP and T0-classical were run on the similar
+  pools on 2026-11-16 with their frozen settings (runs/similar_attackers.py);
+  their results were seen before this addendum. Tiers 1, 2 and 3 are scored on
+  Colab from models/similar/similar_bundle.zip (runs/similar_make_bundle.py,
+  runs/similar_score_t3.py) with the frozen models and decoders; both tier 1
+  and tier 2 tuning addenda exist, so both are included.
+- **GPT-5.6 sol, approved separately as D20 requires** (user, 2026-11-16,
+  after a quote of about $25: its headline run cost $25.36). Why this model:
+  it was the strongest attacker on the headline pools in the post-hoc
+  cross-model check, so it is the hardest test of whether similar pools
+  protect. Protocol: the cross-model sandbox's protocol for gpt-5.6-sol
+  exactly as last amended there (Azure OpenAI deployment, Responses API,
+  `service_tier` flex, reasoning effort max, `max_output_tokens` 128,000,
+  guardrail Default, one transport resend, one structural repair round, the
+  frozen scorer and the same integrity rule), with one change: the request
+  spec is runs/similar_J.json (hash above) instead of the headline spec, sent
+  verbatim. Cost cap $50, as for its headline run. The 41-pool sensitivity of
+  the cross-model check does not apply: it removes headline pools by name, and
+  the similar pools regroup the same 322 documents, seven of which have a 2025
+  first-online date; that is stated wherever the result appears. Run in
+  experiments/cross_model_sandbox/ under that sandbox's own preregistration
+  amendment, committed there before the first request.
+- **Reading for GPT-5.6 sol**, fixed now: D20's analysis and reading,
+  unchanged, comparing its similar-pool result with its own headline result.
+  If it fails the integrity rule on the similar pools, that is reported as
+  failed and its scores are secondary. Post-hoc exploratory wherever it
+  appears.
+- **Descriptive addition, disclosed.** analysis/similar_comparison.py also
+  reports, within the similar pools, F1_J by thirds of pool similarity and its
+  rank correlation with pool cosine. That cut is not in D20; it was added
+  after the tier 0 similar-pool totals were seen and is labelled descriptive.
+
 ## D21 — 2026-11-16: POST-HOC DIAGNOSTIC — per-document recovery on the headline pools, defined before it is computed
 
 Written before the numbers below exist. A reading aid for the headline Game J
