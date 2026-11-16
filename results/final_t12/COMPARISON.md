@@ -2,8 +2,6 @@
 
 Headline only (the scope fixed for tiers 1 and 2). Means with 95% paired bootstrap CIs (10,000 resamples, seed 42). Diff = tier minus attacker.
 
-Not run by the results freeze: T2-pythia1.4b.
-
 ## T1-pythia160m
 
 Game J headline (46 pools): F1_J 0.168 [0.160, 0.177], F1_L 0.327 [0.312, 0.343], q 0.515, base 0.149, A_J 0.022 (of the means), exact records 0/322
@@ -28,3 +26,28 @@ Game O headline (100 documents; random τ = 0): τ 0.031 [0.003, 0.060]
 | One-shot Sonnet | 0.769 [0.734, 0.801] | -0.738 [-0.779, -0.695] |
 | Jaccard-Greedy | -0.005 [-0.031, 0.021] | 0.036 [-0.003, 0.076] |
 | Jaccard-MST | 0.012 [-0.017, 0.040] | 0.019 [-0.016, 0.053] |
+
+## T2-pythia1.4b
+
+Game J headline (46 pools): F1_J 0.263 [0.247, 0.279], F1_L 0.484 [0.459, 0.511], q 0.535, base 0.149, A_J 0.133 (of the means), exact records 0/322
+
+| Attacker | F1_J | tier − attacker, F1_J | tier − attacker, F1_L |
+|---|---|---|---|
+| T3-crossenc | 0.544 [0.521, 0.567] | -0.282 [-0.302, -0.261] | -0.205 [-0.236, -0.174] |
+| T0-classical | 0.234 [0.219, 0.251] | 0.029 [0.010, 0.047] | 0.146 [0.114, 0.176] |
+| T0-PUP | 0.109 [0.102, 0.116] | 0.154 [0.136, 0.172] | 0.269 [0.238, 0.301] |
+| One-shot Sonnet | 0.723 [0.702, 0.743] | -0.460 [-0.480, -0.438] | -0.397 [-0.426, -0.368] |
+| Memon-inspired | 0.168 [0.156, 0.183] | 0.094 [0.074, 0.114] | 0.145 [0.110, 0.179] |
+| Embedding (post-hoc exploratory) | 0.182 [0.167, 0.198] | 0.081 [0.060, 0.101] | 0.121 [0.084, 0.155] |
+| Analytic one-bucket | 0.149 [0.143, 0.157] | 0.113 [0.095, 0.132] | 0.186 [0.155, 0.216] |
+
+Game O headline (100 documents; random τ = 0): τ 0.089 [0.066, 0.112]
+
+| Attacker | τ | tier − attacker |
+|---|---|---|
+| T3-crossenc-O | 0.639 [0.602, 0.673] | -0.550 [-0.588, -0.508] |
+| T0-classical-O | 0.504 [0.468, 0.539] | -0.415 [-0.453, -0.377] |
+| T0-PUP-O | 0.016 [-0.009, 0.040] | 0.073 [0.037, 0.110] |
+| One-shot Sonnet | 0.769 [0.734, 0.801] | -0.680 [-0.717, -0.641] |
+| Jaccard-Greedy | -0.005 [-0.031, 0.021] | 0.095 [0.061, 0.128] |
+| Jaccard-MST | 0.012 [-0.017, 0.040] | 0.077 [0.045, 0.110] |
