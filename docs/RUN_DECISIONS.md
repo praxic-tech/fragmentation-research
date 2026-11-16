@@ -1694,6 +1694,24 @@ plainly.
   sandbox logged them.
 - The sandbox commits its own amendment before the first request.
 
+### D20 addendum — 2026-11-16: gpt-5.6-sol resend outcome on the similar pools (as reported by the sandbox session)
+
+Recorded from the sandbox session's report, relayed by the user; its commits
+(up to 1e3c62f) are local to that machine and not yet in this checkout, so
+nothing here has been recomputed by this session.
+
+- Both pools blocked under Default were answered on the resend under the
+  custom guardrail. Verdict under the amended rule: PASS on all 46 similar
+  pools. F1_J 0.7829, F1_L 0.8755, q 0.8959; cost $29.48 (cap $50). The
+  44-pool scoring under Default is kept in the sandbox record.
+- **Guardrail name.** The addendum above names the guardrail `guardrail 450`,
+  as the user gave it. The sandbox reports the resend ran under
+  `guardrail460`. The sandbox's per-row guardrail record and its smoke-request
+  check are the authority for what was in force; the name here is to be
+  reconciled with them when its commits are merged.
+- Similar against headline for this model (D20's analysis, with intervals) is
+  computed by analysis/similar_comparison.py once the raw rows are merged.
+
 ### D20 addendum — 2026-11-16: tiers 3 and 1 scored on the similar pools; hardware differs from the headline scoring
 
 Disclosure, written after these two results were computed.
