@@ -1,0 +1,64 @@
+{
+ "slug": "gpt-5.6-sol",
+ "budget": 128000,
+ "post_hoc_exploratory": true,
+ "spec_tag": "final-similarJ",
+ "spec_sha256": "4c4e654de9f953554649fb48e4e3e3b622fddd9f2149af0b9e5a319c7415efd4",
+ "usage": {
+  "input_tokens": 381198,
+  "output_tokens": 2759205,
+  "reasoning_tokens": 2677556,
+  "cost_usd": 28.354446000000014,
+  "responses": 44,
+  "transport_attempts": 5,
+  "requests_with_transport_error": 5
+ },
+ "requests_sent": 44,
+ "pools46": {
+  "scope": "46",
+  "units": 46,
+  "PRIMARY_verdict": "REFUSED",
+  "refusal_reasons": {
+   "units_without_answer": [
+    "sim_015",
+    "sim_041"
+   ],
+   "units_over_policy_cap": []
+  },
+  "frozen_gate_output": {
+   "prose": [
+    "J"
+   ]
+  },
+  "answered_units": 44,
+  "completion_rate": 0.9565217391304348,
+  "d6_units": 0,
+  "d6_rate": 0.0,
+  "excluded_units": {
+   "content_filter": [],
+   "not_run": [
+    "sim_015",
+    "sim_041"
+   ],
+   "not_completed": [
+    "sim_015",
+    "sim_041"
+   ],
+   "repair_not_sent_or_not_completed": []
+  },
+  "invalid_after_repair": 0,
+  "invalid_after_repair_rate": 0.0,
+  "mean_policy_share": 0.0,
+  "units_over_cap": 0,
+  "SECONDARY_answered_units_only": {
+   "F1_J": 0.7840357299988946,
+   "F1_L": 0.8785229708572828,
+   "q": 0.8940380866905919,
+   "n": 44,
+   "n_q_defined": 44
+  }
+ },
+ "pools41": {
+  "not_applicable": "the 41-pool sensitivity removes headline pools by name; the similar pools regroup the same 322 documents (7 have a 2025 first-online date)"
+ }
+}

@@ -759,6 +759,13 @@ class ApiRunner:
         spread = max(rat) / min(rat)
         self.log(f"{tag}: prompt tokens/char min {min(rat):.4f} max {max(rat):.4f} spread {spread:.3f}")
         if spread > 1.25:
+            chk = f"tokens/char spread {spread:.3f} > 1.25"
+            prev = self.path(tag, "check_failures.jsonl")
+            if self.resume and os.path.exists(prev) and any(
+                    json.loads(ln).get("check") == chk for ln in open(prev, encoding="utf-8") if ln.strip()):
+                # the same failure on the same rows, already reviewed by the user: do not halt on it again
+                self.log(f"{tag}: {chk}: the halt the user reviewed and resumed; not halting again")
+                return
             self.append(self.path(tag, "check_failures.jsonl"),
                         {"custom_id": "*", "at": now(), "check": f"tokens/char spread {spread:.3f} > 1.25"})
             raise SystemExit(f"HALT: {tag} prompt tokens/char spread {spread:.3f} > 1.25")

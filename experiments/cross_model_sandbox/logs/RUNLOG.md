@@ -802,3 +802,30 @@ Install (user granted install permission, asked to keep it small):
   (Usage includes ~$0.5 billed for requests not in the attempt logs: the
   gpt-oss-120b requests in flight when it was stopped, and the cut-off
   deepseek streams.)
+
+## 2026-11-16 gpt-5.6-sol, similar pools (amendment 3): HALT after the base wave (check failure)
+
+- Base wave 20:44 to 21:44 UTC: 46 sent, 44 answered (all end_turn; output max 82,691, mean 62,709;
+  no D6), 2 content-filter blocks, $28.3544 spent of the $50 cap.
+- Blocks (guardrail Default, both on the completion, prompt safe): sim-015 violence medium (filtered,
+  after 463 s); sim-041 violence medium (filtered), sexual low (not filtered), after 335 s. Under
+  amendment 2 both go to the one resend.
+- HALT: prompt tokens/char spread 1.405 > 1.25 (min 0.2104 sim-009, max 0.2956 sim-001; median
+  0.2385). Headline run: 0.2206 to 0.2593 (1.175). Every row passed the prompt-integrity check
+  (lowest 0.2104 per char vs the 0.19 threshold). sim-001's prompt is 9.4% digits, sim-009's 5.1%.
+- Stopped before the resend; waiting for the user before --resume-after-check-failure.
+- 2026-11-16T22:00:01Z User approved --resume-after-check-failure (spread 1.405) in chat.
+- 22:00 UTC: the resume re-ran the end-of-wave ratio check on the same 44 rows and halted again
+  on the identical spread (1.405), sending nothing ($0). Runner bug: --resume-after-check-failure
+  did not cover the wave-level ratio check. Fixed: with the flag, an identical, already-recorded
+  ratio failure is logged and not halted on again; any new or different failure still halts.
+  Resumed again under the same user approval.
+- 22:01 to 22:04 UTC: resend (-rs1) of sim-015 and sim-041 under Default: both blocked again on the
+  completion (prompt safe). sim-015 violence medium (filtered), after 74 s; sim-041 sexual medium
+  (filtered), after 117 s. Both "not completed" under amendment 2. No repair needed (0 invalid).
+  $0.00 for the resends; total $28.3544.
+- Result, 46 pools: REFUSED (2 units without an answer). SECONDARY, answered units only (44):
+  F1_J 0.7840, F1_L 0.8785, q 0.8940. 41-pool view not applicable (amendment 3).
+- Scorer fix: the first scoring wrote this run's PRIMARY_RESULT.md over the headline
+  results/gpt-5.6-sol/PRIMARY_RESULT.md; restored from git before any commit, and the scorer now
+  writes it under results/gpt-5.6-sol/final_similarJ/. Headline results unchanged (git status clean).

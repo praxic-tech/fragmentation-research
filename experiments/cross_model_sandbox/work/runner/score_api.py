@@ -383,7 +383,7 @@ def write_primary_md(slug, s):
         x = s["superseded_attempts"]
         L += [f"- superseded attempts ({x['dir']}, never scored): {x['responses']} responses, "
               f"cost ${x['cost_usd']:.4f}; total cost including them ${s['total_cost_usd_incl_superseded']:.4f}", ""]
-    with open(os.path.join(SB, "results", slug, "PRIMARY_RESULT.md"), "w", encoding="utf-8") as fh:
+    with open(os.path.join(SB, "results", slug, *([VARIANTS[VARIANT]["out"]] if VARIANT else []), "PRIMARY_RESULT.md"), "w", encoding="utf-8") as fh:
         fh.write("\n".join(L))
 
 
