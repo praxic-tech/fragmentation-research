@@ -1694,6 +1694,31 @@ plainly.
   sandbox logged them.
 - The sandbox commits its own amendment before the first request.
 
+### D20 addendum — 2026-11-16: tiers 3 and 1 scored on the similar pools; hardware differs from the headline scoring
+
+Disclosure, written after these two results were computed.
+
+- **How they were scored.** Google Drive would not mount in Colab, so the
+  bundle (SHA-256 5b9fa20bdeba…, unchanged) was embedded in a notebook
+  (runs/similar_make_nodrive_notebook.py) and each tier's score store was
+  downloaded as a zip. The tier 3 model folder was fetched from a Drive share
+  link; runs/similar_score_t3.py checked the weights against the recorded
+  hashes before scoring, and SCORE_DONE.json records weights SHA-256
+  de081db6…, the frozen model.
+- **Hardware and versions.** Both tiers ran on an NVIDIA A100-SXM4-40GB with
+  torch 2.14.1+cu130 (tier 1: transformers 5.22.1). The headline tier 1 and
+  tier 3 scores came from an L4 (tier 1: torch 2.11.0+cu130, transformers
+  5.20.2). The similar-against-headline differences for tiers 1 and 3
+  therefore also carry a GPU and library change, whose size was not measured.
+- **Checks on this machine** (runs/similar_attackers.py): full runs, 46 units
+  each; texts match what this repository generates; every score file hashes
+  to what the GPU recorded. Decoders as frozen (tier 3: runs/final_t3.FROZEN;
+  tier 1: results/final_t1/RECORD.json).
+- **Results.** T3-crossenc F1_J 0.3592 (F1_L 0.4584, q 0.7436) against 0.5442
+  on the headline pools; T1-pythia160m 0.1363 (F1_L 0.2593, q 0.5198) against
+  0.1683. Differences and intervals: results/final_similar/COMPARISON.md.
+- **Pending.** Tier 2 (no pair scores yet); gpt-5.6-sol (addendum above).
+
 ## D21 — 2026-11-16: POST-HOC DIAGNOSTIC — per-document recovery on the headline pools, defined before it is computed
 
 Written before the numbers below exist. A reading aid for the headline Game J
