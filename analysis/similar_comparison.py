@@ -45,9 +45,14 @@ SON = "One-shot Sonnet"
 # attacker: (headline rows, similar rows); Sonnet's are raw model answers, scored here
 LOCAL = {"T0-PUP": "final_t0", "T0-classical": "final_t0", "T1-pythia160m": "final_t1",
          "T2-pythia1.4b": "final_t2", "T3-crossenc": "final_t3"}
+GPT = "gpt-5.6-sol (post hoc)"
+SB = os.path.join("experiments", "cross_model_sandbox", "results", "gpt-5.6-sol")
 RAW = {SON: (os.path.join("results", "final", "headlineJ", "prose", "J.jsonl"),
-             os.path.join("results", "final", "similarJ", "prose", "J.jsonl"))}
-ORDER = [SON, "T3-crossenc", "T2-pythia1.4b", "T0-classical", "T1-pythia160m", "T0-PUP"]
+             os.path.join("results", "final", "similarJ", "prose", "J.jsonl")),
+       # cross-model sandbox, post hoc on both sets; protocol history in D20's addenda of 2026-11-16
+       GPT: (os.path.join(SB, "final_headlineJ", "prose", "J.jsonl"),
+             os.path.join(SB, "final_similarJ", "prose", "J.jsonl"))}
+ORDER = [GPT, SON, "T3-crossenc", "T2-pythia1.4b", "T0-classical", "T1-pythia160m", "T0-PUP"]
 
 
 def row(r):
@@ -157,6 +162,11 @@ def main():
         x = e["descriptive_not_in_D20"]
         L.append(f"| {att} | " + " | ".join(f"{v:.3f}" for v in x["F1_J_by_third"])
                  + f" | {x['spearman_cosine_vs_F1_J']:+.2f} ({x['spearman_p']:.3g}) |")
+    if GPT in res:
+        L += ["", "gpt-5.6-sol: cross-model sandbox, post hoc exploratory on both sets. On the similar pools, 2 of "
+              "46 (sim-015, sim-041) were blocked twice by the provider's content filter under the Default "
+              "guardrail and answered when resent under a custom guardrail (guardrail460); that rule was set "
+              "after the 44-pool result was seen (sandbox amendment 4; D20 addenda of 2026-11-16)."]
     if pending:
         L += ["", "Pending: " + ", ".join(pending) + "."]
     open(os.path.join(OUT, "COMPARISON.md"), "w", encoding="utf-8").write("\n".join(L) + "\n")

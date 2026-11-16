@@ -1711,6 +1711,19 @@ nothing here has been recomputed by this session.
   reconciled with them when its commits are merged.
 - Similar against headline for this model (D20's analysis, with intervals) is
   computed by analysis/similar_comparison.py once the raw rows are merged.
+- **Merged and recomputed** (sandbox commits up to 1e3c62f, merge 001aa76).
+  This session's scoring of the sandbox rows reproduces F1_J 0.7829 and F1_L
+  0.8755 on 46 pools. Similar minus headline: F1_J -0.064 [-0.091, -0.036],
+  F1_L -0.075 [-0.102, -0.049], q (micro) -0.003 [-0.029, +0.030]; A_J 0.747
+  against 0.819. D20 reading: similarity helps the defence. The sandbox's
+  q 0.8959 is its own summary's convention; the comparison uses micro q
+  (0.870), as D20 specifies.
+- **Guardrail name reconciled.** The resend ran under `guardrail460` (sandbox
+  amendment 4 and its per-row record). `guardrail 450` in the addendum above
+  was the name as first given to this session. Its settings are the user's
+  statement (lowest blocking on all categories); the sandbox's smoke request
+  could not show them. Blocked pools: sim-015 and sim-041, on the completion
+  side, under Default, base wave and resend.
 
 ### D20 addendum — 2026-11-16: tiers 3 and 1 scored on the similar pools; hardware differs from the headline scoring
 
