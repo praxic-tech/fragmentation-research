@@ -172,15 +172,18 @@ random seven-group answer of $0.077$. That score measures precedence, not
 contiguity: on the same pools immediate-adjacency F1 was $0.287$ and the mean
 longest intact run was $4.53$ fragments. The attacker recovers source
 association and broad relative order strongly; contiguous plaintext recovery
-is much weaker. The leak is not specific to large language models: a
+is much weaker. In a post-hoc diagnostic, $84\%$ of documents had at least
+$80\%$ of their fragments in one group that was at least $80\%$ theirs. The
+leak is not specific to large language models: a
 cross-encoder fine-tuned on disjoint public case reports reached
 $\FJ = 0.544$, and the generative attacker exceeded it by $0.178$ in every
 pool. In a post-hoc exploratory check, two other large language models given the unchanged
 prompt matched or exceeded the main one.
 
-Resistance depended on what the fragments retained. Synthetic identifier
-records behaved qualitatively differently: the record template was recovered
-in every group, but fields were not associated across records and every tested
+Resistance depended on what the fragments retained. A synthetic identifier
+arm serves as a negative control: its fields are generated independently, so
+there is no association for a content-based attacker to find, and none found
+one. The record template was recovered in every group, and every tested
 content-based attacker scored below a truth-free schema-order baseline. In a
 post-hoc controlled arm over five cuts of identical text, null-adjusted
 reconstruction fell monotonically from $\AVJ = 0.588$ at a sentence cut to
@@ -245,10 +248,11 @@ precedence score, and the
 same answers recover far less \emph{contiguous} text---a distinction we make
 explicit at the point of first reporting. The cutting strategy matters, with
 subject--verb cuts the most resistant of those tested. And resistance depends
-sharply on the data: structured identifiers defeat every content-based attacker
-we tested, and in a controlled post-hoc arm, progressively finer fixed-width
-cuts of identical text drive reconstruction down to its random-shuffle
-reference.
+on what the fragments carry: in a synthetic identifier arm whose fields are
+independent by construction, a negative control, no tested attacker recovered
+record association, and in a controlled post-hoc arm, progressively finer
+fixed-width cuts of identical text drive reconstruction down to its
+random-shuffle reference.
 
 \paragraph{Contributions.} We make two.
 
@@ -262,8 +266,9 @@ conditional ordering, with closed-form references.
 \item \textbf{An empirical privacy characterisation.} Substantial linkage and
 broad ordering recovery for clinical prose, by a trained non-LLM attacker as
 well as a generative one, with much weaker immediate adjacency and contiguous
-reconstruction; strong dependence on the fragmentation regime and the data
-type; and a controlled monotone decline with fragment width.
+reconstruction; strong dependence on the fragmentation regime; a negative
+control on synthetic records with independent fields, where no association
+was recovered; and a controlled monotone decline with fragment width.
 \end{enumerate}
 
 The attacker comparison is evidence supporting both contributions rather than a
@@ -433,8 +438,13 @@ sizes; raw fragment identifiers; or any auxiliary source. The closed world is
 enforced by the harness for prose, whose sources are public papers, and holds
 by construction for the synthetic identifiers.
 
-Resources: one query per pool, with the model's 128{,}000-token output budget
+Resources: one prompt per pool, with the model's 128{,}000-token output budget
 as a prespecified attacker budget rather than a limit of the technology.
+``One-shot'' refers to that single prompt. An answer that cannot be parsed, or
+that omits, repeats or invents labels, receives at most one structural repair
+round, which reads no score; 2 of the 46 headline pools and 51 of the 652
+prespecified units received one. A request the provider declined before
+inference was resent once, unchanged (\S\ref{sec:protocol}).
 
 \paragraph{The setting is attacker-favourable.} Relative to any real
 deployment, Game~J is generous in four ways we state rather than bury: every
@@ -549,8 +559,9 @@ $\pm 0.10$.
 One attempt per unit at a 128{,}000-token output budget. A unit that exhausts
 the budget without producing an answer is a \emph{resource-bounded
 non-completion}: it is reported in the completion rate, never scored as zero,
-and never re-asked. Paired comparisons use units where both conditions
-completed.
+and never re-asked. The repair round of \S\ref{sec:protocol} is the only
+second call a unit can receive, and it applies to a malformed answer, not to a
+non-completion. Paired comparisons use units where both conditions completed.
 
 \subsection{Scope}
 \label{sec:scope}
@@ -666,6 +677,7 @@ had an evaluation score: if tier 3 came out far below the one-shot attacker,
 the reading that large language models open a new regime would stand; if its
 \FJ{} came out well above $0.5$, the reading would become that fragmentation
 fails against modern NLP generally and large language models widen the margin.
+The rule named no boundary between its two branches.
 \TODO{tiers 1--2 (zero-shot language-model scores): the decision log commits
 to reporting every tier finished by the results freeze; report them here or
 state their status}
@@ -673,19 +685,6 @@ state their status}
 \textbf{Other large language models}\posthoc{} were run on the headline pools
 after the one-shot result was seen, under their own preregistration entry, with
 the frozen prompt unchanged (Appendix~\ref{app:crossmodel}).
-
-Two cautions apply to every comparison that follows. The Memon-inspired
-attacker \emph{is not a faithful reproduction} of the original
-algorithm~\cite{shanmugasundaram2003}: it substitutes a fixed-order smoothed
-character model for the original's context model, adds a grouping stage the
-original does not have, and uses a local ordering search rather than a pruned
-Hamiltonian-path procedure; the original is also rooted at a known first
-fragment, which Game~J does not supply. And the Jaccard orderers' word-bigram
-similarity is zero for a large majority of within-document pairs on this
-corpus, so their results reflect a sparse signal. We therefore write
-\emph{tested} statistical, lexical and embedding attackers throughout. The
-ladder is a stronger test than those attackers, but it is still a sample of
-non-LLM methods, not a frontier.
 
 % ---- RESULTS EXHIBITS --------------------------------------------------------
 % All nine are declared HERE, a section before the results, on purpose. A
@@ -696,6 +695,29 @@ non-LLM methods, not a frontier.
 % them back under their own headings: that puts each one two to three pages
 % behind its text.
 \input{table2_headline_attackers}
+Two cautions apply to every comparison that follows. The Memon-inspired
+attacker \emph{is not a faithful reproduction} of the original
+algorithm~\cite{shanmugasundaram2003}: it substitutes a fixed-order smoothed
+character model for the original's context model, adds a grouping stage the
+original does not have, and uses a local ordering search rather than a pruned
+Hamiltonian-path procedure; the original is also rooted at a known first
+fragment, which Game~J does not supply. Its boundary statistic, which the
+tier~0 parallel-path decoder also uses, reads two characters on each side of a
+candidate join. That suits fragments cut mid-content, as file blocks are.
+Under a sentence cut, $98\%$ of headline fragments end in sentence-final
+punctuation and $99\%$ begin with a capital letter or a digit, so the
+statistic has almost nothing to tell one join from another. Both attackers are
+a forensic method carried over to this setting, not baselines built for it.
+And the Jaccard orderers' word-bigram
+similarity is zero for a large majority of within-document pairs on this
+corpus, so their results reflect a sparse signal. We therefore write
+\emph{tested} statistical, lexical and embedding attackers throughout. The
+ladder is a stronger test than those attackers, but it is still a sample of
+non-LLM methods, not a frontier.
+
+% The rest of the exhibits. Table 2 is declared one paragraph earlier (above
+% "Two cautions") so it starts a page sooner; with all nine here the last one
+% landed two pages after its section (revision 12, tools/check_layout.py).
 \input{table9_adjacency}
 \input{table3_grid}
 \begin{figure*}[t]
@@ -788,13 +810,17 @@ $0.130$ in $\tau$ (\S\ref{sec:res-gameO}). Most of the distance to the one-shot
 attacker is in grouping. Neither reconstructed a whole document exactly more
 than once (1 and 0 of 322).
 
-Under the outcome rule fixed before the ladder had any evaluation score
-(\S\ref{sec:attackers}), this is the second branch: tier~3 is well above $0.5$,
-so the reading is not that only large language models can reassemble these
-fragments, but that fragmentation of clinical prose fails against modern NLP
-generally and the generative attacker widens the margin. A model of about
-110 million parameters, fine-tuned for two epochs on public case reports,
-already recovers most of the source association.
+The outcome rule fixed before the ladder had any evaluation score
+(\S\ref{sec:attackers}) had two branches and no stated boundary between them,
+and the result falls between. Tier~3 is above $0.5$ but not far above it, and
+it is below the one-shot attacker in every pool. We read it as nearer the
+second branch and state that reading no more strongly than the numbers allow:
+the fine-tuned model recovers about two-thirds of the one-shot attacker's
+advantage over the reference ($\AJ$ $0.464$ against $0.673$), so reassembling
+these fragments does not require a large language model, and the generative
+attacker widens the margin. A model of about 110 million parameters,
+fine-tuned for two epochs on public case reports, already recovers much of the
+source association.
 
 Four checks make it unlikely that the cross-encoder's score comes from a leak
 rather than the text. With every pair score set to a constant, which is what a
@@ -837,6 +863,20 @@ therefore specific: \emph{the attacker recovers source association and broad
 relative-order structure strongly, while immediate adjacency and contiguous
 plaintext recovery remain much weaker.} Exact reconstruction---membership and
 order both perfect---occurred for 1 of 322 headline documents.
+
+\paragraph{What the attacker holds for one document\posthoc.}
+A post-hoc diagnostic, defined in the decision log before it was computed,
+restates the linkage result per document. A document's \emph{best group} is
+the answer group holding the most of its fragments; \emph{completeness} is the
+share of the document's fragments in that group, and \emph{purity} the share
+of that group that belongs to the document. Under the one-shot attacker mean
+completeness was $0.927$ and mean purity $0.923$, and for $83.5\%$
+$[78.3, 88.5]$ of the 322 headline documents both were at least $0.8$
+($60.6\%$ at $0.9$; $98.4\%$ at $0.5$). For the cross-encoder those shares
+were $36.0\%$ $[30.4, 41.9]$, $15.8\%$ and $81.7\%$. No other non-LLM attacker
+exceeded $5.3\%$ at $0.8$, and the legal random attacker scored zero at every
+threshold. The two post-hoc models that passed the integrity check
+(Appendix~\ref{app:crossmodel}) reached $98.8\%$ and $93.5\%$ at $0.8$.
 
 \subsection{Fragmentation strategy and granularity}
 \label{sec:res-grid}
@@ -885,7 +925,10 @@ directions in some comparisons.
 \subsection{Structured identifiers}
 \label{sec:res-identifiers}
 
-The identifier arm behaved qualitatively differently. The one-shot attacker
+The identifier arm is a negative control. The generator draws every field
+independently (\S\ref{sec:synthetic}), so there is no cross-field signal for a
+content-based attacker to find; the arm tests whether the pipeline and the
+scorer report that. The one-shot attacker
 scored $\FJ = 0.083$ $[0.068, 0.099]$ with $\FL = 0.132$---below the analytic
 reference of $0.10$ and well below the truth-free schema-order baseline of
 $0.20$. Its advantage over that baseline has a $90\%$ CI of
@@ -1011,8 +1054,10 @@ that entity continuity or chronology specifically were measured.
 
 \subsection{Data-type dependence}
 Prose fragments carry both linkage and ordering signal. Identifier fragments
-carry a visible schema but, in this synthetic arm, no recoverable cross-record
-association. In the controlled granularity series the joint structure falls to
+carry a visible schema but, in this synthetic arm, no cross-record association
+at all: the fields are independent by construction, so the arm is a control
+and not a finding about structured data. In the controlled granularity series
+the joint structure falls to
 its reference while some linkage signal persists. Resistance to reassembly, on
 this evidence, is a property of the data type, the granularity, the attacker
 and its budget, rather than of fragmentation alone. Disjointness did not remove
@@ -1024,8 +1069,14 @@ These results do not support treating plaintext fragmentation as a sole
 confidentiality control for narrative text. They are consistent with it being,
 at most, a data-dependent compromise-containment measure. The threat does not
 require access to a frontier model: a small domain model fine-tuned on public
-text of the same kind recovered most of the source association, and a
-large language model available as an inexpensive API recovered more. For a practitioner
+text of the same kind recovered much of the source association, and a
+large language model available as an inexpensive API recovered more. Nor can a
+designer check for the channel with a similarity measure: the tested lexical
+and embedding\posthoc{} attackers grouped these fragments little better than
+the one-bucket reference ($\FL$ $0.34$ and $0.36$ against $0.30$) while the
+cross-encoder and the one-shot attacker reached $0.69$ and $0.88$, so low
+lexical or embedding similarity between fragments, as these attackers measure
+it, is not evidence that they cannot be linked. For a practitioner
 the two-regime finding of \S\ref{sec:res-gradient} is the usable part: in the
 coarse range, finer cutting helps mainly by exposing less text per fragment,
 because a sentence-sized fragment is a sentence of readable text whatever the
@@ -1124,7 +1175,8 @@ adjacency and contiguous recovery remained much weaker. A fine-tuned non-LLM
 attacker recovered much of the same structure, so the leak is a property of the
 text rather than of one model family; the generative attacker widened the
 margin. Reconstruction changed
-sharply with the fragmentation regime and the data type, and in a controlled
+sharply with the fragmentation regime; in a synthetic control whose fields are
+independent by construction no association was recovered; and in a controlled
 post-hoc arm sufficiently fine fixed-width fragmentation drove the tested
 attacker toward its random-shuffle reference. Resistance to reassembly is
 therefore a property of the data, the granularity and the attacker, and

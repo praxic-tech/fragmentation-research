@@ -139,5 +139,32 @@ sec = [LAD[s]["pools46"]["F1_J"] for s in ("gpt-4.1", "llama-4-maverick", "gemma
 has("secondary range", f"${min(sec):.2f}$ to ${max(sec):.2f}$")
 has("deepseek cost", f"\\${json.load(open(f'{SB}/deepseek-v3.2/SUMMARY.json'))['usage']['cost_usd']:.2f}")
 
+
+# per-document recovery (D21, post-hoc diagnostic)
+DOC = json.load(open("results/final_analysis/DOC_RECOVERY.json", encoding="utf-8"))["attackers"]
+
+
+def pc(x):
+    return f"${100 * x:.1f}\\%$"
+
+
+so, t3 = DOC["One-shot Sonnet"], DOC["T3-crossenc"]
+has("doc recovery Sonnet means", f"completeness was ${f3(so['completeness'])}$ and mean purity ${f3(so['purity'])}$")
+has("doc recovery Sonnet 0.8", f"{pc(so['both_ge_0.8'])} $[{100 * so['both_ge_0.8_ci'][0]:.1f}, "
+                               f"{100 * so['both_ge_0.8_ci'][1]:.1f}]$")
+has("doc recovery Sonnet 0.9 / 0.5", f"({pc(so['both_ge_0.9'])} at $0.9$; {pc(so['both_ge_0.5'])} at $0.5$)")
+has("doc recovery T3", f"{pc(t3['both_ge_0.8'])} $[{100 * t3['both_ge_0.8_ci'][0]:.1f}, "
+                       f"{100 * t3['both_ge_0.8_ci'][1]:.1f}]$, {pc(t3['both_ge_0.9'])} and {pc(t3['both_ge_0.5'])}")
+others = [v["both_ge_0.8"] for k, v in DOC.items()
+          if k not in ("One-shot Sonnet", "T3-crossenc") and "post hoc" not in k and "Random" not in k]
+has("doc recovery other non-LLM max", f"exceeded {pc(max(others))} at $0.8$")
+assert all(DOC["Random valid N-group (size-blind)"][f"both_ge_{t}"] == 0 for t in (0.5, 0.8, 0.9))
+has("doc recovery sweep", f"reached {pc(DOC['gpt-5.6-sol (post hoc)']['both_ge_0.8'])} and "
+                          f"{pc(DOC['deepseek-v3.2 (post hoc)']['both_ge_0.8'])} at $0.8$")
+has("abstract doc recovery", f"${100 * so['both_ge_0.8']:.0f}\\%$ of documents had at least")
+has("T3 share of advantage", "$0.464$ against $0.673$")
+assert abs(LAD["T3-crossenc"]["pools46"]["A_J"] - 0.464) < 5e-4
+assert abs(LAD["One-shot Sonnet"]["pools46"]["A_J"] - 0.673) < 5e-4
+
 print(f"\n{len(fails)} miss(es)" + (": " + ", ".join(fails) if fails else ""))
 sys.exit(1 if fails else 0)

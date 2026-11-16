@@ -12,6 +12,43 @@ acknowledgments, bibliography and appendices follow and do not count).
 
 ---
 
+## Revision 12 (2026-11-16): reviewer-read fixes (AI-drafted, not yet author-reviewed)
+
+Made after an internal reviewer-style read of revision 11. No result changed.
+
+- **Per-document recovery (new, post-hoc diagnostic, D21).** A paragraph in
+  §5.1 and one sentence in the abstract: for each document, the share of its
+  fragments in its best group (completeness) and that group's share that is
+  the document's (purity). One-shot attacker: 83.5% [78.3, 88.5] of the 322
+  headline documents at 0.8 on both; cross-encoder 36.0%. Defined in the
+  decision log before it was computed; `analysis/doc_recovery.py`.
+- **"One query per pool" corrected (§3.3, §3.6).** It contradicted §4.5. Now:
+  one prompt per pool, at most one structural repair round (2 of 46 headline
+  pools, 51 of 652 units), one unchanged resend of a declined request.
+- **Outcome rule read as it fell (§4.4, §5.1).** "Well above 0.5" removed. The
+  rule had no boundary between its branches and tier 3 (0.544) falls between;
+  the text now says so and gives the share of the one-shot attacker's
+  advantage tier 3 recovers (A_J 0.464 against 0.673).
+- **Identifier arm called a negative control** in the abstract, introduction,
+  contributions, §5.5, discussion and conclusion: fields are independent by
+  construction, so the arm cannot show that structured data is safe.
+- **Forensic baselines (§4.4).** The boundary statistic reads two characters
+  on each side of a join; 98% of headline fragments end in sentence-final
+  punctuation and 99% begin with a capital or digit, so it carries almost no
+  signal under a sentence cut. Stated, so those rows are not read as
+  baselines built for this setting.
+- **Implication added (§6.3).** Low lexical or embedding similarity between
+  fragments, as the tested attackers measure it, is not evidence that they
+  cannot be linked (F1_L 0.34 and 0.36 against 0.69 and 0.88).
+- **Layout.** Table 2 is declared one paragraph earlier than the other eight
+  exhibits; with the longer text all nine together left the last table two
+  pages from its section. 16 pages; `tools/check_layout.py` passes;
+  `analysis/audit_ladder_numbers.py` checks the new numbers, 0 misses.
+
+Still open, for the authors: the motivating system for plaintext text
+fragmentation (§1), the tiers 1-2 TODO in §4.4, the `anonymous` class option,
+Appendix B.
+
 ## Revision 6 (2026-11-14): non-LLM ladder, integrity gate, cross-model appendix
 
 AI-drafted at the user's request; the user has not read it.
