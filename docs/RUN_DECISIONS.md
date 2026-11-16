@@ -1580,6 +1580,32 @@ evaluation reconstruction has been decoded or scored.
   this is a weaker version of the worrying case.
 - Files: runs/similar_pools.py, data/pools/similar_pools.json.
 
+## D21 — 2026-11-16: POST-HOC DIAGNOSTIC — per-document recovery on the headline pools, defined before it is computed
+
+Written before the numbers below exist. A reading aid for the headline Game J
+answers already stored, like the adjacency diagnostic; it changes no primary
+metric, calls no model and re-runs no attacker. Reason: the pair scores do not
+say what an attacker holds for a given document.
+
+- **Definition.** For each true document d in a headline pool, with the
+  attacker's answer padded to a partition exactly as the scorer does (unplaced
+  fragments are singletons): the document's **best group** is the group holding
+  the most of d's fragments (ties: the smaller group, then the first in the
+  answer). **Completeness** = share of d's fragments in that group.
+  **Purity** = share of that group's fragments that are d's. Two documents may
+  share a best group; purity then penalises both.
+- **Reported**, for every attacker with a stored headline answer (one-shot
+  Sonnet, the non-LLM ladder, Memon-inspired, the post-hoc embedding attacker,
+  and the two post-hoc sweep models that passed their integrity rule), over the
+  322 documents: mean completeness, mean purity, and the share of documents
+  with completeness and purity both at least t, for t = 0.5, 0.8 and 0.9, all
+  three fixed here and all three reported. Size-blind random reference: the
+  round-robin deal of D11/D13, 200 seeded draws per pool.
+- **Statistics.** Pools are the unit: per-pool values, mean over the 46 pools,
+  95% percentile bootstrap over pools (10,000 resamples, seed 42).
+- **Label.** Post-hoc diagnostic wherever it appears.
+- Files: analysis/doc_recovery.py, results/final_analysis/DOC_RECOVERY.json.
+
 ## Development history — 2026-09-10: headline documents used before frame A existed
 
 Development work done before D2 was taken used documents that frame A later
