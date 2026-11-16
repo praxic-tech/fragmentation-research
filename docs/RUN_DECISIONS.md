@@ -1535,6 +1535,40 @@ evaluation reconstruction has been decoded or scored.
   a freeze.)
 - Files: results/final_t1/RECORD.json, results/final_t1/dev_tuning.json.
 
+### D19 addendum — 2026-11-16: tier 2 tuning, fixed before the evaluation run
+
+Written after tier 2 scoring and dev tuning finished and before any tier 2
+evaluation reconstruction has been decoded or scored.
+
+- **Scoring run, with a deviation.** The design said dev and evaluation pairs
+  would be scored "in the same session". Tier 2 was scored on Google Colab
+  (NVIDIA L4) over **several sessions**, because the runtime disconnected
+  repeatedly; each restart resumed from the units already saved (a unit is
+  written under a temporary name and renamed only when complete). The same
+  pinned model and revision, the same bundle (texts SHA-256
+  a2a350c35329265abb2082adf3f200e699c72a00283d76161ba817f188238dc7) and the
+  same scoring code were used throughout. Colab's library versions changed
+  between sessions: the first session printed torch 2.11.0+cu130; the last,
+  which scored 154 of the 192 units (3,492,137 pairs, 212 minutes), recorded
+  torch 2.14.1+cu130 and transformers 5.22.1. Which earlier units were scored
+  under which version is not recorded beyond that. bfloat16 weights, float32
+  log-softmax, side cap 64 throughout. runs/t12_tune.py verified the model and
+  revision, that the final run was not a smoke run, that every unit's texts
+  match what the repository generates, and that all 192 score files hash to
+  what the final session recorded. Disclosed; not re-scored.
+- **Dev tuning (46 dev pools).** Orderer by mean dev τ: borda 0.1024, path1
+  0.0879 → **borda**. Cluster-rank, F1_L / F1_J / q: agglomerative
+  0.2901 / 0.1522 / 0.5223, agglomerative + refine 0.4403 / 0.2356 / 0.5302,
+  spectral 0.4347 / 0.2371 / 0.5435, spectral + refine 0.4957 / 0.2696 /
+  0.5382 → **spectral + refine**. Path-cover 0.2795 / 0.1489 / 0.5304, not
+  higher. **Evaluation decoder: cluster-rank, spectral grouping, refine on,
+  borda ordering; Game O uses borda.** Dev T2: F1_J 0.2696, F1_L 0.4957,
+  q micro 0.5382, one-bucket baseline 0.1441, exact records 0.
+- **Hashes.** Every score file's SHA-256 is in results/final_t2/RECORD.json
+  (192 entries), committed with this addendum; RECORD.json SHA-256
+  dd091f918a37112d69694ace8f674ce15f713f42ffbc7f420b2158b33ab13e3b.
+- Files: results/final_t2/RECORD.json, results/final_t2/dev_tuning.json.
+
 ## D20 — 2026-11-14: POST-HOC EXPLORATORY — SIMILAR POOLS, design frozen before any pool is built
 
 - **Why.** Each headline pool's seven documents were drawn at random, so they
