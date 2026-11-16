@@ -48,6 +48,11 @@ from batch_submit import (IncompleteBatchError, TruncatedAnswerError,  # noqa: E
                           parse_custom_id)
 
 HEADLINE_SPEC = os.path.join(FROZEN, "runs", "final_headlineJ.json")
+# Amendment 3: on the similar pools there is no Sonnet row to compare prompt tokens with; the
+# reference is Sonnet's median prompt tokens per character on the headline base rows (40 rows,
+# min 0.3535, median 0.3795, max 0.3960) times the prompt's length. The check stays "reported
+# prompt tokens >= 0.5 x reference" (gpt-5.6-sol's own headline rows: 0.2206 to 0.2593 per char).
+SONNET_TOKENS_PER_CHAR = 0.3795
 SONNET_BATCHES = os.path.join(FROZEN, "results", "batches")
 MAX_ATTEMPTS = 6
 MAX_INFLIGHT = 16
@@ -445,15 +450,20 @@ class TPMBucket:
 
 
 class ApiRunner:
-    def __init__(self, cfg, resume_after_check_failure=False, out=print):
+    def __init__(self, cfg, resume_after_check_failure=False, out=print, variant=None):
+        import score_api
         self.cfg, self.out, self.resume = cfg, out, resume_after_check_failure
+        self.variant, self.spec_path = variant, HEADLINE_SPEC
+        if variant:
+            self.spec_path = score_api.use_variant(variant)["spec"]
+        self.tag = score_api.TAG
         slug = cfg["slug"]
         self.raw_dir = os.path.join(SB, "raw", slug)
         self.log_dir = os.path.join(SB, "logs", slug)
         self.req_dir = os.path.join(self.log_dir, "requests")       # full bodies: not committed
         for d in (self.raw_dir, self.log_dir, self.req_dir):
             os.makedirs(d, exist_ok=True)
-        self.log_path = os.path.join(self.log_dir, "run.log")
+        self.log_path = os.path.join(self.log_dir, f"run.{self.tag}.log" if variant else "run.log")
         self.lock = threading.Lock()
         e = env()
         if cfg["api"] == "openrouter":
@@ -463,7 +473,9 @@ class ApiRunner:
             self.key, self.endpoint = e.get("AZURE_OPENAI_API_KEY"), e.get("AZURE_OPENAI_ENDPOINT")
             self.deployment = e.get(cfg["deployment_env"])
             assert self.key and self.endpoint and self.deployment, "Azure settings missing"
-        self.sonnet_in = sonnet_input_tokens()
+        self.sonnet_in = {} if variant else sonnet_input_tokens()
+        self.unit_chars = {r["unit"]: len(r["prompt"])
+                           for r in json.load(open(self.spec_path, encoding="utf-8"))["requests"]}
         self.ledger = Ledger(cfg["cap"] if cfg["cap"] is not None else 0.0, self.spent_so_far())
         self.bucket = TPMBucket(cfg["tpm"]) if cfg["api"] == "azure" else None
         self.stop = threading.Event()
@@ -498,7 +510,7 @@ class ApiRunner:
         total = 0.0
         if os.path.isdir(self.raw_dir):
             for f in os.listdir(self.raw_dir):
-                if f.endswith(".attempts.jsonl"):
+                if f.endswith(".attempts.jsonl") and f.startswith((self.tag + ".", self.tag + "-")):
                     for ln in open(os.path.join(self.raw_dir, f), encoding="utf-8"):
                         total += json.loads(ln).get("cost_usd") or 0.0
         return total
@@ -514,7 +526,14 @@ class ApiRunner:
         return call_azure(self.cfg, body, self.endpoint, self.key)
 
     def est_prompt_tokens(self, side):
+        if self.variant:
+            return int(1.2 * SONNET_TOKENS_PER_CHAR * self.unit_chars.get(base_unit(side["unit"]), 120000)) + 2048
         return int(1.2 * self.sonnet_in.get(side["unit"], 30000)) + 2048
+
+    def ref_tokens(self, side, prompt):
+        if self.variant:
+            return round(SONNET_TOKENS_PER_CHAR * len(prompt))
+        return self.sonnet_in.get(side["unit"])
 
     def worst(self, side):
         return self.est_prompt_tokens(side) * self.cfg["price_in"] + self.cfg["budget"] * self.cfg["price_out"]
@@ -541,10 +560,10 @@ class ApiRunner:
             if want and (res.get("echo_reasoning") or {}).get("effort") != want:
                 raise Halt(f"reasoning effort echoed {res.get('echo_reasoning')!r} != {want!r}")
         if side is not None:
-            ref = self.sonnet_in.get(side["unit"])
+            ref = self.ref_tokens(side, prompt)
             n = res.get("input_tokens") or 0
             if ref is None or n < 0.5 * ref:
-                raise Halt(f"prompt integrity: reported prompt tokens {n} < 0.5 x Sonnet's {ref}")
+                raise Halt(f"prompt integrity: reported prompt tokens {n} < 0.5 x reference {ref}")
         if res["finish"] == "length" and (res.get("output_tokens") or 0) < cfg["budget"]:
             raise Halt(f"stopped at length after {res.get('output_tokens')} tokens, below the budget "
                        f"{cfg['budget']} (not covered by D6)")
@@ -679,6 +698,8 @@ class ApiRunner:
                         self.ledger.settle(cid, cost)
                         row = row_from_result(cid, res, atts)
                         row["sonnet_input_tokens"] = self.sonnet_in.get(side["unit"])
+                        if self.variant:
+                            row["integrity_ref_tokens"] = self.ref_tokens(side, r["prompt"])
                         row["prompt_chars"] = len(r["prompt"])
                         if self.cfg["api"] == "azure":
                             row["guardrail"] = self.cfg.get("guardrail")
@@ -738,6 +759,13 @@ class ApiRunner:
         spread = max(rat) / min(rat)
         self.log(f"{tag}: prompt tokens/char min {min(rat):.4f} max {max(rat):.4f} spread {spread:.3f}")
         if spread > 1.25:
+            chk = f"tokens/char spread {spread:.3f} > 1.25"
+            prev = self.path(tag, "check_failures.jsonl")
+            if self.resume and os.path.exists(prev) and any(
+                    json.loads(ln).get("check") == chk for ln in open(prev, encoding="utf-8") if ln.strip()):
+                # the same failure on the same rows, already reviewed by the user: do not halt on it again
+                self.log(f"{tag}: {chk}: the halt the user reviewed and resumed; not halting again")
+                return
             self.append(self.path(tag, "check_failures.jsonl"),
                         {"custom_id": "*", "at": now(), "check": f"tokens/char spread {spread:.3f} > 1.25"})
             raise SystemExit(f"HALT: {tag} prompt tokens/char spread {spread:.3f} > 1.25")
@@ -762,10 +790,11 @@ class ApiRunner:
         import score_api
         cfg = self.cfg
         batch_game.MODEL_MAX_OUTPUT = cfg["budget"]
-        self.log(f"=== start {cfg['slug']} headline J: budget {cfg['budget']}, cap ${cfg['cap']}, "
+        self.log(f"=== start {cfg['slug']} {self.tag}: budget {cfg['budget']}, cap ${cfg['cap']}, "
                  f"MODEL_MAX_OUTPUT {batch_game.MODEL_MAX_OUTPUT}")
-        spec = json.load(open(HEADLINE_SPEC, encoding="utf-8"))
+        spec = json.load(open(self.spec_path, encoding="utf-8"))
         tag = spec["tag"]
+        assert tag == self.tag
         files = [self.run_wave(spec, base_wave=True)]
         cf = self.ids_in(tag, "content_filter.jsonl")
         if cfg["api"] == "azure":          # amendment 2: a block is a platform error, resent once in -rs1
@@ -802,6 +831,39 @@ class ApiRunner:
                 rfiles.append(self.run_wave(rrs, base_wave=False))
             waves.append((rp, rfiles))
         self.log(f"=== waves done; spent ${self.ledger.spent:.4f}")
+        return score_api.score_model(cfg["slug"])
+
+    def resend_g460(self):
+        """Amendment 4: resend, once and unchanged, the similar-pool units that were blocked by the
+        content filter and never answered, under the custom guardrail guardrail460."""
+        import score_api
+        cfg = self.cfg
+        assert self.variant == "similarJ" and cfg.get("guardrail") == "guardrail460"
+        batch_game.MODEL_MAX_OUTPUT = cfg["budget"]
+        spec = json.load(open(self.spec_path, encoding="utf-8"))
+        files = [p for p in (self.path(self.tag), self.path(self.tag + "-rs1")) if os.path.exists(p)]
+        cf = self.ids_in(self.tag, "content_filter.jsonl") | self.ids_in(self.tag + "-rs1", "content_filter.jsonl")
+        blocked = sorted(cf - set(_latest_rows(files)))
+        assert blocked == ["prose__J__sim-015", "prose__J__sim-041"], blocked
+        gs = score_api.subset(spec, drop_cids=set(spec["sidecar"]) - set(blocked))
+        gs["tag"] = self.tag + "-g460"
+        self.log(f"=== amendment 4: {gs['tag']}: resend {blocked} under guardrail {cfg['guardrail']}")
+        self.save_spec(gs)
+        gfiles = [self.run_wave(gs, base_wave=False)]
+        still = self.ids_in(gs["tag"], "content_filter.jsonl") - set(_latest_rows(gfiles))
+        if still:
+            self.log(f"{gs['tag']}: still blocked (provider content filter): {sorted(still)}")
+        rp = batch_game.build_repair_spec([(score_api.subset(gs, drop_cids=still), gfiles)], 1, 1,
+                                          gs["tag"] + "-r1")
+        self.save_spec(rp)
+        if rp["requests"]:
+            rfiles = [self.run_wave(rp, base_wave=False)]
+            rrs = batch_game.build_resubmit_spec(score_api.subset(rp, drop_cids=self.ids_in(
+                rp["tag"], "content_filter.jsonl")), rfiles, rp["tag"] + "-rs1")
+            self.save_spec(rrs)
+            if rrs["requests"]:
+                self.run_wave(rrs, base_wave=False)
+        self.log(f"=== amendment 4 waves done; spent ${self.ledger.spent:.4f}")
         return score_api.score_model(cfg["slug"])
 
 
@@ -936,7 +998,12 @@ def main():
     ap.add_argument("--balance", action="store_true")
     ap.add_argument("--cap", type=float, help="Kimi only: cap from the Kimi rule")
     ap.add_argument("--resume-after-check-failure", action="store_true")
+    ap.add_argument("--spec", choices=["similarJ"], help="amendment 3: gpt-5.6-sol only, similar-pools spec")
+    ap.add_argument("--guardrail", choices=["guardrail460"], help="amendment 4: the deployment's guardrail (recorded)")
+    ap.add_argument("--g460-resend", action="store_true", help="amendment 4: resend the blocked similar pools")
     a = ap.parse_args()
+    if a.spec:
+        assert a.model == "gpt-5.6-sol", "amendment 3 covers gpt-5.6-sol only"
     if a.balance:
         balance()
         return
@@ -946,14 +1013,25 @@ def main():
         cfg["cap"] = a.cap
     if a.parasail_fallback:
         cfg = PARASAIL_FALLBACK[a.model]()
+    if a.guardrail:
+        assert a.model == "gpt-5.6-sol", "amendment 4 covers gpt-5.6-sol only"
+        cfg["guardrail"] = a.guardrail
     if a.smoke or a.smoke_long or a.longgen:
         smoke(cfg, long=a.smoke_long, longgen=a.longgen, seed=a.longgen_seed)
     elif a.score:
         import score_api
+        if a.spec:
+            score_api.use_variant(a.spec)
         score_api.score_model(a.model)
     else:
         assert cfg["cap"] is not None, "no cap"
-        ApiRunner(cfg, resume_after_check_failure=a.resume_after_check_failure).run()
+        r = ApiRunner(cfg, resume_after_check_failure=a.resume_after_check_failure, variant=a.spec)
+        if a.g460_resend:
+            assert a.spec == "similarJ" and a.guardrail == "guardrail460"
+            r.resend_g460()
+        else:
+            assert a.guardrail is None, "amendment 4: guardrail460 only for the resend"
+            r.run()
 
 
 if __name__ == "__main__":

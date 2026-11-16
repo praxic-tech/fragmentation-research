@@ -802,3 +802,50 @@ Install (user granted install permission, asked to keep it small):
   (Usage includes ~$0.5 billed for requests not in the attempt logs: the
   gpt-oss-120b requests in flight when it was stopped, and the cut-off
   deepseek streams.)
+
+## 2026-11-16 gpt-5.6-sol, similar pools (amendment 3): HALT after the base wave (check failure)
+
+- Base wave 20:44 to 21:44 UTC: 46 sent, 44 answered (all end_turn; output max 82,691, mean 62,709;
+  no D6), 2 content-filter blocks, $28.3544 spent of the $50 cap.
+- Blocks (guardrail Default, both on the completion, prompt safe): sim-015 violence medium (filtered,
+  after 463 s); sim-041 violence medium (filtered), sexual low (not filtered), after 335 s. Under
+  amendment 2 both go to the one resend.
+- HALT: prompt tokens/char spread 1.405 > 1.25 (min 0.2104 sim-009, max 0.2956 sim-001; median
+  0.2385). Headline run: 0.2206 to 0.2593 (1.175). Every row passed the prompt-integrity check
+  (lowest 0.2104 per char vs the 0.19 threshold). sim-001's prompt is 9.4% digits, sim-009's 5.1%.
+- Stopped before the resend; waiting for the user before --resume-after-check-failure.
+- 2026-11-16T22:00:01Z User approved --resume-after-check-failure (spread 1.405) in chat.
+- 22:00 UTC: the resume re-ran the end-of-wave ratio check on the same 44 rows and halted again
+  on the identical spread (1.405), sending nothing ($0). Runner bug: --resume-after-check-failure
+  did not cover the wave-level ratio check. Fixed: with the flag, an identical, already-recorded
+  ratio failure is logged and not halted on again; any new or different failure still halts.
+  Resumed again under the same user approval.
+- 22:01 to 22:04 UTC: resend (-rs1) of sim-015 and sim-041 under Default: both blocked again on the
+  completion (prompt safe). sim-015 violence medium (filtered), after 74 s; sim-041 sexual medium
+  (filtered), after 117 s. Both "not completed" under amendment 2. No repair needed (0 invalid).
+  $0.00 for the resends; total $28.3544.
+- Result, 46 pools: REFUSED (2 units without an answer). SECONDARY, answered units only (44):
+  F1_J 0.7840, F1_L 0.8785, q 0.8940. 41-pool view not applicable (amendment 3).
+- Scorer fix: the first scoring wrote this run's PRIMARY_RESULT.md over the headline
+  results/gpt-5.6-sol/PRIMARY_RESULT.md; restored from git before any commit, and the scorer now
+  writes it under results/gpt-5.6-sol/final_similarJ/. Headline results unchanged (git status clean).
+
+## 2026-11-16 amendment 4: guardrail460 smoke test: HALT before the resend
+
+- 22:34 UTC: one dummy smoke request ($0.0002, checks pass). Its content-filter results are
+  identical to the Default smoke at 20:43: prompt and completion each report hate / sexual /
+  violence / self_harm, all "safe", content_filter_raw empty, no jailbreak or protected-material
+  entry, no field naming the guardrail or its thresholds. A safe dummy cannot show severity
+  thresholds, so the response gives no evidence that guardrail460 (rather than Default) is in
+  force. Per amendment 4: halted, resend not sent; waiting for the user.
+- The 44/46 result is preserved, unchanged, under results/gpt-5.6-sol/final_similarJ_before_amendment4/.
+- User statement in chat (2026-11-16), recorded in place of smoke evidence: guardrail460 is set on
+  the deployment with the lowest filtering on all filter categories (blocks only high severity,
+  per Azure's setting). Not observable through the data-plane key. Resend approved on that basis.
+- 22:35 to 22:47 UTC: resend (-g460) under guardrail460: both answered, no block. sim-041 end_turn
+  (in 4,645, out 43,790, $0.4472, 457 s); sim-015 end_turn (in 6,614, out 66,265, $0.6759, 677 s).
+  Wave tokens/char 0.2246 to 0.2336. No repair needed (0 invalid).
+- Result, 46 pools (amendment 4): PASS. F1_J 0.7829, F1_L 0.8755, q 0.8959; completion 46/46,
+  D6 0, invalid after repair 0, mean policy_share 0.0000. Total cost $29.4775 of the $50 cap.
+  The earlier 44/46 scoring (REFUSED under amendment 2's wording) stays in
+  results/gpt-5.6-sol/final_similarJ_before_amendment4/.
