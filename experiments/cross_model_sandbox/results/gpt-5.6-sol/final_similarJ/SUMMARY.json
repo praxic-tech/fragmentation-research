@@ -5,57 +5,47 @@
  "spec_tag": "final-similarJ",
  "spec_sha256": "4c4e654de9f953554649fb48e4e3e3b622fddd9f2149af0b9e5a319c7415efd4",
  "usage": {
-  "input_tokens": 381198,
-  "output_tokens": 2759205,
-  "reasoning_tokens": 2677556,
-  "cost_usd": 28.354446000000014,
-  "responses": 44,
+  "input_tokens": 392457,
+  "output_tokens": 2869260,
+  "reasoning_tokens": 2784859,
+  "cost_usd": 29.477514000000014,
+  "responses": 46,
   "transport_attempts": 5,
   "requests_with_transport_error": 5
  },
- "requests_sent": 44,
+ "requests_sent": 46,
  "pools46": {
   "scope": "46",
   "units": 46,
-  "PRIMARY_verdict": "REFUSED",
+  "PRIMARY_verdict": "PASS",
   "refusal_reasons": {
-   "units_without_answer": [
-    "sim_015",
-    "sim_041"
-   ],
+   "units_without_answer": [],
    "units_over_policy_cap": []
   },
   "frozen_gate_output": {
-   "prose": [
-    "J"
-   ]
+   "prose": []
   },
-  "answered_units": 44,
-  "completion_rate": 0.9565217391304348,
+  "answered_units": 46,
+  "completion_rate": 1.0,
   "d6_units": 0,
   "d6_rate": 0.0,
   "excluded_units": {
    "content_filter": [],
-   "not_run": [
-    "sim_015",
-    "sim_041"
-   ],
-   "not_completed": [
-    "sim_015",
-    "sim_041"
-   ],
+   "not_run": [],
+   "not_completed": [],
+   "not_completed_provider_content_filter": [],
    "repair_not_sent_or_not_completed": []
   },
   "invalid_after_repair": 0,
   "invalid_after_repair_rate": 0.0,
   "mean_policy_share": 0.0,
   "units_over_cap": 0,
-  "SECONDARY_answered_units_only": {
-   "F1_J": 0.7840357299988946,
-   "F1_L": 0.8785229708572828,
-   "q": 0.8940380866905919,
-   "n": 44,
-   "n_q_defined": 44
+  "PRIMARY_means": {
+   "F1_J": 0.7828532008590535,
+   "F1_L": 0.8755272995195997,
+   "q": 0.8958684438853739,
+   "n": 46,
+   "n_q_defined": 46
   }
  },
  "pools41": {

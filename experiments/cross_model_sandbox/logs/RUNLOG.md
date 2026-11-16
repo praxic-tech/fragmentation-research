@@ -829,3 +829,23 @@ Install (user granted install permission, asked to keep it small):
 - Scorer fix: the first scoring wrote this run's PRIMARY_RESULT.md over the headline
   results/gpt-5.6-sol/PRIMARY_RESULT.md; restored from git before any commit, and the scorer now
   writes it under results/gpt-5.6-sol/final_similarJ/. Headline results unchanged (git status clean).
+
+## 2026-11-16 amendment 4: guardrail460 smoke test: HALT before the resend
+
+- 22:34 UTC: one dummy smoke request ($0.0002, checks pass). Its content-filter results are
+  identical to the Default smoke at 20:43: prompt and completion each report hate / sexual /
+  violence / self_harm, all "safe", content_filter_raw empty, no jailbreak or protected-material
+  entry, no field naming the guardrail or its thresholds. A safe dummy cannot show severity
+  thresholds, so the response gives no evidence that guardrail460 (rather than Default) is in
+  force. Per amendment 4: halted, resend not sent; waiting for the user.
+- The 44/46 result is preserved, unchanged, under results/gpt-5.6-sol/final_similarJ_before_amendment4/.
+- User statement in chat (2026-11-16), recorded in place of smoke evidence: guardrail460 is set on
+  the deployment with the lowest filtering on all filter categories (blocks only high severity,
+  per Azure's setting). Not observable through the data-plane key. Resend approved on that basis.
+- 22:35 to 22:47 UTC: resend (-g460) under guardrail460: both answered, no block. sim-041 end_turn
+  (in 4,645, out 43,790, $0.4472, 457 s); sim-015 end_turn (in 6,614, out 66,265, $0.6759, 677 s).
+  Wave tokens/char 0.2246 to 0.2336. No repair needed (0 invalid).
+- Result, 46 pools (amendment 4): PASS. F1_J 0.7829, F1_L 0.8755, q 0.8959; completion 46/46,
+  D6 0, invalid after repair 0, mean policy_share 0.0000. Total cost $29.4775 of the $50 cap.
+  The earlier 44/46 scoring (REFUSED under amendment 2's wording) stays in
+  results/gpt-5.6-sol/final_similarJ_before_amendment4/.

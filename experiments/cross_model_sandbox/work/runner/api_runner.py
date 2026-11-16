@@ -833,6 +833,39 @@ class ApiRunner:
         self.log(f"=== waves done; spent ${self.ledger.spent:.4f}")
         return score_api.score_model(cfg["slug"])
 
+    def resend_g460(self):
+        """Amendment 4: resend, once and unchanged, the similar-pool units that were blocked by the
+        content filter and never answered, under the custom guardrail guardrail460."""
+        import score_api
+        cfg = self.cfg
+        assert self.variant == "similarJ" and cfg.get("guardrail") == "guardrail460"
+        batch_game.MODEL_MAX_OUTPUT = cfg["budget"]
+        spec = json.load(open(self.spec_path, encoding="utf-8"))
+        files = [p for p in (self.path(self.tag), self.path(self.tag + "-rs1")) if os.path.exists(p)]
+        cf = self.ids_in(self.tag, "content_filter.jsonl") | self.ids_in(self.tag + "-rs1", "content_filter.jsonl")
+        blocked = sorted(cf - set(_latest_rows(files)))
+        assert blocked == ["prose__J__sim-015", "prose__J__sim-041"], blocked
+        gs = score_api.subset(spec, drop_cids=set(spec["sidecar"]) - set(blocked))
+        gs["tag"] = self.tag + "-g460"
+        self.log(f"=== amendment 4: {gs['tag']}: resend {blocked} under guardrail {cfg['guardrail']}")
+        self.save_spec(gs)
+        gfiles = [self.run_wave(gs, base_wave=False)]
+        still = self.ids_in(gs["tag"], "content_filter.jsonl") - set(_latest_rows(gfiles))
+        if still:
+            self.log(f"{gs['tag']}: still blocked (provider content filter): {sorted(still)}")
+        rp = batch_game.build_repair_spec([(score_api.subset(gs, drop_cids=still), gfiles)], 1, 1,
+                                          gs["tag"] + "-r1")
+        self.save_spec(rp)
+        if rp["requests"]:
+            rfiles = [self.run_wave(rp, base_wave=False)]
+            rrs = batch_game.build_resubmit_spec(score_api.subset(rp, drop_cids=self.ids_in(
+                rp["tag"], "content_filter.jsonl")), rfiles, rp["tag"] + "-rs1")
+            self.save_spec(rrs)
+            if rrs["requests"]:
+                self.run_wave(rrs, base_wave=False)
+        self.log(f"=== amendment 4 waves done; spent ${self.ledger.spent:.4f}")
+        return score_api.score_model(cfg["slug"])
+
 
 # ── smoke test and balance ───────────────────────────────────────────────────
 
@@ -966,6 +999,8 @@ def main():
     ap.add_argument("--cap", type=float, help="Kimi only: cap from the Kimi rule")
     ap.add_argument("--resume-after-check-failure", action="store_true")
     ap.add_argument("--spec", choices=["similarJ"], help="amendment 3: gpt-5.6-sol only, similar-pools spec")
+    ap.add_argument("--guardrail", choices=["guardrail460"], help="amendment 4: the deployment's guardrail (recorded)")
+    ap.add_argument("--g460-resend", action="store_true", help="amendment 4: resend the blocked similar pools")
     a = ap.parse_args()
     if a.spec:
         assert a.model == "gpt-5.6-sol", "amendment 3 covers gpt-5.6-sol only"
@@ -978,6 +1013,9 @@ def main():
         cfg["cap"] = a.cap
     if a.parasail_fallback:
         cfg = PARASAIL_FALLBACK[a.model]()
+    if a.guardrail:
+        assert a.model == "gpt-5.6-sol", "amendment 4 covers gpt-5.6-sol only"
+        cfg["guardrail"] = a.guardrail
     if a.smoke or a.smoke_long or a.longgen:
         smoke(cfg, long=a.smoke_long, longgen=a.longgen, seed=a.longgen_seed)
     elif a.score:
@@ -987,7 +1025,13 @@ def main():
         score_api.score_model(a.model)
     else:
         assert cfg["cap"] is not None, "no cap"
-        ApiRunner(cfg, resume_after_check_failure=a.resume_after_check_failure, variant=a.spec).run()
+        r = ApiRunner(cfg, resume_after_check_failure=a.resume_after_check_failure, variant=a.spec)
+        if a.g460_resend:
+            assert a.spec == "similarJ" and a.guardrail == "guardrail460"
+            r.resend_g460()
+        else:
+            assert a.guardrail is None, "amendment 4: guardrail460 only for the resend"
+            r.run()
 
 
 if __name__ == "__main__":

@@ -67,3 +67,9 @@
 2026-11-16T22:04:06.400990+00:00 final-similarJ-rs1 prose__J__sim-041: CONTENT FILTER (own outcome; not resent again): response incomplete: content_filter
 2026-11-16T22:04:06.411771+00:00 final-similarJ: 2 units not completed after the resend: ['prose__J__sim-015', 'prose__J__sim-041']
 2026-11-16T22:04:06.421430+00:00 === waves done; spent $28.3544
+2026-11-16T22:35:40.008708+00:00 === amendment 4: final-similarJ-g460: resend ['prose__J__sim-015', 'prose__J__sim-041'] under guardrail guardrail460
+2026-11-16T22:35:40.010591+00:00 final-similarJ-g460: 2 requests, 2 to send; spent $28.3544 of cap $50.00
+2026-11-16T22:44:16.587171+00:00 final-similarJ-g460 prose__J__sim-041: end_turn in 4645 out 43790 $0.4472  (456.6 s) total $28.8016
+2026-11-16T22:46:56.916361+00:00 final-similarJ-g460 prose__J__sim-015: end_turn in 6614 out 66265 $0.6759  (676.9 s) total $29.4775
+2026-11-16T22:46:56.922518+00:00 final-similarJ-g460: prompt tokens/char min 0.2246 max 0.2336 spread 1.040
+2026-11-16T22:46:56.924726+00:00 === amendment 4 waves done; spent $29.4775

@@ -108,7 +108,16 @@ def model_setup(slug):
                             os.path.join(raw, f"{tag}-rs1.results.jsonl")) if os.path.exists(p)]
     rpp = os.path.join(raw, f"{TAG}-r1.spec.json")
     rp = json.load(open(rpp, encoding="utf-8")) if os.path.exists(rpp) else None
-    return budget, raw, spec, files(TAG), rp, files(f"{TAG}-r1"), sweep
+    bfiles, rfiles = files(TAG), files(f"{TAG}-r1")
+    g = os.path.join(raw, f"{TAG}-g460.results.jsonl")
+    if VARIANT and os.path.exists(g):          # amendment 4: the guardrail460 resend joins the base wave
+        bfiles.append(g)
+        gpp = os.path.join(raw, f"{TAG}-g460-r1.spec.json")
+        grp = json.load(open(gpp, encoding="utf-8")) if os.path.exists(gpp) else None
+        if grp and grp["requests"]:
+            assert not (rp and rp["requests"]), "two repair specs"
+            rp, rfiles = grp, files(f"{TAG}-g460-r1")
+    return budget, raw, spec, bfiles, rp, rfiles, sweep
 
 
 def api_runner_cfg(slug):
@@ -127,6 +136,14 @@ def exclusions(raw, spec, files, tag, cf_is_platform=False):
     rows = _latest_rows(files) if files else {}
     side = set(spec["sidecar"])
     holes = {c for c in failed_ids(files) if c in side and not batch_game.at_ceiling(rows[c])} if files else set()
+    if VARIANT is not None and os.path.exists(os.path.join(raw, f"{tag}-g460.results.jsonl")):
+        # amendment 4: a provider content-filter block does not count against the model
+        cf |= _ids(os.path.join(raw, f"{tag}-g460.content_filter.jsonl"))
+        pf = (cf & side) - set(rows)
+        missing = side - set(rows) - cf - nr
+        return {"content_filter": [], "not_run": sorted((nr & side) | missing),
+                "not_completed": sorted(holes - cf - nr),
+                "not_completed_provider_content_filter": sorted(pf)}
     if cf_is_platform:
         holes |= (cf & side) - set(rows)
         cf = set()
@@ -235,10 +252,12 @@ def one_scope(name, n_units, pools, waves, out_dir, excl_units, keep_dirs):
     over = sorted(((u, rows[u]["repair"]["policy_share"]) for u in rows
                    if rows[u]["repair"]["policy_share"] > joint_game.POLICY_CAP), key=lambda x: -x[1])
     refused = bool(no_answer or over)
+    pf = set(excl_units.get("not_completed_provider_content_filter", []))
     ps = [rows[u]["repair"]["policy_share"] for u in rows]
     res = {
         "scope": name, "units": n_units,
-        "PRIMARY_verdict": "REFUSED" if refused else "PASS",
+        "PRIMARY_verdict": ("NOT COMPLETED (provider content filter)" if refused and not over
+                            and set(no_answer) <= pf else "REFUSED" if refused else "PASS"),
         "refusal_reasons": {"units_without_answer": no_answer,
                             "units_over_policy_cap": [{"unit": u, "policy_share": round(s, 4)} for u, s in over]},
         "frozen_gate_output": verdict,
@@ -256,7 +275,7 @@ def one_scope(name, n_units, pools, waves, out_dir, excl_units, keep_dirs):
         sec = out_dir + "_answered_units_only" if keep_dirs else os.path.join(tmp, "y")
         _v2, rep2 = _score(waves, sec, allow_partial=True)
         with open(os.path.join(sec, "REPORT.txt"), "w", encoding="utf-8") as fh:
-            fh.write("SECONDARY: answered units only (allow_partial=True). The cell is REFUSED under the "
+            fh.write(f"SECONDARY: answered units only (allow_partial=True). The cell is {res['PRIMARY_verdict']} under the "
                      "preregistered rule (units without an answer, or a unit's recorded repair.policy_share "
                      "over joint_game.POLICY_CAP); that refusal is the primary result. See ../PRIMARY_RESULT.md.\n\n"
                      + rep2)
@@ -357,7 +376,7 @@ def write_primary_md(slug, s):
             L += [f"## {label}: not applicable", "", f"- {r['not_applicable']}", ""]
             continue
         L += [f"## {label}: {r['PRIMARY_verdict']}", ""]
-        if r["PRIMARY_verdict"] == "REFUSED":
+        if r["PRIMARY_verdict"] != "PASS":
             rr = r["refusal_reasons"]
             L.append(f"- units without an answer: {len(rr['units_without_answer'])} {rr['units_without_answer']}")
             L.append(f"- units over the cap: {len(rr['units_over_policy_cap'])} "
