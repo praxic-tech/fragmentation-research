@@ -1655,6 +1655,45 @@ Written before any similar-pool answer from either model has been read.
   rank correlation with pool cosine. That cut is not in D20; it was added
   after the tier 0 similar-pool totals were seen and is labelled descriptive.
 
+### D20 addendum — 2026-11-16: gpt-5.6-sol filter blocks on the similar pools; resend under a custom guardrail
+
+Written after the first gpt-5.6-sol similar-pools result was seen, and before
+any further request. This changes a rule after a result; that is stated here
+plainly.
+
+- **What happened** (reported by the sandbox session; its commit a65023f is
+  local to that machine and not yet in this checkout). 46 pools sent under the
+  Default guardrail. 44 answered. 2 were blocked by the Azure content filter,
+  and blocked again on their one resend. On the 44 answered pools: F1_J
+  0.7840, F1_L 0.8785, q 0.8940; cost $28.35. Under the sandbox's amendment 2
+  as written ("A unit still blocked under Default is 'not completed'") and the
+  addendum above ("guardrail Default"; a failed integrity rule "is reported as
+  failed"), the verdict is failed.
+- **User decision, 2026-11-16.** A block by the provider's content filter is
+  not the model declining or failing to answer, and is not to count against
+  the model. The user states that the two sentences quoted above were
+  AI-drafted wording that did not reflect that intent. They were committed
+  before this result (sandbox 69c3d8c; this log 305af21) and stay in the
+  record as written.
+- **Amended rule, for this run.** The 2 blocked pools are resent once,
+  unchanged (same frozen prompt, deployment, model version, tier, reasoning
+  effort and max output), under the user's custom Azure guardrail
+  `guardrail 450`. Seen by this session: a screenshot of one filter page with
+  Hate, Sexual, Self-harm and Violence each at "Lowest blocking" (the least
+  restrictive level). The other filter page and the prompt-shield and
+  protected-material settings are the user's to set and are recorded by the
+  sandbox, which first sends one dummy request and checks its filter results
+  to confirm the guardrail in force. Guardrail recorded per row.
+- **Outcome rule, fixed now.** Both pools answered: one verdict on 46 pools
+  under the amended rule. A pool still blocked: "not completed (provider
+  content filter)", and the scores on the answered pools are secondary.
+- **Reporting, either way.** Wherever this result appears: post-hoc
+  exploratory; 2 pools were blocked twice under Default; they were resent
+  under a custom guardrail chosen after the 44-pool result was seen; the
+  category, severity and side (prompt or completion) of each block as the
+  sandbox logged them.
+- The sandbox commits its own amendment before the first request.
+
 ## D21 — 2026-11-16: POST-HOC DIAGNOSTIC — per-document recovery on the headline pools, defined before it is computed
 
 Written before the numbers below exist. A reading aid for the headline Game J
