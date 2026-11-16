@@ -48,6 +48,11 @@ from batch_submit import (IncompleteBatchError, TruncatedAnswerError,  # noqa: E
                           parse_custom_id)
 
 HEADLINE_SPEC = os.path.join(FROZEN, "runs", "final_headlineJ.json")
+# Amendment 3: on the similar pools there is no Sonnet row to compare prompt tokens with; the
+# reference is Sonnet's median prompt tokens per character on the headline base rows (40 rows,
+# min 0.3535, median 0.3795, max 0.3960) times the prompt's length. The check stays "reported
+# prompt tokens >= 0.5 x reference" (gpt-5.6-sol's own headline rows: 0.2206 to 0.2593 per char).
+SONNET_TOKENS_PER_CHAR = 0.3795
 SONNET_BATCHES = os.path.join(FROZEN, "results", "batches")
 MAX_ATTEMPTS = 6
 MAX_INFLIGHT = 16
@@ -445,15 +450,20 @@ class TPMBucket:
 
 
 class ApiRunner:
-    def __init__(self, cfg, resume_after_check_failure=False, out=print):
+    def __init__(self, cfg, resume_after_check_failure=False, out=print, variant=None):
+        import score_api
         self.cfg, self.out, self.resume = cfg, out, resume_after_check_failure
+        self.variant, self.spec_path = variant, HEADLINE_SPEC
+        if variant:
+            self.spec_path = score_api.use_variant(variant)["spec"]
+        self.tag = score_api.TAG
         slug = cfg["slug"]
         self.raw_dir = os.path.join(SB, "raw", slug)
         self.log_dir = os.path.join(SB, "logs", slug)
         self.req_dir = os.path.join(self.log_dir, "requests")       # full bodies: not committed
         for d in (self.raw_dir, self.log_dir, self.req_dir):
             os.makedirs(d, exist_ok=True)
-        self.log_path = os.path.join(self.log_dir, "run.log")
+        self.log_path = os.path.join(self.log_dir, f"run.{self.tag}.log" if variant else "run.log")
         self.lock = threading.Lock()
         e = env()
         if cfg["api"] == "openrouter":
@@ -463,7 +473,9 @@ class ApiRunner:
             self.key, self.endpoint = e.get("AZURE_OPENAI_API_KEY"), e.get("AZURE_OPENAI_ENDPOINT")
             self.deployment = e.get(cfg["deployment_env"])
             assert self.key and self.endpoint and self.deployment, "Azure settings missing"
-        self.sonnet_in = sonnet_input_tokens()
+        self.sonnet_in = {} if variant else sonnet_input_tokens()
+        self.unit_chars = {r["unit"]: len(r["prompt"])
+                           for r in json.load(open(self.spec_path, encoding="utf-8"))["requests"]}
         self.ledger = Ledger(cfg["cap"] if cfg["cap"] is not None else 0.0, self.spent_so_far())
         self.bucket = TPMBucket(cfg["tpm"]) if cfg["api"] == "azure" else None
         self.stop = threading.Event()
@@ -498,7 +510,7 @@ class ApiRunner:
         total = 0.0
         if os.path.isdir(self.raw_dir):
             for f in os.listdir(self.raw_dir):
-                if f.endswith(".attempts.jsonl"):
+                if f.endswith(".attempts.jsonl") and f.startswith((self.tag + ".", self.tag + "-")):
                     for ln in open(os.path.join(self.raw_dir, f), encoding="utf-8"):
                         total += json.loads(ln).get("cost_usd") or 0.0
         return total
@@ -514,7 +526,14 @@ class ApiRunner:
         return call_azure(self.cfg, body, self.endpoint, self.key)
 
     def est_prompt_tokens(self, side):
+        if self.variant:
+            return int(1.2 * SONNET_TOKENS_PER_CHAR * self.unit_chars.get(base_unit(side["unit"]), 120000)) + 2048
         return int(1.2 * self.sonnet_in.get(side["unit"], 30000)) + 2048
+
+    def ref_tokens(self, side, prompt):
+        if self.variant:
+            return round(SONNET_TOKENS_PER_CHAR * len(prompt))
+        return self.sonnet_in.get(side["unit"])
 
     def worst(self, side):
         return self.est_prompt_tokens(side) * self.cfg["price_in"] + self.cfg["budget"] * self.cfg["price_out"]
@@ -541,10 +560,10 @@ class ApiRunner:
             if want and (res.get("echo_reasoning") or {}).get("effort") != want:
                 raise Halt(f"reasoning effort echoed {res.get('echo_reasoning')!r} != {want!r}")
         if side is not None:
-            ref = self.sonnet_in.get(side["unit"])
+            ref = self.ref_tokens(side, prompt)
             n = res.get("input_tokens") or 0
             if ref is None or n < 0.5 * ref:
-                raise Halt(f"prompt integrity: reported prompt tokens {n} < 0.5 x Sonnet's {ref}")
+                raise Halt(f"prompt integrity: reported prompt tokens {n} < 0.5 x reference {ref}")
         if res["finish"] == "length" and (res.get("output_tokens") or 0) < cfg["budget"]:
             raise Halt(f"stopped at length after {res.get('output_tokens')} tokens, below the budget "
                        f"{cfg['budget']} (not covered by D6)")
@@ -679,6 +698,8 @@ class ApiRunner:
                         self.ledger.settle(cid, cost)
                         row = row_from_result(cid, res, atts)
                         row["sonnet_input_tokens"] = self.sonnet_in.get(side["unit"])
+                        if self.variant:
+                            row["integrity_ref_tokens"] = self.ref_tokens(side, r["prompt"])
                         row["prompt_chars"] = len(r["prompt"])
                         if self.cfg["api"] == "azure":
                             row["guardrail"] = self.cfg.get("guardrail")
@@ -762,10 +783,11 @@ class ApiRunner:
         import score_api
         cfg = self.cfg
         batch_game.MODEL_MAX_OUTPUT = cfg["budget"]
-        self.log(f"=== start {cfg['slug']} headline J: budget {cfg['budget']}, cap ${cfg['cap']}, "
+        self.log(f"=== start {cfg['slug']} {self.tag}: budget {cfg['budget']}, cap ${cfg['cap']}, "
                  f"MODEL_MAX_OUTPUT {batch_game.MODEL_MAX_OUTPUT}")
-        spec = json.load(open(HEADLINE_SPEC, encoding="utf-8"))
+        spec = json.load(open(self.spec_path, encoding="utf-8"))
         tag = spec["tag"]
+        assert tag == self.tag
         files = [self.run_wave(spec, base_wave=True)]
         cf = self.ids_in(tag, "content_filter.jsonl")
         if cfg["api"] == "azure":          # amendment 2: a block is a platform error, resent once in -rs1
@@ -936,7 +958,10 @@ def main():
     ap.add_argument("--balance", action="store_true")
     ap.add_argument("--cap", type=float, help="Kimi only: cap from the Kimi rule")
     ap.add_argument("--resume-after-check-failure", action="store_true")
+    ap.add_argument("--spec", choices=["similarJ"], help="amendment 3: gpt-5.6-sol only, similar-pools spec")
     a = ap.parse_args()
+    if a.spec:
+        assert a.model == "gpt-5.6-sol", "amendment 3 covers gpt-5.6-sol only"
     if a.balance:
         balance()
         return
@@ -950,10 +975,12 @@ def main():
         smoke(cfg, long=a.smoke_long, longgen=a.longgen, seed=a.longgen_seed)
     elif a.score:
         import score_api
+        if a.spec:
+            score_api.use_variant(a.spec)
         score_api.score_model(a.model)
     else:
         assert cfg["cap"] is not None, "no cap"
-        ApiRunner(cfg, resume_after_check_failure=a.resume_after_check_failure).run()
+        ApiRunner(cfg, resume_after_check_failure=a.resume_after_check_failure, variant=a.spec).run()
 
 
 if __name__ == "__main__":

@@ -624,3 +624,48 @@ were seen, which is recorded here plainly.
 Everything else is unchanged: halt conditions, scoring, the 41-pool
 sensitivity, committing per model. The only planned stop is still the Kimi
 decision.
+
+## 2026-11-16 (amendment 3): gpt-5.6-sol on the similar pools (RUN_DECISIONS D20)
+
+Post hoc exploratory. Requested by the main fragmentation session and approved
+by the user in this session on 2026-11-16, before any request; the design and
+the user's approval of the spend are in `docs/RUN_DECISIONS.md` (D20 and its
+2026-11-16 addendum). Written and committed before the first request. No
+similar-pool answer from any LLM has been read in this sandbox.
+
+- **Model and protocol.** gpt-5.6-sol exactly as last amended: Azure OpenAI
+  deployment, Responses API, `service_tier` flex, reasoning effort max,
+  `max_output_tokens` 128,000 (D6 at 128,000), guardrail Default (a content
+  filter block is a platform error, resent once; still blocked = not
+  completed), one transport resend (`-rs1`), one structural repair round
+  (`-r1`), the frozen scorer (`batch_game.score`) and the same primary rule
+  (REFUSED if a unit has no answer or a recorded `repair.policy_share` > 0.25;
+  answered-units-only figures then reported as secondary). Halt conditions
+  unchanged.
+- **The only change: the spec.** `runs/similar_J.json` (tag
+  `final-similarJ`, 46 requests, 46 pools of 7 regrouping the 322 headline
+  documents), copied unchanged to `work/specs/similar_J.json`. SHA-256 of the
+  file on disk: 4c4e654de9f953554649fb48e4e3e3b622fddd9f2149af0b9e5a319c7415efd4
+  (CRLF line endings, as in the main repo's manifest; the git blob with LF
+  endings hashes to f56294da5be8c5a16b37f2b1383c1376d8d617879b2e0d3e97834e8b2c8323ef;
+  same JSON). The runner and scorer check the hash before use. Prompts are sent
+  verbatim from `request["prompt"]`.
+- **Prompt-integrity check.** The runner's check compares reported prompt
+  tokens with Sonnet's for the same unit; Sonnet has no rows for these pools.
+  Reference instead: Sonnet's median prompt tokens per character on the 40
+  headline base rows with usage (0.3795; range 0.3535 to 0.3960) times the
+  prompt's character count. The rule stays "reported prompt tokens >= 0.5 x
+  reference". gpt-5.6-sol's own headline rows ran 0.2206 to 0.2593 tokens per
+  character, above the 0.19 threshold.
+- **Cap.** $50.00, counted only over this run's attempt logs
+  (`raw/gpt-5.6-sol/final-similarJ*.attempts.jsonl`). Expected about $25
+  (headline run: $25.36). The similar prompts are longer at most (16,779 to
+  118,136 characters; 1,650,887 in total).
+- **Outputs.** Raw rows `raw/gpt-5.6-sol/final-similarJ*`; run log
+  `logs/gpt-5.6-sol/run.final-similarJ.log`; scored rows, SUMMARY and
+  PRIMARY_RESULT under `results/gpt-5.6-sol/final_similarJ/`. The headline
+  rows and results are not touched or re-scored.
+- **41-pool view: not applicable.** It removes the five epub-2025 headline
+  pools by name; the similar pools regroup the same 322 documents, seven of
+  which have a 2025 first-online date. Stated wherever the result appears.
+- One verdict, on 46 pools. Commit when scored; push only after asking the user.

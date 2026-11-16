@@ -18,6 +18,7 @@ checked against the committed rows; only their 41-pool directories are written.
 """
 import contextlib
 import copy
+import hashlib
 import io
 import json
 import os
@@ -39,6 +40,29 @@ from joint_game import build_units, score_row                      # noqa: E402
 HEADLINE_SPEC = os.path.join(FROZEN, "runs", "final_headlineJ.json")
 EPUB_2025_POOLS = ["pool_009", "pool_011", "pool_041", "pool_056", "pool_062"]
 TAG = "final-headlineJ"
+SPEC_PATH = HEADLINE_SPEC
+VARIANT = None                      # None = the headline spec (default, unchanged)
+# Amendment 3 (2026-11-16): the similar-pools spec (RUN_DECISIONS D20), a hash-checked copy
+# inside the sandbox; scored into results/<slug>/final_similarJ/, 46 pools only.
+VARIANTS = {
+    "similarJ": {"spec": os.path.join(SB, "work", "specs", "similar_J.json"),
+                 "sha256": "4c4e654de9f953554649fb48e4e3e3b622fddd9f2149af0b9e5a319c7415efd4",
+                 "tag": "final-similarJ", "out": "final_similarJ",
+                 "label": "similar pools (D20) Game J"},
+}
+
+
+def use_variant(name):
+    """Switch spec, tag and output directory to a variant (amendment 3). Never used for the headline."""
+    global TAG, SPEC_PATH, VARIANT
+    v = VARIANTS[name]
+    got = hashlib.sha256(open(v["spec"], "rb").read()).hexdigest()
+    if got != v["sha256"]:
+        raise SystemExit(f"HALT: {v['spec']} sha256 {got} != {v['sha256']}")
+    spec = json.load(open(v["spec"], encoding="utf-8"))
+    assert spec["tag"] == v["tag"] and len(spec["requests"]) == 46, "variant spec shape"
+    TAG, SPEC_PATH, VARIANT = v["tag"], v["spec"], name
+    return v
 
 
 def subset(spec, drop_cids=(), drop_pools=()):
@@ -62,8 +86,9 @@ def _ids(path):
 
 def model_setup(slug):
     """-> (budget, raw_dir, base spec, base files, repair spec or None, repair files, sweep?)"""
-    spec = json.load(open(HEADLINE_SPEC, encoding="utf-8"))
+    spec = json.load(open(SPEC_PATH, encoding="utf-8"))
     if slug == "claude-sonnet-5":
+        assert VARIANT is None, "Sonnet's rows are read only from the frozen headline batches"
         raw = os.path.join(FROZEN, "results", "batches")
         batch_game.MODEL_MAX_OUTPUT = 128000
         bf = [os.path.join(raw, f"{TAG}.results.jsonl"), os.path.join(raw, f"{TAG}-rs1.results.jsonl")]
@@ -142,7 +167,7 @@ def usage_totals(raw, slug, sweep):
     if sweep:
         hit = set()
         for f in sorted(os.listdir(raw)):
-            if not f.endswith(".attempts.jsonl"):
+            if not f.endswith(".attempts.jsonl") or not f.startswith((TAG + ".", TAG + "-")):
                 continue
             for ln in open(os.path.join(raw, f), encoding="utf-8"):
                 a = json.loads(ln)
@@ -256,6 +281,8 @@ def one_scope(name, n_units, pools, waves, out_dir, excl_units, keep_dirs):
 def score_model(slug):
     budget, raw, spec, bfiles, rp, rfiles, sweep = model_setup(slug)
     res_dir = os.path.join(SB, "results", slug)
+    if VARIANT:
+        res_dir = os.path.join(res_dir, VARIANTS[VARIANT]["out"])
     os.makedirs(res_dir, exist_ok=True)
     platform = sweep and api_runner_cfg(slug).get("api") == "azure"     # amendment 2
     bex = exclusions(raw, spec, bfiles, TAG, cf_is_platform=platform)
@@ -274,8 +301,8 @@ def score_model(slug):
     waves41 = [(subset(s, drop_pools=EPUB_2025_POOLS), f) for s, f in waves]
     e41 = {k: [u for u in v if u not in EPUB_2025_POOLS] for k, v in excl_units.items()}
 
-    r46, rows46 = one_scope("46", 46, pools46, waves, os.path.join(res_dir, "final_headlineJ"), excl_units,
-                            keep_dirs=sweep)
+    r46, rows46 = one_scope("46", 46, pools46, waves, res_dir if VARIANT else os.path.join(res_dir, "final_headlineJ"),
+                            excl_units, keep_dirs=sweep)
     if not sweep:                         # read-only reference: the rows must equal the committed ones
         ref = (os.path.join(FROZEN, "results", "final", "headlineJ", "prose", "J.jsonl")
                if slug == "claude-sonnet-5" else os.path.join(res_dir, "final_headlineJ", "prose", "J.jsonl"))
@@ -283,12 +310,17 @@ def score_model(slug):
         assert set(refrows) == set(rows46), "re-scored units differ from the committed rows"
         assert all(refrows[u]["raw_response"] == rows46[u]["raw_response"] for u in rows46), \
             "re-scored answers differ from the committed rows"
-    r41, _ = one_scope("41", 41, pools41, waves41, os.path.join(res_dir, "final_headlineJ_41pools"), e41,
-                       keep_dirs=True)
-    summary = {"slug": slug, "budget": budget, "post_hoc_exploratory": True,
+    if VARIANT:              # amendment 3: the 41-pool view drops headline pools by name; not applicable
+        r41 = {"not_applicable": "the 41-pool sensitivity removes headline pools by name; the similar pools "
+                                 "regroup the same 322 documents (7 have a 2025 first-online date)"}
+    else:
+        r41, _ = one_scope("41", 41, pools41, waves41, os.path.join(res_dir, "final_headlineJ_41pools"), e41,
+                           keep_dirs=True)
+    summary = {"slug": slug, "budget": budget, "post_hoc_exploratory": True, "spec_tag": TAG,
+               "spec_sha256": VARIANTS[VARIANT]["sha256"] if VARIANT else None,
                "usage": usage_totals(raw, slug, sweep), "requests_sent": sum(
                    len(_latest_rows(f)) for _s, fs in waves for f in fs), "pools46": r46, "pools41": r41}
-    sup = superseded_cost(slug) if sweep else None
+    sup = superseded_cost(slug) if sweep and not VARIANT else None
     if sup:
         summary["superseded_attempts"] = sup
         summary["total_cost_usd_incl_superseded"] = round(summary["usage"]["cost_usd"] + sup["cost_usd"], 6)
@@ -299,7 +331,7 @@ def score_model(slug):
     show = {s: {k: summary[s].get(k) for k in ("PRIMARY_verdict", "PRIMARY_means", "SECONDARY_answered_units_only",
                                                "answered_units", "d6_units", "invalid_after_repair",
                                                "units_over_cap", "mean_policy_share", "frozen_gate_output")}
-            for s in ("pools46", "pools41")}
+            for s in ("pools46", "pools41") if "not_applicable" not in summary[s]}
     print(json.dumps({"slug": slug, **show, "usage": summary["usage"]}, indent=1))
     return summary
 
@@ -313,13 +345,17 @@ def _q(m):
 
 
 def write_primary_md(slug, s):
-    L = [f"# {slug}: headline Game J, primary result", "",
+    lab = VARIANTS[VARIANT]["label"] if VARIANT else "headline Game J"
+    L = [f"# {slug}: {lab}, primary result", "",
          "Post-hoc exploratory (PREREGISTRATION.md, 2026-11-13). Primary verdict = the preregistered rule "
          "applied to the scored rows (a unit without an answer, or a unit's recorded `repair.policy_share` "
          "over `joint_game.POLICY_CAP` = 0.25, refuses the cell). The frozen gate's own output is kept in "
          "`final_headlineJ*/verdict.json` as `frozen_gate_output`.", ""]
     for key, label in (("pools46", "46 pools"), ("pools41", "41 pools (without the 5 epub-2025 pools)")):
         r = s[key]
+        if "not_applicable" in r:
+            L += [f"## {label}: not applicable", "", f"- {r['not_applicable']}", ""]
+            continue
         L += [f"## {label}: {r['PRIMARY_verdict']}", ""]
         if r["PRIMARY_verdict"] == "REFUSED":
             rr = r["refusal_reasons"]
