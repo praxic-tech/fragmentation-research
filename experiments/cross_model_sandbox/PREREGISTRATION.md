@@ -669,3 +669,47 @@ similar-pool answer from any LLM has been read in this sandbox.
   pools by name; the similar pools regroup the same 322 documents, seven of
   which have a 2025 first-online date. Stated wherever the result appears.
 - One verdict, on 46 pools. Commit when scored; push only after asking the user.
+
+## 2026-11-16 (amendment 4): provider content-filter blocks do not count against the model; resend under guardrail460
+
+Post hoc exploratory. **Written after the similar-pools result was seen**:
+gpt-5.6-sol answered 44 of 46 similar pools (answered-only F1_J 0.7840,
+F1_L 0.8785, q 0.8940) and was scored REFUSED because sim-015 and sim-041 were
+blocked by Azure's content filter on the base request and on the one resend
+(commit a65023f). Decided by the user; matches the main log's D20 addendum of
+2026-11-16 (laptop commit 5191769, not yet on origin when this was written).
+
+- **Correction to amendment 2.** Its sentence "A unit still blocked under
+  Default is 'not completed', like a transport error at the retry limit" was
+  drafted by the AI assistant and did not reflect the user's intent. User
+  decision: a provider content-filter block does not count against the model.
+  This applies to the similar-pools run (amendment 3); the headline results
+  are not re-scored (gpt-4.1 had no blocks; gpt-5.6-sol's two headline blocks
+  were answered on their resend).
+- **Earlier blocks, kept in the record** (all under guardrail Default, all on
+  the completion side; the prompt side was "safe" in every category):
+  - sim-015 base: violence, medium, filtered (after 463 s)
+  - sim-041 base: violence, medium, filtered; sexual low, not filtered (after 335 s)
+  - sim-015 resend (-rs1): violence, medium, filtered (after 74 s)
+  - sim-041 resend (-rs1): sexual, medium, filtered (after 117 s)
+  The 44/46 result and its REFUSED scoring stay in the record, moved unchanged
+  to `results/gpt-5.6-sol/final_similarJ_before_amendment4/`.
+- **Guardrail.** The user set the custom guardrail **guardrail460** on the
+  deployment. Before resending: one dummy smoke request; the content-filter
+  categories and fields in its response are recorded in `logs/smoke_tests.jsonl`
+  and RUNLOG, as the observable settings of guardrail460, and compared with the
+  Default smoke response. If the response shows no evidence that the guardrail
+  changed from Default, halt and report before resending.
+- **Resend.** sim-015 and sim-041 are resent once, unchanged (same frozen
+  prompts, same deployment, model version, Flex tier, reasoning effort max,
+  max output 128,000), under guardrail460, tag `final-similarJ-g460`. The
+  guardrail is recorded per row (`raw/gpt-5.6-sol/guardrail.jsonl`). Answers
+  enter the frozen scorer like any other row (latest row per unit), followed by
+  the one structural repair round if needed (tag `final-similarJ-g460-r1`).
+- **Verdict.** If both are answered: one verdict on 46 pools under the
+  preregistered rule. If either is still blocked: the cell is reported as
+  "not completed (provider content filter)", not REFUSED, with the 44-pool
+  (answered units) scores as the secondary result. A refusal for any other
+  reason (a unit without an answer for another reason, or policy_share over the
+  cap) is unchanged.
+- Cap unchanged ($50 for the similar run; $28.3544 spent so far).
