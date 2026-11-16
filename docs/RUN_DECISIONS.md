@@ -1528,8 +1528,11 @@ evaluation reconstruction has been decoded or scored.
   (192 entries), committed with this addendum; RECORD.json SHA-256
   81ddd2503ee2958b964e8a29fa866247005c852a5cbd682afa4f6bbbabef78b3.
   runs/final_t12.py checks the score files against it before decoding.
-- **Freeze date.** The results freeze moved from 2026-11-15 to 2026-11-16
-  17:00 (user). Recorded here because tier 1 is scored and tuned on the 16th.
+- **Freeze date.** The results freeze planned for 2026-11-15 did not happen
+  on that date; tier 1 is scored and tuned on the 16th. The freeze is when the
+  user declares it and is recorded then. (Corrected the same day: an earlier
+  wording of this line gave 2026-11-16 17:00, which was a stopping time, not
+  a freeze.)
 - Files: results/final_t1/RECORD.json, results/final_t1/dev_tuning.json.
 
 ## D20 — 2026-11-14: POST-HOC EXPLORATORY — SIMILAR POOLS, design frozen before any pool is built
